@@ -1,7 +1,7 @@
 --- 
 title: "R for Epidemiology"
 author: "Brad Cannell"
-date: "`r Sys.Date()`"
+date: "2020-02-11"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
@@ -12,12 +12,7 @@ url: 'https://brad-cannell.github.io/r4epi/'
 description: "This is the textbook for Brad Cannell's Introduction to R Programming for Epidemiologic Research course."
 ---
 
-```{r include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'packages.bib')
-```
+
 
 # Welcome {-}
 
