@@ -18,4 +18,8 @@ description: "This is the textbook for Brad Cannell's Introduction to R Programm
 
 My goal is to make this accessible and practically useful without stripping out all of the complexity that makes doing epidemiology in real life a challenge.
 
+<!--
+Epidemiology is the study of the distribution of…. Good enough for our purposes.
 
+Introduction: What are we doing here? The big picture. Grab some headlines from the news (Corona virus, Ebola virus, HIV, Chronic diseases, 
+-->
