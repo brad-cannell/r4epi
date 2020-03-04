@@ -1,0 +1,3 @@
+# Navigating the RStudio interface
+
+Here's how to navigate it...
