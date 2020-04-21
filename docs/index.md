@@ -1,7 +1,7 @@
 --- 
 title: "R for Epidemiology"
 author: "Brad Cannell"
-date: "2020-03-03"
+date: "2020-03-21"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
