@@ -1,3 +1,0 @@
-# Measurement
-
-Measurement: We typically evaluate and quantify our intuition about health and disease with numbers. This could be relative to anecdotes. Surely, the one person who happened to survive cancer through a diet exclusively of honey could have had an article written about them. That doesn’t mean honey cured that person’s cancer, and even if it did, it doesn’t mean that it would be likely to cure cancer in you.

@@ -1,3 +1,0 @@
-# Speaking R’s language
-
-Here's how to speak it...
