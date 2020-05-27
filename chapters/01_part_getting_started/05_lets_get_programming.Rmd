@@ -174,6 +174,46 @@ You may have also noticed that when we created the `names` and `heights` vectors
 
 <p class="warning"> ⚠️**Warning:** By definition, all columns in a data frame must have the same length (i.e., number of rows). That means that each vector you create when building your data frame must have the same number of values in it. For example, the class data frame above has four names and four heights. If we had only entered three heights, we would have gotten the following error: `Error in data.frame(names = c("John", "Sally", "Brad", "Anne"), heights = c(68,  : arguments imply differing number of rows: 4, 3`</p>
 
+## Missing data
+
+As indicated in the warning above, all columns in our data frames have to have the same length. So what do we do when we are truly missing information in some of our observations? For example, how do we create the `class` data frame if we are missing Anne's height for some reason?
+
+In R, we represent missing data with an `NA`. For example:
+
+```{r}
+# Create the class data frame
+data.frame(
+  names   = c("John", "Sally", "Brad", "Anne"),
+  heights = c(68, 63, 71, NA) # Now we are missing Anne's height
+)
+```
+
+<p class="note"> 🗒**Side Note:** Make sure you capitalize `NA` and don't use any spaces or quotation marks. Also, make sure you use `NA` instead of writing `"Missing"` or something like that.</p>
+
+By default, R considers `NA` to be a logical-type value (as opposed to character or numeric). for example:
+
+```{r}
+typeof(NA)
+```
+
+However, you can tell R to make `NA` a different type by using one of the more specific forms of `NA`. For example:
+
+```{r}
+typeof(NA_character_)
+```
+
+```{r}
+typeof(NA_integer_)
+```
+
+```{r}
+typeof(NA_real_)
+```
+
+Most of the time, you won't have to worry about doing this because R will take care of converting `NA` for you. What do I mean by that? Well, remember that every vector can have only one type. So, when you add an `NA` (logical by default) to a vector with double values as we did above (i.e., `c(68, 63, 71, NA)`), that would cause you to have three double values and one logical value in the same vector, which is not allowed. Therefore, R will automatically convert the `NA` to `NA_real_` for you behind the scenes. 
+
+This is a concept known as "type coercion" and you can read more about it [here](https://r4ds.had.co.nz/vectors.html#coercion) if you are interested. As I said, most of the time you don't have to worry about type coercion -- it will happen automatically. But, sometimes it doesn't and it will cause R to give you an error. I mostly encounter this when using the `if_else()` and `case_when()` functions, which we will discuss later.
+
 ## Our first analysis
 
 Congratulations on your new R programming skills. 🎉 You can now create vectors and data frames. This is no small thing. Basically, everything else we do in this book will start with vectors and data frames.
