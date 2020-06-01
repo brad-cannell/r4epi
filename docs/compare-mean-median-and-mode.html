@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>24 Compare mean, median, and mode | R for Epidemiology</title>
+  <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="24 Compare mean, median, and mode | R for Epidemiology" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://brad-cannell.github.io/r4epi/" />
+  
+  <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="github-repo" content="brad-cannell/r4epi" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="24 Compare mean, median, and mode | R for Epidemiology" />
+  
+  <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  
+
+<meta name="author" content="Brad Cannell" />
+
+
+<meta name="date" content="2020-05-31" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="calculate-the-mode.html"/>
+<link rel="next" href="measures-of-dispersion.html"/>
+<script src="libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R for Epidemiology</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html"><i class="fa fa-check"></i><b>1</b> Installing R and RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-mac"><i class="fa fa-check"></i><b>1.1</b> Download and install on a Mac</a></li>
+<li class="chapter" data-level="1.2" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-pc"><i class="fa fa-check"></i><b>1.2</b> Download and install on a PC</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="what-is-r.html"><a href="what-is-r.html"><i class="fa fa-check"></i><b>2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="what-is-r.html"><a href="what-is-r.html#what-is-data"><i class="fa fa-check"></i><b>2.1</b> What is data?</a></li>
+<li class="chapter" data-level="2.2" data-path="what-is-r.html"><a href="what-is-r.html#what-is-r-1"><i class="fa fa-check"></i><b>2.2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="what-is-r.html"><a href="what-is-r.html#accessing-data"><i class="fa fa-check"></i><b>2.2.1</b> Accessing data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="what-is-r.html"><a href="what-is-r.html#managing-data"><i class="fa fa-check"></i><b>2.2.2</b> Managing data</a></li>
+<li class="chapter" data-level="2.2.3" data-path="what-is-r.html"><a href="what-is-r.html#analyzing-data"><i class="fa fa-check"></i><b>2.2.3</b> Analyzing data</a></li>
+<li class="chapter" data-level="2.2.4" data-path="what-is-r.html"><a href="what-is-r.html#presenting-data"><i class="fa fa-check"></i><b>2.2.4</b> Presenting data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html"><i class="fa fa-check"></i><b>3</b> Navigating the RStudio interface</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-console"><i class="fa fa-check"></i><b>3.1</b> The console</a></li>
+<li class="chapter" data-level="3.2" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-environment-pane"><i class="fa fa-check"></i><b>3.2</b> The environment pane</a></li>
+<li class="chapter" data-level="3.3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-files-pane"><i class="fa fa-check"></i><b>3.3</b> The files pane</a></li>
+<li class="chapter" data-level="3.4" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-source-pane"><i class="fa fa-check"></i><b>3.4</b> The source pane</a></li>
+<li class="chapter" data-level="3.5" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#rstudio-preferences"><i class="fa fa-check"></i><b>3.5</b> RStudio preferences</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html"><i class="fa fa-check"></i><b>4</b> Speaking R’s language</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#r-is-a-language"><i class="fa fa-check"></i><b>4.1</b> R is a <em>language</em></a></li>
+<li class="chapter" data-level="4.2" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#the-r-interpreter"><i class="fa fa-check"></i><b>4.2</b> The R interpreter</a></li>
+<li class="chapter" data-level="4.3" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#errors"><i class="fa fa-check"></i><b>4.3</b> Errors</a></li>
+<li class="chapter" data-level="4.4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#functions"><i class="fa fa-check"></i><b>4.4</b> Functions</a></li>
+<li class="chapter" data-level="4.5" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#objects"><i class="fa fa-check"></i><b>4.5</b> Objects</a></li>
+<li class="chapter" data-level="4.6" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#comments"><i class="fa fa-check"></i><b>4.6</b> Comments</a></li>
+<li class="chapter" data-level="4.7" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#packages"><i class="fa fa-check"></i><b>4.7</b> Packages</a></li>
+<li class="chapter" data-level="4.8" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#programming-style"><i class="fa fa-check"></i><b>4.8</b> Programming style</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lets-get-programming.html"><a href="lets-get-programming.html"><i class="fa fa-check"></i><b>5</b> Let’s get programming</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#simulating-data"><i class="fa fa-check"></i><b>5.1</b> Simulating data</a></li>
+<li class="chapter" data-level="5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vectors"><i class="fa fa-check"></i><b>5.2</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vector-types"><i class="fa fa-check"></i><b>5.2.1</b> Vector types</a></li>
+<li class="chapter" data-level="5.2.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#double-vectors"><i class="fa fa-check"></i><b>5.2.2</b> Double vectors</a></li>
+<li class="chapter" data-level="5.2.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#integer-vectors"><i class="fa fa-check"></i><b>5.2.3</b> Integer vectors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#logical-vectors"><i class="fa fa-check"></i><b>5.2.4</b> Logical vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#data-frames"><i class="fa fa-check"></i><b>5.3</b> Data frames</a></li>
+<li class="chapter" data-level="5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#missing-data"><i class="fa fa-check"></i><b>5.4</b> Missing data</a></li>
+<li class="chapter" data-level="5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#our-first-analysis"><i class="fa fa-check"></i><b>5.5</b> Our first analysis</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#manual-calculation-of-the-mean"><i class="fa fa-check"></i><b>5.5.1</b> Manual calculation of the mean</a></li>
+<li class="chapter" data-level="5.5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#dollar-sign-notation"><i class="fa fa-check"></i><b>5.5.2</b> Dollar sign notation</a></li>
+<li class="chapter" data-level="5.5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#bracket-notation"><i class="fa fa-check"></i><b>5.5.3</b> Bracket notation</a></li>
+<li class="chapter" data-level="5.5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-sum-function"><i class="fa fa-check"></i><b>5.5.4</b> The sum function</a></li>
+<li class="chapter" data-level="5.5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#nesting-functions"><i class="fa fa-check"></i><b>5.5.5</b> Nesting functions</a></li>
+<li class="chapter" data-level="5.5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-length-function"><i class="fa fa-check"></i><b>5.5.6</b> The length function</a></li>
+<li class="chapter" data-level="5.5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-mean-function"><i class="fa fa-check"></i><b>5.5.7</b> The mean function</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#some-common-errors"><i class="fa fa-check"></i><b>5.6</b> Some common errors</a></li>
+<li class="chapter" data-level="5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#summary"><i class="fa fa-check"></i><b>5.7</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Coding Tools and Best Practices</b></span></li>
+<li class="chapter" data-level="6" data-path="r-scripts.html"><a href="r-scripts.html"><i class="fa fa-check"></i><b>6</b> R scripts</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="r-scripts.html"><a href="r-scripts.html#creating-r-scripts"><i class="fa fa-check"></i><b>6.1</b> Creating R scripts</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="r-markdown.html"><a href="r-markdown.html"><i class="fa fa-check"></i><b>7</b> R markdown</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="r-markdown.html"><a href="r-markdown.html#what-is-r-markdown"><i class="fa fa-check"></i><b>7.1</b> What is R markdown?</a></li>
+<li class="chapter" data-level="7.2" data-path="r-markdown.html"><a href="r-markdown.html#why-use-r-markdown"><i class="fa fa-check"></i><b>7.2</b> Why use R markdown?</a></li>
+<li class="chapter" data-level="7.3" data-path="r-markdown.html"><a href="r-markdown.html#create-an-r-markdown-file"><i class="fa fa-check"></i><b>7.3</b> Create an R markdown file</a></li>
+<li class="chapter" data-level="7.4" data-path="r-markdown.html"><a href="r-markdown.html#yaml-headers"><i class="fa fa-check"></i><b>7.4</b> YAML headers</a></li>
+<li class="chapter" data-level="7.5" data-path="r-markdown.html"><a href="r-markdown.html#r-code-chunks"><i class="fa fa-check"></i><b>7.5</b> R code chunks</a></li>
+<li class="chapter" data-level="7.6" data-path="r-markdown.html"><a href="r-markdown.html#markdown"><i class="fa fa-check"></i><b>7.6</b> Markdown</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="r-projects.html"><a href="r-projects.html"><i class="fa fa-check"></i><b>8</b> R projects</a></li>
+<li class="chapter" data-level="9" data-path="coding-best-practices.html"><a href="coding-best-practices.html"><i class="fa fa-check"></i><b>9</b> Coding best practices</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#general-principles"><i class="fa fa-check"></i><b>9.1</b> General principles</a></li>
+<li class="chapter" data-level="9.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#code-comments"><i class="fa fa-check"></i><b>9.2</b> Code comments</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#defining-key-variables"><i class="fa fa-check"></i><b>9.2.1</b> Defining key variables</a></li>
+<li class="chapter" data-level="9.2.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#what-this-code-is-trying-to-accomplish"><i class="fa fa-check"></i><b>9.2.2</b> What this code is trying to accomplish</a></li>
+<li class="chapter" data-level="9.2.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#why-i-chose-this-particular-strategy"><i class="fa fa-check"></i><b>9.2.3</b> Why I chose this particular strategy</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#style-guidelines"><i class="fa fa-check"></i><b>9.3</b> Style guidelines</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#object-variable-names"><i class="fa fa-check"></i><b>9.3.1</b> Object (variable) names</a></li>
+<li class="chapter" data-level="9.3.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#use-names-that-are-informative"><i class="fa fa-check"></i><b>9.3.2</b> Use names that are informative</a></li>
+<li class="chapter" data-level="9.3.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#file-names"><i class="fa fa-check"></i><b>9.3.3</b> File Names</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="using-pipes.html"><a href="using-pipes.html"><i class="fa fa-check"></i><b>10</b> Using pipes</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="using-pipes.html"><a href="using-pipes.html#what-are-pipes"><i class="fa fa-check"></i><b>10.1</b> What are pipes?</a></li>
+<li class="chapter" data-level="10.2" data-path="using-pipes.html"><a href="using-pipes.html#how-do-pipes-work"><i class="fa fa-check"></i><b>10.2</b> How do pipes work?</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="using-pipes.html"><a href="using-pipes.html#keyboard-shortcut"><i class="fa fa-check"></i><b>10.2.1</b> Keyboard shortcut</a></li>
+<li class="chapter" data-level="10.2.2" data-path="using-pipes.html"><a href="using-pipes.html#pipe-style"><i class="fa fa-check"></i><b>10.2.2</b> Pipe style</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="using-pipes.html"><a href="using-pipes.html#final-thought-on-pipes"><i class="fa fa-check"></i><b>10.3</b> Final thought on pipes</a></li>
+</ul></li>
+<li class="part"><span><b>III Descriptive Analysis</b></span></li>
+<li class="chapter" data-level="11" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html"><i class="fa fa-check"></i><b>11</b> Introduction to descriptive analysis</a></li>
+<li class="chapter" data-level="12" data-path="what-is-descriptive-analysis-and-why-would-we-do-it.html"><a href="what-is-descriptive-analysis-and-why-would-we-do-it.html"><i class="fa fa-check"></i><b>12</b> What is descriptive analysis and why would we do it?</a></li>
+<li class="chapter" data-level="13" data-path="what-kind-of-descriptive-analysis-should-we-perform.html"><a href="what-kind-of-descriptive-analysis-should-we-perform.html"><i class="fa fa-check"></i><b>13</b> What kind of descriptive analysis should we perform?</a></li>
+<li class="chapter" data-level="14" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html"><i class="fa fa-check"></i><b>14</b> Numerical descriptions of categorical variables</a></li>
+<li class="chapter" data-level="15" data-path="height-and-weight-data.html"><a href="height-and-weight-data.html"><i class="fa fa-check"></i><b>15</b> Height and Weight Data</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="height-and-weight-data.html"><a href="height-and-weight-data.html#view-the-data"><i class="fa fa-check"></i><b>15.1</b> View the data</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="calculating-frequencies.html"><a href="calculating-frequencies.html"><i class="fa fa-check"></i><b>16</b> Calculating frequencies</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="calculating-frequencies.html"><a href="calculating-frequencies.html#the-base-r-table-function"><i class="fa fa-check"></i><b>16.1</b> The base R table function</a></li>
+<li class="chapter" data-level="16.2" data-path="calculating-frequencies.html"><a href="calculating-frequencies.html#the-gmodels-crosstable-function"><i class="fa fa-check"></i><b>16.2</b> The gmodels CrossTable function</a></li>
+<li class="chapter" data-level="16.3" data-path="calculating-frequencies.html"><a href="calculating-frequencies.html#the-tidyverse-way"><i class="fa fa-check"></i><b>16.3</b> The tidyverse way</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="calculating-percentages.html"><a href="calculating-percentages.html"><i class="fa fa-check"></i><b>17</b> Calculating percentages</a></li>
+<li class="chapter" data-level="18" data-path="missing-data-1.html"><a href="missing-data-1.html"><i class="fa fa-check"></i><b>18</b> Missing data</a></li>
+<li class="chapter" data-level="19" data-path="formatting-results.html"><a href="formatting-results.html"><i class="fa fa-check"></i><b>19</b> Formatting results</a></li>
+<li class="chapter" data-level="20" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html"><i class="fa fa-check"></i><b>20</b> Measures of central tendency</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#the-mean"><i class="fa fa-check"></i><b>20.1</b> The mean</a></li>
+<li class="chapter" data-level="20.2" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#the-median"><i class="fa fa-check"></i><b>20.2</b> The median</a></li>
+<li class="chapter" data-level="20.3" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#the-mode"><i class="fa fa-check"></i><b>20.3</b> The mode</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="calculate-the-mean.html"><a href="calculate-the-mean.html"><i class="fa fa-check"></i><b>21</b> Calculate the mean</a></li>
+<li class="chapter" data-level="22" data-path="calculate-the-median.html"><a href="calculate-the-median.html"><i class="fa fa-check"></i><b>22</b> Calculate the median</a></li>
+<li class="chapter" data-level="23" data-path="calculate-the-mode.html"><a href="calculate-the-mode.html"><i class="fa fa-check"></i><b>23</b> Calculate the mode</a></li>
+<li class="chapter" data-level="24" data-path="compare-mean-median-and-mode.html"><a href="compare-mean-median-and-mode.html"><i class="fa fa-check"></i><b>24</b> Compare mean, median, and mode</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="compare-mean-median-and-mode.html"><a href="compare-mean-median-and-mode.html#data-checking"><i class="fa fa-check"></i><b>24.1</b> Data checking</a></li>
+<li class="chapter" data-level="24.2" data-path="compare-mean-median-and-mode.html"><a href="compare-mean-median-and-mode.html#properties-of-mean-median-and-mode"><i class="fa fa-check"></i><b>24.2</b> Properties of mean, median, and mode</a></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html"><i class="fa fa-check"></i><b>25</b> Measures of dispersion</a></li>
+<li class="chapter" data-level="26" data-path="range.html"><a href="range.html"><i class="fa fa-check"></i><b>26</b> Range</a></li>
+<li class="chapter" data-level="27" data-path="variance.html"><a href="variance.html"><i class="fa fa-check"></i><b>27</b> Variance</a></li>
+<li class="chapter" data-level="28" data-path="standard-deviation.html"><a href="standard-deviation.html"><i class="fa fa-check"></i><b>28</b> Standard deviation</a></li>
+<li class="chapter" data-level="29" data-path="comparing-distributions.html"><a href="comparing-distributions.html"><i class="fa fa-check"></i><b>29</b> Comparing distributions</a></li>
+<li class="part"><span><b>IV Appendix</b></span></li>
+<li class="chapter" data-level="" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i>Appendix A: Glossary</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R for Epidemiology</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="compare-mean-median-and-mode" class="section level1" number="24">
+<h1><span class="header-section-number">24</span> Compare mean, median, and mode</h1>
+<!-- This isn't HOW to get the mean. This a comparison of the mean and the median - the WHY -->
+<p>Now that you know how to calculate the mean, median, and mode, let’s compare these three measures of central tendency. This is a good opportunity to demonstrate some of the different characteristics of each that we spoke about earlier.</p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="compare-mean-median-and-mode.html#cb166-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb166-2"><a href="compare-mean-median-and-mode.html#cb166-2"></a><span class="st">  </span><span class="kw">summarise</span>(</span>
+<span id="cb166-3"><a href="compare-mean-median-and-mode.html#cb166-3"></a>    <span class="dt">min_weight    =</span> <span class="kw">min</span>(wt_lbs),</span>
+<span id="cb166-4"><a href="compare-mean-median-and-mode.html#cb166-4"></a>    <span class="dt">mean_weight   =</span> <span class="kw">mean</span>(wt_lbs),</span>
+<span id="cb166-5"><a href="compare-mean-median-and-mode.html#cb166-5"></a>    <span class="dt">median_weight =</span> <span class="kw">median</span>(wt_lbs),</span>
+<span id="cb166-6"><a href="compare-mean-median-and-mode.html#cb166-6"></a>    <span class="dt">mode_weight   =</span> <span class="kw">mode_val</span>(wt_lbs) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.double</span>(),</span>
+<span id="cb166-7"><a href="compare-mean-median-and-mode.html#cb166-7"></a>    <span class="dt">max_weight    =</span> <span class="kw">max</span>(wt_lbs)</span>
+<span id="cb166-8"><a href="compare-mean-median-and-mode.html#cb166-8"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 5
+##   min_weight mean_weight median_weight mode_weight max_weight
+##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+## 1        102       1113.          176.         176      19000</code></pre>
+<p><strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used the <code>mean()</code> function, <code>median()</code> function, and our <code>mode_val()</code> function inside of dpylr’s <code>summarise()</code> function to find the mean, median, and mode values of the column “wt_lbs” in the “height_and_weight_20” data frame.</p></li>
+<li><p>We also used the <code>as.double()</code> function to convert the value returned by <code>mode_val()</code> – “176” – from a character string to a numeric double. This isn’t strictly necessary, but I think it looks better.</p></li>
+<li><p>Finally, we used base R’s <code>min()</code> and <code>max()</code> functions to view the lowest and highest weights in our sample.</p></li>
+</ul>
+<div id="data-checking" class="section level2" number="24.1">
+<h2><span class="header-section-number">24.1</span> Data checking</h2>
+<p>Do you see any red flags 🚩as you scan the results? Do you really think a mean weight of 1,113 pounds sounds reasonable? This should definitely be a red flag for you. Now move your gaze three columns to the right and notice that the maximum value of weight is 19,000 lbs – an impossible value for a study in human populations. In this case the real weight was supposed to be 190 pounds, but the person entering the data accidently got a little trigger-happy with the zero key. This is an example of what I meant when I said “We can use descriptive analysis to uncover errors in our data” in the [Introduction to decriptive analysis] chapter. Often times, for various reasons, some observations for a given variable take on values that don’t make sense. Starting by calculating some basic descriptive statistics for each variable is one approach you can use to try to figure out if you have values in your data that don’t make sense.</p>
+<p>In this case we can just go back and fix our data, but what if we didn’t know this value was an error? What if it were a value that was technically possible, but very unlikely? Well, we can’t just go changing values in our data. It’s unethical, and in some cases illegal. Below, we discuss the how the properties of the median and mode can come in handy in situations such as this.</p>
+</div>
+<div id="properties-of-mean-median-and-mode" class="section level2" number="24.2">
+<h2><span class="header-section-number">24.2</span> Properties of mean, median, and mode</h2>
+<p>Despite the fact that this impossibly extreme value is in our data, the median and mode estimates are reasonable estimates of the typical person’s weight in this sample. This is what I meant when I said that the median and mode were more “resistant to extreme values” than the mean.</p>
+<p>You may also notice that no person in our sample had an actual weight of 1,112.75 (the mean) or even 176.5 (the median). This is what I meant above when I said that the mean and median values are “not necessarily observed in the data.”</p>
+<p>In this case, the mode value (176) is also a more reasonable estimate of the average person’s weight than the mean. And unlike the mean and the median, participants 18 and 19 actually weigh 176 pounds. I’m <strong>not</strong> saying that the mode is always the best measure of central tendency to use. However, I <strong>am</strong> saying that you can often learn useful information from your data by calculating and comparing these relatively simple descriptive statistics on each of your numeric variables.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="calculate-the-mode.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="measures-of-dispersion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

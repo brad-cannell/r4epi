@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>14 Measures of dispersion | R for Epidemiology</title>
+  <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="14 Measures of dispersion | R for Epidemiology" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://brad-cannell.github.io/r4epi/" />
+  
+  <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="github-repo" content="brad-cannell/r4epi" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="14 Measures of dispersion | R for Epidemiology" />
+  
+  <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  
+
+<meta name="author" content="Brad Cannell" />
+
+
+<meta name="date" content="2020-05-31" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="measures-of-central-tendency.html"/>
+<link rel="next" href="appendix-a-glossary.html"/>
+<script src="libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R for Epidemiology</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html"><i class="fa fa-check"></i><b>1</b> Installing R and RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-mac"><i class="fa fa-check"></i><b>1.1</b> Download and install on a Mac</a></li>
+<li class="chapter" data-level="1.2" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-pc"><i class="fa fa-check"></i><b>1.2</b> Download and install on a PC</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="what-is-r.html"><a href="what-is-r.html"><i class="fa fa-check"></i><b>2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="what-is-r.html"><a href="what-is-r.html#what-is-data"><i class="fa fa-check"></i><b>2.1</b> What is data?</a></li>
+<li class="chapter" data-level="2.2" data-path="what-is-r.html"><a href="what-is-r.html#what-is-r-1"><i class="fa fa-check"></i><b>2.2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="what-is-r.html"><a href="what-is-r.html#accessing-data"><i class="fa fa-check"></i><b>2.2.1</b> Accessing data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="what-is-r.html"><a href="what-is-r.html#managing-data"><i class="fa fa-check"></i><b>2.2.2</b> Managing data</a></li>
+<li class="chapter" data-level="2.2.3" data-path="what-is-r.html"><a href="what-is-r.html#analyzing-data"><i class="fa fa-check"></i><b>2.2.3</b> Analyzing data</a></li>
+<li class="chapter" data-level="2.2.4" data-path="what-is-r.html"><a href="what-is-r.html#presenting-data"><i class="fa fa-check"></i><b>2.2.4</b> Presenting data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html"><i class="fa fa-check"></i><b>3</b> Navigating the RStudio interface</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-console"><i class="fa fa-check"></i><b>3.1</b> The console</a></li>
+<li class="chapter" data-level="3.2" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-environment-pane"><i class="fa fa-check"></i><b>3.2</b> The environment pane</a></li>
+<li class="chapter" data-level="3.3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-files-pane"><i class="fa fa-check"></i><b>3.3</b> The files pane</a></li>
+<li class="chapter" data-level="3.4" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-source-pane"><i class="fa fa-check"></i><b>3.4</b> The source pane</a></li>
+<li class="chapter" data-level="3.5" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#rstudio-preferences"><i class="fa fa-check"></i><b>3.5</b> RStudio preferences</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html"><i class="fa fa-check"></i><b>4</b> Speaking R’s language</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#r-is-a-language"><i class="fa fa-check"></i><b>4.1</b> R is a <em>language</em></a></li>
+<li class="chapter" data-level="4.2" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#the-r-interpreter"><i class="fa fa-check"></i><b>4.2</b> The R interpreter</a></li>
+<li class="chapter" data-level="4.3" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#errors"><i class="fa fa-check"></i><b>4.3</b> Errors</a></li>
+<li class="chapter" data-level="4.4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#functions"><i class="fa fa-check"></i><b>4.4</b> Functions</a></li>
+<li class="chapter" data-level="4.5" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#objects"><i class="fa fa-check"></i><b>4.5</b> Objects</a></li>
+<li class="chapter" data-level="4.6" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#comments"><i class="fa fa-check"></i><b>4.6</b> Comments</a></li>
+<li class="chapter" data-level="4.7" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#packages"><i class="fa fa-check"></i><b>4.7</b> Packages</a></li>
+<li class="chapter" data-level="4.8" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#programming-style"><i class="fa fa-check"></i><b>4.8</b> Programming style</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lets-get-programming.html"><a href="lets-get-programming.html"><i class="fa fa-check"></i><b>5</b> Let’s get programming</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#simulating-data"><i class="fa fa-check"></i><b>5.1</b> Simulating data</a></li>
+<li class="chapter" data-level="5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vectors"><i class="fa fa-check"></i><b>5.2</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vector-types"><i class="fa fa-check"></i><b>5.2.1</b> Vector types</a></li>
+<li class="chapter" data-level="5.2.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#double-vectors"><i class="fa fa-check"></i><b>5.2.2</b> Double vectors</a></li>
+<li class="chapter" data-level="5.2.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#integer-vectors"><i class="fa fa-check"></i><b>5.2.3</b> Integer vectors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#logical-vectors"><i class="fa fa-check"></i><b>5.2.4</b> Logical vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#data-frames"><i class="fa fa-check"></i><b>5.3</b> Data frames</a></li>
+<li class="chapter" data-level="5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#missing-data"><i class="fa fa-check"></i><b>5.4</b> Missing data</a></li>
+<li class="chapter" data-level="5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#our-first-analysis"><i class="fa fa-check"></i><b>5.5</b> Our first analysis</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#manual-calculation-of-the-mean"><i class="fa fa-check"></i><b>5.5.1</b> Manual calculation of the mean</a></li>
+<li class="chapter" data-level="5.5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#dollar-sign-notation"><i class="fa fa-check"></i><b>5.5.2</b> Dollar sign notation</a></li>
+<li class="chapter" data-level="5.5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#bracket-notation"><i class="fa fa-check"></i><b>5.5.3</b> Bracket notation</a></li>
+<li class="chapter" data-level="5.5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-sum-function"><i class="fa fa-check"></i><b>5.5.4</b> The sum function</a></li>
+<li class="chapter" data-level="5.5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#nesting-functions"><i class="fa fa-check"></i><b>5.5.5</b> Nesting functions</a></li>
+<li class="chapter" data-level="5.5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-length-function"><i class="fa fa-check"></i><b>5.5.6</b> The length function</a></li>
+<li class="chapter" data-level="5.5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-mean-function"><i class="fa fa-check"></i><b>5.5.7</b> The mean function</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#some-common-errors"><i class="fa fa-check"></i><b>5.6</b> Some common errors</a></li>
+<li class="chapter" data-level="5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#summary"><i class="fa fa-check"></i><b>5.7</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Coding Tools and Best Practices</b></span></li>
+<li class="chapter" data-level="6" data-path="r-scripts.html"><a href="r-scripts.html"><i class="fa fa-check"></i><b>6</b> R scripts</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="r-scripts.html"><a href="r-scripts.html#creating-r-scripts"><i class="fa fa-check"></i><b>6.1</b> Creating R scripts</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="r-markdown.html"><a href="r-markdown.html"><i class="fa fa-check"></i><b>7</b> R markdown</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="r-markdown.html"><a href="r-markdown.html#what-is-r-markdown"><i class="fa fa-check"></i><b>7.1</b> What is R markdown?</a></li>
+<li class="chapter" data-level="7.2" data-path="r-markdown.html"><a href="r-markdown.html#why-use-r-markdown"><i class="fa fa-check"></i><b>7.2</b> Why use R markdown?</a></li>
+<li class="chapter" data-level="7.3" data-path="r-markdown.html"><a href="r-markdown.html#create-an-r-markdown-file"><i class="fa fa-check"></i><b>7.3</b> Create an R markdown file</a></li>
+<li class="chapter" data-level="7.4" data-path="r-markdown.html"><a href="r-markdown.html#yaml-headers"><i class="fa fa-check"></i><b>7.4</b> YAML headers</a></li>
+<li class="chapter" data-level="7.5" data-path="r-markdown.html"><a href="r-markdown.html#r-code-chunks"><i class="fa fa-check"></i><b>7.5</b> R code chunks</a></li>
+<li class="chapter" data-level="7.6" data-path="r-markdown.html"><a href="r-markdown.html#markdown"><i class="fa fa-check"></i><b>7.6</b> Markdown</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="r-projects.html"><a href="r-projects.html"><i class="fa fa-check"></i><b>8</b> R projects</a></li>
+<li class="chapter" data-level="9" data-path="coding-best-practices.html"><a href="coding-best-practices.html"><i class="fa fa-check"></i><b>9</b> Coding best practices</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#general-principles"><i class="fa fa-check"></i><b>9.1</b> General principles</a></li>
+<li class="chapter" data-level="9.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#code-comments"><i class="fa fa-check"></i><b>9.2</b> Code comments</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#defining-key-variables"><i class="fa fa-check"></i><b>9.2.1</b> Defining key variables</a></li>
+<li class="chapter" data-level="9.2.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#what-this-code-is-trying-to-accomplish"><i class="fa fa-check"></i><b>9.2.2</b> What this code is trying to accomplish</a></li>
+<li class="chapter" data-level="9.2.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#why-i-chose-this-particular-strategy"><i class="fa fa-check"></i><b>9.2.3</b> Why I chose this particular strategy</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#style-guidelines"><i class="fa fa-check"></i><b>9.3</b> Style guidelines</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#object-variable-names"><i class="fa fa-check"></i><b>9.3.1</b> Object (variable) names</a></li>
+<li class="chapter" data-level="9.3.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#use-names-that-are-informative"><i class="fa fa-check"></i><b>9.3.2</b> Use names that are informative</a></li>
+<li class="chapter" data-level="9.3.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#file-names"><i class="fa fa-check"></i><b>9.3.3</b> File Names</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="using-pipes.html"><a href="using-pipes.html"><i class="fa fa-check"></i><b>10</b> Using pipes</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="using-pipes.html"><a href="using-pipes.html#what-are-pipes"><i class="fa fa-check"></i><b>10.1</b> What are pipes?</a></li>
+<li class="chapter" data-level="10.2" data-path="using-pipes.html"><a href="using-pipes.html#how-do-pipes-work"><i class="fa fa-check"></i><b>10.2</b> How do pipes work?</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="using-pipes.html"><a href="using-pipes.html#keyboard-shortcut"><i class="fa fa-check"></i><b>10.2.1</b> Keyboard shortcut</a></li>
+<li class="chapter" data-level="10.2.2" data-path="using-pipes.html"><a href="using-pipes.html#pipe-style"><i class="fa fa-check"></i><b>10.2.2</b> Pipe style</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="using-pipes.html"><a href="using-pipes.html#final-thought-on-pipes"><i class="fa fa-check"></i><b>10.3</b> Final thought on pipes</a></li>
+</ul></li>
+<li class="part"><span><b>III Descriptive Analysis</b></span></li>
+<li class="chapter" data-level="11" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html"><i class="fa fa-check"></i><b>11</b> Introduction to descriptive analysis</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-is-descriptive-analysis-and-why-would-we-do-it"><i class="fa fa-check"></i><b>11.1</b> What is descriptive analysis and why would we do it?</a></li>
+<li class="chapter" data-level="11.2" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-kind-of-descriptive-analysis-should-we-perform"><i class="fa fa-check"></i><b>11.2</b> What kind of descriptive analysis should we perform?</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html"><i class="fa fa-check"></i><b>12</b> Numerical descriptions of categorical variables</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#height-and-weight-data"><i class="fa fa-check"></i><b>12.1</b> Height and Weight Data</a>
+<ul>
+<li class="chapter" data-level="12.1.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#view-the-data"><i class="fa fa-check"></i><b>12.1.1</b> View the data</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-frequencies"><i class="fa fa-check"></i><b>12.2</b> Calculating frequencies</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-base-r-table-function"><i class="fa fa-check"></i><b>12.2.1</b> The base R table function</a></li>
+<li class="chapter" data-level="12.2.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-gmodels-crosstable-function"><i class="fa fa-check"></i><b>12.2.2</b> The gmodels CrossTable function</a></li>
+<li class="chapter" data-level="12.2.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-tidyverse-way"><i class="fa fa-check"></i><b>12.2.3</b> The tidyverse way</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-percentages"><i class="fa fa-check"></i><b>12.3</b> Calculating percentages</a></li>
+<li class="chapter" data-level="12.4" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#missing-data-1"><i class="fa fa-check"></i><b>12.4</b> Missing data</a></li>
+<li class="chapter" data-level="12.5" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#formatting-results"><i class="fa fa-check"></i><b>12.5</b> Formatting results</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html"><i class="fa fa-check"></i><b>13</b> Measures of central tendency</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mean"><i class="fa fa-check"></i><b>13.1</b> Calculate the mean</a></li>
+<li class="chapter" data-level="13.2" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-median"><i class="fa fa-check"></i><b>13.2</b> Calculate the median</a></li>
+<li class="chapter" data-level="13.3" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mode"><i class="fa fa-check"></i><b>13.3</b> Calculate the mode</a></li>
+<li class="chapter" data-level="13.4" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#compare-mean-median-and-mode"><i class="fa fa-check"></i><b>13.4</b> Compare mean, median, and mode</a></li>
+<li class="chapter" data-level="13.5" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#data-checking"><i class="fa fa-check"></i><b>13.5</b> Data checking</a></li>
+<li class="chapter" data-level="13.6" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#properties-of-mean-median-and-mode"><i class="fa fa-check"></i><b>13.6</b> Properties of mean, median, and mode</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html"><i class="fa fa-check"></i><b>14</b> Measures of dispersion</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html#comparing-distributions"><i class="fa fa-check"></i><b>14.1</b> Comparing distributions</a></li>
+</ul></li>
+<li class="part"><span><b>IV Appendix</b></span></li>
+<li class="chapter" data-level="" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i>Appendix A: Glossary</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R for Epidemiology</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="measures-of-dispersion" class="section level1" number="14">
+<h1><span class="header-section-number">14</span> Measures of dispersion</h1>
+<p>In the chapter on measures of central tendency, we found the minimum value, mean value, median value, mode value, and maximum value of the weight variable in our hypothetical sample of students. We’ll go ahead start this lesson by rerunning that analysis below, but this time we will analyze heights instead of weights.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="measures-of-dispersion.html#cb168-1"></a><span class="co"># Load the tibble package for the tribble function</span></span>
+<span id="cb168-2"><a href="measures-of-dispersion.html#cb168-2"></a><span class="kw">library</span>(tibble)</span>
+<span id="cb168-3"><a href="measures-of-dispersion.html#cb168-3"></a><span class="co"># Load the dplyr package. We will need several of dpylr&#39;s functions in the </span></span>
+<span id="cb168-4"><a href="measures-of-dispersion.html#cb168-4"></a><span class="co"># code below.</span></span>
+<span id="cb168-5"><a href="measures-of-dispersion.html#cb168-5"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="measures-of-dispersion.html#cb169-1"></a><span class="co"># Simulate some data</span></span>
+<span id="cb169-2"><a href="measures-of-dispersion.html#cb169-2"></a>height_and_weight_<span class="dv">20</span> &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb169-3"><a href="measures-of-dispersion.html#cb169-3"></a>  <span class="op">~</span>id,   <span class="op">~</span>sex,     <span class="op">~</span>ht_in, <span class="op">~</span>wt_lbs,</span>
+<span id="cb169-4"><a href="measures-of-dispersion.html#cb169-4"></a>  <span class="st">&quot;001&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">190</span>,</span>
+<span id="cb169-5"><a href="measures-of-dispersion.html#cb169-5"></a>  <span class="st">&quot;002&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">177</span>,</span>
+<span id="cb169-6"><a href="measures-of-dispersion.html#cb169-6"></a>  <span class="st">&quot;003&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">64</span>,     <span class="dv">130</span>,</span>
+<span id="cb169-7"><a href="measures-of-dispersion.html#cb169-7"></a>  <span class="st">&quot;004&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">153</span>,</span>
+<span id="cb169-8"><a href="measures-of-dispersion.html#cb169-8"></a>  <span class="st">&quot;005&quot;</span>, <span class="ot">NA</span>,       <span class="dv">73</span>,     <span class="dv">173</span>,</span>
+<span id="cb169-9"><a href="measures-of-dispersion.html#cb169-9"></a>  <span class="st">&quot;006&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">182</span>,</span>
+<span id="cb169-10"><a href="measures-of-dispersion.html#cb169-10"></a>  <span class="st">&quot;007&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">186</span>,</span>
+<span id="cb169-11"><a href="measures-of-dispersion.html#cb169-11"></a>  <span class="st">&quot;008&quot;</span>, <span class="ot">NA</span>,       <span class="dv">73</span>,     <span class="dv">185</span>,</span>
+<span id="cb169-12"><a href="measures-of-dispersion.html#cb169-12"></a>  <span class="st">&quot;009&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">71</span>,     <span class="dv">157</span>,</span>
+<span id="cb169-13"><a href="measures-of-dispersion.html#cb169-13"></a>  <span class="st">&quot;010&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">66</span>,     <span class="dv">155</span>,</span>
+<span id="cb169-14"><a href="measures-of-dispersion.html#cb169-14"></a>  <span class="st">&quot;011&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">213</span>,</span>
+<span id="cb169-15"><a href="measures-of-dispersion.html#cb169-15"></a>  <span class="st">&quot;012&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">151</span>,</span>
+<span id="cb169-16"><a href="measures-of-dispersion.html#cb169-16"></a>  <span class="st">&quot;013&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">147</span>,</span>
+<span id="cb169-17"><a href="measures-of-dispersion.html#cb169-17"></a>  <span class="st">&quot;014&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">196</span>,</span>
+<span id="cb169-18"><a href="measures-of-dispersion.html#cb169-18"></a>  <span class="st">&quot;015&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">75</span>,     <span class="dv">212</span>,</span>
+<span id="cb169-19"><a href="measures-of-dispersion.html#cb169-19"></a>  <span class="st">&quot;016&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">19000</span>,</span>
+<span id="cb169-20"><a href="measures-of-dispersion.html#cb169-20"></a>  <span class="st">&quot;017&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">194</span>,</span>
+<span id="cb169-21"><a href="measures-of-dispersion.html#cb169-21"></a>  <span class="st">&quot;018&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
+<span id="cb169-22"><a href="measures-of-dispersion.html#cb169-22"></a>  <span class="st">&quot;019&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
+<span id="cb169-23"><a href="measures-of-dispersion.html#cb169-23"></a>  <span class="st">&quot;020&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">102</span></span>
+<span id="cb169-24"><a href="measures-of-dispersion.html#cb169-24"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="measures-of-dispersion.html#cb170-1"></a><span class="co"># Recreate our mode function</span></span>
+<span id="cb170-2"><a href="measures-of-dispersion.html#cb170-2"></a>mode_val &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb170-3"><a href="measures-of-dispersion.html#cb170-3"></a>  value_counts &lt;-<span class="st"> </span><span class="kw">table</span>(x)</span>
+<span id="cb170-4"><a href="measures-of-dispersion.html#cb170-4"></a>  result &lt;-<span class="st"> </span><span class="kw">names</span>(value_counts)[value_counts <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(value_counts)]</span>
+<span id="cb170-5"><a href="measures-of-dispersion.html#cb170-5"></a>  <span class="cf">if</span> (<span class="kw">length</span>(value_counts) <span class="op">==</span><span class="st"> </span><span class="kw">length</span>(result)) {</span>
+<span id="cb170-6"><a href="measures-of-dispersion.html#cb170-6"></a>    result &lt;-<span class="st"> </span><span class="ot">NA</span></span>
+<span id="cb170-7"><a href="measures-of-dispersion.html#cb170-7"></a>  }</span>
+<span id="cb170-8"><a href="measures-of-dispersion.html#cb170-8"></a>  result</span>
+<span id="cb170-9"><a href="measures-of-dispersion.html#cb170-9"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="measures-of-dispersion.html#cb171-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb171-2"><a href="measures-of-dispersion.html#cb171-2"></a><span class="st">  </span><span class="kw">summarise</span>(</span>
+<span id="cb171-3"><a href="measures-of-dispersion.html#cb171-3"></a>    <span class="dt">min_height    =</span> <span class="kw">min</span>(ht_in),</span>
+<span id="cb171-4"><a href="measures-of-dispersion.html#cb171-4"></a>    <span class="dt">mean_height   =</span> <span class="kw">mean</span>(ht_in),</span>
+<span id="cb171-5"><a href="measures-of-dispersion.html#cb171-5"></a>    <span class="dt">median_height =</span> <span class="kw">median</span>(ht_in),</span>
+<span id="cb171-6"><a href="measures-of-dispersion.html#cb171-6"></a>    <span class="dt">mode_height   =</span> <span class="kw">mode_val</span>(ht_in) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">paste</span>(<span class="dt">collapse =</span> <span class="st">&quot; , &quot;</span>),</span>
+<span id="cb171-7"><a href="measures-of-dispersion.html#cb171-7"></a>    <span class="dt">max_height    =</span> <span class="kw">max</span>(ht_in)</span>
+<span id="cb171-8"><a href="measures-of-dispersion.html#cb171-8"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 5
+##   min_height mean_height median_height mode_height max_height
+##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
+## 1         64        68.4          68.5 65 , 69             75</code></pre>
+<p class="note">
+🗒<strong>Side Note:</strong> To get both mode height values to display in the output above I used the <code>paste()</code> function with the collapse argument set to " , " (notices the spaces). This forces R to display our mode values as a character string. The downside is that the “mode_height” variable no longer has any numeric value to R – it’s simply a character string. However, this isn’t a problem for us. We won’t be using the mode in this lesson – and it is rarely used in practice.
+</p>
+<p>Keep in mind that our interest is in describing the “typical” or “average” person in our sample. The results of our analysis above tells us that the average person who answered the height question in our hypothetical class was: 68.4 inches. This information gets us reasonably close to understanding the typical height of the students in our hypothetical class. But remember, our average person does not necessarily have the same height as any <strong>actual person</strong> in our class. So a natural extension of our original question is: “how much like the average person, are the other people in class.”</p>
+<p>For example, is everyone in class 68.4 inches?</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_01_people.png" /><!-- --></p>
+<p>Or are there differences in everyone’s height, with the average person’s height always having a value in the middle of everyone else’s?</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_02_people.png" /><!-- --></p>
+<p>The measures used to answer this question are called measures of dispersion, which we can say is the amount of difference between people in the class or more generally, the amount of variability in the data.</p>
+<p>Three common measures of dispersion used are the:</p>
+<ul>
+<li><strong>Range</strong><br />
+</li>
+<li><strong>Variance</strong><br />
+</li>
+<li><strong>Standard Deviation</strong></li>
+</ul>
+<p><img src="img/03_part_descriptive_analysis/dispersion_03_overview.png" /><!-- --></p>
+<p><strong>Range</strong></p>
+<p>The range is simply the difference between the maximum and minimum value in the data.</p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="measures-of-dispersion.html#cb173-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb173-2"><a href="measures-of-dispersion.html#cb173-2"></a><span class="st">  </span><span class="kw">summarise</span>(</span>
+<span id="cb173-3"><a href="measures-of-dispersion.html#cb173-3"></a>    <span class="dt">min_height  =</span> <span class="kw">min</span>(ht_in),</span>
+<span id="cb173-4"><a href="measures-of-dispersion.html#cb173-4"></a>    <span class="dt">mean_height =</span> <span class="kw">mean</span>(ht_in),</span>
+<span id="cb173-5"><a href="measures-of-dispersion.html#cb173-5"></a>    <span class="dt">max_height  =</span> <span class="kw">max</span>(ht_in),</span>
+<span id="cb173-6"><a href="measures-of-dispersion.html#cb173-6"></a>    <span class="dt">range       =</span> max_height <span class="op">-</span><span class="st"> </span>min_height</span>
+<span id="cb173-7"><a href="measures-of-dispersion.html#cb173-7"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 4
+##   min_height mean_height max_height range
+##        &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1         64        68.4         75    11</code></pre>
+<p>In this case, the range is 11. The range can be useful because it tells us how much difference there is between the tallest person in our class and the shortest person in our class – 11 inches. However, it doesn’t tell us how close to 68.4 inches “most” people in the class are.</p>
+<p>In other words, are most people in the class out at the edges of the range of values in the data?</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_04_edges.png" /><!-- --></p>
+<p>Or are people “evenly distributed” across the range of heights for the class?</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_05_even.png" /><!-- --></p>
+<p>Or something else entirely?</p>
+<p><strong>Variance</strong></p>
+<p>The variance is a measure of dispersion that is slightly more complicated to calculate, although not much, but gives us a number we can use to quantify the dispersion of heights around the mean. To do this, let’s work through a simple example that only includes six observations: 3 people who are 58 inches tall and 3 people who are 78 inches tall. In this sample of six people from our population the average height is 68 inches.</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_04_edges.png" /><!-- --></p>
+<p>Next, let’s draw an imaginary line straight up from the mean.</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_06_variance.png" /><!-- --></p>
+<p>Then, let’s measure the difference, or distance, between each person’s height and the mean height.</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_07_variance.png" /><!-- --></p>
+<p>Then we square the differences.</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_08_variance.png" /><!-- --></p>
+<p>Then we add up all the squared differences.</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_09_variance.png" /><!-- --></p>
+<p>And finally, we divide by n, the number of non-missing observations, minus 1. In this case n equals six, so n-1 equals five.</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_10_variance.png" /><!-- --></p>
+<p class="note">
+🗒<strong>Side Note:</strong> The sample variance is often written as <span class="math inline">\(s^2\)</span>.
+</p>
+<p class="note">
+🗒<strong>Side Note:</strong> If the 6 observations here represented our entire population of interest, then we could simply divide by n instead of n-1.
+</p>
+<p>Getting R to do this math for us is really straightforward. We simply use base R’s <code>var()</code> function.</p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="measures-of-dispersion.html#cb175-1"></a><span class="kw">var</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">58</span>, <span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">78</span>, <span class="dv">3</span>)))</span></code></pre></div>
+<pre><code>## [1] 120</code></pre>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created a numeric vector of heights using the <code>c()</code> function.</p></li>
+<li><p>Instead of typing <code>c(58, 58, 58, 78, 78, 78)</code> I chose to use the <code>rep()</code> function. <code>rep(58, 3)</code> is equivalent to typing <code>c(58, 58, 58)</code> and <code>rep(78, 3)</code> is equivalent to typing <code>c(78, 78, 78)</code>.</p></li>
+<li><p>We passed this numeric vector to the <code>var()</code> function and R returned the variance – 120</p></li>
+</ul>
+<p>So, 600 divided by 5 equals 120. Therefore, the sample variance in this case is 120. However, because the variance is expressed in squared units, instead of the original units, it isn’t necessarily intuitive to interpret.</p>
+<p><strong>Standard deviation</strong></p>
+<p>If we take the square root of the variance, we get the standard deviation.</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_11_sd.png" /><!-- --></p>
+<p class="note">
+🗒<strong>Side Note:</strong> The sample standard deviation is often written as <span class="math inline">\(s\)</span>.
+</p>
+<p>The standard deviation is 10.95 inches, which is much easier to interpret, and compare with other samples. Now that we know the sample standard deviation, we can use it to describe a value’s distance from the mean. Additionally, when our data is approximately normally distributed, then the proportion of values within each standard deviation from the mean follow the rules displayed in this table:</p>
+<p><img src="img/03_part_descriptive_analysis/dispersion_12_sd.png" /><!-- --></p>
+<p>That is, about 68% of all the observations fall within one standard deviation of the mean. About 95% of all observations are within 2 standard deviations of the mean, and about 99.9% of all observations are within 3 standard deviations of the mean.</p>
+<p>Don’t forget that these percentage rules apply to values <strong>around</strong> the mean. In other words, half the values will be greater than the mean and half the values will be lower than the mean. You will often see this graphically illustrated with a “normal curve” or “bell curve.”</p>
+<!-- Helpful site: http://t-redactyl.io/blog/2016/03/creating-plots-in-r-using-ggplot2-part-9-function-plots.html -->
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-173-1.png" width="672" /></p>
+<p>Unfortunately, the current data is nowhere near normally distributed and does not make for a good example of this rule.</p>
+<div id="comparing-distributions" class="section level2" number="14.1">
+<h2><span class="header-section-number">14.1</span> Comparing distributions</h2>
+<p>Now that you understand what the different measures of distribution are and how they are calculated, let’s further develop your “feel” for interpreting them. I like to do this by comparing different simulated distributions.</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="measures-of-dispersion.html#cb177-1"></a>sim_data &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb177-2"><a href="measures-of-dispersion.html#cb177-2"></a>  <span class="dt">all_68     =</span> <span class="kw">rep</span>(<span class="dv">68</span>, <span class="dv">20</span>),</span>
+<span id="cb177-3"><a href="measures-of-dispersion.html#cb177-3"></a>  <span class="dt">half_58_78 =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">58</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="dv">78</span>, <span class="dv">10</span>)),</span>
+<span id="cb177-4"><a href="measures-of-dispersion.html#cb177-4"></a>  <span class="dt">even_58_78 =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">58</span>, <span class="dt">to =</span> <span class="dv">78</span>, <span class="dt">length.out =</span> <span class="dv">20</span>),</span>
+<span id="cb177-5"><a href="measures-of-dispersion.html#cb177-5"></a>  <span class="dt">half_48_88 =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">48</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="dv">88</span>, <span class="dv">10</span>)),</span>
+<span id="cb177-6"><a href="measures-of-dispersion.html#cb177-6"></a>  <span class="dt">even_48_88 =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">48</span>, <span class="dt">to =</span> <span class="dv">88</span>, <span class="dt">length.out =</span> <span class="dv">20</span>)</span>
+<span id="cb177-7"><a href="measures-of-dispersion.html#cb177-7"></a>)</span>
+<span id="cb177-8"><a href="measures-of-dispersion.html#cb177-8"></a>sim_data</span></code></pre></div>
+<pre><code>## # A tibble: 20 x 5
+##    all_68 half_58_78 even_58_78 half_48_88 even_48_88
+##     &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+##  1     68         58       58           48       48  
+##  2     68         58       59.1         48       50.1
+##  3     68         58       60.1         48       52.2
+##  4     68         58       61.2         48       54.3
+##  5     68         58       62.2         48       56.4
+##  6     68         58       63.3         48       58.5
+##  7     68         58       64.3         48       60.6
+##  8     68         58       65.4         48       62.7
+##  9     68         58       66.4         48       64.8
+## 10     68         58       67.5         48       66.9
+## 11     68         78       68.5         88       69.1
+## 12     68         78       69.6         88       71.2
+## 13     68         78       70.6         88       73.3
+## 14     68         78       71.7         88       75.4
+## 15     68         78       72.7         88       77.5
+## 16     68         78       73.8         88       79.6
+## 17     68         78       74.8         88       81.7
+## 18     68         78       75.9         88       83.8
+## 19     68         78       76.9         88       85.9
+## 20     68         78       78           88       88</code></pre>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created a data frame with 5 simulated distributions:</p>
+<ul>
+<li><p>all_68 has a value of 68 repeated 20 times</p></li>
+<li><p>half_58_78 is made up of the values 58 and 78, each repeated 10 times (similar to our example above)</p></li>
+<li><p>even_58_78 is 20 evenly distributed numbers between 58 and 78</p></li>
+<li><p>half_48_88 is made up of the values 48 and 88, each repeated 10 times</p></li>
+<li><p>even_48_88 is 20 evenly distributed numbers between 48 and 88</p></li>
+</ul></li>
+</ul>
+<p>I can use this simulated data to quickly demonstrate a couple of these concepts for you. Let’s use R to calculate and compare the mean, variance, and standard deviation of each variable.</p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="measures-of-dispersion.html#cb179-1"></a><span class="kw">tibble</span>(</span>
+<span id="cb179-2"><a href="measures-of-dispersion.html#cb179-2"></a>  <span class="dt">Column   =</span> <span class="kw">names</span>(sim_data),</span>
+<span id="cb179-3"><a href="measures-of-dispersion.html#cb179-3"></a>  <span class="dt">Mean     =</span> purrr<span class="op">::</span><span class="kw">map_dbl</span>(sim_data, mean),</span>
+<span id="cb179-4"><a href="measures-of-dispersion.html#cb179-4"></a>  <span class="dt">Variance =</span> purrr<span class="op">::</span><span class="kw">map_dbl</span>(sim_data, var),</span>
+<span id="cb179-5"><a href="measures-of-dispersion.html#cb179-5"></a>  <span class="dt">SD       =</span> purrr<span class="op">::</span><span class="kw">map_dbl</span>(sim_data, sd)</span>
+<span id="cb179-6"><a href="measures-of-dispersion.html#cb179-6"></a>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 x 4
+##   Column      Mean Variance    SD
+##   &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
+## 1 all_68        68      0    0   
+## 2 half_58_78    68    105.  10.3 
+## 3 even_58_78    68     38.8  6.23
+## 4 half_48_88    68    421.  20.5 
+## 5 even_48_88    68    155.  12.5</code></pre>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created a data frame to hold some summary statistics about each column in the “sim_data” data frame.</p></li>
+<li><p>We used the <code>map_dbl()</code> function from the <code>purrr</code> package to iterate over each column in the data. Don’t worry too much about this right now. We will talk more about iteration and the <code>purrr</code> package later in the book.</p></li>
+</ul>
+<p>So, for all the columns the mean is 68 inches. And that makes sense, right? We set the middle value and/or most commonly occurring value to be 68 inches for each of these variables. However, the variance and standard deviation are quite different.</p>
+<p>For the column “all_68” the variance and standard deviation are both zero. If you think about it, this should make perfect sense: all the values are 68 – they don’t vary – and each observations distance from the mean (68) is zero.</p>
+<p>When comparing the rest of the columns notice that all of them have a non-zero variance. This is because not all people have the same value in that column – they vary. Additionally, we can see very clearly that variance (and standard deviation) are affected by at least two things:</p>
+<ol style="list-style-type: decimal">
+<li><p>First is the distribution of values across the range of possible values. For example, half_58_78 and half_48_88 have a larger variance than even_58_78 and even_48_88 because all the values are clustered at the min and max - far away from the mean.</p></li>
+<li><p>The second property of the data that is clearly influencing variance is the width of the range of values included in the distribution. For example, even_48_88 has a larger variance and standard deviation than even_58_78, even though both are evenly distributed across the range of possible values. The reason is because the range of possible values is larger, and therefore the range of distances from the mean is larger too.</p></li>
+</ol>
+<p>In summary, although the variance and standard deviation don’t always have a really intuitive meaning all by themselves, we can get some useful information by <strong>comparing</strong> them. Generally speaking, the variance is larger when values are clustered at very low or very high values away from the mean, or when values are spread across a wider range.</p>
+
+</div>
+</div>
+
+
+
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="measures-of-central-tendency.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appendix-a-glossary.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
