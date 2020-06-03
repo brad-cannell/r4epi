@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>16 Pearson Correlation Coefficient | R for Epidemiology</title>
+  <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="16 Pearson Correlation Coefficient | R for Epidemiology" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://brad-cannell.github.io/r4epi/" />
+  
+  <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="github-repo" content="brad-cannell/r4epi" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="16 Pearson Correlation Coefficient | R for Epidemiology" />
+  
+  <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  
+
+<meta name="author" content="Brad Cannell" />
+
+
+<meta name="date" content="2020-06-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"/>
+<link rel="next" href="appendix-a-glossary.html"/>
+<script src="libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R for Epidemiology</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html"><i class="fa fa-check"></i><b>1</b> Installing R and RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-mac"><i class="fa fa-check"></i><b>1.1</b> Download and install on a Mac</a></li>
+<li class="chapter" data-level="1.2" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-pc"><i class="fa fa-check"></i><b>1.2</b> Download and install on a PC</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="what-is-r.html"><a href="what-is-r.html"><i class="fa fa-check"></i><b>2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="what-is-r.html"><a href="what-is-r.html#what-is-data"><i class="fa fa-check"></i><b>2.1</b> What is data?</a></li>
+<li class="chapter" data-level="2.2" data-path="what-is-r.html"><a href="what-is-r.html#what-is-r-1"><i class="fa fa-check"></i><b>2.2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="what-is-r.html"><a href="what-is-r.html#accessing-data"><i class="fa fa-check"></i><b>2.2.1</b> Accessing data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="what-is-r.html"><a href="what-is-r.html#managing-data"><i class="fa fa-check"></i><b>2.2.2</b> Managing data</a></li>
+<li class="chapter" data-level="2.2.3" data-path="what-is-r.html"><a href="what-is-r.html#analyzing-data"><i class="fa fa-check"></i><b>2.2.3</b> Analyzing data</a></li>
+<li class="chapter" data-level="2.2.4" data-path="what-is-r.html"><a href="what-is-r.html#presenting-data"><i class="fa fa-check"></i><b>2.2.4</b> Presenting data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html"><i class="fa fa-check"></i><b>3</b> Navigating the RStudio interface</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-console"><i class="fa fa-check"></i><b>3.1</b> The console</a></li>
+<li class="chapter" data-level="3.2" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-environment-pane"><i class="fa fa-check"></i><b>3.2</b> The environment pane</a></li>
+<li class="chapter" data-level="3.3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-files-pane"><i class="fa fa-check"></i><b>3.3</b> The files pane</a></li>
+<li class="chapter" data-level="3.4" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-source-pane"><i class="fa fa-check"></i><b>3.4</b> The source pane</a></li>
+<li class="chapter" data-level="3.5" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#rstudio-preferences"><i class="fa fa-check"></i><b>3.5</b> RStudio preferences</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html"><i class="fa fa-check"></i><b>4</b> Speaking R’s language</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#r-is-a-language"><i class="fa fa-check"></i><b>4.1</b> R is a <em>language</em></a></li>
+<li class="chapter" data-level="4.2" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#the-r-interpreter"><i class="fa fa-check"></i><b>4.2</b> The R interpreter</a></li>
+<li class="chapter" data-level="4.3" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#errors"><i class="fa fa-check"></i><b>4.3</b> Errors</a></li>
+<li class="chapter" data-level="4.4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#functions"><i class="fa fa-check"></i><b>4.4</b> Functions</a></li>
+<li class="chapter" data-level="4.5" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#objects"><i class="fa fa-check"></i><b>4.5</b> Objects</a></li>
+<li class="chapter" data-level="4.6" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#comments"><i class="fa fa-check"></i><b>4.6</b> Comments</a></li>
+<li class="chapter" data-level="4.7" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#packages"><i class="fa fa-check"></i><b>4.7</b> Packages</a></li>
+<li class="chapter" data-level="4.8" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#programming-style"><i class="fa fa-check"></i><b>4.8</b> Programming style</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lets-get-programming.html"><a href="lets-get-programming.html"><i class="fa fa-check"></i><b>5</b> Let’s get programming</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#simulating-data"><i class="fa fa-check"></i><b>5.1</b> Simulating data</a></li>
+<li class="chapter" data-level="5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vectors"><i class="fa fa-check"></i><b>5.2</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vector-types"><i class="fa fa-check"></i><b>5.2.1</b> Vector types</a></li>
+<li class="chapter" data-level="5.2.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#double-vectors"><i class="fa fa-check"></i><b>5.2.2</b> Double vectors</a></li>
+<li class="chapter" data-level="5.2.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#integer-vectors"><i class="fa fa-check"></i><b>5.2.3</b> Integer vectors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#logical-vectors"><i class="fa fa-check"></i><b>5.2.4</b> Logical vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#data-frames"><i class="fa fa-check"></i><b>5.3</b> Data frames</a></li>
+<li class="chapter" data-level="5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#missing-data"><i class="fa fa-check"></i><b>5.4</b> Missing data</a></li>
+<li class="chapter" data-level="5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#our-first-analysis"><i class="fa fa-check"></i><b>5.5</b> Our first analysis</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#manual-calculation-of-the-mean"><i class="fa fa-check"></i><b>5.5.1</b> Manual calculation of the mean</a></li>
+<li class="chapter" data-level="5.5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#dollar-sign-notation"><i class="fa fa-check"></i><b>5.5.2</b> Dollar sign notation</a></li>
+<li class="chapter" data-level="5.5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#bracket-notation"><i class="fa fa-check"></i><b>5.5.3</b> Bracket notation</a></li>
+<li class="chapter" data-level="5.5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-sum-function"><i class="fa fa-check"></i><b>5.5.4</b> The sum function</a></li>
+<li class="chapter" data-level="5.5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#nesting-functions"><i class="fa fa-check"></i><b>5.5.5</b> Nesting functions</a></li>
+<li class="chapter" data-level="5.5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-length-function"><i class="fa fa-check"></i><b>5.5.6</b> The length function</a></li>
+<li class="chapter" data-level="5.5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-mean-function"><i class="fa fa-check"></i><b>5.5.7</b> The mean function</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#some-common-errors"><i class="fa fa-check"></i><b>5.6</b> Some common errors</a></li>
+<li class="chapter" data-level="5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#summary"><i class="fa fa-check"></i><b>5.7</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Coding Tools and Best Practices</b></span></li>
+<li class="chapter" data-level="6" data-path="r-scripts.html"><a href="r-scripts.html"><i class="fa fa-check"></i><b>6</b> R scripts</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="r-scripts.html"><a href="r-scripts.html#creating-r-scripts"><i class="fa fa-check"></i><b>6.1</b> Creating R scripts</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="r-markdown.html"><a href="r-markdown.html"><i class="fa fa-check"></i><b>7</b> R markdown</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="r-markdown.html"><a href="r-markdown.html#what-is-r-markdown"><i class="fa fa-check"></i><b>7.1</b> What is R markdown?</a></li>
+<li class="chapter" data-level="7.2" data-path="r-markdown.html"><a href="r-markdown.html#why-use-r-markdown"><i class="fa fa-check"></i><b>7.2</b> Why use R markdown?</a></li>
+<li class="chapter" data-level="7.3" data-path="r-markdown.html"><a href="r-markdown.html#create-an-r-markdown-file"><i class="fa fa-check"></i><b>7.3</b> Create an R markdown file</a></li>
+<li class="chapter" data-level="7.4" data-path="r-markdown.html"><a href="r-markdown.html#yaml-headers"><i class="fa fa-check"></i><b>7.4</b> YAML headers</a></li>
+<li class="chapter" data-level="7.5" data-path="r-markdown.html"><a href="r-markdown.html#r-code-chunks"><i class="fa fa-check"></i><b>7.5</b> R code chunks</a></li>
+<li class="chapter" data-level="7.6" data-path="r-markdown.html"><a href="r-markdown.html#markdown"><i class="fa fa-check"></i><b>7.6</b> Markdown</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="r-projects.html"><a href="r-projects.html"><i class="fa fa-check"></i><b>8</b> R projects</a></li>
+<li class="chapter" data-level="9" data-path="coding-best-practices.html"><a href="coding-best-practices.html"><i class="fa fa-check"></i><b>9</b> Coding best practices</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#general-principles"><i class="fa fa-check"></i><b>9.1</b> General principles</a></li>
+<li class="chapter" data-level="9.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#code-comments"><i class="fa fa-check"></i><b>9.2</b> Code comments</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#defining-key-variables"><i class="fa fa-check"></i><b>9.2.1</b> Defining key variables</a></li>
+<li class="chapter" data-level="9.2.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#what-this-code-is-trying-to-accomplish"><i class="fa fa-check"></i><b>9.2.2</b> What this code is trying to accomplish</a></li>
+<li class="chapter" data-level="9.2.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#why-i-chose-this-particular-strategy"><i class="fa fa-check"></i><b>9.2.3</b> Why I chose this particular strategy</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#style-guidelines"><i class="fa fa-check"></i><b>9.3</b> Style guidelines</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#object-variable-names"><i class="fa fa-check"></i><b>9.3.1</b> Object (variable) names</a></li>
+<li class="chapter" data-level="9.3.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#use-names-that-are-informative"><i class="fa fa-check"></i><b>9.3.2</b> Use names that are informative</a></li>
+<li class="chapter" data-level="9.3.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#file-names"><i class="fa fa-check"></i><b>9.3.3</b> File Names</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="using-pipes.html"><a href="using-pipes.html"><i class="fa fa-check"></i><b>10</b> Using pipes</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="using-pipes.html"><a href="using-pipes.html#what-are-pipes"><i class="fa fa-check"></i><b>10.1</b> What are pipes?</a></li>
+<li class="chapter" data-level="10.2" data-path="using-pipes.html"><a href="using-pipes.html#how-do-pipes-work"><i class="fa fa-check"></i><b>10.2</b> How do pipes work?</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="using-pipes.html"><a href="using-pipes.html#keyboard-shortcut"><i class="fa fa-check"></i><b>10.2.1</b> Keyboard shortcut</a></li>
+<li class="chapter" data-level="10.2.2" data-path="using-pipes.html"><a href="using-pipes.html#pipe-style"><i class="fa fa-check"></i><b>10.2.2</b> Pipe style</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="using-pipes.html"><a href="using-pipes.html#final-thought-on-pipes"><i class="fa fa-check"></i><b>10.3</b> Final thought on pipes</a></li>
+</ul></li>
+<li class="part"><span><b>III Descriptive Analysis</b></span></li>
+<li class="chapter" data-level="11" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html"><i class="fa fa-check"></i><b>11</b> Introduction to descriptive analysis</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-is-descriptive-analysis-and-why-would-we-do-it"><i class="fa fa-check"></i><b>11.1</b> What is descriptive analysis and why would we do it?</a></li>
+<li class="chapter" data-level="11.2" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-kind-of-descriptive-analysis-should-we-perform"><i class="fa fa-check"></i><b>11.2</b> What kind of descriptive analysis should we perform?</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html"><i class="fa fa-check"></i><b>12</b> Numerical descriptions of categorical variables</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#height-and-weight-data"><i class="fa fa-check"></i><b>12.1</b> Height and Weight Data</a>
+<ul>
+<li class="chapter" data-level="12.1.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#view-the-data"><i class="fa fa-check"></i><b>12.1.1</b> View the data</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-frequencies"><i class="fa fa-check"></i><b>12.2</b> Calculating frequencies</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-base-r-table-function"><i class="fa fa-check"></i><b>12.2.1</b> The base R table function</a></li>
+<li class="chapter" data-level="12.2.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-gmodels-crosstable-function"><i class="fa fa-check"></i><b>12.2.2</b> The gmodels CrossTable function</a></li>
+<li class="chapter" data-level="12.2.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-tidyverse-way"><i class="fa fa-check"></i><b>12.2.3</b> The tidyverse way</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-percentages"><i class="fa fa-check"></i><b>12.3</b> Calculating percentages</a></li>
+<li class="chapter" data-level="12.4" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#missing-data-1"><i class="fa fa-check"></i><b>12.4</b> Missing data</a></li>
+<li class="chapter" data-level="12.5" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#formatting-results"><i class="fa fa-check"></i><b>12.5</b> Formatting results</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html"><i class="fa fa-check"></i><b>13</b> Measures of central tendency</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mean"><i class="fa fa-check"></i><b>13.1</b> Calculate the mean</a></li>
+<li class="chapter" data-level="13.2" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-median"><i class="fa fa-check"></i><b>13.2</b> Calculate the median</a></li>
+<li class="chapter" data-level="13.3" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mode"><i class="fa fa-check"></i><b>13.3</b> Calculate the mode</a></li>
+<li class="chapter" data-level="13.4" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#compare-mean-median-and-mode"><i class="fa fa-check"></i><b>13.4</b> Compare mean, median, and mode</a></li>
+<li class="chapter" data-level="13.5" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#data-checking"><i class="fa fa-check"></i><b>13.5</b> Data checking</a></li>
+<li class="chapter" data-level="13.6" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#properties-of-mean-median-and-mode"><i class="fa fa-check"></i><b>13.6</b> Properties of mean, median, and mode</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html"><i class="fa fa-check"></i><b>14</b> Measures of dispersion</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html#comparing-distributions"><i class="fa fa-check"></i><b>14.1</b> Comparing distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><i class="fa fa-check"></i><b>15</b> Describing the relationship between a continuous outcome and a continuous predictor</a></li>
+<li class="chapter" data-level="16" data-path="pearson-correlation-coefficient.html"><a href="pearson-correlation-coefficient.html"><i class="fa fa-check"></i><b>16</b> Pearson Correlation Coefficient</a>
+<ul>
+<li class="chapter" data-level="16.0.1" data-path="pearson-correlation-coefficient.html"><a href="pearson-correlation-coefficient.html#calculating-r"><i class="fa fa-check"></i><b>16.0.1</b> Calculating r</a></li>
+<li class="chapter" data-level="16.0.2" data-path="pearson-correlation-coefficient.html"><a href="pearson-correlation-coefficient.html#correlation-intuition"><i class="fa fa-check"></i><b>16.0.2</b> Correlation intuition</a></li>
+</ul></li>
+<li class="part"><span><b>IV Appendix</b></span></li>
+<li class="chapter" data-level="" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i>Appendix A: Glossary</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R for Epidemiology</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="pearson-correlation-coefficient" class="section level1" number="16">
+<h1><span class="header-section-number">16</span> Pearson Correlation Coefficient</h1>
+<p>Pearson’s Correlation Coefficient is a parametric measure of the <em>linear</em> relationship between two numerical variables. It’s also referred to as rho (pronounced like “row”) and can be written shorthand as a lowercase <span class="math inline">\(r\)</span>. The Pearson Correlation Coefficient can take on values between -1 and 1, including zero.</p>
+<p><img src="img/03_part_descriptive_analysis/cont_cont_03_correlation.png" /><!-- --></p>
+<p>A value of 0 indicates that there is no linear correlation between the two variables.</p>
+<p><img src="img/03_part_descriptive_analysis/cont_cont_04_correlation.png" /><!-- --></p>
+<p>A negative value indicates that there is a negative linear correlation between the two variables. In other words, as the value of x increases, the value of y decreases. Or, as the value of x decreases, the value of y increases.</p>
+<p><img src="img/03_part_descriptive_analysis/cont_cont_05_correlation.png" /><!-- --></p>
+<p>A positive value indicates that there is a positive linear correlation between the two variables. As the value of x increases, the value of y increases. Or as the value of x decreases, the value of y decreases.</p>
+<p><img src="img/03_part_descriptive_analysis/cont_cont_06_correlation.png" /><!-- --></p>
+<p class="warning">
+⚠️<strong>Warning:</strong> When the relationship between two variables is nonlinear, or when outliers are present, the correlation coefficient might incorrectly estimate the strength of the relationship. Plotting the data enables you to verify the linear relationship and to identify the potential outliers.
+</p>
+<!-- show an example -->
+<div id="calculating-r" class="section level3" number="16.0.1">
+<h3><span class="header-section-number">16.0.1</span> Calculating r</h3>
+<p>In this first code chunk, we’re going to use some simple simulated data to develop an intuition about describing the relationship between two continuous variables.</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="pearson-correlation-coefficient.html#cb180-1"></a><span class="co"># Load the dplyr package</span></span>
+<span id="cb180-2"><a href="pearson-correlation-coefficient.html#cb180-2"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb180-3"><a href="pearson-correlation-coefficient.html#cb180-3"></a><span class="co"># Load the ggplot2 package</span></span>
+<span id="cb180-4"><a href="pearson-correlation-coefficient.html#cb180-4"></a><span class="kw">library</span>(ggplot2)</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="pearson-correlation-coefficient.html#cb181-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb181-2"><a href="pearson-correlation-coefficient.html#cb181-2"></a>df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb181-3"><a href="pearson-correlation-coefficient.html#cb181-3"></a>  <span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>,</span>
+<span id="cb181-4"><a href="pearson-correlation-coefficient.html#cb181-4"></a>  <span class="dt">x  =</span> <span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">100</span>, <span class="dt">size =</span> <span class="dv">20</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb181-5"><a href="pearson-correlation-coefficient.html#cb181-5"></a>  <span class="dt">y  =</span> <span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">100</span>, <span class="dt">size =</span> <span class="dv">20</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb181-6"><a href="pearson-correlation-coefficient.html#cb181-6"></a>)</span>
+<span id="cb181-7"><a href="pearson-correlation-coefficient.html#cb181-7"></a>df</span></code></pre></div>
+<pre><code>## # A tibble: 20 x 3
+##       id     x     y
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1     1    30    71
+##  2     2    78    25
+##  3     3    50     6
+##  4     4    13    41
+##  5     5    66     8
+##  6     6    41    82
+##  7     7    49    35
+##  8     8    42    77
+##  9     9   100    80
+## 10    10    13    42
+## 11    11    24    75
+## 12    12    89    14
+## 13    13    90    31
+## 14    14    68     6
+## 15    15    90     8
+## 16    16    56    40
+## 17    17    91    73
+## 18    18     8    22
+## 19    19    92    26
+## 20    20    98    59</code></pre>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created a data frame with 3 simulated variables – id, x, and y.</p></li>
+<li><p>We used the <code>sample()</code> function to create x and y by sampling a number between 0 and 100 at random, 20 times.</p></li>
+<li><p>The <code>replace = TRUE</code> option tells R that the same number can be selected more than once.</p></li>
+<li><p>The <code>set.seed()</code> function is to ensure that I get the same random numbers every time I run the code chunk.</p></li>
+</ul>
+<p>There is nothing special about 0 and 100; they are totally arbitrary. But, because all of these values are chosen at random, we have no reason to believe that there should be any relationship between them. Accordingly, we should also expect the Pearson Correlation Coefficient to be 0 (or very close to it).</p>
+<p>In order to develop an intuition, let’s first plot this data, and get a feel for what it looks like.</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="pearson-correlation-coefficient.html#cb183-1"></a><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(x, y)) <span class="op">+</span></span>
+<span id="cb183-2"><a href="pearson-correlation-coefficient.html#cb183-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb183-3"><a href="pearson-correlation-coefficient.html#cb183-3"></a><span class="st">  </span><span class="kw">theme_bw</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-185-1.png" width="672" /></p>
+<p>Above, we’ve created a nice scatter plot using <code>ggplot2()</code>. But, how do we interpret it? Well, each dot corresponds to a person in our data at the point where their x value intersects with their y value. This is made clearer by adding a <code>geom_text()</code> layer to our plot.</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="pearson-correlation-coefficient.html#cb184-1"></a><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(x, y)) <span class="op">+</span></span>
+<span id="cb184-2"><a href="pearson-correlation-coefficient.html#cb184-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb184-3"><a href="pearson-correlation-coefficient.html#cb184-3"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> id), <span class="dt">nudge_x =</span> <span class="fl">1.5</span>, <span class="dt">nudge_y =</span> <span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb184-4"><a href="pearson-correlation-coefficient.html#cb184-4"></a><span class="st">  </span><span class="kw">theme_bw</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-186-1.png" width="672" /></p>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We added a <code>geom_text()</code> layer to our plot in order to make it clear which person each dot represents.</p></li>
+<li><p>The <code>nudge_x = 1.5</code> option moves our text (the id number) to the right 1.5 units. The <code>nudge_y = 2</code> option moves our text 2 units up. We did this to make the id number easier to read. If we had not nudged them, they would have been placed directly on top of the points.</p></li>
+</ul>
+<p>For example, person 1 in our simulated data had an x value of 30 and a y value of 71. When you look at the plot above, does it look like person 1’s point is approximately at (x = 30, y = 71)? If we want to emphasize the point even further, we can plot a vertical line at x = 30 and a horizontal line at y = 71. Let’s do that below.</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="pearson-correlation-coefficient.html#cb185-1"></a><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(x, y)) <span class="op">+</span></span>
+<span id="cb185-2"><a href="pearson-correlation-coefficient.html#cb185-2"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> id), <span class="dt">nudge_x =</span> <span class="fl">1.5</span>, <span class="dt">nudge_y =</span> <span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb185-3"><a href="pearson-correlation-coefficient.html#cb185-3"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">30</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">0.25</span>) <span class="op">+</span></span>
+<span id="cb185-4"><a href="pearson-correlation-coefficient.html#cb185-4"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">71</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">0.25</span>) <span class="op">+</span></span>
+<span id="cb185-5"><a href="pearson-correlation-coefficient.html#cb185-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb185-6"><a href="pearson-correlation-coefficient.html#cb185-6"></a><span class="st">  </span><span class="kw">theme_bw</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-187-1.png" width="672" /></p>
+<p>As you can see, the dot representing id 1 is at the intersection of these two lines.</p>
+<p>So, we know how to read the plot now, but we still don’t really know anything about the <em>relationship</em> between x and y. Remember, we want to be able to characterize x and y as having one of these 5 relationships:</p>
+<p><img src="img/03_part_descriptive_analysis/cont_cont_07_correlation.png" /><!-- --></p>
+<p>Looking again at our scatter plot, which relationship do you think x and y have?</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="pearson-correlation-coefficient.html#cb186-1"></a><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(x, y)) <span class="op">+</span></span>
+<span id="cb186-2"><a href="pearson-correlation-coefficient.html#cb186-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb186-3"><a href="pearson-correlation-coefficient.html#cb186-3"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> id), <span class="dt">nudge_x =</span> <span class="fl">1.5</span>, <span class="dt">nudge_y =</span> <span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb186-4"><a href="pearson-correlation-coefficient.html#cb186-4"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(x, y), <span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">100</span>, <span class="dt">y =</span> <span class="dv">80</span>), <span class="dt">shape =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="dv">16</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb186-5"><a href="pearson-correlation-coefficient.html#cb186-5"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(x, y), <span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">90</span>, <span class="dt">y =</span> <span class="dv">8</span>), <span class="dt">shape =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="dv">16</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span></span>
+<span id="cb186-6"><a href="pearson-correlation-coefficient.html#cb186-6"></a><span class="st">  </span><span class="kw">theme_bw</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-189-1.png" width="672" /></p>
+<p>Well, if you look at id 9 above, x is a high number (100) and y is a high number (80). But if you look at id 15, x is a high number (90) and y is a low number (8). In other words, these dots are scattered all over the chart area. There doesn’t appear to be much of a pattern, trend, or relationship. And that’s exactly what we would expect from randomly generated data.</p>
+<p>Now that we know what this data looks like, and we intuitively feel as though x and y are unrelated, it would be nice to quantify our results in some way. And, that is precisely what the Pearson Correlation Coefficient does.</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="pearson-correlation-coefficient.html#cb187-1"></a><span class="kw">cor.test</span>(<span class="dt">x =</span> df<span class="op">$</span>x, <span class="dt">y =</span> df<span class="op">$</span>y)</span></code></pre></div>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  df$x and df$y
+## t = -0.60281, df = 18, p-value = 0.5542
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  -0.5490152  0.3218878
+## sample estimates:
+##        cor 
+## -0.1406703</code></pre>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>By default, R’s <code>cor.test()</code> function gives us a list of information about the relationship between x and y. The very last number in the output (-0.1406703) is the Pearson Correlation Coefficient.</p></li>
+<li><p>The fact that this value is negative (between -1 and 0) tells us that x and y tend to vary in opposite directions.</p></li>
+<li><p>The numeric value (0.1406703) tells us something about the strength of the relationship between x and y. In this case, the relationship is not strong – exactly what we expected.</p>
+<ul>
+<li><p>You will sometimes hear rules of thumb for interpreting the strength of <span class="math inline">\(r\)</span> such as<span class="citation"><sup><a href="#ref-Field2013-zo" role="doc-biblioref">5</a></sup></span>:</p>
+<ul>
+<li><p>±0.1 = Weak correlation</p></li>
+<li><p>±0.3 = Medium correlation</p></li>
+<li><p>±0.5 = Strong correlation</p></li>
+</ul></li>
+<li><p>Rules of thumb like this are useful as you are learning; however, you want to make sure you don’t become overly reliant on them. As you get more experience, you will want to start interpreting effect sizes in the context of your data and the specific research question at hand.</p></li>
+</ul></li>
+<li><p>The p-value (0.5542) tells us that we’d be pretty likely to get the result we got even if there really were no relationship between x and y – <strong>assuming all other assumptions are satisfied and the sample was collected without bias.</strong></p></li>
+<li><p>Taken together, the weak negative correlation and p-value tell us that there is not much – if any – relationship between x and y. Another way to say the same thing is, “x and y are statistically independent.”</p></li>
+</ul>
+</div>
+<div id="correlation-intuition" class="section level3" number="16.0.2">
+<h3><span class="header-section-number">16.0.2</span> Correlation intuition</h3>
+<p>To further bolster our intuition about these relationships, let’s look at a few positively and negatively correlated variables.</p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="pearson-correlation-coefficient.html#cb189-1"></a><span class="co"># Positively correlated data</span></span>
+<span id="cb189-2"><a href="pearson-correlation-coefficient.html#cb189-2"></a><span class="kw">tibble</span>(</span>
+<span id="cb189-3"><a href="pearson-correlation-coefficient.html#cb189-3"></a>  <span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,</span>
+<span id="cb189-4"><a href="pearson-correlation-coefficient.html#cb189-4"></a>  <span class="dt">y =</span> <span class="dv">100</span><span class="op">:</span><span class="dv">109</span>,</span>
+<span id="cb189-5"><a href="pearson-correlation-coefficient.html#cb189-5"></a>  <span class="dt">r =</span> <span class="kw">cor</span>(x, y)</span>
+<span id="cb189-6"><a href="pearson-correlation-coefficient.html#cb189-6"></a>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb189-7"><a href="pearson-correlation-coefficient.html#cb189-7"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb189-8"><a href="pearson-correlation-coefficient.html#cb189-8"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(x, y)) <span class="op">+</span></span>
+<span id="cb189-9"><a href="pearson-correlation-coefficient.html#cb189-9"></a><span class="st">    </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">2.5</span>, <span class="dt">y =</span> <span class="fl">107.5</span>, <span class="dt">label =</span> <span class="kw">paste</span>(<span class="st">&quot;r = &quot;</span>, r)), <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span></span>
+<span id="cb189-10"><a href="pearson-correlation-coefficient.html#cb189-10"></a><span class="st">    </span><span class="kw">theme_classic</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-191-1.png" width="672" /></p>
+<p>Above, we created positively correlated data. In fact, this data is perfectly positively correlated. That is, every time the value of x increases, the value of y increases by a proportional amount. Now, instead of being randomly scattered around the plot area, the dots line up in a perfect, upward-sloping, diagonal line. I also, went ahead and added the correlation coefficient directly to the plot. As you can see, it is exactly 1. This is what you should expect from perfectly positively correlated data.</p>
+<p>How about this next data set? Now, every time x decreases by one, y decreases by one. Is this positively or negatively correlated data?</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="pearson-correlation-coefficient.html#cb190-1"></a>df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb190-2"><a href="pearson-correlation-coefficient.html#cb190-2"></a>  <span class="dt">x =</span> <span class="dv">1</span><span class="op">:-</span><span class="dv">8</span>,</span>
+<span id="cb190-3"><a href="pearson-correlation-coefficient.html#cb190-3"></a>  <span class="dt">y =</span> <span class="dv">100</span><span class="op">:</span><span class="dv">91</span></span>
+<span id="cb190-4"><a href="pearson-correlation-coefficient.html#cb190-4"></a>)</span>
+<span id="cb190-5"><a href="pearson-correlation-coefficient.html#cb190-5"></a>df</span></code></pre></div>
+<pre><code>## # A tibble: 10 x 2
+##        x     y
+##    &lt;int&gt; &lt;int&gt;
+##  1     1   100
+##  2     0    99
+##  3    -1    98
+##  4    -2    97
+##  5    -3    96
+##  6    -4    95
+##  7    -5    94
+##  8    -6    93
+##  9    -7    92
+## 10    -8    91</code></pre>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="pearson-correlation-coefficient.html#cb192-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb192-2"><a href="pearson-correlation-coefficient.html#cb192-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">r =</span> <span class="kw">cor</span>(x, y)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb192-3"><a href="pearson-correlation-coefficient.html#cb192-3"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb192-4"><a href="pearson-correlation-coefficient.html#cb192-4"></a><span class="st">      </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(x, y)) <span class="op">+</span></span>
+<span id="cb192-5"><a href="pearson-correlation-coefficient.html#cb192-5"></a><span class="st">      </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="dv">-6</span>, <span class="dt">y =</span> <span class="dv">98</span>, <span class="dt">label =</span> <span class="kw">paste</span>(<span class="st">&quot;r = &quot;</span>, r)), <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span></span>
+<span id="cb192-6"><a href="pearson-correlation-coefficient.html#cb192-6"></a><span class="st">      </span><span class="kw">theme_classic</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-193-1.png" width="672" /></p>
+<p>This is still perfectly positively correlated data. The values for x and y are still changing in the same direction proportionately. The fact that the direction is one of decreasing value makes no difference.</p>
+<p>One last simulated example here. This time, as x increases by one, y decreases by one. Let’s plot this data and calculate the Pearson Correlation Coefficient.</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="pearson-correlation-coefficient.html#cb193-1"></a><span class="kw">tibble</span>(</span>
+<span id="cb193-2"><a href="pearson-correlation-coefficient.html#cb193-2"></a>  <span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,</span>
+<span id="cb193-3"><a href="pearson-correlation-coefficient.html#cb193-3"></a>  <span class="dt">y =</span> <span class="dv">100</span><span class="op">:</span><span class="dv">91</span>,</span>
+<span id="cb193-4"><a href="pearson-correlation-coefficient.html#cb193-4"></a>  <span class="dt">r =</span> <span class="kw">cor</span>(x, y)</span>
+<span id="cb193-5"><a href="pearson-correlation-coefficient.html#cb193-5"></a>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb193-6"><a href="pearson-correlation-coefficient.html#cb193-6"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb193-7"><a href="pearson-correlation-coefficient.html#cb193-7"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(x, y)) <span class="op">+</span></span>
+<span id="cb193-8"><a href="pearson-correlation-coefficient.html#cb193-8"></a><span class="st">    </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">7.5</span>, <span class="dt">y =</span> <span class="dv">98</span>, <span class="dt">label =</span> <span class="kw">paste</span>(<span class="st">&quot;r = &quot;</span>, r)), <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>) <span class="op">+</span></span>
+<span id="cb193-9"><a href="pearson-correlation-coefficient.html#cb193-9"></a><span class="st">    </span><span class="kw">theme_classic</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-194-1.png" width="672" /></p>
+<p>This is what perfectly negatively correlated data looks like. The dots line up in a perfect, downward-sloping diagonal line, and when we check the value of rho, we see that it is exactly -1.</p>
+<p>Of course, as you may have suspected, <em>in real life things are almost never this cut and dry</em>. So, let’s investigate the relationship between continuous variables using more realistic data.</p>
+<p>In this example I’m using data from a class survey I actually conducted in the past:</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="pearson-correlation-coefficient.html#cb194-1"></a>class &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb194-2"><a href="pearson-correlation-coefficient.html#cb194-2"></a>  <span class="dt">ht_in =</span> <span class="kw">c</span>(<span class="dv">70</span>, <span class="dv">63</span>, <span class="dv">62</span>, <span class="dv">67</span>, <span class="dv">67</span>, <span class="dv">58</span>, <span class="dv">64</span>, <span class="dv">69</span>, <span class="dv">65</span>, <span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">68</span>, <span class="dv">69</span>, <span class="dv">66</span>, <span class="dv">67</span>, <span class="dv">65</span>, </span>
+<span id="cb194-3"><a href="pearson-correlation-coefficient.html#cb194-3"></a>            <span class="dv">64</span>, <span class="dv">75</span>, <span class="dv">67</span>, <span class="dv">63</span>, <span class="dv">60</span>, <span class="dv">67</span>, <span class="dv">64</span>, <span class="dv">73</span>, <span class="dv">62</span>, <span class="dv">69</span>, <span class="dv">67</span>, <span class="dv">62</span>, <span class="dv">68</span>, <span class="dv">66</span>, <span class="dv">66</span>, <span class="dv">62</span>, </span>
+<span id="cb194-4"><a href="pearson-correlation-coefficient.html#cb194-4"></a>            <span class="dv">64</span>, <span class="dv">68</span>, <span class="ot">NA</span>, <span class="dv">68</span>, <span class="dv">70</span>, <span class="dv">68</span>, <span class="dv">68</span>, <span class="dv">66</span>, <span class="dv">71</span>, <span class="dv">61</span>, <span class="dv">62</span>, <span class="dv">64</span>, <span class="dv">64</span>, <span class="dv">63</span>, <span class="dv">67</span>, <span class="dv">66</span>, </span>
+<span id="cb194-5"><a href="pearson-correlation-coefficient.html#cb194-5"></a>            <span class="dv">69</span>, <span class="dv">76</span>, <span class="ot">NA</span>, <span class="dv">63</span>, <span class="dv">64</span>, <span class="dv">65</span>, <span class="dv">65</span>, <span class="dv">71</span>, <span class="dv">66</span>, <span class="dv">65</span>, <span class="dv">65</span>, <span class="dv">71</span>, <span class="dv">64</span>, <span class="dv">71</span>, <span class="dv">60</span>, <span class="dv">62</span>, </span>
+<span id="cb194-6"><a href="pearson-correlation-coefficient.html#cb194-6"></a>            <span class="dv">61</span>, <span class="dv">69</span>, <span class="dv">66</span>, <span class="ot">NA</span>),</span>
+<span id="cb194-7"><a href="pearson-correlation-coefficient.html#cb194-7"></a>  <span class="dt">wt_lbs =</span> <span class="kw">c</span>(<span class="dv">216</span>, <span class="dv">106</span>, <span class="dv">145</span>, <span class="dv">195</span>, <span class="dv">143</span>, <span class="dv">125</span>, <span class="dv">138</span>, <span class="dv">140</span>, <span class="dv">158</span>, <span class="dv">167</span>, <span class="dv">145</span>, <span class="dv">297</span>, <span class="dv">146</span>, </span>
+<span id="cb194-8"><a href="pearson-correlation-coefficient.html#cb194-8"></a>             <span class="dv">125</span>, <span class="dv">111</span>, <span class="dv">125</span>, <span class="dv">130</span>, <span class="dv">182</span>, <span class="dv">170</span>, <span class="dv">121</span>, <span class="dv">98</span>, <span class="dv">150</span>, <span class="dv">132</span>, <span class="dv">250</span>, <span class="dv">137</span>, <span class="dv">124</span>, </span>
+<span id="cb194-9"><a href="pearson-correlation-coefficient.html#cb194-9"></a>             <span class="dv">186</span>, <span class="dv">148</span>, <span class="dv">134</span>, <span class="dv">155</span>, <span class="dv">122</span>, <span class="dv">142</span>, <span class="dv">110</span>, <span class="dv">132</span>, <span class="dv">188</span>, <span class="dv">176</span>, <span class="dv">188</span>, <span class="dv">166</span>, <span class="dv">136</span>, </span>
+<span id="cb194-10"><a href="pearson-correlation-coefficient.html#cb194-10"></a>             <span class="dv">147</span>, <span class="dv">178</span>, <span class="dv">125</span>, <span class="dv">102</span>, <span class="dv">140</span>, <span class="dv">139</span>, <span class="dv">60</span>, <span class="dv">147</span>, <span class="dv">147</span>, <span class="dv">141</span>, <span class="dv">232</span>, <span class="dv">186</span>, <span class="dv">212</span>, </span>
+<span id="cb194-11"><a href="pearson-correlation-coefficient.html#cb194-11"></a>             <span class="dv">110</span>, <span class="dv">110</span>, <span class="dv">115</span>, <span class="dv">154</span>, <span class="dv">140</span>, <span class="dv">150</span>, <span class="dv">130</span>, <span class="ot">NA</span>, <span class="dv">171</span>, <span class="dv">156</span>, <span class="dv">92</span>, <span class="dv">122</span>, <span class="dv">102</span>, </span>
+<span id="cb194-12"><a href="pearson-correlation-coefficient.html#cb194-12"></a>             <span class="dv">163</span>, <span class="dv">141</span>, <span class="ot">NA</span>)</span>
+<span id="cb194-13"><a href="pearson-correlation-coefficient.html#cb194-13"></a>)</span></code></pre></div>
+<p>Next, I’m going to use a scatter plot to explore the relationship between height and weight in this data.</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="pearson-correlation-coefficient.html#cb195-1"></a><span class="kw">ggplot</span>(class, <span class="kw">aes</span>(ht_in, wt_lbs)) <span class="op">+</span></span>
+<span id="cb195-2"><a href="pearson-correlation-coefficient.html#cb195-2"></a><span class="st">  </span><span class="kw">geom_jitter</span>() <span class="op">+</span></span>
+<span id="cb195-3"><a href="pearson-correlation-coefficient.html#cb195-3"></a><span class="st">  </span><span class="kw">theme_classic</span>()</span></code></pre></div>
+<pre><code>## Warning: Removed 4 rows containing missing values (geom_point).</code></pre>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-196-1.png" width="672" /></p>
+<p>Quickly, what do you think? Will height and weight be positively correlated, negatively correlated, or not correlated?</p>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="pearson-correlation-coefficient.html#cb197-1"></a><span class="kw">cor.test</span>(class<span class="op">$</span>ht_in, class<span class="op">$</span>wt_lbs)</span></code></pre></div>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  class$ht_in and class$wt_lbs
+## t = 5.7398, df = 62, p-value = 3.051e-07
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.4013642 0.7292714
+## sample estimates:
+##       cor 
+## 0.5890576</code></pre>
+<p>The dots don’t line up in a perfectly upward – or downward – slope. But the general trend is still an upward slope. Additionally, we can see that height and weight are positively correlated because the value of the correlation coefficient is between 0 and positive 1 (0.5890576). By looking at the p-value (3.051e-07), we can also see that the probability of finding a correlation value this large or larger in our sample if the true value of the correlation coefficient in the population from which our sample was drawn is zero, is very small.</p>
+<p>That’s quite a mouthful, right? In more relatable terms, you can just think of it this way. In our data, as height increases weight tends to increase as well. Our p-value indicates that it’s pretty unlikely that we would get this result if there were truly no relationship in the population this sample was drawn from – assuming it’s an unbiased sample.</p>
+<p><em>Quick detour</em>: The p-value above is written in scientific notation, which you may not have seen before. I’ll quickly show you how to basically disable scientific notation in R.</p>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="pearson-correlation-coefficient.html#cb199-1"></a><span class="kw">options</span>(<span class="dt">scipen =</span> <span class="dv">999</span>)</span>
+<span id="cb199-2"><a href="pearson-correlation-coefficient.html#cb199-2"></a><span class="kw">cor.test</span>(class<span class="op">$</span>ht_in, class<span class="op">$</span>wt_lbs)</span></code></pre></div>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  class$ht_in and class$wt_lbs
+## t = 5.7398, df = 62, p-value = 0.0000003051
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.4013642 0.7292714
+## sample estimates:
+##       cor 
+## 0.5890576</code></pre>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li>We used the R global option <code>options(scipen = 999)</code> to display decimal numbers instead of scientific notation. Because this is a global option, it will remain in effect until you restart your R session. If you do restart your R session, you will have to run <code>options(scipen = 999)</code> again to disable scientific notation.</li>
+</ul>
+<p>Finally, wouldn’t it be nice if we could draw a line through this graph that sort of quickly summarizes this relationship (or lack thereof). Well, that is exactly what an Ordinary Least Squares (OLS) regression line does.</p>
+<p>To add a regression line to our plot, all we need to do is add a <code>geom_smooth()</code> layer to our scatterplot with the <code>method</code> argument set to <code>lm</code>. Let’s do that below and take a look.</p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="pearson-correlation-coefficient.html#cb201-1"></a><span class="kw">ggplot</span>(class, <span class="kw">aes</span>(ht_in, wt_lbs)) <span class="op">+</span></span>
+<span id="cb201-2"><a href="pearson-correlation-coefficient.html#cb201-2"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="op">+</span></span>
+<span id="cb201-3"><a href="pearson-correlation-coefficient.html#cb201-3"></a><span class="st">  </span><span class="kw">geom_jitter</span>() <span class="op">+</span></span>
+<span id="cb201-4"><a href="pearson-correlation-coefficient.html#cb201-4"></a><span class="st">  </span><span class="kw">theme_classic</span>()</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 4 rows containing non-finite values (stat_smooth).</code></pre>
+<pre><code>## Warning: Removed 4 rows containing missing values (geom_point).</code></pre>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-199-1.png" width="672" /></p>
+<p>The exact calculation for deriving this line is beyond the scope of this chapter. In general, though, you can think of the line as cutting through the middle of all of your points and representing the average change in the y value given a one-unit change in the x value. So here, the upward slope indicates that, on average, as height (the x value) increases, so does weight (the y value). And that is completely consistent with our previous conclusions about the relationship between height and weight.</p>
+
+</div>
+</div>
+
+
+
+
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Field2013-zo">
+<p>5. Field A, Miles J, Field Z. <em>Discovering Statistics Using R</em>. Sage; 2013.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appendix-a-glossary.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
