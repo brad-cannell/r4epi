@@ -1,0 +1,264 @@
+# Numerical descriptions of categorical variables
+
+We’ll begin our discussion of descriptive statistics in the categorical half of our flow chart. Specifically, we’ll start by numerically describing categorical variables. As a reminder, categorical variables are variables whose values fit into categories.
+
+```{r echo=FALSE}
+knitr::include_graphics("img/04_part_descriptive_analysis/flowchart_cat_numerical.png")
+```
+
+Some examples of categorical variables commonly seen in public health data are: sex, race or ethnicity, and level of educational attainment.
+
+```{r echo=FALSE}
+knitr::include_graphics("img/04_part_descriptive_analysis/categorical_variables_01.jpeg")
+```
+
+Notice that there is no inherent numeric value to any of these categories. Having said that, we can, and often will, assign a numeric value to each category using R.
+
+```{r echo=FALSE}
+knitr::include_graphics("img/04_part_descriptive_analysis/categorical_variables_02.jpeg")
+```
+
+The two most common numerical descriptions of categorical variables are probably the **frequency count** (you will often hear this referred to as simply the **frequency**, the **count**, or the **n**) and the **proportion** or **percentage** (the percentage is just the proportion multiplied by 100).
+
+```{r echo=FALSE}
+knitr::include_graphics("img/04_part_descriptive_analysis/categorical_variables_03.jpeg")
+```
+
+The count is simply the number of observations, in this case people, which fall into each possible category.
+
+The proportion is just the count divided by the total number of observations. In this example, 2 people out of 5 people (.40 or 40%) are in the Asian race category.
+
+Now let’s go over _how_ to calculate frequency counts and percentages using R.
+
+## Height and Weight Data
+
+Below, we're going to learn to do descriptive analysis in R by experimenting with some simulated data that contains several people's sex, height, and weight. You can follow along with this lesson by copying and pasting the code chunks below in your R session.
+
+```{r message=FALSE}
+# Load the dplyr package. We will need several of dpylr's functions in the 
+# code below.
+library(dplyr)
+```
+
+```{r}
+# Simulate some data
+height_and_weight_20 <- data.frame(
+  id     = c("001", "002", "003", "004", "005", "006", "007", "008", "009", 
+             "010", "011", "012", "013", "014", "015", "016", "017", "018", 
+             "019", "020"),
+  sex    = c("Male", "Male", "Female", "Female", "Male", "Male", "Female", "Male", 
+             "Female", "Male", "Male", "Female", "Female", "Female", "Male", 
+             "Female", "Female", "Female", "Female", 'Female'),
+  ht_in  = c(71, 69, 64, 65, 73, 69, 68, 73, 71, 66, 71, 69, 66, 68, 75, 69, 
+             66, 65, 65, 65),
+  wt_lbs = c(190, 176, 130, 154, 173, 182, 140, 185, 157, 155, 213, 151, 147, 
+             196, 212, 190, 194, 176, 176, 102)
+)
+```
+
+### View the data
+
+Let's start our analysis by taking a quick look at our data...
+
+```{r}
+height_and_weight_20
+```
+
+👆**Here's what we did above:** 
+
+* Simulated some data that we can use to practice categorical data analysis.    
+
+* We viewed the data and found that it has 4 variables (columns) and 20 observations (rows).    
+
+* Also notice that you can use the "Next" button at the bottom right corner of the printed data frame to view rows 11 through 20 if you are viewing this data in RStudio.   
+
+## Calculating frequencies
+
+Now that we’re able to easily view our data, let’s return to the original purpose of this demonstration – calculating frequencies and proportions. At this point, I suspect that few of you would have any trouble telling me that the frequency of females in this data is 12 and the frequency of males in this data is 8. It's pretty easy to just count the number of females and males in this small data set with only 20 rows. Further, if I asked you what proportion of this sample is female, most of you would still be able to easily tell me `12/20 = 0.6`, or 60%. But, what if we had 100 observations or 1,000,000 observations? You’d get sick of counting pretty quickly. Fortunately, you don’t have to! Let R do it for you!
+
+As is always the case with R, there are multiple ways we can calculate the statistics that we're interested in. For example, we can use the base R `table` function like this:
+
+### The base R table function
+
+```{r}
+table(height_and_weight_20$sex)
+```
+
+Additionally, we can use the `CrossTable` function from the `gmodels` package, which gives us a little more information by default.
+
+### The gmodels CrossTable function
+
+```{r}
+# Like all packages, you will have to install gmodels before you can use the
+# CrossTable function. 
+gmodels::CrossTable(height_and_weight_20$sex)
+```
+
+### The tidyverse way
+
+The final way I'm going to discuss here is the `tidyverse` way, which is my preference. We will have to write a little additional code, but the end result will be more flexible, more readable, and will return our statistics to us in a data frame that we can save and use for further analysis. Let's walk through this step by step...
+
+<p class="note"> 🗒**Side Note:** You should already be familiar with the pipe operator (`%>%`), but if it doesn't look familiar to you, you can learn more about it in [Using pipes]. Don't forget, if you are using RStudio, you can use the keyboard shortcut `shift + command + m` (Mac) or `shift + control + m` (Windows) to insert the pipe operator.</p>
+
+First, we don't want to view the individual values in our data frame. Instead, we want to condense those values into summary statistics. This is a job for the [summarise()](https://dplyr.tidyverse.org/reference/summarise.html) function. 
+
+```{r}
+height_and_weight_20 %>% 
+  summarise()
+```
+
+As you can see, `summarise()` doesn't do anything interesting on its own. We need to tell it what kind of summary information we want. We can use the [n()](https://dplyr.tidyverse.org/reference/n.html) function to count rows. By, default, it will count all the rows in the data frame. For example:
+
+```{r}
+height_and_weight_20 %>% 
+  summarise(n())
+```
+
+👆**Here's what we did above:** 
+
+* We passed our entire data frame to the `summarise()` function and asked it to count the number of rows in the data frame. 
+
+* The result we get is a new data frame with 1 column (named `n()`) and one row with the value 20 (the number of rows in the original data frame).
+
+This is a great start. However, we really want to count the number of rows that have the value "female" for sex, and then separately count the number of rows that have the value "male" for sex. Said another way, we want to break our data frame up into smaller data frames -- one for each value of `sex` -- and then count the rows. This is exactly what `dplyr`'s [group_by()](https://dplyr.tidyverse.org/reference/group_by.html) function does.
+
+```{r message=FALSE}
+height_and_weight_20 %>%
+  group_by(sex) %>% 
+  summarise(n())
+```
+
+And, that's what we want.
+
+<p class="note"> 🗒**Side Note:** `dplyr`'s `group_by()` function operationalizes the **Split - Apply - Combine** strategy for data analysis. That sounds sort of fancy, but all it really means is that we split our data frame up into smaller data frames, apply our calculation separately to each smaller data frame, and then combine those individual results back together as a single result. So, in the example above, the `height_and_weight_20` data frame was split into two separate little data frames (i.e., one for females and one for males), then the `summarise()` and `n()` functions counted the number of rows in each of the two smaller data frames (i.e., 12 and 8 respectively), and finally combined those individual results into a single data frame, which was printed to the screen for us to view.</p>
+
+However, it will be awkward to work with a variable named `n()` in the future. Let's go ahead and assign it a different name. We can assign it any valid name we want. Some names that might make sense are n, frequency, or count. I'm going to go ahead an just name it `n` without the parentheses.
+
+```{r}
+height_and_weight_20 %>%
+  group_by(sex) %>% 
+  summarise(n = n())
+```
+
+👆**Here's what we did above:** 
+
+* We added `n = ` to our summarise function (`summarise(n = n())`) so that our count column in the resulting data frame would be named `n` instead of `n()`.
+
+Finally, estimating categorical frequencies like this is such a common operation that `dplyr` has a shortcut for it. We can use the [count](https://dplyr.tidyverse.org/reference/tally.html) function to get the same result that we got above.
+
+```{r}
+height_and_weight_20 %>% 
+  count(sex)
+```
+
+## Calculating percentages
+
+In addition to frequencies, we will often be interested in calculating percentages for categorical variables. As always, there are many was to accomplish this in R. From here on out, I'm going to primarily use `tidyverse` functions.
+
+In this case, the proportion of people in our data who are female can be calculated as the number who are female (12) divided by the total number of people in the data. We already know that there are 20 people in the data, so we could calculate proportions like so:
+
+```{r}
+height_and_weight_20 %>% 
+  count(sex) %>% 
+  mutate(prop = n / 20)
+```
+
+👆**Here's what we did above:**
+
+* Because the `count()` function returns a data frame just like any other data frame, we can manipulate it in the same ways we can manipulate any other data frame.    
+
+* So, we used `dplyr`'s [mutate()](https://dplyr.tidyverse.org/reference/mutate.html) function to create a new variable in the data frame named `prop`. Again, we could have given it any valid name.   
+  - We will talk more about `mutate()` in the data management part of the book. For now, just know that it is the primary function we will use for adding new columns (variables) to our data frames.   
+
+* Then we set the value of `prop` to be equal to the value of `n` divided by 20.    
+
+This works, but it would be better to have R calculate the total number of observations for the denominator (20) than for us to manually type it in. In this case, we can do that with the `sum()` function.
+
+```{r}
+height_and_weight_20 %>% 
+  count(sex) %>% 
+  mutate(prop = n / sum(n))
+```
+
+👆**Here's what we did above:**
+
+* Instead of manually typing in the total count for our denominator (20), we had R calculate it for us using the `sum()` function. The `sum()` function added together all the values of the variable `n` (i.e., 12 + 8 = 20).   
+
+Finally, we just need to multiply our proportion by 100 to convert it to a percentage.
+
+```{r}
+height_and_weight_20 %>% 
+  count(sex) %>% 
+  mutate(percent = n / sum(n) * 100)
+```
+
+👆**Here's what we did above:**
+
+* Changed the name of the variable we are creating from `prop` to `percent`. But, we could have given it any valid name.   
+
+* Multiplied the proportion by 100 to convert it to a percentage.
+
+
+## Missing data
+
+In the real world, you will frequently encounter data that has missing values. Let's quickly take a look at an example by adding some missing values to our data frame.
+
+```{r}
+height_and_weight_20 <- height_and_weight_20 %>% 
+  mutate(sex = replace(sex, c(2, 9), NA)) %>% 
+  print()
+```
+
+👆**Here's what we did above:**
+
+* Replaced the 2nd and 9th value of sex with `NA` (missing) using the `replace()` function.   
+
+Now let's see how our code from above handles this
+
+```{r}
+height_and_weight_20 %>% 
+  count(sex) %>% 
+  mutate(percent = n / sum(n) * 100)
+```
+
+As you can see, we are now treating missing as if it were a category of sex. Sometimes this will be the result you want. However, often you will want the n and percent of _non-missing_ values for your categorical variable. This is sometimes referred to as a _complete case analysis_. There's a couple of different ways we can handle this. I will simply filter out rows with a missing value for sex with `dplyr`'s [filter()](https://dplyr.tidyverse.org/reference/filter.html) function.
+
+```{r}
+height_and_weight_20 %>% 
+  filter(!is.na(sex)) %>% 
+  count(sex) %>% 
+  mutate(percent = n / sum(n) * 100)
+```
+
+👆**Here's what we did above:**
+
+* We used `filter()` to keep only the rows that have a _non-missing_ value for sex.    
+  
+  - In the R language, we use the `is.na()` function to tell the R interpreter to identify NA (missing) values in a vector. We cannot use something like `sex == NA` to identify NA values, which is sometimes confusing for people who are coming to R from other statistical languages.    
+  
+  - In the R language, `!` is the NOT operator. It sort of means "do the opposite."   
+  
+  - So, `filter()` tells R which rows of a data frame to _keep_ and `is.na(sex)` tells R to find rows with an NA value for the variable `sex`. Together, `filter(is.na(sex))` would tell R to _keep_ rows with an NA value for the variable `sex`. Adding the NOT operator `!` tells R to do the opposite -- _keep_ rows that do _NOT_ have an NA value for the variable `sex`.    
+
+* We used our code from above to calculate the n and percent of non-missing values of sex.   
+
+## Formatting results {#formatting-results}
+
+Notice that now our percentages are being displayed with 5 digits to the right of the decimal. If we wanted to present our findings somewhere (e.g., a journal article or a report for our employer) we would almost never want to display this many digits. Let's get R to round these numbers for us.
+
+```{r}
+height_and_weight_20 %>% 
+  filter(!is.na(sex)) %>% 
+  count(sex) %>% 
+  mutate(percent = (n / sum(n) * 100) %>% round(2))
+```
+
+👆**Here's what we did above:**
+
+* We passed the calculated percentage values `(n / sum(n) * 100)` to the `round()` function to round our percentages to 2 decimal places.    
+  
+  - Notice that we had to wrap `n / sum(n) * 100` in parentheses in order to pass it to the `round()` function with a pipe.    
+  
+  - We could have alternatively written our R code this way: `mutate(percent = round(n / sum(n) * 100, 2))`.   
+
+🏆 Congratulations! You now know how to use R to do some basic descriptive analysis of individual categorical variables. 
