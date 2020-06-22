@@ -6,7 +6,7 @@ Exporting data for use in R (Rds)
 We may also want to briefly touch on the difference between memory and disk.
 -->
 
-The data frames we’ve created so far don’t currently live in our global environment from one programming session to the next because we haven’t yet learned how to efficiently store our data long-term. This limitation makes it difficult to share our data with other or even to come back later to modify or analyze our data ourselves. In this chapter, you will learn to **export** data from R's memory to a file on your hard drive so that you may efficiently store it or share it with others. In the examples that follow, I'm going to use the simulated data below.
+The data frames we’ve created so far don’t currently live in our global environment from one programming session to the next because we haven’t yet learned how to efficiently store our data long-term. This limitation makes it difficult to share our data with others or even to come back later to modify or analyze our data ourselves. In this chapter, you will learn to **export** data from R's memory to a file on your hard drive so that you may efficiently store it or share it with others. In the examples that follow, I'm going to use this simulated data.
 
 ```{r}
 demo <- data.frame(
@@ -18,7 +18,7 @@ demo <- data.frame(
 
 👆 **Here's what we did above:**
 
-* We created a data frame that is mean to simulate some demographic information about 4 hypothetical study participants.
+* We created a data frame that is meant to simulate some demographic information about 4 hypothetical study participants.
 
 * The first variable (`id`) is the participant's study id.
 
@@ -40,7 +40,7 @@ Most of `readr`'s `read_` functions that were introduced in the [importing plain
 
 Additionally, all of `haven`s `read_` functions that were introduced in the [importing binary files](#importing-binary-files) chapter have a `write_` counterpart that allow you to export data from R into SAS, Stata, and SPSS binary file formats. 
 
-Interestingly, `readxl` does not have a `write_excel()` function for exporting R data frames as .xls or .xlsx files. However, the importance of this is mitigated by the fact that Excel can open .csv files and `readr` contains a function (`write_csv()`)for exporting data frames in the .csv file format.
+Interestingly, `readxl` does not have a `write_excel()` function for exporting R data frames as .xls or .xlsx files. However, the importance of this is mitigated by the fact that Excel can open .csv files and `readr` contains a function (`write_csv()`)for exporting data frames in the .csv file format. If you absolutely have to export your data frame as a `.xls` or `.xlsx` file, there are other R packages capable of doing so (e.g., `xlsx`).
 
 So, with all these options what format should you choose? My answer to this sort of depends on the answers to two questions. First, will this data be shared with anyone else? Second, will I need any of the metadata that would be lost if I export this data to a plain text file?
 
@@ -66,7 +66,7 @@ readr::write_csv(demo, "/Users/bradcannell/Desktop/demo.csv")
   
   - As always, make sure you remember to include the file extension in the file path.
   
-Even if you don't plan on sharing your data, there is another benefit to saving your data as a csv file. That is, it's easy to open the file and take a quick peek if you need to for some reason. In other words, you don't have to open R and load the file. You can just find the file on your computer and double-click it.
+Even if you don't plan on sharing your data, there is another benefit to saving your data as a csv file. That is, it's easy to open the file and take a quick peek if you need to for some reason. You don't have to open R and load the file. You can just find the file on your computer, double-click it, and quickly view it in your text editor or spreadsheet application of choice.
 
 However, there is a downside to saving your data frames to a csv file. In general, csv files don't store any metadata, which can sometimes be a problem (or a least a pain). For example, if you've coerced several variables to factors, that information would not be preserved in the csv file. Instead, the factors will be converted to character strings. If you need to preserve metadata, then you may want to save you data frames in a binary format.
 
@@ -80,7 +80,7 @@ In R, factors can be useful for representing categorical data. Let's use the dat
 demo
 ```
 
-We can see that person `001` is in category `3`, person `002` is in category `1`, and so on. This compact representation of the categories is convenient for data entry and data manipulation, but it also has an obvious limitation -- what do these numbers mean? I defined what these values mean for you above, but if you didn't have that information or some kind of prior knowledge about the process that was used to gather this data, then you would likely have no idea what these numbers mean. 
+We can see that person `001` is in category `3`, person `002` is in category `1`, and so on. This compact representation of the categories is convenient for data entry and data manipulation, but it also has an obvious limitation -- what do these numbers mean? I defined what these values mean for you above, but if you didn't have that information, or some kind of prior knowledge about the process that was used to gather this data, then you would likely have no idea what these numbers mean. 
 
 Now, we could have solved that problem by making education a character variable from the beginning. For example: 
 
@@ -98,7 +98,7 @@ demo
 
 But, this strategy also has a few limitations. 
 
-👎 First, entering data this way requires more typing. 
+👎 First, entering data this way requires more typing. Not such a big deal in this case because we only have 4 participants. But, imagine typing out the categories as character strings 10, 20, or 100 times. 😫
 
 👎 Second, R summarizes character vectors alphabetically by default, which may not be the ideal way to order some categorical variables. 
 
@@ -139,13 +139,13 @@ demo
 
 * The first argument to the `mutate()` function is the `.data` argument. The value passed to the `.data` argument should be a data frame that is currently in our global environment. We passed the data frame `demo` to the `.data` argument using the pipe operator (`%>%`), which is why `demo` isn't written inside `mutate`'s parentheses. 
 
-* The second argument to the `mutate()` function is the `...` argument. The value passed to the `...` argument should be a name value pair. That means, a variable name, followed by an equal’s sign, followed by the values to be assigned to that variable name (`name = value`).
+* The second argument to the `mutate()` function is the `...` argument. The value passed to the `...` argument should be a name value pair. That means, a variable name, followed by an equal sign, followed by the values to be assigned to that variable name (`name = value`).
 
   - The name we passed to the `...` argument was `edu_f`. This value tells R what to name the new variable we are creating.
   
     + If we had used the name `edu` instead, then the previous values in the `edu` variable would have been replaced with the new values. That is sometimes what you want to happen. However, when it comes to creating factors, I typically keep the numeric version of the variable in my data frame (e.g., `edu`) and _add a new_ factor variable. I just often find that it can be useful to have both versions of the variable hanging around during the analysis process.
     
-    + I also use the `_f` naming convention in my code. That means, when I create a new factor variable, I name it the same thing the original variable was named with the addition of an `_f` (for factor) at the end.
+    + I also use the `_f` naming convention in my code. That means that when I create a new factor variable I name it the same thing the original variable was named with the addition of `_f` (for factor) at the end.
     
   - In this case, the value that will be assigned to the name `edu_f` will be the values returned by the `factor()` function. This is an example of nesting functions. 
   
@@ -169,9 +169,9 @@ as.numeric(demo$edu_char)
 as.numeric(demo$edu_f)
 ```
 
-There are really just two main reasons that you may want to use factors instead of character vectors at times:
+There are two main reasons that you may want to use factors instead of character vectors at times:
 
-👍 First, R summarizes character vectors alphabetically by default, which may not be the ideal way to order some categorical variables. We can explicitly set the order of factor levels. This will be useful to use later when we analyze categorical variables. Here is a glimpse of things to come:
+👍 First, R summarizes character vectors alphabetically by default, which may not be the ideal way to order some categorical variables. However, we can explicitly set the order of factor levels. This will be useful to us later when we analyze categorical variables. Here is a glimpse of things to come:
 
 ```{r}
 table(demo$edu_char)
