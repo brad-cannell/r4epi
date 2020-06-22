@@ -4,7 +4,7 @@
 This chapter gives the nuts and bolts of importing data.
 -->
 
-We previously learned how to manually create a data frame in RStudio with the `data.frame()` function, the `tibble()` function, or the `tribble()` function. This will get the job done, but it’s not always very practical, particularly when you have larger data sets. 
+We previously learned how to manually create a data frame in RStudio with the `data.frame()` function, the `tibble()` function, or the `tribble()` function. This will get the job done, but it’s not always very practical -- particularly when you have larger data sets. 
 
 Additionally, others will usually share data with you that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In my experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the **.csv** file extension and Excel files end with the **.xls** or **.xlsx** file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, you will learn how to take data stored in several different common types of files import them into R for use.
 
@@ -18,7 +18,7 @@ There are many different file types that one can use to store data. In this book
 
 * Plain text files with data delimited by commas - csv files.
 
-Later, we will discuss importing binary files. You can think of binary files as more complex file types that can't generally be read by humans and accessing the information in binary files requires the use of special software. Some examples include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.
+Later, we will discuss importing binary files. For now, you can think of binary files as more complex file types that can't generally be read by humans without the use of special software. Some examples include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.
 
 ```{r echo=FALSE}
 knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files/files.png")
@@ -26,13 +26,13 @@ knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files
 
 ## Packages for importing data
 
-Base R contains several functions that can be used to import plain text files; however, I'm going to use the [readr](https://readr.tidyverse.org/) package to import data in the examples that follow. Compared to base R functions for importing plain text files, `readr` is: @Grolemund2017-qp
+Base R contains several functions that can be used to import plain text files; however, I'm going to use the [readr](https://readr.tidyverse.org/) package to import data in the examples that follow. Compared to base R functions for importing plain text files, `readr`: 
 
-* Roughly 10 times faster.
+* Is roughly 10 times faster.
 
-* They don't convert character variables to factors by default.
+* Doesn't convert character variables to factors by default.
 
-* They behave more consistently across operating systems and geographic locations.
+* Behaves more consistently across operating systems and geographic locations.
 
 If you would like to follow along, I suggest that you go ahead and install and load `readr` now. 
 
@@ -61,7 +61,7 @@ single_space <- read_delim(
 )
 ```
 
-```{r}
+```{r echo=FALSE}
 single_space
 ```
 
@@ -69,15 +69,17 @@ single_space
 
 * We used `readr`'s `read_delim()` function to import a data set with values that are delimited by a single space. Those values were imported as a data frame, and we assigned that data frame to the R object called `single_space`.
 
+* You can type `?read_delim` into your R console to view the help documentation for this function and follow along with the explanation below.
+
 * The first argument to the `read_delim()` function is the `file` argument. The value passed to the file argument should be a file path that tells R where to find the data set on your computer.
 
 * The second argument to the `read_delim()` function is the `delim` argument. The value passed to the `delim` argument tells R what character separates each value in the data set. In this case, a single space separates the values. Note that we had to wrap the single space in quotation marks.
 
 * The `readr` package imported the data and printed a message giving us some information about how it interpreted column names and column types. In programming lingo, deciding how to interpret the data that is being imported is called **parsing** the data.
 
-  - By default, `readr` will assume that the first row of data will contains variable names and will try to use them as column names in the data frame it creates. In this case, that was a good assumption. We want the columns to be named `id`, `sex`, `ht_in`, and `wgt_lbs`. Later, we will learn how to override this default behavior.
+  - By default, `readr` will assume that the first row of data contains variable names and will try to use them as column names in the data frame it creates. In this case, that was a good assumption. We want the columns to be named `id`, `sex`, `ht_in`, and `wgt_lbs`. Later, we will learn how to override this default behavior.
   
-  - By default, `readr` will try to guess what type of data (e.g., numbers, character strings, dates, etc.) each column contains. It will guess based on analyzing the contents of the first 1,000 rows of the data. In this case, `readr`'s guess was not entirely correct (or at least not what we wanted). `readr` correctly guessed that the variables `id` and `sex` should be character variables, but incorrectly guessed that `ht_in` should be character type as well. Below, we will learn how to fix this issue.
+  - By default, `readr` will try to guess what type of data (e.g., numbers, character strings, dates, etc.) each column contains. It will guess based on analyzing the contents of the first 1,000 rows of the data. In this case, `readr`'s guess was not entirely correct (or at least not what we wanted). `readr` correctly guessed that the variables `id` and `sex` should be character variables, but incorrectly guessed that `ht_in` should be a character variable as well. Below, we will learn how to fix this issue.
   
 <p class="warning"> ⚠️**Warning:** Make sure to always include the file extension in your file paths. For example, using "/single_delimited" instead of "/single_delimited.txt" above (i.e., no .txt) would have resulted in an error telling you that the filed does not exist.</p>
 
@@ -89,7 +91,7 @@ In the previous example, `readr` guessed that the variable `ht_in` was a charact
 knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files/space.png")
 ```
 
-Did you see the period in the third value of the second column? The period is there because this value is missing, and a period is commonly used to represent missing data. However, R represents missing data with the special `NA` value -- not a period. So, the period is just a regular character value to R. When R reads the values in the `ht_in` column, it decides that it can easily turn the numbers into character values, but it doesn't know how to turn the period into a number. So, the column is parsed as a character vector. 
+Did you see the period in the third value of the third row? The period is there because this value is missing, and a period is commonly used to represent missing data. However, R represents missing data with the special `NA` value -- not a period. So, the period is just a regular character value to R. When R reads the values in the `ht_in` column, it decides that it can easily turn the numbers into character values, but it doesn't know how to turn the period into a number. So, the column is parsed as a character vector. 
 
 But as we said, this is not what we want. So, how do we fix it? Well, in this case, we will simply need to tell R that missing values are represented with a period in the data we are importing. We do that by passing that information to the `na` argument of the `read_delim()` function:
 
@@ -109,7 +111,7 @@ single_space
 
 * By default, the value passed to the `na` argument of the `read_delim()` function is `c("", "NA")`. This means that R looks for nothing (i.e., a value should be there but isn't - this really doesn't make sense when the delimiter is a single space) or an `NA`. 
 
-* We told R to look for a period to represent missing data instead of a nothing or a single space by passing the period character to the `na` argument.
+* We told R to look for a period to represent missing data instead of a nothing or an `NA` by passing the period character to the `na` argument.
 
 * It's important to note that changing the value of the `na` argument does not change the way R represents missing data in the data frame that is created. It only tells R how to identify missing values in the raw data that we are importing. In the R data frame that is created, missing data will still be represented with the special `NA` value. 
 
@@ -184,6 +186,8 @@ fixed
 
 * We used `readr`'s `read_table()` function to import data from a fixed width format file. Those values were imported as a data frame, and we assigned that data frame to the R object called `fixed`.
 
+* You can type `?read_table` into your R console to view the help documentation for this function and follow along with the explanation below.
+
 * By default, the `read_table()` function looks for values to be separated by one or more columns of space.
 
 However, how could you import this data if there weren't always spaces in between data values. For example:
@@ -208,6 +212,8 @@ Instead, it parses the entire data set as a single character column. It does thi
 
 ### Vector of column widths
 
+One way to import this data is to tell R how many columns wide each variable is in the raw data. We do that like so:
+
 ```{r}
 fixed <- read_fwf(
   file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt",
@@ -227,6 +233,8 @@ fixed
 
 * We used `readr`'s `read_fwf()` function to import data from a fixed width format file. Those values were imported as a data frame, and we assigned that data frame to the R object called `fixed`.
 
+* You can type `?read_fwf` into your R console to view the help documentation for this function and follow along with the explanation below.
+
 * The first argument to the `read_fwf()` function is the `file` argument. The value passed to the file argument should be file path that tells R where to find the data set on your computer.
 
 * The second argument to the `read_fwf()` function is the the `col_positions` argument. The value passed to this argument tells R the width (i.e., number of columns) that belong to each variable in the raw data set. This information is actually passed to the `col_positions` argument directly from the `fwf_widths()` function. This is an example of nesting functions.
@@ -237,13 +245,20 @@ fixed
 knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files/number_line.png")
 ```
 
-  - All of the values for the variable `id` can be located within the first 3 columns of data. All of the values for the variable `sex` can be located within the next 6 columns of data. All of the values for the variable `ht_in` can be located within the next 5 columns of data. And, all of the values for the variable `wgt_lbs` can be located within the next 3 columns of data. Therefore, we pass the vector `c(3, 6, 5, 3)` to the `widths` argument.
+<!-- Have to manually indent the bullets due to inserting the image above -->
+<ul>
+  <ul>
+  <li style="padding-bottom: 0.5em;"> All of the values for the variable `id` can be located within the first 3 columns of data. All of the values for the variable `sex` can be located within the next 6 columns of data. All of the values for the variable `ht_in` can be located within the next 5 columns of data. And, all of the values for the variable `wgt_lbs` can be located within the next 3 columns of data. Therefore, we pass the vector `c(3, 6, 5, 3)` to the `widths` argument.</li>
 
-  - The second argument to the `fwf_widths()` function is the `col_names` argument. The value passed to the `col_names` argument should be a character vector of column names.
-  
-* The third argument of the `read_fwf()` function that we passed a value to is the `skip` argument. The value passed to the `skip` argument tells R how many rows to ignore before looking for data values. In this case, we passed a value of one, which told R to ignore the first row of the raw data. We did this because the first row of the raw data contained variable names instead of data values, and we already gave R variable names in the `col_names` argument to the `fwf_widths()` function.
+  <li> The second argument to the `fwf_widths()` function is the `col_names` argument. The value passed to the `col_names` argument should be a character vector of column names.</li>
+  </ul>
+</ul>
+
+* The third argument of the `read_fwf()` function that we passed a value to is the `skip` argument. The value passed to the `skip` argument tells R how many rows to ignore before looking for data values in the raw data. In this case, we passed a value of one, which told R to ignore the first row of the raw data. We did this because the first row of the raw data contained variable names instead of data values, and we already gave R variable names in the `col_names` argument to the `fwf_widths()` function.
 
 ### Paired vector of start and end positions
+
+Another way to import this data is to tell R how which columns each variable starts and stops at in the raw data. We do that like so:
 
 ```{r}
 fixed <- read_fwf(
@@ -271,11 +286,16 @@ fixed
 knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files/number_line.png")
 ```
 
-  - The first column that contains part of the value for the variable `id` can be located in column 1 of data. The first column that contains part of the value for the variable `sex` can be located in column 4 of data. The first column that contains part of the value for the variable `ht_in` can be located in column 10 of data. And, the first column that contains part of the value for the variable `ht_in` can be located in column 15 of data. Therefore, we pass the vector `c(1, 4, 10, 15)` to the `start` argument.
+<!-- Have to manually indent the bullets due to inserting the image above -->
+<ul>
+  <ul>
+  <li style="padding-bottom: 0.5em;"> The first column that contains part of the value for the variable `id` can be located in column 1 of data. The first column that contains part of the value for the variable `sex` can be located in column 4 of data. The first column that contains part of the value for the variable `ht_in` can be located in column 10 of data. And, the first column that contains part of the value for the variable `ht_in` can be located in column 15 of data. Therefore, we pass the vector `c(1, 4, 10, 15)` to the `start` argument.</li>
   
-  - The second argument to the `fwf_positions()` function is the `end` argument. The value passed to the `end` argument should be a numeric vector containing the last column that contains a value for each variable. - The last column that contains part of the value for the variable `id` can be located in column 3 of data. The last column that contains part of the value for the variable `sex` can be located in column 9 of data. The last column that contains part of the value for the variable `ht_in` can be located in column 11 of data. And, the last column that contains part of the value for the variable `ht_in` can be located in column 17 of data. Therefore, we pass the vector `c(3, 9, 11, 17)` to the `end` argument.
+  <li style="padding-bottom: 0.5em;"> The second argument to the `fwf_positions()` function is the `end` argument. The value passed to the `end` argument should be a numeric vector containing the last column that contains a value for each variable. - The last column that contains part of the value for the variable `id` can be located in column 3 of data. The last column that contains part of the value for the variable `sex` can be located in column 9 of data. The last column that contains part of the value for the variable `ht_in` can be located in column 11 of data. And, the last column that contains part of the value for the variable `ht_in` can be located in column 17 of data. Therefore, we pass the vector `c(3, 9, 11, 17)` to the `end` argument.</li>
 
-  - The third argument to the `fwf_positions()` function is the `col_names` argument. The value passed to the `col_names` argument should be a character vector of column names.
+  <li>The third argument to the `fwf_positions()` function is the `col_names` argument. The value passed to the `col_names` argument should be a character vector of column names.</li>
+  </ul>
+</ul>
 
 ### Using named arguments
 
@@ -313,7 +333,7 @@ read_fwf(
 
 ## Importing comma separated values files
 
-The final type of plain text file that we will discuss is by far the most common type used in my experience. I'm talking about the **comma separated values** or **csv** file. Unlike space and tab separated values files, csv file names end with the **.csv** file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, and Google Sheets. 
+The final type of plain text file that we will discuss is by far the most common type used in my experience. I'm talking about the **comma separated values** or **csv** file. Unlike space and tab separated values files, csv file names end with the **.csv** file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, or Google Sheets. 
 
 ```{r echo=FALSE, fig.cap="A csv file viewed in a plain text editor."}
 knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files/csv_plain_text.png")
@@ -339,11 +359,13 @@ csv
 
 * We used `readr`'s `read_csv()` function to import a data set with values that are delimited by commas. Those values were imported as a data frame, and we assigned that data frame to the R object called `csv`.
 
+* You can type `?read_csv` into your R console to view the help documentation for this function and follow along with the explanation below.
+
 * Like `read_tsv()`, R is basically executing  the `read_delim()` function with the value of the `delim` argument set to `","` under the hood. You could also use the `read_delim()` function with the value of the `delim` argument set to `","` if you wanted to.
 
 ## Additional arguments
 
-For the most part, the data we imported in all of the examples above was relatively well behaved. What I mean by that is that the data basically "looked" like each of the `read_` functions were expecting it to "look". Therefore, we didn't have to adjust many of the various `read_` functions' default values. The exception was changing the default value of the `na` argument to the `read_delim()` function. However, all of the `read_` functions above have additional arguments that you may need to tweak on occasion. The two that I tend to adjust most often are the `col_names` and `col_types` arguments. It's impossible for me to think of every scenario where you may need to do this, but I'll walk through two basic examples below, which should be sufficient for you to get the idea.
+For the most part, the data we imported in all of the examples above was relatively well behaved. What I mean by that is that the data basically "looked" like each of the `read_` functions were expecting it to "look". Therefore, we didn't have to adjust many of the various `read_` functions' default values. The exception was changing the default value of the `na` argument to the `read_delim()` function. However, all of the `read_` functions above have additional arguments that you may need to tweak on occasion. The two that I tend to adjust most often are the `col_names` and `col_types` arguments. It's impossible for me to think of every scenario where you may need to do this, but I'll walk through a basic example below, which should be sufficient for you to get the idea.
 
 Take a look at this csv file for a few seconds. It started as the same exact height and weight data we've been using, but I made a few changes. See if you can spot them all.
 
@@ -357,13 +379,13 @@ When people record data in Microsoft Excel, they do all kinds of crazy things. I
 
 * Row two is a blank line. I'm not sure why it's there. Maybe the study staff finds it aesthetically pleasing?
 
-* Row three are some variable descriptions. These are actually useful, but they aren't currently formatted in a way that makes for good variable names.
+* Row three contains some variable descriptions. These are actually useful, but they aren't currently formatted in a way that makes for good variable names.
 
 * Row 7, column D is a missing value. However, someone wrote the word "Missing" instead of leaving the cell blank.
 
 * Column E also contains some notes for the data collection staff that aren't really part of the data. 
 
-All of the issues listed above are things we will have to deal with before we can analyze our data. Now, in this small data set we could just fix these issues directly in Microsoft Excel and then import into R with a simple call to `read_csv()` without adjusting any options. However, that this is generally a really bad idea. 
+All of the issues listed above are things we will have to deal with before we can analyze our data. Now, in this small data set we could just fix these issues directly in Microsoft Excel and then import the altered data into R with a simple call to `read_csv()` without adjusting any options. However, that this is generally a really bad idea. 
 
 <div class="warning"> ⚠️**Warning:**
 
@@ -385,7 +407,7 @@ csv <- read_csv("/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_com
 csv
 ```
 
-That is obviously not what we wanted. So, let's start adjusting some of the default values.
+That is obviously not what we wanted. So, let's start adjusting some of `read_csv()`'s defaults -- staring with the column names.
 
 ```{r}
 csv <- read_csv(
@@ -400,7 +422,7 @@ csv
 
 👆**Here's what we did above:**
 
-* We passed a character vector of variable names to the `col_names` argument. Doing so told R to use the words in the character vector as column names instead of the values in the first row of the raw data.
+* We passed a character vector of variable names to the `col_names` argument. Doing so told R to use the words in the character vector as column names instead of the values in the first row of the raw data (the default).
 
 * Because the character vector of names only contained 4 values, the last column was dropped from the data. R gives us a warning message to let us know. Specially, for each row it says that it was expecting 4 columns (because we gave it 4 column names), but actually found 5 columns. We'll get rid of this message next.
 
@@ -426,11 +448,13 @@ csv
 
 * We told R explicitly what type of values we wanted each column to contain. We did so by nesting a `col_` function for each column type inside the `col()` function, which is passed directly to the `col-types` argument.
 
-* Notice various column types (e.g., `col_character()`) _are_ functions, and that they are nested inside of the `cols()` function. Because they are functions, you must put include the parentheses. That's just how the `readr` package is designed.
+* You can type `?readr::cols` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* Notice various column types (e.g., `col_character()`) _are functions_, and that they are nested inside of the `cols()` function. Because they are functions, you must include the parentheses. That's just how the `readr` package is designed.
 
 * Notice that the last column type we passed to the `col_types` argument was `col_skip()`. This tells R to ignore the 5th column in the raw data (5th because it's the 5th column type we listed). Doing this will get rid of the warning we saw earlier.
 
-* [Click here to see all available column types.](https://readr.tidyverse.org/articles/readr.html#rectangular-parsers)
+* You can type `?readr::cols` into your R console to see all available column types.
 
 * Because we told R explicitly what type of values we wanted each column to contain, R had to drop any values that couldn't be coerced to the type we requested. More specifically, they were coerced to missing (`NA`). For example, the value `Var3` that was previously in the first row of the `ht_in` column. It was coerced to `NA` because R does not know (nor do I) how to turn the character string "Var3" into an integer. R gives us a warning message about this. 
 
@@ -481,4 +505,4 @@ csv <- read_csv(
 csv
 ```
 
-Wow! This was kind of a long chapter! 🤯 But, you should not have the foundation you need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.
+Wow! This was kind of a long chapter! 🤯 But, you should now have the foundation you need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.
