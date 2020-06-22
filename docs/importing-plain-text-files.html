@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2020-06-19" />
+<meta name="date" content="2020-06-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,9 +258,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="13.5" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#importing-comma-separated-values-files"><i class="fa fa-check"></i><b>13.5</b> Importing comma separated values files</a></li>
 <li class="chapter" data-level="13.6" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#additional-arguments"><i class="fa fa-check"></i><b>13.6</b> Additional arguments</a></li>
-<li class="chapter" data-level="13.7" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#summary-1"><i class="fa fa-check"></i><b>13.7</b> Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="14" data-path="importing-binary-files.html"><a href="importing-binary-files.html"><i class="fa fa-check"></i><b>14</b> Importing binary files</a></li>
+<li class="chapter" data-level="14" data-path="importing-binary-files.html"><a href="importing-binary-files.html"><i class="fa fa-check"></i><b>14</b> Importing binary files</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="importing-binary-files.html"><a href="importing-binary-files.html#packages-for-importing-data-1"><i class="fa fa-check"></i><b>14.1</b> Packages for importing data</a></li>
+<li class="chapter" data-level="14.2" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-microsoft-excel-spreadsheets"><i class="fa fa-check"></i><b>14.2</b> Importing Microsoft Excel spreadsheets</a></li>
+<li class="chapter" data-level="14.3" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-data-from-other-statistical-analysis-software"><i class="fa fa-check"></i><b>14.3</b> Importing data from other statistical analysis software</a></li>
+<li class="chapter" data-level="14.4" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-sas-data-sets"><i class="fa fa-check"></i><b>14.4</b> Importing SAS data sets</a></li>
+<li class="chapter" data-level="14.5" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-stata-data-sets"><i class="fa fa-check"></i><b>14.5</b> Importing Stata data sets</a></li>
+</ul></li>
 <li class="chapter" data-level="15" data-path="file-paths-1.html"><a href="file-paths-1.html"><i class="fa fa-check"></i><b>15</b> File paths</a></li>
 <li class="part"><span><b>IV Descriptive Analysis</b></span></li>
 <li class="chapter" data-level="16" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html"><i class="fa fa-check"></i><b>16</b> Introduction to descriptive analysis</a>
@@ -353,7 +359,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="23.11.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#merge-cells"><i class="fa fa-check"></i><b>23.11.2</b> Merge cells</a></li>
 <li class="chapter" data-level="23.11.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#remove-cell-borders"><i class="fa fa-check"></i><b>23.11.3</b> Remove cell borders</a></li>
 </ul></li>
-<li class="chapter" data-level="23.12" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#summary-2"><i class="fa fa-check"></i><b>23.12</b> Summary</a></li>
+<li class="chapter" data-level="23.12" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#summary-1"><i class="fa fa-check"></i><b>23.12</b> Summary</a></li>
 </ul></li>
 <li class="part"><span><b>VII Appendix</b></span></li>
 <li class="chapter" data-level="" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i>Appendix A: Glossary</a></li>
@@ -382,20 +388,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- 
 This chapter gives the nuts and bolts of importing data.
 -->
-<p>We previously learned how to create an R data frame by directly creating data frames in RStudio with the <code>data.frame()</code> function, the <code>tibble()</code> function, or the <code>tribble()</code> function. This will get the job done, but it’s not always very practical, particularly when you have larger data sets.</p>
+<p>We previously learned how to manually create a data frame in RStudio with the <code>data.frame()</code> function, the <code>tibble()</code> function, or the <code>tribble()</code> function. This will get the job done, but it’s not always very practical, particularly when you have larger data sets.</p>
 <p>Additionally, others will usually share data with you that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In my experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the <strong>.csv</strong> file extension and Excel files end with the <strong>.xls</strong> or <strong>.xlsx</strong> file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, you will learn how to take data stored in several different common types of files import them into R for use.</p>
-<p>There are many different file types that one can use to store data. In this chapter we will focus on data stored in plain text files. You can think of plain text files as simple files that don’t require any special software to view and edit. Your operating system’s plain text editor is all you need (i.e., Notepad on Windows or TextEdit on Mac).</p>
-<p>Later, we will discuss importing binary files. You can think of binary files as more complex file types that do require special software to view and edit. For example, Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.</p>
+<p>There are many different file types that one can use to store data. In this book, we will divide those file types into two categories: <strong>plain text files</strong> and <strong>binary files</strong>. Plain text files are simple files that you (<i>a human</i>) can directly read using only your operating system’s plain text editor (i.e., Notepad on Windows or TextEdit on Mac). These files usually end with the <strong>.txt</strong> file extension – one exception being the <strong>.csv</strong> extension. Specifically, in this chapter we will learn to import the following variations of plain text files:</p>
+<ul>
+<li><p>Plain text files with data delimited by a single space.</p></li>
+<li><p>Plain text files with data delimited by tabs.</p></li>
+<li><p>Plain text files stored in a fixed width format.</p></li>
+<li><p>Plain text files with data delimited by commas - csv files.</p></li>
+</ul>
+<p>Later, we will discuss importing binary files. You can think of binary files as more complex file types that can’t generally be read by humans and accessing the information in binary files requires the use of special software. Some examples include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.</p>
 <p><img src="img/03_part_data_transfer/03_importing_plain_text_files/files.png" /><!-- --></p>
 <div id="packages-for-importing-data" class="section level2" number="13.1">
 <h2><span class="header-section-number">13.1</span> Packages for importing data</h2>
-<p>Base R contains several functions that can be used to import all of the file types discussed above; however, I’m going to use the following packages to import data in the examples below. I suggest that you go ahead and install these packages now if you would like to follow along.</p>
+<p>Base R contains several functions that can be used to import plain text files; however, I’m going to use the <a href="https://readr.tidyverse.org/">readr</a> package to import data in the examples that follow. Compared to base R functions for importing plain text files, <code>readr</code> is: <span class="citation"><a href="#ref-Grolemund2017-qp" role="doc-biblioref">3</a></span></p>
 <ul>
-<li><p><a href="https://readr.tidyverse.org/">readr</a>. We will use the <code>readr</code> package to import plain text and csv files.</p></li>
-<li><p><a href="https://readxl.tidyverse.org/">readxl</a>. We will use the <code>readxl</code> package to import Microsoft Excel files.</p></li>
-<li><p><a href="https://haven.tidyverse.org/">haven</a>. We will use the <code>haven</code> package to import SAS and Stata data sets.</p></li>
+<li><p>Roughly 10 times faster.</p></li>
+<li><p>They don’t convert character variables to factors by default.</p></li>
+<li><p>They behave more consistently across operating systems and geographic locations.</p></li>
 </ul>
-<p>In this chapter, we will be using the <code>readr</code> package extensively. I will go ahead and load it now.</p>
+<p>If you would like to follow along, I suggest that you go ahead and install and load <code>readr</code> now.</p>
 <div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="importing-plain-text-files.html#cb121-1"></a><span class="kw">library</span>(readr)</span></code></pre></div>
 </div>
 <div id="importing-space-delimited-files" class="section level2" number="13.2">
@@ -433,12 +445,12 @@ This chapter gives the nuts and bolts of importing data.
 <li><p>The second argument to the <code>read_delim()</code> function is the <code>delim</code> argument. The value passed to the <code>delim</code> argument tells R what character separates each value in the data set. In this case, a single space separates the values. Note that we had to wrap the single space in quotation marks.</p></li>
 <li><p>The <code>readr</code> package imported the data and printed a message giving us some information about how it interpreted column names and column types. In programming lingo, deciding how to interpret the data that is being imported is called <strong>parsing</strong> the data.</p>
 <ul>
-<li><p>By default, <code>readr</code> will assume that the first row of data will contains variable names and will try to use them as column names in the data frame it creates. In this case, that was a good assumption. We want the columns to be named id, sex, ht_in, and wgt_lbs. Later, we will learn how to override this default behavior.</p></li>
-<li><p>By default, <code>readr</code> will try to guess what type of data (e.g., numbers, character strings, dates, etc.) each column contains. It will guess based on analyzing the contents of the first 1,000 rows of the data. In this case, the <code>readr</code>’s guess were not correct. The variables id and sex should be character variables, but ht_in should not be. Below, we will learn how to fix this issue.</p></li>
+<li><p>By default, <code>readr</code> will assume that the first row of data will contains variable names and will try to use them as column names in the data frame it creates. In this case, that was a good assumption. We want the columns to be named <code>id</code>, <code>sex</code>, <code>ht_in</code>, and <code>wgt_lbs</code>. Later, we will learn how to override this default behavior.</p></li>
+<li><p>By default, <code>readr</code> will try to guess what type of data (e.g., numbers, character strings, dates, etc.) each column contains. It will guess based on analyzing the contents of the first 1,000 rows of the data. In this case, <code>readr</code>’s guess was not entirely correct (or at least not what we wanted). <code>readr</code> correctly guessed that the variables <code>id</code> and <code>sex</code> should be character variables, but incorrectly guessed that <code>ht_in</code> should be character type as well. Below, we will learn how to fix this issue.</p></li>
 </ul></li>
 </ul>
 <p class="warning">
-⚠️<strong>Warning:</strong> Make sure to always include the file extension in your file paths. For example, using “/Users/…/single_delimited” instead of “/Users/…/single_delimited.txt” above (i.e., no .txt) would have resulted in an error telling you that the filed does not exist.
+⚠️<strong>Warning:</strong> Make sure to always include the file extension in your file paths. For example, using “/single_delimited” instead of “/single_delimited.txt” above (i.e., no .txt) would have resulted in an error telling you that the filed does not exist.
 </p>
 <div id="specifying-missing-data-values" class="section level3" number="13.2.1">
 <h3><span class="header-section-number">13.2.1</span> Specifying missing data values</h3>
@@ -458,7 +470,6 @@ This chapter gives the nuts and bolts of importing data.
 ##   ht_in = col_double(),
 ##   wgt_lbs = col_double()
 ## )</code></pre>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="importing-plain-text-files.html#cb128-1"></a>single_space</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -480,10 +491,10 @@ This chapter gives the nuts and bolts of importing data.
 <p><img src="img/03_part_data_transfer/03_importing_plain_text_files/tab.png" /><!-- --></p>
 <p>To import tab separated value files in R, we use a variation of the same program we just saw. We just need to tell R that now the values in the data will be delimited by tabs instead of a single space.</p>
 <p><a href="https://www.dropbox.com/s/1inpy0cg7k5uxaw/tab.txt?dl=1">You may click here to download this file to your compter.</a></p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="importing-plain-text-files.html#cb130-1"></a>tab &lt;-<span class="st"> </span><span class="kw">read_delim</span>(</span>
-<span id="cb130-2"><a href="importing-plain-text-files.html#cb130-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/tab.txt&quot;</span>,</span>
-<span id="cb130-3"><a href="importing-plain-text-files.html#cb130-3"></a>  <span class="dt">delim =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span></span>
-<span id="cb130-4"><a href="importing-plain-text-files.html#cb130-4"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="importing-plain-text-files.html#cb129-1"></a>tab &lt;-<span class="st"> </span><span class="kw">read_delim</span>(</span>
+<span id="cb129-2"><a href="importing-plain-text-files.html#cb129-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/tab.txt&quot;</span>,</span>
+<span id="cb129-3"><a href="importing-plain-text-files.html#cb129-3"></a>  <span class="dt">delim =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span></span>
+<span id="cb129-4"><a href="importing-plain-text-files.html#cb129-4"></a>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   id = col_character(),
@@ -491,7 +502,6 @@ This chapter gives the nuts and bolts of importing data.
 ##   ht_in = col_double(),
 ##   wgt_lbs = col_double()
 ## )</code></pre>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="importing-plain-text-files.html#cb132-1"></a>tab</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -505,7 +515,7 @@ This chapter gives the nuts and bolts of importing data.
 <li><p>To tell R that the values are now separated by tabs, we changed the value we passed to the <code>delim</code> argument to <code>"\t"</code>. This is a special symbol that means “tab” to R.</p></li>
 </ul>
 <p>I don’t personally receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the <code>readr</code> package. That is, instead of using the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>"\t"</code>, we can simply pass our file path to the <code>read_tsv()</code> function. Under the hood, the <code>read_tsv()</code> function does exactly the same thing as the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>"\t"</code>.</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="importing-plain-text-files.html#cb134-1"></a>tab &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/tab.txt&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="importing-plain-text-files.html#cb132-1"></a>tab &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/tab.txt&quot;</span>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   id = col_character(),
@@ -513,7 +523,6 @@ This chapter gives the nuts and bolts of importing data.
 ##   ht_in = col_double(),
 ##   wgt_lbs = col_double()
 ## )</code></pre>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="importing-plain-text-files.html#cb136-1"></a>tab</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -531,7 +540,7 @@ This chapter gives the nuts and bolts of importing data.
 <p>This number line creates a sequence of columns across your data, with each column being 1 character wide. Notice that spaces are also considered a character with width just like any other. We can use these columns to tell R exactly which columns contain the values for each variable.</p>
 <p><a href="https://www.dropbox.com/s/z6uk0ldi36tras5/fixed_width.txt?dl=1">You may click here to download this file to your compter.</a></p>
 <p>Now, in this case we can just use <code>readr</code>’s <code>read_table()</code> function to import this data:</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="importing-plain-text-files.html#cb138-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_table</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width.txt&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="importing-plain-text-files.html#cb135-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_table</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width.txt&quot;</span>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   id = col_character(),
@@ -539,7 +548,6 @@ This chapter gives the nuts and bolts of importing data.
 ##   ht_in = col_double(),
 ##   wgt_lbs = col_double()
 ## )</code></pre>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="importing-plain-text-files.html#cb140-1"></a>fixed</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -555,12 +563,11 @@ This chapter gives the nuts and bolts of importing data.
 <p>However, how could you import this data if there weren’t always spaces in between data values. For example:</p>
 <p><img src="img/03_part_data_transfer/03_importing_plain_text_files/number_line.png" /><!-- --></p>
 <p>In this case, the <code>read_table()</code> function does not give us the result we want.</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="importing-plain-text-files.html#cb142-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_table</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="importing-plain-text-files.html#cb138-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_table</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   `id sex   ht_inwgt_lbs` = col_character()
 ## )</code></pre>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="importing-plain-text-files.html#cb144-1"></a>fixed</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 1
 ##   `id sex   ht_inwgt_lbs`
 ##   &lt;chr&gt;                  
@@ -572,14 +579,14 @@ This chapter gives the nuts and bolts of importing data.
 <p><a href="https://www.dropbox.com/s/m1rcalh46vodd1b/fixed_width_no_space.txt?dl=1">You may click here to download this file to your compter.</a></p>
 <div id="vector-of-column-widths" class="section level3" number="13.4.1">
 <h3><span class="header-section-number">13.4.1</span> Vector of column widths</h3>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="importing-plain-text-files.html#cb146-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_fwf</span>(</span>
-<span id="cb146-2"><a href="importing-plain-text-files.html#cb146-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
-<span id="cb146-3"><a href="importing-plain-text-files.html#cb146-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_widths</span>(</span>
-<span id="cb146-4"><a href="importing-plain-text-files.html#cb146-4"></a>    <span class="dt">widths    =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">3</span>),</span>
-<span id="cb146-5"><a href="importing-plain-text-files.html#cb146-5"></a>    <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>)</span>
-<span id="cb146-6"><a href="importing-plain-text-files.html#cb146-6"></a>  ),</span>
-<span id="cb146-7"><a href="importing-plain-text-files.html#cb146-7"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
-<span id="cb146-8"><a href="importing-plain-text-files.html#cb146-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="importing-plain-text-files.html#cb141-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_fwf</span>(</span>
+<span id="cb141-2"><a href="importing-plain-text-files.html#cb141-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
+<span id="cb141-3"><a href="importing-plain-text-files.html#cb141-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_widths</span>(</span>
+<span id="cb141-4"><a href="importing-plain-text-files.html#cb141-4"></a>    <span class="dt">widths    =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">3</span>),</span>
+<span id="cb141-5"><a href="importing-plain-text-files.html#cb141-5"></a>    <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>)</span>
+<span id="cb141-6"><a href="importing-plain-text-files.html#cb141-6"></a>  ),</span>
+<span id="cb141-7"><a href="importing-plain-text-files.html#cb141-7"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
+<span id="cb141-8"><a href="importing-plain-text-files.html#cb141-8"></a>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   id = col_character(),
@@ -587,7 +594,6 @@ This chapter gives the nuts and bolts of importing data.
 ##   ht_in = col_double(),
 ##   wgt_lbs = col_double()
 ## )</code></pre>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="importing-plain-text-files.html#cb148-1"></a>fixed</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -599,29 +605,29 @@ This chapter gives the nuts and bolts of importing data.
 <ul>
 <li><p>We used <code>readr</code>’s <code>read_fwf()</code> function to import data from a fixed width format file. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>fixed</code>.</p></li>
 <li><p>The first argument to the <code>read_fwf()</code> function is the <code>file</code> argument. The value passed to the file argument should be file path that tells R where to find the data set on your computer.</p></li>
-<li><p>The second argument to the <code>read_fwf()</code> function is the the <code>col_positions</code> argument. The value passed tells R the width (i.e., number of columns) that belong to each variable in the raw data set. This information is actually passed to the <code>col_positions</code> argument directly from the <code>fwf_widths()</code> function. This is an example of nesting functions.</p>
+<li><p>The second argument to the <code>read_fwf()</code> function is the the <code>col_positions</code> argument. The value passed to this argument tells R the width (i.e., number of columns) that belong to each variable in the raw data set. This information is actually passed to the <code>col_positions</code> argument directly from the <code>fwf_widths()</code> function. This is an example of nesting functions.</p>
 <ul>
 <li>The first argument to the <code>fwf_widths()</code> function is the <code>widths</code> argument. The value passed to the <code>widths</code> argument should be a numeric vector of column widths. The column width of each variable should be calculated as the number of columns that contain the values for that variable. For example, take another look at the data with the imaginary number line:</li>
 </ul></li>
 </ul>
 <p><img src="img/03_part_data_transfer/03_importing_plain_text_files/number_line.png" /><!-- --></p>
 <ul>
-<li><p>All of the values for the variable <code>id</code> can be located within the first 3 columns of data. All of the values for the variable <code>sex</code> can be located within the next 6 columns of data. All of the values for the variable <code>ht_in</code> can be located within the next 5 columns of data. And, all of the values for the variable <code>wgt_lbs</code> can be located within the next 3 columns of data. Therefore, we case the vector <code>c(3, 6, 5, 3)</code> to the <code>widths</code> argument.</p></li>
+<li><p>All of the values for the variable <code>id</code> can be located within the first 3 columns of data. All of the values for the variable <code>sex</code> can be located within the next 6 columns of data. All of the values for the variable <code>ht_in</code> can be located within the next 5 columns of data. And, all of the values for the variable <code>wgt_lbs</code> can be located within the next 3 columns of data. Therefore, we pass the vector <code>c(3, 6, 5, 3)</code> to the <code>widths</code> argument.</p></li>
 <li><p>The second argument to the <code>fwf_widths()</code> function is the <code>col_names</code> argument. The value passed to the <code>col_names</code> argument should be a character vector of column names.</p></li>
 <li><p>The third argument of the <code>read_fwf()</code> function that we passed a value to is the <code>skip</code> argument. The value passed to the <code>skip</code> argument tells R how many rows to ignore before looking for data values. In this case, we passed a value of one, which told R to ignore the first row of the raw data. We did this because the first row of the raw data contained variable names instead of data values, and we already gave R variable names in the <code>col_names</code> argument to the <code>fwf_widths()</code> function.</p></li>
 </ul>
 </div>
 <div id="paired-vector-of-start-and-end-positions" class="section level3" number="13.4.2">
 <h3><span class="header-section-number">13.4.2</span> Paired vector of start and end positions</h3>
-<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="importing-plain-text-files.html#cb150-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_fwf</span>(</span>
-<span id="cb150-2"><a href="importing-plain-text-files.html#cb150-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
-<span id="cb150-3"><a href="importing-plain-text-files.html#cb150-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_positions</span>(</span>
-<span id="cb150-4"><a href="importing-plain-text-files.html#cb150-4"></a>    <span class="dt">start     =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">10</span>, <span class="dv">15</span>),</span>
-<span id="cb150-5"><a href="importing-plain-text-files.html#cb150-5"></a>    <span class="dt">end       =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">17</span>),</span>
-<span id="cb150-6"><a href="importing-plain-text-files.html#cb150-6"></a>    <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>)</span>
-<span id="cb150-7"><a href="importing-plain-text-files.html#cb150-7"></a>  ),</span>
-<span id="cb150-8"><a href="importing-plain-text-files.html#cb150-8"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
-<span id="cb150-9"><a href="importing-plain-text-files.html#cb150-9"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="importing-plain-text-files.html#cb144-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_fwf</span>(</span>
+<span id="cb144-2"><a href="importing-plain-text-files.html#cb144-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
+<span id="cb144-3"><a href="importing-plain-text-files.html#cb144-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_positions</span>(</span>
+<span id="cb144-4"><a href="importing-plain-text-files.html#cb144-4"></a>    <span class="dt">start     =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">10</span>, <span class="dv">15</span>),</span>
+<span id="cb144-5"><a href="importing-plain-text-files.html#cb144-5"></a>    <span class="dt">end       =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">17</span>),</span>
+<span id="cb144-6"><a href="importing-plain-text-files.html#cb144-6"></a>    <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>)</span>
+<span id="cb144-7"><a href="importing-plain-text-files.html#cb144-7"></a>  ),</span>
+<span id="cb144-8"><a href="importing-plain-text-files.html#cb144-8"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
+<span id="cb144-9"><a href="importing-plain-text-files.html#cb144-9"></a>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   id = col_character(),
@@ -629,7 +635,6 @@ This chapter gives the nuts and bolts of importing data.
 ##   ht_in = col_double(),
 ##   wgt_lbs = col_double()
 ## )</code></pre>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="importing-plain-text-files.html#cb152-1"></a>fixed</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -655,16 +660,16 @@ This chapter gives the nuts and bolts of importing data.
 <h3><span class="header-section-number">13.4.3</span> Using named arguments</h3>
 <p>As a shortcut, either of the methods above can be written using named vectors. All this means is that we basically combine the <code>widths</code> and <code>col_names</code> arguments to pass a vector of column widths, or we combine the <code>start</code>, <code>end</code>, and <code>col_names</code> arguments to pass a vector of start and end positions. For example:</p>
 <p><strong>Column widths:</strong></p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="importing-plain-text-files.html#cb154-1"></a><span class="kw">read_fwf</span>(</span>
-<span id="cb154-2"><a href="importing-plain-text-files.html#cb154-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
-<span id="cb154-3"><a href="importing-plain-text-files.html#cb154-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_cols</span>(</span>
-<span id="cb154-4"><a href="importing-plain-text-files.html#cb154-4"></a>    <span class="dt">id      =</span> <span class="dv">3</span>,</span>
-<span id="cb154-5"><a href="importing-plain-text-files.html#cb154-5"></a>    <span class="dt">sex     =</span> <span class="dv">6</span>,</span>
-<span id="cb154-6"><a href="importing-plain-text-files.html#cb154-6"></a>    <span class="dt">ht_in   =</span> <span class="dv">5</span>,</span>
-<span id="cb154-7"><a href="importing-plain-text-files.html#cb154-7"></a>    <span class="dt">wgt_lbs =</span> <span class="dv">3</span></span>
-<span id="cb154-8"><a href="importing-plain-text-files.html#cb154-8"></a>  ),</span>
-<span id="cb154-9"><a href="importing-plain-text-files.html#cb154-9"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
-<span id="cb154-10"><a href="importing-plain-text-files.html#cb154-10"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="importing-plain-text-files.html#cb147-1"></a><span class="kw">read_fwf</span>(</span>
+<span id="cb147-2"><a href="importing-plain-text-files.html#cb147-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
+<span id="cb147-3"><a href="importing-plain-text-files.html#cb147-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_cols</span>(</span>
+<span id="cb147-4"><a href="importing-plain-text-files.html#cb147-4"></a>    <span class="dt">id      =</span> <span class="dv">3</span>,</span>
+<span id="cb147-5"><a href="importing-plain-text-files.html#cb147-5"></a>    <span class="dt">sex     =</span> <span class="dv">6</span>,</span>
+<span id="cb147-6"><a href="importing-plain-text-files.html#cb147-6"></a>    <span class="dt">ht_in   =</span> <span class="dv">5</span>,</span>
+<span id="cb147-7"><a href="importing-plain-text-files.html#cb147-7"></a>    <span class="dt">wgt_lbs =</span> <span class="dv">3</span></span>
+<span id="cb147-8"><a href="importing-plain-text-files.html#cb147-8"></a>  ),</span>
+<span id="cb147-9"><a href="importing-plain-text-files.html#cb147-9"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
+<span id="cb147-10"><a href="importing-plain-text-files.html#cb147-10"></a>)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -673,16 +678,16 @@ This chapter gives the nuts and bolts of importing data.
 ## 3 003   Female    64     130
 ## 4 004   Female    65     154</code></pre>
 <p><strong>Column positions:</strong></p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="importing-plain-text-files.html#cb156-1"></a><span class="kw">read_fwf</span>(</span>
-<span id="cb156-2"><a href="importing-plain-text-files.html#cb156-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
-<span id="cb156-3"><a href="importing-plain-text-files.html#cb156-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_cols</span>(</span>
-<span id="cb156-4"><a href="importing-plain-text-files.html#cb156-4"></a>    <span class="dt">id      =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>),</span>
-<span id="cb156-5"><a href="importing-plain-text-files.html#cb156-5"></a>    <span class="dt">sex     =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">9</span>),</span>
-<span id="cb156-6"><a href="importing-plain-text-files.html#cb156-6"></a>    <span class="dt">ht_in   =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">11</span>),</span>
-<span id="cb156-7"><a href="importing-plain-text-files.html#cb156-7"></a>    <span class="dt">wgt_lbs =</span> <span class="kw">c</span>(<span class="dv">15</span>, <span class="dv">17</span>)</span>
-<span id="cb156-8"><a href="importing-plain-text-files.html#cb156-8"></a>  ),</span>
-<span id="cb156-9"><a href="importing-plain-text-files.html#cb156-9"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
-<span id="cb156-10"><a href="importing-plain-text-files.html#cb156-10"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="importing-plain-text-files.html#cb149-1"></a><span class="kw">read_fwf</span>(</span>
+<span id="cb149-2"><a href="importing-plain-text-files.html#cb149-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
+<span id="cb149-3"><a href="importing-plain-text-files.html#cb149-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_cols</span>(</span>
+<span id="cb149-4"><a href="importing-plain-text-files.html#cb149-4"></a>    <span class="dt">id      =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb149-5"><a href="importing-plain-text-files.html#cb149-5"></a>    <span class="dt">sex     =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">9</span>),</span>
+<span id="cb149-6"><a href="importing-plain-text-files.html#cb149-6"></a>    <span class="dt">ht_in   =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">11</span>),</span>
+<span id="cb149-7"><a href="importing-plain-text-files.html#cb149-7"></a>    <span class="dt">wgt_lbs =</span> <span class="kw">c</span>(<span class="dv">15</span>, <span class="dv">17</span>)</span>
+<span id="cb149-8"><a href="importing-plain-text-files.html#cb149-8"></a>  ),</span>
+<span id="cb149-9"><a href="importing-plain-text-files.html#cb149-9"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
+<span id="cb149-10"><a href="importing-plain-text-files.html#cb149-10"></a>)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -694,7 +699,7 @@ This chapter gives the nuts and bolts of importing data.
 </div>
 <div id="importing-comma-separated-values-files" class="section level2" number="13.5">
 <h2><span class="header-section-number">13.5</span> Importing comma separated values files</h2>
-<p>The final type of plain text file that we will discuss is by far the most common type used in my experience. I’m talking about the <strong>comma separated values</strong> or <strong>csv</strong> file. Unlike space and tab separated values files, csv file names end with the <strong>.csv</strong> file extension. However, they are still considered plain text files. Meaning, you can open them in plain text editors such as Notepad for Windows or TextEdit for Mac. However, you can also open csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, and Google Sheets.</p>
+<p>The final type of plain text file that we will discuss is by far the most common type used in my experience. I’m talking about the <strong>comma separated values</strong> or <strong>csv</strong> file. Unlike space and tab separated values files, csv file names end with the <strong>.csv</strong> file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, and Google Sheets.</p>
 <div class="figure"><span id="fig:unnamed-chunk-142"></span>
 <img src="img/03_part_data_transfer/03_importing_plain_text_files/csv_plain_text.png" alt="A csv file viewed in a plain text editor."  />
 <p class="caption">
@@ -709,7 +714,7 @@ Figure 13.2: A csv file viewed in Microsoft Excel.
 </div>
 <p>Importing standard csv files into R with the <code>readr</code> package is easy and uses a syntax that is very similar to <code>read_delim()</code> and <code>read_tsv()</code>. In fact, in many cases we only have to pass the path to the csv file to the <code>read_csv()</code> function like so:</p>
 <p><a href="https://www.dropbox.com/s/weaea47drw0iln5/comma.csv?dl=1">You may click here to download this file to your compter.</a></p>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="importing-plain-text-files.html#cb158-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="importing-plain-text-files.html#cb151-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   id = col_double(),
@@ -717,7 +722,6 @@ Figure 13.2: A csv file viewed in Microsoft Excel.
 ##   ht_in = col_double(),
 ##   wt_lbs = col_double()
 ## )</code></pre>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="importing-plain-text-files.html#cb160-1"></a>csv</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##      id sex    ht_in wt_lbs
 ##   &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
@@ -728,39 +732,34 @@ Figure 13.2: A csv file viewed in Microsoft Excel.
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>readr</code>’s <code>read_csv()</code> function to import a data set with values that are delimited by commas. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>csv</code>.</p></li>
-<li><p>Like, <code>read_tsv()</code> R is basically executing the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> under the hood. You could also use the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> if you wanted to.</p></li>
+<li><p>Like <code>read_tsv()</code>, R is basically executing the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> under the hood. You could also use the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> if you wanted to.</p></li>
 </ul>
 </div>
 <div id="additional-arguments" class="section level2" number="13.6">
 <h2><span class="header-section-number">13.6</span> Additional arguments</h2>
 <p>For the most part, the data we imported in all of the examples above was relatively well behaved. What I mean by that is that the data basically “looked” like each of the <code>read_</code> functions were expecting it to “look”. Therefore, we didn’t have to adjust many of the various <code>read_</code> functions’ default values. The exception was changing the default value of the <code>na</code> argument to the <code>read_delim()</code> function. However, all of the <code>read_</code> functions above have additional arguments that you may need to tweak on occasion. The two that I tend to adjust most often are the <code>col_names</code> and <code>col_types</code> arguments. It’s impossible for me to think of every scenario where you may need to do this, but I’ll walk through two basic examples below, which should be sufficient for you to get the idea.</p>
-<p>Take a look at this csv file for a few seconds. It’s basically the same exact height and weight data we’ve been using; however, I’ve made some changes around the data. See if you can spot them all.</p>
-<div class="figure"><span id="fig:unnamed-chunk-146"></span>
-<img src="img/03_part_data_transfer/03_importing_plain_text_files/csv_complex.png" alt="A csv file viewed in Microsoft Excel."  />
-<p class="caption">
-Figure 13.3: A csv file viewed in Microsoft Excel.
-</p>
-</div>
+<p>Take a look at this csv file for a few seconds. It started as the same exact height and weight data we’ve been using, but I made a few changes. See if you can spot them all.</p>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/csv_complex.png" /><!-- --></p>
 <p>When people record data in Microsoft Excel, they do all kinds of crazy things. In the screenshot above, I’ve included just a few examples of things I see all the time. For example:</p>
 <ul>
-<li><p>Row one contains generic variable names that don’t really serve much of purpose.</p></li>
-<li><p>Row one also contains some notes for the data collection staff that aren’t really part of the data.</p></li>
+<li><p>Row one contains generic variable names that don’t really serve much of a purpose.</p></li>
 <li><p>Row two is a blank line. I’m not sure why it’s there. Maybe the study staff finds it aesthetically pleasing?</p></li>
 <li><p>Row three are some variable descriptions. These are actually useful, but they aren’t currently formatted in a way that makes for good variable names.</p></li>
 <li><p>Row 7, column D is a missing value. However, someone wrote the word “Missing” instead of leaving the cell blank.</p></li>
+<li><p>Column E also contains some notes for the data collection staff that aren’t really part of the data.</p></li>
 </ul>
 <p>All of the issues listed above are things we will have to deal with before we can analyze our data. Now, in this small data set we could just fix these issues directly in Microsoft Excel and then import into R with a simple call to <code>read_csv()</code> without adjusting any options. However, that this is generally a really bad idea.</p>
 <div class="warning">
-<p>⚠️<strong>Warning:</strong> Alter your data with code</p>
+<p>⚠️<strong>Warning:</strong></p>
 <ul>
 <li><p>I suggest that you don’t <strong>EVER</strong> alter your raw data. All kinds of crazy things happen with data and data files. If you keep your raw data untouched and in a safe place, worst case scenario you can always come back to it and start over. If you start messing with the raw data, then you may lose the ability to recover what it looked like in its original form forever. If you import the data into R before altering it then your raw data stays preserved.</p></li>
-<li><p>If you are going to make alterations in Excel prior to importing the data, I <strong>strongly</strong> suggest making a copy of the Excel file, and then altering and importing the copy of the raw data. But, even this can be a bad idea.</p></li>
-<li><p>If you make alterations to the data in Excel then there is generally no record of those alterations. Therefore, it can be really difficult for others (including future you) to know what was done to the data. You can manually compare the altered data to the original data of you are working from a copy (see above), but who wants to do that – especially if the file is large? If you import the data into R as-is then your R code will, by definition, create a record of any alterations that were made.</p></li>
-<li><p>Often data is updated. You could spend a significant amount of time altering your data in Excel only to be sent an updated file next week. Often, the manual alterations you made in one Excel file are not transferable to another. However, if all alterations are made in R then you can often run the exact same code again on the updated data.</p>
+<li><p>If you are going to make alterations in Excel prior to importing the data, I <strong>strongly</strong> suggest making a copy of the raw data first. Then, alter the copy before importing into R. But, even this can be a bad idea.</p></li>
+<li><p>If you make alterations to the data in Excel then there is generally no record of those alterations. For example, let’s say you click in a cell and delete a value (maybe even by accident), and then send me the csv file. I will have no way of knowing that a value was deleted. When you alter the data directly in Excel (or any program that doesn’t require writing code), it can be really difficult for others (including future you) to know what was done to the data. You may be able manually compare the altered data to the original data if you have access to both, but who wants to do that – especially if the file is large? However, if you import the data into R as-is and programmatically make alterations with R code, then your R code will, by definition, serve a record of all alterations that were made.</p></li>
+<li><p>Often data is updated. You could spend a significant amount of time altering your data in Excel only to be sent an updated file next week. Often, the manual alterations you made in one Excel file are not transferable to another. However, if all alterations are made in R, then you can often just run the exact same code again on the updated data.</p>
 </div></li>
 </ul>
-<p>So, let’s walk through addressing these issues together. We’ll start by taking a look at our results with all of <code>read_csv</code>’s arguments left are their default values.</p>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="importing-plain-text-files.html#cb162-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>)</span></code></pre></div>
+<p>So, let’s walk through addressing these issues together. We’ll start by taking a look at our results with all of <code>read_csv</code>’s arguments left at their default values.</p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="importing-plain-text-files.html#cb154-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning: Duplicated column names deduplicated: &#39;Var1&#39; =&gt; &#39;Var1_1&#39; [2]</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
@@ -770,7 +769,6 @@ Figure 13.3: A csv file viewed in Microsoft Excel.
 ##   Var4 = col_character(),
 ##   Notes = col_character()
 ## )</code></pre>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="importing-plain-text-files.html#cb165-1"></a>csv</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 5
 ##   Var1     Var1_1        Var3                Var4                Notes          
 ##   &lt;chr&gt;    &lt;chr&gt;         &lt;chr&gt;               &lt;chr&gt;               &lt;chr&gt;          
@@ -781,10 +779,10 @@ Figure 13.3: A csv file viewed in Microsoft Excel.
 ## 5 3        Female        64                  130                 &lt;NA&gt;           
 ## 6 4        Female        65                  Missing             Call back on M…</code></pre>
 <p>That is obviously not what we wanted. So, let’s start adjusting some of the default values.</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="importing-plain-text-files.html#cb167-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
-<span id="cb167-2"><a href="importing-plain-text-files.html#cb167-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
-<span id="cb167-3"><a href="importing-plain-text-files.html#cb167-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>)</span>
-<span id="cb167-4"><a href="importing-plain-text-files.html#cb167-4"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="importing-plain-text-files.html#cb158-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
+<span id="cb158-2"><a href="importing-plain-text-files.html#cb158-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
+<span id="cb158-3"><a href="importing-plain-text-files.html#cb158-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>)</span>
+<span id="cb158-4"><a href="importing-plain-text-files.html#cb158-4"></a>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   id = col_character(),
@@ -801,7 +799,6 @@ Figure 13.3: A csv file viewed in Microsoft Excel.
 ##   5  -- 4 columns 5 columns &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
 ## ... ... ......... ......... .........................................................................
 ## See problems(...) for more details.</code></pre>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="importing-plain-text-files.html#cb170-1"></a>csv</span></code></pre></div>
 <pre><code>## # A tibble: 7 x 4
 ##   id       sex             ht_in                  wgt_lbs                 
 ##   &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;                  &lt;chr&gt;                   
@@ -817,17 +814,17 @@ Figure 13.3: A csv file viewed in Microsoft Excel.
 <li><p>We passed a character vector of variable names to the <code>col_names</code> argument. Doing so told R to use the words in the character vector as column names instead of the values in the first row of the raw data.</p></li>
 <li><p>Because the character vector of names only contained 4 values, the last column was dropped from the data. R gives us a warning message to let us know. Specially, for each row it says that it was expecting 4 columns (because we gave it 4 column names), but actually found 5 columns. We’ll get rid of this message next.</p></li>
 </ul>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="importing-plain-text-files.html#cb172-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
-<span id="cb172-2"><a href="importing-plain-text-files.html#cb172-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
-<span id="cb172-3"><a href="importing-plain-text-files.html#cb172-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>),</span>
-<span id="cb172-4"><a href="importing-plain-text-files.html#cb172-4"></a>  <span class="dt">col_types =</span> <span class="kw">cols</span>(</span>
-<span id="cb172-5"><a href="importing-plain-text-files.html#cb172-5"></a>    <span class="kw">col_character</span>(),</span>
-<span id="cb172-6"><a href="importing-plain-text-files.html#cb172-6"></a>    <span class="kw">col_character</span>(),</span>
-<span id="cb172-7"><a href="importing-plain-text-files.html#cb172-7"></a>    <span class="kw">col_integer</span>(),</span>
-<span id="cb172-8"><a href="importing-plain-text-files.html#cb172-8"></a>    <span class="kw">col_integer</span>(),</span>
-<span id="cb172-9"><a href="importing-plain-text-files.html#cb172-9"></a>    <span class="kw">col_skip</span>()</span>
-<span id="cb172-10"><a href="importing-plain-text-files.html#cb172-10"></a>  )</span>
-<span id="cb172-11"><a href="importing-plain-text-files.html#cb172-11"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="importing-plain-text-files.html#cb162-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
+<span id="cb162-2"><a href="importing-plain-text-files.html#cb162-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
+<span id="cb162-3"><a href="importing-plain-text-files.html#cb162-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>),</span>
+<span id="cb162-4"><a href="importing-plain-text-files.html#cb162-4"></a>  <span class="dt">col_types =</span> <span class="kw">cols</span>(</span>
+<span id="cb162-5"><a href="importing-plain-text-files.html#cb162-5"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb162-6"><a href="importing-plain-text-files.html#cb162-6"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb162-7"><a href="importing-plain-text-files.html#cb162-7"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb162-8"><a href="importing-plain-text-files.html#cb162-8"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb162-9"><a href="importing-plain-text-files.html#cb162-9"></a>    <span class="kw">col_skip</span>()</span>
+<span id="cb162-10"><a href="importing-plain-text-files.html#cb162-10"></a>  )</span>
+<span id="cb162-11"><a href="importing-plain-text-files.html#cb162-11"></a>)</span></code></pre></div>
 <pre><code>## Warning: 5 parsing failures.
 ## row     col   expected                   actual                                                                      file
 ##   1 ht_in   an integer Var3                     &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
@@ -835,7 +832,6 @@ Figure 13.3: A csv file viewed in Microsoft Excel.
 ##   3 ht_in   an integer Paticipant Height (in)   &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
 ##   3 wgt_lbs an integer Participant Weight (lbs) &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
 ##   7 wgt_lbs an integer Missing                  &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;</code></pre>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="importing-plain-text-files.html#cb174-1"></a>csv</span></code></pre></div>
 <pre><code>## # A tibble: 7 x 4
 ##   id       sex             ht_in wgt_lbs
 ##   &lt;chr&gt;    &lt;chr&gt;           &lt;int&gt;   &lt;int&gt;
@@ -849,26 +845,27 @@ Figure 13.3: A csv file viewed in Microsoft Excel.
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We told R explicitly what type of values we wanted each column to contain. We did so by nesting a <code>col_</code> function for each column type inside the <code>col()</code> function, which is passed directly to the <code>col-types</code> argument.</p></li>
+<li><p>Notice various column types (e.g., <code>col_character()</code>) <em>are</em> functions, and that they are nested inside of the <code>cols()</code> function. Because they are functions, you must put include the parentheses. That’s just how the <code>readr</code> package is designed.</p></li>
+<li><p>Notice that the last column type we passed to the <code>col_types</code> argument was <code>col_skip()</code>. This tells R to ignore the 5th column in the raw data (5th because it’s the 5th column type we listed). Doing this will get rid of the warning we saw earlier.</p></li>
 <li><p><a href="https://readr.tidyverse.org/articles/readr.html#rectangular-parsers">Click here to see all available column types.</a></p></li>
-<li><p>Because we told R explicitly what type of values we wanted each column to contain, R had to drop any values that couldn’t be coerced to the type we requested. More specifically, they were coerced to missing (<code>NA</code>). For example, the value <code>Var3</code> that was previously in the first row of the <code>ht_in</code> column was coerced to <code>NA</code> because R does not know (nor do I) how to turn the character string “Var3” into an integer. R gives us a warning message about this.</p></li>
+<li><p>Because we told R explicitly what type of values we wanted each column to contain, R had to drop any values that couldn’t be coerced to the type we requested. More specifically, they were coerced to missing (<code>NA</code>). For example, the value <code>Var3</code> that was previously in the first row of the <code>ht_in</code> column. It was coerced to <code>NA</code> because R does not know (nor do I) how to turn the character string “Var3” into an integer. R gives us a warning message about this.</p></li>
 </ul>
 <p>Next, let’s go ahead and tell R to ignore the first three rows of the csv file. They don’t contain anything that is of use to us at this point.</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="importing-plain-text-files.html#cb176-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
-<span id="cb176-2"><a href="importing-plain-text-files.html#cb176-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
-<span id="cb176-3"><a href="importing-plain-text-files.html#cb176-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>),</span>
-<span id="cb176-4"><a href="importing-plain-text-files.html#cb176-4"></a>  <span class="dt">col_types =</span> <span class="kw">cols</span>(</span>
-<span id="cb176-5"><a href="importing-plain-text-files.html#cb176-5"></a>    <span class="kw">col_character</span>(),</span>
-<span id="cb176-6"><a href="importing-plain-text-files.html#cb176-6"></a>    <span class="kw">col_character</span>(),</span>
-<span id="cb176-7"><a href="importing-plain-text-files.html#cb176-7"></a>    <span class="kw">col_integer</span>(),</span>
-<span id="cb176-8"><a href="importing-plain-text-files.html#cb176-8"></a>    <span class="kw">col_integer</span>(),</span>
-<span id="cb176-9"><a href="importing-plain-text-files.html#cb176-9"></a>    <span class="kw">col_skip</span>()</span>
-<span id="cb176-10"><a href="importing-plain-text-files.html#cb176-10"></a>  ),</span>
-<span id="cb176-11"><a href="importing-plain-text-files.html#cb176-11"></a>  <span class="dt">skip =</span> <span class="dv">3</span></span>
-<span id="cb176-12"><a href="importing-plain-text-files.html#cb176-12"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="importing-plain-text-files.html#cb165-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
+<span id="cb165-2"><a href="importing-plain-text-files.html#cb165-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
+<span id="cb165-3"><a href="importing-plain-text-files.html#cb165-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>),</span>
+<span id="cb165-4"><a href="importing-plain-text-files.html#cb165-4"></a>  <span class="dt">col_types =</span> <span class="kw">cols</span>(</span>
+<span id="cb165-5"><a href="importing-plain-text-files.html#cb165-5"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb165-6"><a href="importing-plain-text-files.html#cb165-6"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb165-7"><a href="importing-plain-text-files.html#cb165-7"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb165-8"><a href="importing-plain-text-files.html#cb165-8"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb165-9"><a href="importing-plain-text-files.html#cb165-9"></a>    <span class="kw">col_skip</span>()</span>
+<span id="cb165-10"><a href="importing-plain-text-files.html#cb165-10"></a>  ),</span>
+<span id="cb165-11"><a href="importing-plain-text-files.html#cb165-11"></a>  <span class="dt">skip =</span> <span class="dv">3</span></span>
+<span id="cb165-12"><a href="importing-plain-text-files.html#cb165-12"></a>)</span></code></pre></div>
 <pre><code>## Warning: 1 parsing failure.
 ## row     col   expected  actual                                                                      file
 ##   4 wgt_lbs an integer Missing &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;</code></pre>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="importing-plain-text-files.html#cb178-1"></a>csv</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;   &lt;int&gt;
@@ -881,20 +878,19 @@ Figure 13.3: A csv file viewed in Microsoft Excel.
 <li><p>We told R to ignore the first three rows of the csv file by passing the value 3 to the <code>skip</code> argument.</p></li>
 <li><p>The remaining warning above is R telling us that it still had to convert the word “Missing” to an <code>NA</code> in the 4th row of the <code>wgt_lbs</code> column because it didn’t know how to turn the word “Missing” into an integer. This is actually exactly what we wanted to happen, but we can get rid of the warning by explicitly adding the word “Missing” to the list of values R looks for in the <code>na</code> argument.</p></li>
 </ul>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="importing-plain-text-files.html#cb180-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
-<span id="cb180-2"><a href="importing-plain-text-files.html#cb180-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
-<span id="cb180-3"><a href="importing-plain-text-files.html#cb180-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>),</span>
-<span id="cb180-4"><a href="importing-plain-text-files.html#cb180-4"></a>  <span class="dt">col_types =</span> <span class="kw">cols</span>(</span>
-<span id="cb180-5"><a href="importing-plain-text-files.html#cb180-5"></a>    <span class="kw">col_character</span>(),</span>
-<span id="cb180-6"><a href="importing-plain-text-files.html#cb180-6"></a>    <span class="kw">col_character</span>(),</span>
-<span id="cb180-7"><a href="importing-plain-text-files.html#cb180-7"></a>    <span class="kw">col_integer</span>(),</span>
-<span id="cb180-8"><a href="importing-plain-text-files.html#cb180-8"></a>    <span class="kw">col_integer</span>(),</span>
-<span id="cb180-9"><a href="importing-plain-text-files.html#cb180-9"></a>    <span class="kw">col_skip</span>()</span>
-<span id="cb180-10"><a href="importing-plain-text-files.html#cb180-10"></a>  ),</span>
-<span id="cb180-11"><a href="importing-plain-text-files.html#cb180-11"></a>  <span class="dt">skip =</span> <span class="dv">3</span>,</span>
-<span id="cb180-12"><a href="importing-plain-text-files.html#cb180-12"></a>  <span class="dt">na =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;Missing&quot;</span>)</span>
-<span id="cb180-13"><a href="importing-plain-text-files.html#cb180-13"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="importing-plain-text-files.html#cb181-1"></a>csv</span></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="importing-plain-text-files.html#cb168-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
+<span id="cb168-2"><a href="importing-plain-text-files.html#cb168-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
+<span id="cb168-3"><a href="importing-plain-text-files.html#cb168-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>),</span>
+<span id="cb168-4"><a href="importing-plain-text-files.html#cb168-4"></a>  <span class="dt">col_types =</span> <span class="kw">cols</span>(</span>
+<span id="cb168-5"><a href="importing-plain-text-files.html#cb168-5"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb168-6"><a href="importing-plain-text-files.html#cb168-6"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb168-7"><a href="importing-plain-text-files.html#cb168-7"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb168-8"><a href="importing-plain-text-files.html#cb168-8"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb168-9"><a href="importing-plain-text-files.html#cb168-9"></a>    <span class="kw">col_skip</span>()</span>
+<span id="cb168-10"><a href="importing-plain-text-files.html#cb168-10"></a>  ),</span>
+<span id="cb168-11"><a href="importing-plain-text-files.html#cb168-11"></a>  <span class="dt">skip =</span> <span class="dv">3</span>,</span>
+<span id="cb168-12"><a href="importing-plain-text-files.html#cb168-12"></a>  <span class="dt">na =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;Missing&quot;</span>)</span>
+<span id="cb168-13"><a href="importing-plain-text-files.html#cb168-13"></a>)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   id    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;   &lt;int&gt;
@@ -902,18 +898,14 @@ Figure 13.3: A csv file viewed in Microsoft Excel.
 ## 2 2     Male      NA     176
 ## 3 3     Female    64     130
 ## 4 4     Female    65      NA</code></pre>
-</div>
-<div id="summary-1" class="section level2" number="13.7">
-<h2><span class="header-section-number">13.7</span> Summary</h2>
-<p>Wow! This was kind of a long chapter! 🤯 But, you should not have the foundation you need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Specially, you should now know how to import data stored in the following formats:</p>
-<ul>
-<li><p>Plain text files with data delimited by a single space.</p></li>
-<li><p>Plain text files with data delimited by tabs.</p></li>
-<li><p>Plain text files stored in a fixed width format.</p></li>
-<li><p>Plain text files with data delimited by commas - csv files.</p></li>
-</ul>
-<p>Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.</p>
+<p>Wow! This was kind of a long chapter! 🤯 But, you should not have the foundation you need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.</p>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Grolemund2017-qp">
+<p>3. Grolemund G, Wickham H. <em>R for Data Science</em>.; 2017.</p>
 </div>
 </div>
             </section>

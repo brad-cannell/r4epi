@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>13 Importing plain text files | R for Epidemiology</title>
+  <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="13 Importing plain text files | R for Epidemiology" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://brad-cannell.github.io/r4epi/" />
+  
+  <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="github-repo" content="brad-cannell/r4epi" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="13 Importing plain text files | R for Epidemiology" />
+  
+  <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  
+
+<meta name="author" content="Brad Cannell" />
+
+
+<meta name="date" content="2020-06-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="file-paths.html"/>
+<link rel="next" href="importing-binary-files.html"/>
+<script src="libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R for Epidemiology</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html"><i class="fa fa-check"></i><b>1</b> Installing R and RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-mac"><i class="fa fa-check"></i><b>1.1</b> Download and install on a Mac</a></li>
+<li class="chapter" data-level="1.2" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-pc"><i class="fa fa-check"></i><b>1.2</b> Download and install on a PC</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="what-is-r.html"><a href="what-is-r.html"><i class="fa fa-check"></i><b>2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="what-is-r.html"><a href="what-is-r.html#what-is-data"><i class="fa fa-check"></i><b>2.1</b> What is data?</a></li>
+<li class="chapter" data-level="2.2" data-path="what-is-r.html"><a href="what-is-r.html#what-is-r-1"><i class="fa fa-check"></i><b>2.2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="what-is-r.html"><a href="what-is-r.html#transferring-data"><i class="fa fa-check"></i><b>2.2.1</b> Transferring data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="what-is-r.html"><a href="what-is-r.html#managing-data"><i class="fa fa-check"></i><b>2.2.2</b> Managing data</a></li>
+<li class="chapter" data-level="2.2.3" data-path="what-is-r.html"><a href="what-is-r.html#analyzing-data"><i class="fa fa-check"></i><b>2.2.3</b> Analyzing data</a></li>
+<li class="chapter" data-level="2.2.4" data-path="what-is-r.html"><a href="what-is-r.html#presenting-data"><i class="fa fa-check"></i><b>2.2.4</b> Presenting data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html"><i class="fa fa-check"></i><b>3</b> Navigating the RStudio interface</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-console"><i class="fa fa-check"></i><b>3.1</b> The console</a></li>
+<li class="chapter" data-level="3.2" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-environment-pane"><i class="fa fa-check"></i><b>3.2</b> The environment pane</a></li>
+<li class="chapter" data-level="3.3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-files-pane"><i class="fa fa-check"></i><b>3.3</b> The files pane</a></li>
+<li class="chapter" data-level="3.4" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-source-pane"><i class="fa fa-check"></i><b>3.4</b> The source pane</a></li>
+<li class="chapter" data-level="3.5" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#rstudio-preferences"><i class="fa fa-check"></i><b>3.5</b> RStudio preferences</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html"><i class="fa fa-check"></i><b>4</b> Speaking R’s language</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#r-is-a-language"><i class="fa fa-check"></i><b>4.1</b> R is a <em>language</em></a></li>
+<li class="chapter" data-level="4.2" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#the-r-interpreter"><i class="fa fa-check"></i><b>4.2</b> The R interpreter</a></li>
+<li class="chapter" data-level="4.3" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#errors"><i class="fa fa-check"></i><b>4.3</b> Errors</a></li>
+<li class="chapter" data-level="4.4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#functions"><i class="fa fa-check"></i><b>4.4</b> Functions</a></li>
+<li class="chapter" data-level="4.5" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#objects"><i class="fa fa-check"></i><b>4.5</b> Objects</a></li>
+<li class="chapter" data-level="4.6" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#comments"><i class="fa fa-check"></i><b>4.6</b> Comments</a></li>
+<li class="chapter" data-level="4.7" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#packages"><i class="fa fa-check"></i><b>4.7</b> Packages</a></li>
+<li class="chapter" data-level="4.8" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#programming-style"><i class="fa fa-check"></i><b>4.8</b> Programming style</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lets-get-programming.html"><a href="lets-get-programming.html"><i class="fa fa-check"></i><b>5</b> Let’s get programming</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#simulating-data"><i class="fa fa-check"></i><b>5.1</b> Simulating data</a></li>
+<li class="chapter" data-level="5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vectors"><i class="fa fa-check"></i><b>5.2</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vector-types"><i class="fa fa-check"></i><b>5.2.1</b> Vector types</a></li>
+<li class="chapter" data-level="5.2.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#double-vectors"><i class="fa fa-check"></i><b>5.2.2</b> Double vectors</a></li>
+<li class="chapter" data-level="5.2.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#integer-vectors"><i class="fa fa-check"></i><b>5.2.3</b> Integer vectors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#logical-vectors"><i class="fa fa-check"></i><b>5.2.4</b> Logical vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#data-frames"><i class="fa fa-check"></i><b>5.3</b> Data frames</a></li>
+<li class="chapter" data-level="5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#missing-data"><i class="fa fa-check"></i><b>5.4</b> Missing data</a></li>
+<li class="chapter" data-level="5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#our-first-analysis"><i class="fa fa-check"></i><b>5.5</b> Our first analysis</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#manual-calculation-of-the-mean"><i class="fa fa-check"></i><b>5.5.1</b> Manual calculation of the mean</a></li>
+<li class="chapter" data-level="5.5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#dollar-sign-notation"><i class="fa fa-check"></i><b>5.5.2</b> Dollar sign notation</a></li>
+<li class="chapter" data-level="5.5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#bracket-notation"><i class="fa fa-check"></i><b>5.5.3</b> Bracket notation</a></li>
+<li class="chapter" data-level="5.5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-sum-function"><i class="fa fa-check"></i><b>5.5.4</b> The sum function</a></li>
+<li class="chapter" data-level="5.5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#nesting-functions"><i class="fa fa-check"></i><b>5.5.5</b> Nesting functions</a></li>
+<li class="chapter" data-level="5.5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-length-function"><i class="fa fa-check"></i><b>5.5.6</b> The length function</a></li>
+<li class="chapter" data-level="5.5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-mean-function"><i class="fa fa-check"></i><b>5.5.7</b> The mean function</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#some-common-errors"><i class="fa fa-check"></i><b>5.6</b> Some common errors</a></li>
+<li class="chapter" data-level="5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#summary"><i class="fa fa-check"></i><b>5.7</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Coding Tools and Best Practices</b></span></li>
+<li class="chapter" data-level="6" data-path="r-scripts.html"><a href="r-scripts.html"><i class="fa fa-check"></i><b>6</b> R scripts</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="r-scripts.html"><a href="r-scripts.html#creating-r-scripts"><i class="fa fa-check"></i><b>6.1</b> Creating R scripts</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="r-markdown.html"><a href="r-markdown.html"><i class="fa fa-check"></i><b>7</b> R markdown</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="r-markdown.html"><a href="r-markdown.html#what-is-r-markdown"><i class="fa fa-check"></i><b>7.1</b> What is R markdown?</a></li>
+<li class="chapter" data-level="7.2" data-path="r-markdown.html"><a href="r-markdown.html#why-use-r-markdown"><i class="fa fa-check"></i><b>7.2</b> Why use R markdown?</a></li>
+<li class="chapter" data-level="7.3" data-path="r-markdown.html"><a href="r-markdown.html#create-an-r-markdown-file"><i class="fa fa-check"></i><b>7.3</b> Create an R markdown file</a></li>
+<li class="chapter" data-level="7.4" data-path="r-markdown.html"><a href="r-markdown.html#yaml-headers"><i class="fa fa-check"></i><b>7.4</b> YAML headers</a></li>
+<li class="chapter" data-level="7.5" data-path="r-markdown.html"><a href="r-markdown.html#r-code-chunks"><i class="fa fa-check"></i><b>7.5</b> R code chunks</a></li>
+<li class="chapter" data-level="7.6" data-path="r-markdown.html"><a href="r-markdown.html#markdown"><i class="fa fa-check"></i><b>7.6</b> Markdown</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="r-projects.html"><a href="r-projects.html"><i class="fa fa-check"></i><b>8</b> R projects</a></li>
+<li class="chapter" data-level="9" data-path="coding-best-practices.html"><a href="coding-best-practices.html"><i class="fa fa-check"></i><b>9</b> Coding best practices</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#general-principles"><i class="fa fa-check"></i><b>9.1</b> General principles</a></li>
+<li class="chapter" data-level="9.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#code-comments"><i class="fa fa-check"></i><b>9.2</b> Code comments</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#defining-key-variables"><i class="fa fa-check"></i><b>9.2.1</b> Defining key variables</a></li>
+<li class="chapter" data-level="9.2.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#what-this-code-is-trying-to-accomplish"><i class="fa fa-check"></i><b>9.2.2</b> What this code is trying to accomplish</a></li>
+<li class="chapter" data-level="9.2.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#why-i-chose-this-particular-strategy"><i class="fa fa-check"></i><b>9.2.3</b> Why I chose this particular strategy</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#style-guidelines"><i class="fa fa-check"></i><b>9.3</b> Style guidelines</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#object-variable-names"><i class="fa fa-check"></i><b>9.3.1</b> Object (variable) names</a></li>
+<li class="chapter" data-level="9.3.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#use-names-that-are-informative"><i class="fa fa-check"></i><b>9.3.2</b> Use names that are informative</a></li>
+<li class="chapter" data-level="9.3.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#file-names"><i class="fa fa-check"></i><b>9.3.3</b> File Names</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="using-pipes.html"><a href="using-pipes.html"><i class="fa fa-check"></i><b>10</b> Using pipes</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="using-pipes.html"><a href="using-pipes.html#what-are-pipes"><i class="fa fa-check"></i><b>10.1</b> What are pipes?</a></li>
+<li class="chapter" data-level="10.2" data-path="using-pipes.html"><a href="using-pipes.html#how-do-pipes-work"><i class="fa fa-check"></i><b>10.2</b> How do pipes work?</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="using-pipes.html"><a href="using-pipes.html#keyboard-shortcut"><i class="fa fa-check"></i><b>10.2.1</b> Keyboard shortcut</a></li>
+<li class="chapter" data-level="10.2.2" data-path="using-pipes.html"><a href="using-pipes.html#pipe-style"><i class="fa fa-check"></i><b>10.2.2</b> Pipe style</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="using-pipes.html"><a href="using-pipes.html#final-thought-on-pipes"><i class="fa fa-check"></i><b>10.3</b> Final thought on pipes</a></li>
+</ul></li>
+<li class="part"><span><b>III Data Transfer</b></span></li>
+<li class="chapter" data-level="11" data-path="data-transfer.html"><a href="data-transfer.html"><i class="fa fa-check"></i><b>11</b> Data transfer</a></li>
+<li class="chapter" data-level="12" data-path="file-paths.html"><a href="file-paths.html"><i class="fa fa-check"></i><b>12</b> File paths</a></li>
+<li class="chapter" data-level="13" data-path="plain-text.html"><a href="plain-text.html"><i class="fa fa-check"></i><b>13</b> Importing plain text files</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="plain-text.html"><a href="plain-text.html#packages-for-importing-data"><i class="fa fa-check"></i><b>13.1</b> Packages for importing data</a></li>
+<li class="chapter" data-level="13.2" data-path="plain-text.html"><a href="plain-text.html#importing-space-delimited-files"><i class="fa fa-check"></i><b>13.2</b> Importing space delimited files</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="plain-text.html"><a href="plain-text.html#specifying-missing-data-values"><i class="fa fa-check"></i><b>13.2.1</b> Specifying missing data values</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="plain-text.html"><a href="plain-text.html#importing-tab-delimited-files"><i class="fa fa-check"></i><b>13.3</b> Importing tab delimited files</a></li>
+<li class="chapter" data-level="13.4" data-path="plain-text.html"><a href="plain-text.html#importing-fixed-width-format-files"><i class="fa fa-check"></i><b>13.4</b> Importing fixed width format files</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="plain-text.html"><a href="plain-text.html#vector-of-column-widths"><i class="fa fa-check"></i><b>13.4.1</b> Vector of column widths</a></li>
+<li class="chapter" data-level="13.4.2" data-path="plain-text.html"><a href="plain-text.html#paired-vector-of-start-and-end-positions"><i class="fa fa-check"></i><b>13.4.2</b> Paired vector of start and end positions</a></li>
+<li class="chapter" data-level="13.4.3" data-path="plain-text.html"><a href="plain-text.html#using-named-arguments"><i class="fa fa-check"></i><b>13.4.3</b> Using named arguments</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="plain-text.html"><a href="plain-text.html#importing-comma-separated-values-files"><i class="fa fa-check"></i><b>13.5</b> Importing comma separated values files</a></li>
+<li class="chapter" data-level="13.6" data-path="plain-text.html"><a href="plain-text.html#additional-arguments"><i class="fa fa-check"></i><b>13.6</b> Additional arguments</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="importing-binary-files.html"><a href="importing-binary-files.html"><i class="fa fa-check"></i><b>14</b> Importing binary files</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="importing-binary-files.html"><a href="importing-binary-files.html#packages-for-importing-data-1"><i class="fa fa-check"></i><b>14.1</b> Packages for importing data</a></li>
+<li class="chapter" data-level="14.2" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-microsoft-excel-spreadsheets"><i class="fa fa-check"></i><b>14.2</b> Importing Microsoft Excel spreadsheets</a></li>
+<li class="chapter" data-level="14.3" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-data-from-other-statistical-analysis-software"><i class="fa fa-check"></i><b>14.3</b> Importing data from other statistical analysis software</a></li>
+<li class="chapter" data-level="14.4" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-sas-data-sets"><i class="fa fa-check"></i><b>14.4</b> Importing SAS data sets</a></li>
+<li class="chapter" data-level="14.5" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-stata-data-sets"><i class="fa fa-check"></i><b>14.5</b> Importing Stata data sets</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="rstudios-data-import-tool.html"><a href="rstudios-data-import-tool.html"><i class="fa fa-check"></i><b>15</b> RStudio’s data import tool</a></li>
+<li class="chapter" data-level="16" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>16</b> Exporting data</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="exporting-data.html"><a href="exporting-data.html#plain-text-files"><i class="fa fa-check"></i><b>16.1</b> Plain text files</a></li>
+<li class="chapter" data-level="16.2" data-path="exporting-data.html"><a href="exporting-data.html#factor-vectors"><i class="fa fa-check"></i><b>16.2</b> Factor vectors</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="exporting-data.html"><a href="exporting-data.html#coerce-a-numeric-variable"><i class="fa fa-check"></i><b>16.2.1</b> Coerce a numeric variable</a></li>
+<li class="chapter" data-level="16.2.2" data-path="exporting-data.html"><a href="exporting-data.html#coerce-a-character-variable"><i class="fa fa-check"></i><b>16.2.2</b> Coerce a character variable</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="exporting-data.html"><a href="exporting-data.html#r-binary-files"><i class="fa fa-check"></i><b>16.3</b> R binary files</a></li>
+</ul></li>
+<li class="part"><span><b>IV Descriptive Analysis</b></span></li>
+<li class="chapter" data-level="17" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html"><i class="fa fa-check"></i><b>17</b> Introduction to descriptive analysis</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-is-descriptive-analysis-and-why-would-we-do-it"><i class="fa fa-check"></i><b>17.1</b> What is descriptive analysis and why would we do it?</a></li>
+<li class="chapter" data-level="17.2" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-kind-of-descriptive-analysis-should-we-perform"><i class="fa fa-check"></i><b>17.2</b> What kind of descriptive analysis should we perform?</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html"><i class="fa fa-check"></i><b>18</b> Numerical descriptions of categorical variables</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#height-and-weight-data"><i class="fa fa-check"></i><b>18.1</b> Height and Weight Data</a>
+<ul>
+<li class="chapter" data-level="18.1.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#view-the-data"><i class="fa fa-check"></i><b>18.1.1</b> View the data</a></li>
+</ul></li>
+<li class="chapter" data-level="18.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-frequencies"><i class="fa fa-check"></i><b>18.2</b> Calculating frequencies</a>
+<ul>
+<li class="chapter" data-level="18.2.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-base-r-table-function"><i class="fa fa-check"></i><b>18.2.1</b> The base R table function</a></li>
+<li class="chapter" data-level="18.2.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-gmodels-crosstable-function"><i class="fa fa-check"></i><b>18.2.2</b> The gmodels CrossTable function</a></li>
+<li class="chapter" data-level="18.2.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-tidyverse-way"><i class="fa fa-check"></i><b>18.2.3</b> The tidyverse way</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-percentages"><i class="fa fa-check"></i><b>18.3</b> Calculating percentages</a></li>
+<li class="chapter" data-level="18.4" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#missing-data-1"><i class="fa fa-check"></i><b>18.4</b> Missing data</a></li>
+<li class="chapter" data-level="18.5" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#formatting-results"><i class="fa fa-check"></i><b>18.5</b> Formatting results</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html"><i class="fa fa-check"></i><b>19</b> Measures of central tendency</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mean"><i class="fa fa-check"></i><b>19.1</b> Calculate the mean</a></li>
+<li class="chapter" data-level="19.2" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-median"><i class="fa fa-check"></i><b>19.2</b> Calculate the median</a></li>
+<li class="chapter" data-level="19.3" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mode"><i class="fa fa-check"></i><b>19.3</b> Calculate the mode</a></li>
+<li class="chapter" data-level="19.4" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#compare-mean-median-and-mode"><i class="fa fa-check"></i><b>19.4</b> Compare mean, median, and mode</a></li>
+<li class="chapter" data-level="19.5" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#data-checking"><i class="fa fa-check"></i><b>19.5</b> Data checking</a></li>
+<li class="chapter" data-level="19.6" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#properties-of-mean-median-and-mode"><i class="fa fa-check"></i><b>19.6</b> Properties of mean, median, and mode</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html"><i class="fa fa-check"></i><b>20</b> Measures of dispersion</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html#comparing-distributions"><i class="fa fa-check"></i><b>20.1</b> Comparing distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><i class="fa fa-check"></i><b>21</b> Describing the relationship between a continuous outcome and a continuous predictor</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html#pearson-correlation-coefficient"><i class="fa fa-check"></i><b>21.1</b> Pearson Correlation Coefficient</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html#calculating-r"><i class="fa fa-check"></i><b>21.1.1</b> Calculating r</a></li>
+<li class="chapter" data-level="21.1.2" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html#correlation-intuition"><i class="fa fa-check"></i><b>21.1.2</b> Correlation intuition</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><i class="fa fa-check"></i><b>22</b> Describing the relationship between a continuous outcome and a categorical predictor</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html#single-predictor-and-single-outcome"><i class="fa fa-check"></i><b>22.1</b> Single predictor and single outcome</a></li>
+<li class="chapter" data-level="22.2" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html#multiple-predictors"><i class="fa fa-check"></i><b>22.2</b> Multiple predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"><i class="fa fa-check"></i><b>23</b> Describing the relationship between a categorical outcome and a categorical predictor</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html#comparing-two-variables"><i class="fa fa-check"></i><b>23.1</b> Comparing two variables</a></li>
+</ul></li>
+<li class="part"><span><b>V Data Management</b></span></li>
+<li class="part"><span><b>VI Presenting Results</b></span></li>
+<li class="chapter" data-level="24" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html"><i class="fa fa-check"></i><b>24</b> Creating tables with R and Microsoft Word</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#table-1"><i class="fa fa-check"></i><b>24.1</b> Table 1</a></li>
+<li class="chapter" data-level="24.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#opioid-drug-use"><i class="fa fa-check"></i><b>24.2</b> Opioid drug use</a></li>
+<li class="chapter" data-level="24.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#table-columns"><i class="fa fa-check"></i><b>24.3</b> Table columns</a></li>
+<li class="chapter" data-level="24.4" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#table-rows"><i class="fa fa-check"></i><b>24.4</b> Table rows</a></li>
+<li class="chapter" data-level="24.5" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#make-the-table-skeleton"><i class="fa fa-check"></i><b>24.5</b> Make the table skeleton</a></li>
+<li class="chapter" data-level="24.6" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-column-headers"><i class="fa fa-check"></i><b>24.6</b> Fill in column headers</a>
+<ul>
+<li class="chapter" data-level="24.6.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#group-sample-sizes"><i class="fa fa-check"></i><b>24.6.1</b> Group sample sizes</a></li>
+<li class="chapter" data-level="24.6.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-column-headers"><i class="fa fa-check"></i><b>24.6.2</b> Formatting column headers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.7" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-row-headers"><i class="fa fa-check"></i><b>24.7</b> Fill in row headers</a>
+<ul>
+<li class="chapter" data-level="24.7.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#label-statistics"><i class="fa fa-check"></i><b>24.7.1</b> Label statistics</a></li>
+<li class="chapter" data-level="24.7.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-row-headers"><i class="fa fa-check"></i><b>24.7.2</b> Formatting row headers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.8" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-data-values"><i class="fa fa-check"></i><b>24.8</b> Fill in data values</a>
+<ul>
+<li class="chapter" data-level="24.8.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#manually-type-values"><i class="fa fa-check"></i><b>24.8.1</b> Manually type values</a></li>
+<li class="chapter" data-level="24.8.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#copy-and-paste-values"><i class="fa fa-check"></i><b>24.8.2</b> Copy and paste values</a></li>
+<li class="chapter" data-level="24.8.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#knit-a-word-document"><i class="fa fa-check"></i><b>24.8.3</b> Knit a Word document</a></li>
+<li class="chapter" data-level="24.8.4" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#flextable-and-officer"><i class="fa fa-check"></i><b>24.8.4</b> flextable and officer</a></li>
+<li class="chapter" data-level="24.8.5" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#significant-digits"><i class="fa fa-check"></i><b>24.8.5</b> Significant digits</a></li>
+<li class="chapter" data-level="24.8.6" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-data-values"><i class="fa fa-check"></i><b>24.8.6</b> Formatting data values</a></li>
+</ul></li>
+<li class="chapter" data-level="24.9" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-title"><i class="fa fa-check"></i><b>24.9</b> Fill in title</a></li>
+<li class="chapter" data-level="24.10" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-footnotes"><i class="fa fa-check"></i><b>24.10</b> Fill in footnotes</a>
+<ul>
+<li class="chapter" data-level="24.10.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-footnotes"><i class="fa fa-check"></i><b>24.10.1</b> Formatting footnotes</a></li>
+</ul></li>
+<li class="chapter" data-level="24.11" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#final-formatting"><i class="fa fa-check"></i><b>24.11</b> Final formatting</a>
+<ul>
+<li class="chapter" data-level="24.11.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#adjust-column-widths"><i class="fa fa-check"></i><b>24.11.1</b> Adjust column widths</a></li>
+<li class="chapter" data-level="24.11.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#merge-cells"><i class="fa fa-check"></i><b>24.11.2</b> Merge cells</a></li>
+<li class="chapter" data-level="24.11.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#remove-cell-borders"><i class="fa fa-check"></i><b>24.11.3</b> Remove cell borders</a></li>
+</ul></li>
+<li class="chapter" data-level="24.12" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#summary-1"><i class="fa fa-check"></i><b>24.12</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>VII Appendix</b></span></li>
+<li class="chapter" data-level="" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i>Appendix A: Glossary</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R for Epidemiology</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="plain-text" class="section level1" number="13">
+<h1><span class="header-section-number">13</span> Importing plain text files</h1>
+<!-- 
+This chapter gives the nuts and bolts of importing data.
+-->
+<p>We previously learned how to manually create a data frame in RStudio with the <code>data.frame()</code> function, the <code>tibble()</code> function, or the <code>tribble()</code> function. This will get the job done, but it’s not always very practical, particularly when you have larger data sets.</p>
+<p>Additionally, others will usually share data with you that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In my experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the <strong>.csv</strong> file extension and Excel files end with the <strong>.xls</strong> or <strong>.xlsx</strong> file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, you will learn how to take data stored in several different common types of files import them into R for use.</p>
+<p>There are many different file types that one can use to store data. In this book, we will divide those file types into two categories: <strong>plain text files</strong> and <strong>binary files</strong>. Plain text files are simple files that you (<i>a human</i>) can directly read using only your operating system’s plain text editor (i.e., Notepad on Windows or TextEdit on Mac). These files usually end with the <strong>.txt</strong> file extension – one exception being the <strong>.csv</strong> extension. Specifically, in this chapter we will learn to import the following variations of plain text files:</p>
+<ul>
+<li><p>Plain text files with data delimited by a single space.</p></li>
+<li><p>Plain text files with data delimited by tabs.</p></li>
+<li><p>Plain text files stored in a fixed width format.</p></li>
+<li><p>Plain text files with data delimited by commas - csv files.</p></li>
+</ul>
+<p>Later, we will discuss importing binary files. You can think of binary files as more complex file types that can’t generally be read by humans and accessing the information in binary files requires the use of special software. Some examples include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.</p>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/files.png" /><!-- --></p>
+<div id="packages-for-importing-data" class="section level2" number="13.1">
+<h2><span class="header-section-number">13.1</span> Packages for importing data</h2>
+<p>Base R contains several functions that can be used to import plain text files; however, I’m going to use the <a href="https://readr.tidyverse.org/">readr</a> package to import data in the examples that follow. Compared to base R functions for importing plain text files, <code>readr</code> is: <span class="citation"><a href="#ref-Grolemund2017-qp" role="doc-biblioref">3</a></span></p>
+<ul>
+<li><p>Roughly 10 times faster.</p></li>
+<li><p>They don’t convert character variables to factors by default.</p></li>
+<li><p>They behave more consistently across operating systems and geographic locations.</p></li>
+</ul>
+<p>If you would like to follow along, I suggest that you go ahead and install and load <code>readr</code> now.</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="plain-text.html#cb121-1"></a><span class="kw">library</span>(readr)</span></code></pre></div>
+</div>
+<div id="importing-space-delimited-files" class="section level2" number="13.2">
+<h2><span class="header-section-number">13.2</span> Importing space delimited files</h2>
+<p>We will start by importing data with values are separated by a single space. Not necessarily because this is the most common format you will encounter; in my experience it is not. But it’s about as simple as it gets, and other types of data are often considered special cases of files separated with a single space. So, it seems like a good place to start.</p>
+<p class="note">
+🗒<strong>Side Note:</strong> In programming lingo, it is common to use the word <strong>delimited</strong> interchangeably with the word <strong>separated.</strong> For example, you might say “values separated by a single space” or you might say “a file with space delimited values.”
+</p>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/space.png" /><!-- --></p>
+<p>For our first example we will import a text file with values separated by a single space. The contents of the file are the now familiar height and weight data.</p>
+<p><a href="https://www.dropbox.com/s/be3w3r3qdaekhm3/single_delimited.txt?dl=1">You may click here to download this file to your compter.</a></p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="plain-text.html#cb122-1"></a>single_space &lt;-<span class="st"> </span><span class="kw">read_delim</span>(</span>
+<span id="cb122-2"><a href="plain-text.html#cb122-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/single_delimited.txt&quot;</span>,</span>
+<span id="cb122-3"><a href="plain-text.html#cb122-3"></a>  <span class="dt">delim =</span> <span class="st">&quot; &quot;</span></span>
+<span id="cb122-4"><a href="plain-text.html#cb122-4"></a>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_character(),
+##   sex = col_character(),
+##   ht_in = col_character(),
+##   wgt_lbs = col_double()
+## )</code></pre>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="plain-text.html#cb124-1"></a>single_space</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;
+## 1 001   Male   71        190
+## 2 002   Male   .         176
+## 3 003   Female 64        130
+## 4 004   Female 65        154</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>readr</code>’s <code>read_delim()</code> function to import a data set with values that are delimited by a single space. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>single_space</code>.</p></li>
+<li><p>The first argument to the <code>read_delim()</code> function is the <code>file</code> argument. The value passed to the file argument should be a file path that tells R where to find the data set on your computer.</p></li>
+<li><p>The second argument to the <code>read_delim()</code> function is the <code>delim</code> argument. The value passed to the <code>delim</code> argument tells R what character separates each value in the data set. In this case, a single space separates the values. Note that we had to wrap the single space in quotation marks.</p></li>
+<li><p>The <code>readr</code> package imported the data and printed a message giving us some information about how it interpreted column names and column types. In programming lingo, deciding how to interpret the data that is being imported is called <strong>parsing</strong> the data.</p>
+<ul>
+<li><p>By default, <code>readr</code> will assume that the first row of data will contains variable names and will try to use them as column names in the data frame it creates. In this case, that was a good assumption. We want the columns to be named <code>id</code>, <code>sex</code>, <code>ht_in</code>, and <code>wgt_lbs</code>. Later, we will learn how to override this default behavior.</p></li>
+<li><p>By default, <code>readr</code> will try to guess what type of data (e.g., numbers, character strings, dates, etc.) each column contains. It will guess based on analyzing the contents of the first 1,000 rows of the data. In this case, <code>readr</code>’s guess was not entirely correct (or at least not what we wanted). <code>readr</code> correctly guessed that the variables <code>id</code> and <code>sex</code> should be character variables, but incorrectly guessed that <code>ht_in</code> should be character type as well. Below, we will learn how to fix this issue.</p></li>
+</ul></li>
+</ul>
+<p class="warning">
+⚠️<strong>Warning:</strong> Make sure to always include the file extension in your file paths. For example, using “/single_delimited” instead of “/single_delimited.txt” above (i.e., no .txt) would have resulted in an error telling you that the filed does not exist.
+</p>
+<div id="specifying-missing-data-values" class="section level3" number="13.2.1">
+<h3><span class="header-section-number">13.2.1</span> Specifying missing data values</h3>
+<p>In the previous example, <code>readr</code> guessed that the variable <code>ht_in</code> was a character variable. Take another look at the data and see if you can figure out why?</p>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/space.png" /><!-- --></p>
+<p>Did you see the period in the third value of the second column? The period is there because this value is missing, and a period is commonly used to represent missing data. However, R represents missing data with the special <code>NA</code> value – not a period. So, the period is just a regular character value to R. When R reads the values in the <code>ht_in</code> column, it decides that it can easily turn the numbers into character values, but it doesn’t know how to turn the period into a number. So, the column is parsed as a character vector.</p>
+<p>But as we said, this is not what we want. So, how do we fix it? Well, in this case, we will simply need to tell R that missing values are represented with a period in the data we are importing. We do that by passing that information to the <code>na</code> argument of the <code>read_delim()</code> function:</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="plain-text.html#cb126-1"></a>single_space &lt;-<span class="st"> </span><span class="kw">read_delim</span>(</span>
+<span id="cb126-2"><a href="plain-text.html#cb126-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/single_delimited.txt&quot;</span>,</span>
+<span id="cb126-3"><a href="plain-text.html#cb126-3"></a>  <span class="dt">delim =</span> <span class="st">&quot; &quot;</span>,</span>
+<span id="cb126-4"><a href="plain-text.html#cb126-4"></a>  <span class="dt">na =</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb126-5"><a href="plain-text.html#cb126-5"></a>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_character(),
+##   sex = col_character(),
+##   ht_in = col_double(),
+##   wgt_lbs = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 001   Male      71     190
+## 2 002   Male      NA     176
+## 3 003   Female    64     130
+## 4 004   Female    65     154</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>By default, the value passed to the <code>na</code> argument of the <code>read_delim()</code> function is <code>c("", "NA")</code>. This means that R looks for nothing (i.e., a value should be there but isn’t - this really doesn’t make sense when the delimiter is a single space) or an <code>NA</code>.</p></li>
+<li><p>We told R to look for a period to represent missing data instead of a nothing or a single space by passing the period character to the <code>na</code> argument.</p></li>
+<li><p>It’s important to note that changing the value of the <code>na</code> argument does not change the way R represents missing data in the data frame that is created. It only tells R how to identify missing values in the raw data that we are importing. In the R data frame that is created, missing data will still be represented with the special <code>NA</code> value.</p></li>
+</ul>
+</div>
+</div>
+<div id="importing-tab-delimited-files" class="section level2" number="13.3">
+<h2><span class="header-section-number">13.3</span> Importing tab delimited files</h2>
+<p>Sometimes you will encounter plain text files that contain values separated by tab characters instead of a single space. Files like these may be called <strong>tab separated value</strong> or <strong>tsv</strong> files, or they may be called <strong>tab-delimited</strong> files.</p>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/tab.png" /><!-- --></p>
+<p>To import tab separated value files in R, we use a variation of the same program we just saw. We just need to tell R that now the values in the data will be delimited by tabs instead of a single space.</p>
+<p><a href="https://www.dropbox.com/s/1inpy0cg7k5uxaw/tab.txt?dl=1">You may click here to download this file to your compter.</a></p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="plain-text.html#cb129-1"></a>tab &lt;-<span class="st"> </span><span class="kw">read_delim</span>(</span>
+<span id="cb129-2"><a href="plain-text.html#cb129-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/tab.txt&quot;</span>,</span>
+<span id="cb129-3"><a href="plain-text.html#cb129-3"></a>  <span class="dt">delim =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span></span>
+<span id="cb129-4"><a href="plain-text.html#cb129-4"></a>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_character(),
+##   sex = col_character(),
+##   ht_in = col_double(),
+##   wgt_lbs = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 001   Male      71     190
+## 2 002   Male      69     176
+## 3 003   Female    64     130
+## 4 004   Female    65     154</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>readr</code>’s <code>read_delim()</code> function to import a data set with values that are delimited by tabs. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>tab</code>.</p></li>
+<li><p>To tell R that the values are now separated by tabs, we changed the value we passed to the <code>delim</code> argument to <code>"\t"</code>. This is a special symbol that means “tab” to R.</p></li>
+</ul>
+<p>I don’t personally receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the <code>readr</code> package. That is, instead of using the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>"\t"</code>, we can simply pass our file path to the <code>read_tsv()</code> function. Under the hood, the <code>read_tsv()</code> function does exactly the same thing as the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>"\t"</code>.</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="plain-text.html#cb132-1"></a>tab &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/tab.txt&quot;</span>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_character(),
+##   sex = col_character(),
+##   ht_in = col_double(),
+##   wgt_lbs = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 001   Male      71     190
+## 2 002   Male      69     176
+## 3 003   Female    64     130
+## 4 004   Female    65     154</code></pre>
+</div>
+<div id="importing-fixed-width-format-files" class="section level2" number="13.4">
+<h2><span class="header-section-number">13.4</span> Importing fixed width format files</h2>
+<p>Yet another type of plain text file we will discuss is called a <strong>fixed width format</strong> or <strong>fwf</strong> file. Again, these files aren’t super common in my experience, but they can be sort of tricky when you do encounter them. Take a look at this example:</p>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/fixed_width.png" /><!-- --></p>
+<p>As you can see, a hallmark of fixed width format files is inconsistent spacing between values. For example, there is only one single space between the values <code>004</code> and <code>Female</code> in the fourth row. But, there are multiple spaces between the values <code>65</code> and <code>154</code>. Therefore, we can’t tell R to look for a single space or tab to separate values. So, how do we tell R which characters (including spaces) go with which variable? Well, if you look closely you will notice that all variable values start in the same column. If you are wondering what I mean, try to imagine a number line along the top of the data:</p>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/number_line_spaces.png" /><!-- --></p>
+<p>This number line creates a sequence of columns across your data, with each column being 1 character wide. Notice that spaces are also considered a character with width just like any other. We can use these columns to tell R exactly which columns contain the values for each variable.</p>
+<p><a href="https://www.dropbox.com/s/z6uk0ldi36tras5/fixed_width.txt?dl=1">You may click here to download this file to your compter.</a></p>
+<p>Now, in this case we can just use <code>readr</code>’s <code>read_table()</code> function to import this data:</p>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="plain-text.html#cb135-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_table</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width.txt&quot;</span>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_character(),
+##   sex = col_character(),
+##   ht_in = col_double(),
+##   wgt_lbs = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 001   Male      71     190
+## 2 002   Male      69     176
+## 3 003   Female    64     130
+## 4 004   Female    65     154</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>readr</code>’s <code>read_table()</code> function to import data from a fixed width format file. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>fixed</code>.</p></li>
+<li><p>By default, the <code>read_table()</code> function looks for values to be separated by one or more columns of space.</p></li>
+</ul>
+<p>However, how could you import this data if there weren’t always spaces in between data values. For example:</p>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/number_line.png" /><!-- --></p>
+<p>In this case, the <code>read_table()</code> function does not give us the result we want.</p>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="plain-text.html#cb138-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_table</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   `id sex   ht_inwgt_lbs` = col_character()
+## )</code></pre>
+<pre><code>## # A tibble: 4 x 1
+##   `id sex   ht_inwgt_lbs`
+##   &lt;chr&gt;                  
+## 1 001Male  71   190      
+## 2 002Male  69   176      
+## 3 003Female64   130      
+## 4 004Female65   154</code></pre>
+<p>Instead, it parses the entire data set as a single character column. It does this because it can’t tell where the values for one variable stop and the values for the next variable start. However, because all the variables start in the same column, we can tell R how to parse the data correctly. We can actually do this in a couple different ways:</p>
+<p><a href="https://www.dropbox.com/s/m1rcalh46vodd1b/fixed_width_no_space.txt?dl=1">You may click here to download this file to your compter.</a></p>
+<div id="vector-of-column-widths" class="section level3" number="13.4.1">
+<h3><span class="header-section-number">13.4.1</span> Vector of column widths</h3>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="plain-text.html#cb141-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_fwf</span>(</span>
+<span id="cb141-2"><a href="plain-text.html#cb141-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
+<span id="cb141-3"><a href="plain-text.html#cb141-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_widths</span>(</span>
+<span id="cb141-4"><a href="plain-text.html#cb141-4"></a>    <span class="dt">widths    =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">3</span>),</span>
+<span id="cb141-5"><a href="plain-text.html#cb141-5"></a>    <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>)</span>
+<span id="cb141-6"><a href="plain-text.html#cb141-6"></a>  ),</span>
+<span id="cb141-7"><a href="plain-text.html#cb141-7"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
+<span id="cb141-8"><a href="plain-text.html#cb141-8"></a>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_character(),
+##   sex = col_character(),
+##   ht_in = col_double(),
+##   wgt_lbs = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 001   Male      71     190
+## 2 002   Male      69     176
+## 3 003   Female    64     130
+## 4 004   Female    65     154</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>readr</code>’s <code>read_fwf()</code> function to import data from a fixed width format file. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>fixed</code>.</p></li>
+<li><p>The first argument to the <code>read_fwf()</code> function is the <code>file</code> argument. The value passed to the file argument should be file path that tells R where to find the data set on your computer.</p></li>
+<li><p>The second argument to the <code>read_fwf()</code> function is the the <code>col_positions</code> argument. The value passed to this argument tells R the width (i.e., number of columns) that belong to each variable in the raw data set. This information is actually passed to the <code>col_positions</code> argument directly from the <code>fwf_widths()</code> function. This is an example of nesting functions.</p>
+<ul>
+<li>The first argument to the <code>fwf_widths()</code> function is the <code>widths</code> argument. The value passed to the <code>widths</code> argument should be a numeric vector of column widths. The column width of each variable should be calculated as the number of columns that contain the values for that variable. For example, take another look at the data with the imaginary number line:</li>
+</ul></li>
+</ul>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/number_line.png" /><!-- --></p>
+<ul>
+<li><p>All of the values for the variable <code>id</code> can be located within the first 3 columns of data. All of the values for the variable <code>sex</code> can be located within the next 6 columns of data. All of the values for the variable <code>ht_in</code> can be located within the next 5 columns of data. And, all of the values for the variable <code>wgt_lbs</code> can be located within the next 3 columns of data. Therefore, we pass the vector <code>c(3, 6, 5, 3)</code> to the <code>widths</code> argument.</p></li>
+<li><p>The second argument to the <code>fwf_widths()</code> function is the <code>col_names</code> argument. The value passed to the <code>col_names</code> argument should be a character vector of column names.</p></li>
+<li><p>The third argument of the <code>read_fwf()</code> function that we passed a value to is the <code>skip</code> argument. The value passed to the <code>skip</code> argument tells R how many rows to ignore before looking for data values. In this case, we passed a value of one, which told R to ignore the first row of the raw data. We did this because the first row of the raw data contained variable names instead of data values, and we already gave R variable names in the <code>col_names</code> argument to the <code>fwf_widths()</code> function.</p></li>
+</ul>
+</div>
+<div id="paired-vector-of-start-and-end-positions" class="section level3" number="13.4.2">
+<h3><span class="header-section-number">13.4.2</span> Paired vector of start and end positions</h3>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="plain-text.html#cb144-1"></a>fixed &lt;-<span class="st"> </span><span class="kw">read_fwf</span>(</span>
+<span id="cb144-2"><a href="plain-text.html#cb144-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
+<span id="cb144-3"><a href="plain-text.html#cb144-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_positions</span>(</span>
+<span id="cb144-4"><a href="plain-text.html#cb144-4"></a>    <span class="dt">start     =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">10</span>, <span class="dv">15</span>),</span>
+<span id="cb144-5"><a href="plain-text.html#cb144-5"></a>    <span class="dt">end       =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">17</span>),</span>
+<span id="cb144-6"><a href="plain-text.html#cb144-6"></a>    <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>)</span>
+<span id="cb144-7"><a href="plain-text.html#cb144-7"></a>  ),</span>
+<span id="cb144-8"><a href="plain-text.html#cb144-8"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
+<span id="cb144-9"><a href="plain-text.html#cb144-9"></a>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_character(),
+##   sex = col_character(),
+##   ht_in = col_double(),
+##   wgt_lbs = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 001   Male      71     190
+## 2 002   Male      69     176
+## 3 003   Female    64     130
+## 4 004   Female    65     154</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>This time, we passed column positions to the <code>col_positions</code> argument of <code>read_fwf()</code> directly from the <code>fwf_positions()</code> function.</p>
+<ul>
+<li>The first argument to the <code>fwf_positions()</code> function is the <code>start</code> argument. The value passed to the <code>start</code> argument should be a numeric vector containing the first column that contains a value for each variable. For example, take another look at the data with the imaginary number line:</li>
+</ul></li>
+</ul>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/number_line.png" /><!-- --></p>
+<ul>
+<li><p>The first column that contains part of the value for the variable <code>id</code> can be located in column 1 of data. The first column that contains part of the value for the variable <code>sex</code> can be located in column 4 of data. The first column that contains part of the value for the variable <code>ht_in</code> can be located in column 10 of data. And, the first column that contains part of the value for the variable <code>ht_in</code> can be located in column 15 of data. Therefore, we pass the vector <code>c(1, 4, 10, 15)</code> to the <code>start</code> argument.</p></li>
+<li><p>The second argument to the <code>fwf_positions()</code> function is the <code>end</code> argument. The value passed to the <code>end</code> argument should be a numeric vector containing the last column that contains a value for each variable. - The last column that contains part of the value for the variable <code>id</code> can be located in column 3 of data. The last column that contains part of the value for the variable <code>sex</code> can be located in column 9 of data. The last column that contains part of the value for the variable <code>ht_in</code> can be located in column 11 of data. And, the last column that contains part of the value for the variable <code>ht_in</code> can be located in column 17 of data. Therefore, we pass the vector <code>c(3, 9, 11, 17)</code> to the <code>end</code> argument.</p></li>
+<li><p>The third argument to the <code>fwf_positions()</code> function is the <code>col_names</code> argument. The value passed to the <code>col_names</code> argument should be a character vector of column names.</p></li>
+</ul>
+</div>
+<div id="using-named-arguments" class="section level3" number="13.4.3">
+<h3><span class="header-section-number">13.4.3</span> Using named arguments</h3>
+<p>As a shortcut, either of the methods above can be written using named vectors. All this means is that we basically combine the <code>widths</code> and <code>col_names</code> arguments to pass a vector of column widths, or we combine the <code>start</code>, <code>end</code>, and <code>col_names</code> arguments to pass a vector of start and end positions. For example:</p>
+<p><strong>Column widths:</strong></p>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="plain-text.html#cb147-1"></a><span class="kw">read_fwf</span>(</span>
+<span id="cb147-2"><a href="plain-text.html#cb147-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
+<span id="cb147-3"><a href="plain-text.html#cb147-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_cols</span>(</span>
+<span id="cb147-4"><a href="plain-text.html#cb147-4"></a>    <span class="dt">id      =</span> <span class="dv">3</span>,</span>
+<span id="cb147-5"><a href="plain-text.html#cb147-5"></a>    <span class="dt">sex     =</span> <span class="dv">6</span>,</span>
+<span id="cb147-6"><a href="plain-text.html#cb147-6"></a>    <span class="dt">ht_in   =</span> <span class="dv">5</span>,</span>
+<span id="cb147-7"><a href="plain-text.html#cb147-7"></a>    <span class="dt">wgt_lbs =</span> <span class="dv">3</span></span>
+<span id="cb147-8"><a href="plain-text.html#cb147-8"></a>  ),</span>
+<span id="cb147-9"><a href="plain-text.html#cb147-9"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
+<span id="cb147-10"><a href="plain-text.html#cb147-10"></a>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 001   Male      71     190
+## 2 002   Male      69     176
+## 3 003   Female    64     130
+## 4 004   Female    65     154</code></pre>
+<p><strong>Column positions:</strong></p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="plain-text.html#cb149-1"></a><span class="kw">read_fwf</span>(</span>
+<span id="cb149-2"><a href="plain-text.html#cb149-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt&quot;</span>,</span>
+<span id="cb149-3"><a href="plain-text.html#cb149-3"></a>  <span class="dt">col_positions =</span> <span class="kw">fwf_cols</span>(</span>
+<span id="cb149-4"><a href="plain-text.html#cb149-4"></a>    <span class="dt">id      =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb149-5"><a href="plain-text.html#cb149-5"></a>    <span class="dt">sex     =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">9</span>),</span>
+<span id="cb149-6"><a href="plain-text.html#cb149-6"></a>    <span class="dt">ht_in   =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">11</span>),</span>
+<span id="cb149-7"><a href="plain-text.html#cb149-7"></a>    <span class="dt">wgt_lbs =</span> <span class="kw">c</span>(<span class="dv">15</span>, <span class="dv">17</span>)</span>
+<span id="cb149-8"><a href="plain-text.html#cb149-8"></a>  ),</span>
+<span id="cb149-9"><a href="plain-text.html#cb149-9"></a>  <span class="dt">skip =</span> <span class="dv">1</span></span>
+<span id="cb149-10"><a href="plain-text.html#cb149-10"></a>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 001   Male      71     190
+## 2 002   Male      69     176
+## 3 003   Female    64     130
+## 4 004   Female    65     154</code></pre>
+</div>
+</div>
+<div id="importing-comma-separated-values-files" class="section level2" number="13.5">
+<h2><span class="header-section-number">13.5</span> Importing comma separated values files</h2>
+<p>The final type of plain text file that we will discuss is by far the most common type used in my experience. I’m talking about the <strong>comma separated values</strong> or <strong>csv</strong> file. Unlike space and tab separated values files, csv file names end with the <strong>.csv</strong> file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, and Google Sheets.</p>
+<div class="figure"><span id="fig:unnamed-chunk-149"></span>
+<img src="img/03_part_data_transfer/03_importing_plain_text_files/csv_plain_text.png" alt="A csv file viewed in a plain text editor."  />
+<p class="caption">
+Figure 13.1: A csv file viewed in a plain text editor.
+</p>
+</div>
+<div class="figure"><span id="fig:unnamed-chunk-150"></span>
+<img src="img/03_part_data_transfer/03_importing_plain_text_files/csv_excel.png" alt="A csv file viewed in Microsoft Excel."  />
+<p class="caption">
+Figure 13.2: A csv file viewed in Microsoft Excel.
+</p>
+</div>
+<p>Importing standard csv files into R with the <code>readr</code> package is easy and uses a syntax that is very similar to <code>read_delim()</code> and <code>read_tsv()</code>. In fact, in many cases we only have to pass the path to the csv file to the <code>read_csv()</code> function like so:</p>
+<p><a href="https://www.dropbox.com/s/weaea47drw0iln5/comma.csv?dl=1">You may click here to download this file to your compter.</a></p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="plain-text.html#cb151-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_double(),
+##   sex = col_character(),
+##   ht_in = col_double(),
+##   wt_lbs = col_double()
+## )</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##      id sex    ht_in wt_lbs
+##   &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1     1 Male      71    190
+## 2     2 Male      69    176
+## 3     3 Female    64    130
+## 4     4 Female    65    154</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>readr</code>’s <code>read_csv()</code> function to import a data set with values that are delimited by commas. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>csv</code>.</p></li>
+<li><p>Like <code>read_tsv()</code>, R is basically executing the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> under the hood. You could also use the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> if you wanted to.</p></li>
+</ul>
+</div>
+<div id="additional-arguments" class="section level2" number="13.6">
+<h2><span class="header-section-number">13.6</span> Additional arguments</h2>
+<p>For the most part, the data we imported in all of the examples above was relatively well behaved. What I mean by that is that the data basically “looked” like each of the <code>read_</code> functions were expecting it to “look”. Therefore, we didn’t have to adjust many of the various <code>read_</code> functions’ default values. The exception was changing the default value of the <code>na</code> argument to the <code>read_delim()</code> function. However, all of the <code>read_</code> functions above have additional arguments that you may need to tweak on occasion. The two that I tend to adjust most often are the <code>col_names</code> and <code>col_types</code> arguments. It’s impossible for me to think of every scenario where you may need to do this, but I’ll walk through two basic examples below, which should be sufficient for you to get the idea.</p>
+<p>Take a look at this csv file for a few seconds. It started as the same exact height and weight data we’ve been using, but I made a few changes. See if you can spot them all.</p>
+<p><img src="img/03_part_data_transfer/03_importing_plain_text_files/csv_complex.png" /><!-- --></p>
+<p>When people record data in Microsoft Excel, they do all kinds of crazy things. In the screenshot above, I’ve included just a few examples of things I see all the time. For example:</p>
+<ul>
+<li><p>Row one contains generic variable names that don’t really serve much of a purpose.</p></li>
+<li><p>Row two is a blank line. I’m not sure why it’s there. Maybe the study staff finds it aesthetically pleasing?</p></li>
+<li><p>Row three are some variable descriptions. These are actually useful, but they aren’t currently formatted in a way that makes for good variable names.</p></li>
+<li><p>Row 7, column D is a missing value. However, someone wrote the word “Missing” instead of leaving the cell blank.</p></li>
+<li><p>Column E also contains some notes for the data collection staff that aren’t really part of the data.</p></li>
+</ul>
+<p>All of the issues listed above are things we will have to deal with before we can analyze our data. Now, in this small data set we could just fix these issues directly in Microsoft Excel and then import into R with a simple call to <code>read_csv()</code> without adjusting any options. However, that this is generally a really bad idea.</p>
+<div class="warning">
+<p>⚠️<strong>Warning:</strong></p>
+<ul>
+<li><p>I suggest that you don’t <strong>EVER</strong> alter your raw data. All kinds of crazy things happen with data and data files. If you keep your raw data untouched and in a safe place, worst case scenario you can always come back to it and start over. If you start messing with the raw data, then you may lose the ability to recover what it looked like in its original form forever. If you import the data into R before altering it then your raw data stays preserved.</p></li>
+<li><p>If you are going to make alterations in Excel prior to importing the data, I <strong>strongly</strong> suggest making a copy of the raw data first. Then, alter the copy before importing into R. But, even this can be a bad idea.</p></li>
+<li><p>If you make alterations to the data in Excel then there is generally no record of those alterations. For example, let’s say you click in a cell and delete a value (maybe even by accident), and then send me the csv file. I will have no way of knowing that a value was deleted. When you alter the data directly in Excel (or any program that doesn’t require writing code), it can be really difficult for others (including future you) to know what was done to the data. You may be able manually compare the altered data to the original data if you have access to both, but who wants to do that – especially if the file is large? However, if you import the data into R as-is and programmatically make alterations with R code, then your R code will, by definition, serve a record of all alterations that were made.</p></li>
+<li><p>Often data is updated. You could spend a significant amount of time altering your data in Excel only to be sent an updated file next week. Often, the manual alterations you made in one Excel file are not transferable to another. However, if all alterations are made in R, then you can often just run the exact same code again on the updated data.</p>
+</div></li>
+</ul>
+<p>So, let’s walk through addressing these issues together. We’ll start by taking a look at our results with all of <code>read_csv</code>’s arguments left at their default values.</p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="plain-text.html#cb154-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Duplicated column names deduplicated: &#39;Var1&#39; =&gt; &#39;Var1_1&#39; [2]</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Var1 = col_character(),
+##   Var1_1 = col_character(),
+##   Var3 = col_character(),
+##   Var4 = col_character(),
+##   Notes = col_character()
+## )</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##   Var1     Var1_1        Var3                Var4                Notes          
+##   &lt;chr&gt;    &lt;chr&gt;         &lt;chr&gt;               &lt;chr&gt;               &lt;chr&gt;          
+## 1 &lt;NA&gt;     &lt;NA&gt;          &lt;NA&gt;                &lt;NA&gt;                &lt;NA&gt;           
+## 2 Study ID Participant … Paticipant Height … Participant Weight… &lt;NA&gt;           
+## 3 1        Male          71                  190                 &lt;NA&gt;           
+## 4 2        Male          &lt;NA&gt;                176                 &lt;NA&gt;           
+## 5 3        Female        64                  130                 &lt;NA&gt;           
+## 6 4        Female        65                  Missing             Call back on M…</code></pre>
+<p>That is obviously not what we wanted. So, let’s start adjusting some of the default values.</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="plain-text.html#cb158-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
+<span id="cb158-2"><a href="plain-text.html#cb158-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
+<span id="cb158-3"><a href="plain-text.html#cb158-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>)</span>
+<span id="cb158-4"><a href="plain-text.html#cb158-4"></a>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_character(),
+##   sex = col_character(),
+##   ht_in = col_character(),
+##   wgt_lbs = col_character()
+## )</code></pre>
+<pre><code>## Warning: 7 parsing failures.
+## row col  expected    actual                                                                      file
+##   1  -- 4 columns 5 columns &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
+##   2  -- 4 columns 5 columns &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
+##   3  -- 4 columns 5 columns &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
+##   4  -- 4 columns 5 columns &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
+##   5  -- 4 columns 5 columns &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
+## ... ... ......... ......... .........................................................................
+## See problems(...) for more details.</code></pre>
+<pre><code>## # A tibble: 7 x 4
+##   id       sex             ht_in                  wgt_lbs                 
+##   &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;                  &lt;chr&gt;                   
+## 1 Var1     Var1            Var3                   Var4                    
+## 2 &lt;NA&gt;     &lt;NA&gt;            &lt;NA&gt;                   &lt;NA&gt;                    
+## 3 Study ID Participant Sex Paticipant Height (in) Participant Weight (lbs)
+## 4 1        Male            71                     190                     
+## 5 2        Male            &lt;NA&gt;                   176                     
+## 6 3        Female          64                     130                     
+## 7 4        Female          65                     Missing</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We passed a character vector of variable names to the <code>col_names</code> argument. Doing so told R to use the words in the character vector as column names instead of the values in the first row of the raw data.</p></li>
+<li><p>Because the character vector of names only contained 4 values, the last column was dropped from the data. R gives us a warning message to let us know. Specially, for each row it says that it was expecting 4 columns (because we gave it 4 column names), but actually found 5 columns. We’ll get rid of this message next.</p></li>
+</ul>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="plain-text.html#cb162-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
+<span id="cb162-2"><a href="plain-text.html#cb162-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
+<span id="cb162-3"><a href="plain-text.html#cb162-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>),</span>
+<span id="cb162-4"><a href="plain-text.html#cb162-4"></a>  <span class="dt">col_types =</span> <span class="kw">cols</span>(</span>
+<span id="cb162-5"><a href="plain-text.html#cb162-5"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb162-6"><a href="plain-text.html#cb162-6"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb162-7"><a href="plain-text.html#cb162-7"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb162-8"><a href="plain-text.html#cb162-8"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb162-9"><a href="plain-text.html#cb162-9"></a>    <span class="kw">col_skip</span>()</span>
+<span id="cb162-10"><a href="plain-text.html#cb162-10"></a>  )</span>
+<span id="cb162-11"><a href="plain-text.html#cb162-11"></a>)</span></code></pre></div>
+<pre><code>## Warning: 5 parsing failures.
+## row     col   expected                   actual                                                                      file
+##   1 ht_in   an integer Var3                     &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
+##   1 wgt_lbs an integer Var4                     &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
+##   3 ht_in   an integer Paticipant Height (in)   &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
+##   3 wgt_lbs an integer Participant Weight (lbs) &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;
+##   7 wgt_lbs an integer Missing                  &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;</code></pre>
+<pre><code>## # A tibble: 7 x 4
+##   id       sex             ht_in wgt_lbs
+##   &lt;chr&gt;    &lt;chr&gt;           &lt;int&gt;   &lt;int&gt;
+## 1 Var1     Var1               NA      NA
+## 2 &lt;NA&gt;     &lt;NA&gt;               NA      NA
+## 3 Study ID Participant Sex    NA      NA
+## 4 1        Male               71     190
+## 5 2        Male               NA     176
+## 6 3        Female             64     130
+## 7 4        Female             65      NA</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We told R explicitly what type of values we wanted each column to contain. We did so by nesting a <code>col_</code> function for each column type inside the <code>col()</code> function, which is passed directly to the <code>col-types</code> argument.</p></li>
+<li><p>Notice various column types (e.g., <code>col_character()</code>) <em>are</em> functions, and that they are nested inside of the <code>cols()</code> function. Because they are functions, you must put include the parentheses. That’s just how the <code>readr</code> package is designed.</p></li>
+<li><p>Notice that the last column type we passed to the <code>col_types</code> argument was <code>col_skip()</code>. This tells R to ignore the 5th column in the raw data (5th because it’s the 5th column type we listed). Doing this will get rid of the warning we saw earlier.</p></li>
+<li><p><a href="https://readr.tidyverse.org/articles/readr.html#rectangular-parsers">Click here to see all available column types.</a></p></li>
+<li><p>Because we told R explicitly what type of values we wanted each column to contain, R had to drop any values that couldn’t be coerced to the type we requested. More specifically, they were coerced to missing (<code>NA</code>). For example, the value <code>Var3</code> that was previously in the first row of the <code>ht_in</code> column. It was coerced to <code>NA</code> because R does not know (nor do I) how to turn the character string “Var3” into an integer. R gives us a warning message about this.</p></li>
+</ul>
+<p>Next, let’s go ahead and tell R to ignore the first three rows of the csv file. They don’t contain anything that is of use to us at this point.</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="plain-text.html#cb165-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
+<span id="cb165-2"><a href="plain-text.html#cb165-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
+<span id="cb165-3"><a href="plain-text.html#cb165-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>),</span>
+<span id="cb165-4"><a href="plain-text.html#cb165-4"></a>  <span class="dt">col_types =</span> <span class="kw">cols</span>(</span>
+<span id="cb165-5"><a href="plain-text.html#cb165-5"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb165-6"><a href="plain-text.html#cb165-6"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb165-7"><a href="plain-text.html#cb165-7"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb165-8"><a href="plain-text.html#cb165-8"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb165-9"><a href="plain-text.html#cb165-9"></a>    <span class="kw">col_skip</span>()</span>
+<span id="cb165-10"><a href="plain-text.html#cb165-10"></a>  ),</span>
+<span id="cb165-11"><a href="plain-text.html#cb165-11"></a>  <span class="dt">skip =</span> <span class="dv">3</span></span>
+<span id="cb165-12"><a href="plain-text.html#cb165-12"></a>)</span></code></pre></div>
+<pre><code>## Warning: 1 parsing failure.
+## row     col   expected  actual                                                                      file
+##   4 wgt_lbs an integer Missing &#39;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&#39;</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;   &lt;int&gt;
+## 1 1     Male      71     190
+## 2 2     Male      NA     176
+## 3 3     Female    64     130
+## 4 4     Female    65      NA</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We told R to ignore the first three rows of the csv file by passing the value 3 to the <code>skip</code> argument.</p></li>
+<li><p>The remaining warning above is R telling us that it still had to convert the word “Missing” to an <code>NA</code> in the 4th row of the <code>wgt_lbs</code> column because it didn’t know how to turn the word “Missing” into an integer. This is actually exactly what we wanted to happen, but we can get rid of the warning by explicitly adding the word “Missing” to the list of values R looks for in the <code>na</code> argument.</p></li>
+</ul>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="plain-text.html#cb168-1"></a>csv &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
+<span id="cb168-2"><a href="plain-text.html#cb168-2"></a>  <span class="dt">file =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv&quot;</span>,</span>
+<span id="cb168-3"><a href="plain-text.html#cb168-3"></a>  <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>),</span>
+<span id="cb168-4"><a href="plain-text.html#cb168-4"></a>  <span class="dt">col_types =</span> <span class="kw">cols</span>(</span>
+<span id="cb168-5"><a href="plain-text.html#cb168-5"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb168-6"><a href="plain-text.html#cb168-6"></a>    <span class="kw">col_character</span>(),</span>
+<span id="cb168-7"><a href="plain-text.html#cb168-7"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb168-8"><a href="plain-text.html#cb168-8"></a>    <span class="kw">col_integer</span>(),</span>
+<span id="cb168-9"><a href="plain-text.html#cb168-9"></a>    <span class="kw">col_skip</span>()</span>
+<span id="cb168-10"><a href="plain-text.html#cb168-10"></a>  ),</span>
+<span id="cb168-11"><a href="plain-text.html#cb168-11"></a>  <span class="dt">skip =</span> <span class="dv">3</span>,</span>
+<span id="cb168-12"><a href="plain-text.html#cb168-12"></a>  <span class="dt">na =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;Missing&quot;</span>)</span>
+<span id="cb168-13"><a href="plain-text.html#cb168-13"></a>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 4
+##   id    sex    ht_in wgt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;   &lt;int&gt;
+## 1 1     Male      71     190
+## 2 2     Male      NA     176
+## 3 3     Female    64     130
+## 4 4     Female    65      NA</code></pre>
+<p>Wow! This was kind of a long chapter! 🤯 But, you should not have the foundation you need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.</p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Grolemund2017-qp">
+<p>3. Grolemund G, Wickham H. <em>R for Data Science</em>.; 2017.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="file-paths.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="importing-binary-files.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

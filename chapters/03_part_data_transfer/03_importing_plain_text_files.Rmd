@@ -1,16 +1,24 @@
-# Importing plain text files
+# Importing plain text files {#plain-text}
 
 <!-- 
 This chapter gives the nuts and bolts of importing data.
 -->
 
-We previously learned how to create an R data frame by directly creating data frames in RStudio with the `data.frame()` function, the `tibble()` function, or the `tribble()` function. This will get the job done, but it’s not always very practical, particularly when you have larger data sets. 
+We previously learned how to manually create a data frame in RStudio with the `data.frame()` function, the `tibble()` function, or the `tribble()` function. This will get the job done, but it’s not always very practical, particularly when you have larger data sets. 
 
 Additionally, others will usually share data with you that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In my experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the **.csv** file extension and Excel files end with the **.xls** or **.xlsx** file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, you will learn how to take data stored in several different common types of files import them into R for use.
 
-There are many different file types that one can use to store data. In this chapter we will focus on data stored in plain text files. You can think of plain text files as simple files that don't require any special software to view and edit. Your operating system's plain text editor is all you need (i.e., Notepad on Windows or TextEdit on Mac).
+There are many different file types that one can use to store data. In this book, we will divide those file types into two categories: **plain text files** and **binary files**. Plain text files are simple files that you (<i>a human</i>) can directly read using only your operating system's plain text editor (i.e., Notepad on Windows or TextEdit on Mac). These files usually end with the **.txt** file extension -- one exception being the **.csv** extension. Specifically, in this chapter we will learn to import the following variations of plain text files:
 
-Later, we will discuss importing binary files. You can think of binary files as more complex file types that do require special software to view and edit. For example, Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.
+* Plain text files with data delimited by a single space.
+
+* Plain text files with data delimited by tabs.
+
+* Plain text files stored in a fixed width format.
+
+* Plain text files with data delimited by commas - csv files.
+
+Later, we will discuss importing binary files. You can think of binary files as more complex file types that can't generally be read by humans and accessing the information in binary files requires the use of special software. Some examples include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.
 
 ```{r echo=FALSE}
 knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files/files.png")
@@ -18,15 +26,15 @@ knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files
 
 ## Packages for importing data
 
-Base R contains several functions that can be used to import all of the file types discussed above; however, I'm going to use the following packages to import data in the examples below. I suggest that you go ahead and install these packages now if you would like to follow along. 
+Base R contains several functions that can be used to import plain text files; however, I'm going to use the [readr](https://readr.tidyverse.org/) package to import data in the examples that follow. Compared to base R functions for importing plain text files, `readr` is: @Grolemund2017-qp
 
-* [readr](https://readr.tidyverse.org/). We will use the `readr` package to import plain text and csv files.
+* Roughly 10 times faster.
 
-* [readxl](https://readxl.tidyverse.org/). We will use the `readxl` package to import Microsoft Excel files.
+* They don't convert character variables to factors by default.
 
-* [haven](https://haven.tidyverse.org/). We will use the `haven` package to import SAS and Stata data sets.
+* They behave more consistently across operating systems and geographic locations.
 
-In this chapter, we will be using the `readr` package extensively. I will go ahead and load it now.
+If you would like to follow along, I suggest that you go ahead and install and load `readr` now. 
 
 ```{r}
 library(readr)
@@ -67,11 +75,11 @@ single_space
 
 * The `readr` package imported the data and printed a message giving us some information about how it interpreted column names and column types. In programming lingo, deciding how to interpret the data that is being imported is called **parsing** the data.
 
-  - By default, `readr` will assume that the first row of data will contains variable names and will try to use them as column names in the data frame it creates. In this case, that was a good assumption. We want the columns to be named id, sex, ht_in, and wgt_lbs. Later, we will learn how to override this default behavior.
+  - By default, `readr` will assume that the first row of data will contains variable names and will try to use them as column names in the data frame it creates. In this case, that was a good assumption. We want the columns to be named `id`, `sex`, `ht_in`, and `wgt_lbs`. Later, we will learn how to override this default behavior.
   
-  - By default, `readr` will try to guess what type of data (e.g., numbers, character strings, dates, etc.) each column contains. It will guess based on analyzing the contents of the first 1,000 rows of the data. In this case, the `readr`'s guess were not correct. The variables id and sex should be character variables, but ht_in should not be. Below, we will learn how to fix this issue.
+  - By default, `readr` will try to guess what type of data (e.g., numbers, character strings, dates, etc.) each column contains. It will guess based on analyzing the contents of the first 1,000 rows of the data. In this case, `readr`'s guess was not entirely correct (or at least not what we wanted). `readr` correctly guessed that the variables `id` and `sex` should be character variables, but incorrectly guessed that `ht_in` should be character type as well. Below, we will learn how to fix this issue.
   
-<p class="warning"> ⚠️**Warning:** Make sure to always include the file extension in your file paths. For example, using "/Users/.../single_delimited" instead of "/Users/.../single_delimited.txt" above (i.e., no .txt) would have resulted in an error telling you that the filed does not exist.</p>
+<p class="warning"> ⚠️**Warning:** Make sure to always include the file extension in your file paths. For example, using "/single_delimited" instead of "/single_delimited.txt" above (i.e., no .txt) would have resulted in an error telling you that the filed does not exist.</p>
 
 ### Specifying missing data values
 
@@ -93,7 +101,7 @@ single_space <- read_delim(
 )
 ```
 
-```{r}
+```{r echo=FALSE}
 single_space
 ```
 
@@ -124,7 +132,7 @@ tab <- read_delim(
 )
 ```
 
-```{r}
+```{r echo=FALSE}
 tab
 ```
 
@@ -140,7 +148,7 @@ I don't personally receive tab separated values files very often. But, apparentl
 tab <- read_tsv("/Users/bradcannell/Dropbox/Datasets/Height and Weight/tab.txt")
 ```
 
-```{r}
+```{r echo=FALSE}
 tab
 ```
 
@@ -168,7 +176,7 @@ Now, in this case we can just use `readr`'s `read_table()` function to import th
 fixed <- read_table("/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width.txt")
 ```
 
-```{r}
+```{r echo=FALSE}
 fixed
 ```
 
@@ -190,7 +198,7 @@ In this case, the `read_table()` function does not give us the result we want.
 fixed <- read_table("/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt")
 ```
 
-```{r}
+```{r echo=FALSE}
 fixed
 ```
 
@@ -211,7 +219,7 @@ fixed <- read_fwf(
 )
 ```
 
-```{r}
+```{r echo=FALSE}
 fixed
 ```
 
@@ -221,7 +229,7 @@ fixed
 
 * The first argument to the `read_fwf()` function is the `file` argument. The value passed to the file argument should be file path that tells R where to find the data set on your computer.
 
-* The second argument to the `read_fwf()` function is the the `col_positions` argument. The value passed tells R the width (i.e., number of columns) that belong to each variable in the raw data set. This information is actually passed to the `col_positions` argument directly from the `fwf_widths()` function. This is an example of nesting functions.
+* The second argument to the `read_fwf()` function is the the `col_positions` argument. The value passed to this argument tells R the width (i.e., number of columns) that belong to each variable in the raw data set. This information is actually passed to the `col_positions` argument directly from the `fwf_widths()` function. This is an example of nesting functions.
 
   - The first argument to the `fwf_widths()` function is the `widths` argument. The value passed to the `widths` argument should be a numeric vector of column widths. The column width of each variable should be calculated as the number of columns that contain the values for that variable. For example, take another look at the data with the imaginary number line:
   
@@ -229,7 +237,7 @@ fixed
 knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files/number_line.png")
 ```
 
-  - All of the values for the variable `id` can be located within the first 3 columns of data. All of the values for the variable `sex` can be located within the next 6 columns of data. All of the values for the variable `ht_in` can be located within the next 5 columns of data. And, all of the values for the variable `wgt_lbs` can be located within the next 3 columns of data. Therefore, we case the vector `c(3, 6, 5, 3)` to the `widths` argument.
+  - All of the values for the variable `id` can be located within the first 3 columns of data. All of the values for the variable `sex` can be located within the next 6 columns of data. All of the values for the variable `ht_in` can be located within the next 5 columns of data. And, all of the values for the variable `wgt_lbs` can be located within the next 3 columns of data. Therefore, we pass the vector `c(3, 6, 5, 3)` to the `widths` argument.
 
   - The second argument to the `fwf_widths()` function is the `col_names` argument. The value passed to the `col_names` argument should be a character vector of column names.
   
@@ -249,7 +257,7 @@ fixed <- read_fwf(
 )
 ```
 
-```{r}
+```{r echo=FALSE}
 fixed
 ```
 
@@ -305,7 +313,7 @@ read_fwf(
 
 ## Importing comma separated values files
 
-The final type of plain text file that we will discuss is by far the most common type used in my experience. I'm talking about the **comma separated values** or **csv** file. Unlike space and tab separated values files, csv file names end with the **.csv** file extension. However, they are still considered plain text files. Meaning, you can open them in plain text editors such as Notepad for Windows or TextEdit for Mac. However, you can also open csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, and Google Sheets. 
+The final type of plain text file that we will discuss is by far the most common type used in my experience. I'm talking about the **comma separated values** or **csv** file. Unlike space and tab separated values files, csv file names end with the **.csv** file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, and Google Sheets. 
 
 ```{r echo=FALSE, fig.cap="A csv file viewed in a plain text editor."}
 knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files/csv_plain_text.png")
@@ -323,7 +331,7 @@ Importing standard csv files into R with the `readr` package is easy and uses a 
 csv <- read_csv("/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma.csv")
 ```
 
-```{r}
+```{r echo=FALSE}
 csv
 ```
 
@@ -331,23 +339,21 @@ csv
 
 * We used `readr`'s `read_csv()` function to import a data set with values that are delimited by commas. Those values were imported as a data frame, and we assigned that data frame to the R object called `csv`.
 
-* Like, `read_tsv()` R is basically executing  the `read_delim()` function with the value of the `delim` argument set to `","` under the hood. You could also use the `read_delim()` function with the value of the `delim` argument set to `","` if you wanted to.
+* Like `read_tsv()`, R is basically executing  the `read_delim()` function with the value of the `delim` argument set to `","` under the hood. You could also use the `read_delim()` function with the value of the `delim` argument set to `","` if you wanted to.
 
 ## Additional arguments
 
 For the most part, the data we imported in all of the examples above was relatively well behaved. What I mean by that is that the data basically "looked" like each of the `read_` functions were expecting it to "look". Therefore, we didn't have to adjust many of the various `read_` functions' default values. The exception was changing the default value of the `na` argument to the `read_delim()` function. However, all of the `read_` functions above have additional arguments that you may need to tweak on occasion. The two that I tend to adjust most often are the `col_names` and `col_types` arguments. It's impossible for me to think of every scenario where you may need to do this, but I'll walk through two basic examples below, which should be sufficient for you to get the idea.
 
-Take a look at this csv file for a few seconds. It's basically the same exact height and weight data we've been using; however, I've made some changes around the data. See if you can spot them all.
+Take a look at this csv file for a few seconds. It started as the same exact height and weight data we've been using, but I made a few changes. See if you can spot them all.
 
-```{r echo=FALSE, fig.cap="A csv file viewed in Microsoft Excel."}
+```{r echo=FALSE}
 knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files/csv_complex.png")
 ```
 
 When people record data in Microsoft Excel, they do all kinds of crazy things. In the screenshot above, I've included just a few examples of things I see all the time. For example:
 
-* Row one contains generic variable names that don't really serve much of purpose. 
-
-* Row one also contains some notes for the data collection staff that aren't really part of the data. 
+* Row one contains generic variable names that don't really serve much of a purpose. 
 
 * Row two is a blank line. I'm not sure why it's there. Maybe the study staff finds it aesthetically pleasing?
 
@@ -355,25 +361,27 @@ When people record data in Microsoft Excel, they do all kinds of crazy things. I
 
 * Row 7, column D is a missing value. However, someone wrote the word "Missing" instead of leaving the cell blank.
 
+* Column E also contains some notes for the data collection staff that aren't really part of the data. 
+
 All of the issues listed above are things we will have to deal with before we can analyze our data. Now, in this small data set we could just fix these issues directly in Microsoft Excel and then import into R with a simple call to `read_csv()` without adjusting any options. However, that this is generally a really bad idea. 
 
-<div class="warning"> ⚠️**Warning:** Alter your data with code 
+<div class="warning"> ⚠️**Warning:**
 
 * I suggest that you don't **EVER** alter your raw data. All kinds of crazy things happen with data and data files. If you keep your raw data untouched and in a safe place, worst case scenario you can always come back to it and start over. If you start messing with the raw data, then you may lose the ability to recover what it looked like in its original form forever. If you import the data into R before altering it then your raw data stays preserved.
 
-* If you are going to make alterations in Excel prior to importing the data, I **strongly** suggest making a copy of the Excel file, and then altering and importing the copy of the raw data. But, even this can be a bad idea.
+* If you are going to make alterations in Excel prior to importing the data, I **strongly** suggest making a copy of the raw data first. Then, alter the copy before importing into R. But, even this can be a bad idea.
 
-* If you make alterations to the data in Excel then there is generally no record of those alterations. Therefore, it can be really difficult for others (including future you) to know what was done to the data. You can manually compare the altered data to the original data of you are working from a copy (see above), but who wants to do that -- especially if the file is large? If you import the data into R as-is then your R code will, by definition, create a record of any alterations that were made. 
+* If you make alterations to the data in Excel then there is generally no record of those alterations. For example, let's say you click in a cell and delete a value (maybe even by accident), and then send me the csv file. I will have no way of knowing that a value was deleted. When you alter the data directly in Excel (or any program that doesn't require writing code), it can be really difficult for others (including future you) to know what was done to the data. You may be able manually compare the altered data to the original data if you have access to both, but who wants to do that -- especially if the file is large? However, if you import the data into R as-is and programmatically make alterations with R code, then your R code will, by definition, serve a record of all alterations that were made.
 
-* Often data is updated. You could spend a significant amount of time altering your data in Excel only to be sent an updated file next week. Often, the manual alterations you made in one Excel file are not transferable to another. However, if all alterations are made in R then you can often run the exact same code again on the updated data. </div>
+* Often data is updated. You could spend a significant amount of time altering your data in Excel only to be sent an updated file next week. Often, the manual alterations you made in one Excel file are not transferable to another. However, if all alterations are made in R, then you can often just run the exact same code again on the updated data. </div>
 
-So, let's walk through addressing these issues together. We'll start by taking a look at our results with all of `read_csv`'s arguments left are their default values.
+So, let's walk through addressing these issues together. We'll start by taking a look at our results with all of `read_csv`'s arguments left at their default values.
 
 ```{r}
 csv <- read_csv("/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv")
 ```
 
-```{r}
+```{r echo=FALSE}
 csv
 ```
 
@@ -386,7 +394,7 @@ csv <- read_csv(
 )
 ```
 
-```{r}
+```{r echo=FALSE}
 csv
 ```
 
@@ -410,7 +418,7 @@ csv <- read_csv(
 )
 ```
 
-```{r}
+```{r echo=FALSE}
 csv
 ```
 
@@ -418,9 +426,13 @@ csv
 
 * We told R explicitly what type of values we wanted each column to contain. We did so by nesting a `col_` function for each column type inside the `col()` function, which is passed directly to the `col-types` argument.
 
+* Notice various column types (e.g., `col_character()`) _are_ functions, and that they are nested inside of the `cols()` function. Because they are functions, you must put include the parentheses. That's just how the `readr` package is designed.
+
+* Notice that the last column type we passed to the `col_types` argument was `col_skip()`. This tells R to ignore the 5th column in the raw data (5th because it's the 5th column type we listed). Doing this will get rid of the warning we saw earlier.
+
 * [Click here to see all available column types.](https://readr.tidyverse.org/articles/readr.html#rectangular-parsers)
 
-* Because we told R explicitly what type of values we wanted each column to contain, R had to drop any values that couldn't be coerced to the type we requested. More specifically, they were coerced to missing (`NA`). For example, the value `Var3` that was previously in the first row of the `ht_in` column was coerced to `NA` because R does not know (nor do I) how to turn the character string "Var3" into an integer. R gives us a warning message about this. 
+* Because we told R explicitly what type of values we wanted each column to contain, R had to drop any values that couldn't be coerced to the type we requested. More specifically, they were coerced to missing (`NA`). For example, the value `Var3` that was previously in the first row of the `ht_in` column. It was coerced to `NA` because R does not know (nor do I) how to turn the character string "Var3" into an integer. R gives us a warning message about this. 
 
 Next, let's go ahead and tell R to ignore the first three rows of the csv file. They don't contain anything that is of use to us at this point.
 
@@ -439,7 +451,7 @@ csv <- read_csv(
 )
 ```
 
-```{r}
+```{r echo=FALSE}
 csv
 ```
 
@@ -465,20 +477,8 @@ csv <- read_csv(
 )
 ```
 
-```{r}
+```{r echo=FALSE}
 csv
 ```
 
-## Summary
-
-Wow! This was kind of a long chapter! 🤯 But, you should not have the foundation you need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Specially, you should now know how to import data stored in the following formats:
-
-* Plain text files with data delimited by a single space.
-
-* Plain text files with data delimited by tabs.
-
-* Plain text files stored in a fixed width format.
-
-* Plain text files with data delimited by commas - csv files.
-
-Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.
+Wow! This was kind of a long chapter! 🤯 But, you should not have the foundation you need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.
