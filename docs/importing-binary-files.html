@@ -402,11 +402,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 This chapter gives the nuts and bolts of importing data.
 -->
 <p>In the last chapter we learned that there are many different file types that one can use to store data. We also learned how to use the <code>readr</code> package to import several different variations of <strong>plain text files</strong> into R.</p>
-<p>In this chapter, we will focus on data stored in <strong>binary files</strong>. Again, you can think of binary files as being more complex than plain text files and accessing the information in binary files requires the use of special software. Some examples binary file that I have frequently seen used in epidemiology include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets. Below, we will learn how to import all three file types into R.</p>
+<p>In this chapter, we will focus on data stored in <strong>binary files</strong>. Again, you can think of binary files as being more complex than plain text files and accessing the information in binary files requires the use of special software. Some examples of binary files that I have frequently seen used in epidemiology include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets. Below, we will learn how to import all three file types into R.</p>
 <p><img src="img/03_part_data_transfer/04_importing_binary_files/files.png" /><!-- --></p>
 <div id="packages-for-importing-data-1" class="section level2" number="14.1">
 <h2><span class="header-section-number">14.1</span> Packages for importing data</h2>
-<p>Technically, base R does not contain any functions that can be used to import the binary file types discussed above. However, the <code>foreign</code> package contains functions that may be used to import SAS data sets and Stata data sets, and is installed by default when you install R on your computer. Having said that, we aren’t going to use the <code>foreign</code> package in this chapter. I’m going to use the following packages to import data in the examples below. If you haven’t done so already, I suggest that you go ahead and install these packages now.</p>
+<p>Technically, base R does not contain any functions that can be used to import the binary file types discussed above. However, the <code>foreign</code> package contains functions that may be used to import SAS data sets and Stata data sets, and is installed by default when you install R on your computer. Having said that, we aren’t going to use the <code>foreign</code> package in this chapter. Instead, we’re going to use the following packages to import data in the examples below. If you haven’t done so already, I suggest that you go ahead and install these packages now.</p>
 <ul>
 <li><p><a href="https://readxl.tidyverse.org/">readxl</a>. We will use the <code>readxl</code> package to import Microsoft Excel files.</p></li>
 <li><p><a href="https://haven.tidyverse.org/">haven</a>. We will use the <code>haven</code> package to import SAS and Stata data sets.</p></li>
@@ -460,7 +460,6 @@ This chapter gives the nuts and bolts of importing data.
 ## 6 Weight (lbs)                    Participant&#39;s weight in pounds Continuous     
 ## 7 Date of Birth                   Participant&#39;s date of birth    Date           
 ## 8 Annual Household Income         Participant&#39;s annual househol… Continuous (Cu…</code></pre>
-<p>👆<strong>Here’s what we did above:</strong></p>
 <p>And, as I’m sure you saw coming, this isn’t the result we wanted. However, we can get the result we wanted by making a few tweaks to the default values of the <code>sheet</code>, <code>col_names</code>, <code>col_types</code>, <code>skip</code>, and <code>na</code> arguments of the <code>read_excel()</code> function.</p>
 <div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="importing-binary-files.html#cb175-1"></a>excel &lt;-<span class="st"> </span><span class="kw">read_excel</span>(</span>
 <span id="cb175-2"><a href="importing-binary-files.html#cb175-2"></a>  <span class="dt">path =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/excel_complex.xlsx&quot;</span>,</span>
@@ -487,10 +486,11 @@ This chapter gives the nuts and bolts of importing data.
 ## 2 002   Male      NA     176 1990-08-16 00:00:00  67000
 ## 3 003   Female    64     130 1980-02-21 00:00:00  49000
 ## 4 004   Female    65      NA 1983-04-12 00:00:00  89000</code></pre>
-<p>As I said above, the <code>readr</code> package and <code>readxl</code> package were developed by the same people. So, the code above looks similar to the code we used to import the csv file in the previous chapter. Therefore, I’m not going to walk through this code step-by-step. Rather, I’m just going to highlight some of the slight differences.</p>
+<p>As I said, the <code>readr</code> package and <code>readxl</code> package were developed by the same people. So, the code above looks similar to the code we used to import the csv file in the previous chapter. Therefore, I’m not going to walk through this code step-by-step. Rather, I’m just going to highlight some of the slight differences.</p>
 <ul>
+<li><p>You can type <code>?read_excel</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
 <li><p>The first argument to the <code>read_excel()</code> function is the <code>path</code> argument. It serves the same purpose as the <code>file</code> argument to <code>read_csv()</code> – it just has a different name.</p></li>
-<li><p>The <code>sheet</code> argument to the <code>read_excel()</code> function tells R which sheet of the Excel workbook contains the data you want to import. In this case, the study team named that sheet “Study Phase 1”. We could have also passed the value <code>2</code> to the <code>sheet</code> argument because “Study Phase 1” is the second sheet in the workbook. However, I suggest using the sheet name. That way, if the study team send you a new Excel file next week with different ordering, you are less likely to accidently import the wrong data.</p></li>
+<li><p>The <code>sheet</code> argument to the <code>read_excel()</code> function tells R which sheet of the Excel workbook contains the data you want to import. In this case, the study team named that sheet “Study Phase 1”. We could have also passed the value <code>2</code> to the <code>sheet</code> argument because “Study Phase 1” is the second sheet in the workbook. However, I suggest using the sheet name. That way, if the study team sends you a new Excel file next week with different ordering, you are less likely to accidently import the wrong data.</p></li>
 <li><p>The value we pass to the <code>col_types</code> argument is now a vector of character strings instead of a list of functions nested in the <code>col()</code> function.</p>
 <ul>
 <li><p>The values that the col_types function will accept are <code>"skip"</code> for telling R to ignore a column in the spreadsheet, <code>"guess"</code> for telling R to guess the variable type, <code>"logical"</code> for logical (TRUE/FALSE) variables, “<code>numeric</code>” for numeric variables, <code>"date"</code> for date variables, <code>"text"</code> for character variables, and <code>"list"</code> for everything else.</p></li>
@@ -503,7 +503,7 @@ This chapter gives the nuts and bolts of importing data.
 <div id="importing-data-from-other-statistical-analysis-software" class="section level2" number="14.3">
 <h2><span class="header-section-number">14.3</span> Importing data from other statistical analysis software</h2>
 <p>Many applications designed for statistical analysis allow you to save data in a binary format. One reason for this is that binary data formats allow you to save <strong>metadata</strong> alongside your data values. Metadata is data <em>about</em> the data. Using our running example, the data is about the heights, weights, and other characteristics of our study participants. <strong>Metadata</strong> about this data might include information like when this data set was created, or value labels that make the data easier to read (e.g., the dollar signs in the income variable).</p>
-<p>In my experience, you are far more likely to have problems importing binary files saved from other statistical analysis applications. Perhaps because they are more complex, the data just seems to become corrupt and do other weird things far more often than is the case with plain text files. However, in my experience, it is also the case that when we are able to import binary files created in other statistical analysis applications, doing so requires less adjusting of default values. In fact, we will usually only need to pass the file path to the correct <code>read_</code> function.</p>
+<p>In my experience, you are slightly more likely to have problems importing binary files saved from other statistical analysis applications than plain text files. Perhaps because they are more complex, the data just seems to become corrupt and do other weird things more often than is the case with plain text files. However, in my experience, it is also the case that when we are able to import binary files created in other statistical analysis applications, doing so requires less adjusting of default values. In fact, we will usually only need to pass the file path to the correct <code>read_</code> function.</p>
 <p>Below, we will see some examples of importing binary files saved in two popular statistical analysis applications – SAS and Stata. We will use the <code>haven</code> package to import both.</p>
 </div>
 <div id="importing-sas-data-sets" class="section level2" number="14.4">
@@ -567,7 +567,7 @@ This chapter gives the nuts and bolts of importing data.
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>haven</code>’s <code>read_xpt()</code> function to import a zipped SAS Transport File. That data was imported as a data frame and we assigned that data frame to the R object called <code>brfss_2018</code>.</p></li>
-<li><p>Because this is a large data frame (437,436 observations and 275 variables), we used the <code>head()</code> function to print only the first 10 rows of the data to the screen.</p></li>
+<li><p>Because this is a large data frame (437,436 observations and 275 variables), we used the <code>head()</code> function to print only the first 6 rows of the data to the screen.</p></li>
 </ul>
 <p>But, this demonstration actually gets even cooler. Instead of downloading the SAS Transport file to our computer before importing it, we can actually sometimes import files, including SAS Transport files, directly from the internet.</p>
 <p>For example, you can <a href="https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Demographics&amp;CycleBeginYear=2017">download the 2017-2018 NHANES demographic data as a SAS Transport file here</a></p>
@@ -599,7 +599,7 @@ This chapter gives the nuts and bolts of importing data.
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>haven</code>’s <code>read_xpt()</code> function to import a SAS Transport File directly from the NHANES website. That data was imported as a data frame and we assigned that data frame to the R object called <code>nhanes_demo</code>.</p></li>
-<li><p>Because this is a large data frame (9,254 observations and 46 variables), we used the <code>head()</code> function to print only the first 10 rows of the data to the screen.</p></li>
+<li><p>Because this is a large data frame (9,254 observations and 46 variables), we used the <code>head()</code> function to print only the first 6 rows of the data to the screen.</p></li>
 </ul>
 </div>
 <div id="importing-stata-data-sets" class="section level2" number="14.5">
@@ -619,7 +619,7 @@ This chapter gives the nuts and bolts of importing data.
 <ul>
 <li>We used <code>haven</code>’s <code>read_stata()</code> function to import a Stata data set. That data was imported as a data frame and we assigned that data frame to the R object called <code>stata</code>.</li>
 </ul>
-<p>You now know how to write code that will allow you to import data stored in all of the file formats that we will use in this book, and the vast majority of formats that you are likely to encounter in your real-world analyses. In the next section, I will introduce you to a tool in RStudio that makes importing data even easier.</p>
+<p>You now know how to write code that will allow you to import data stored in all of the file formats that we will use in this book, and the vast majority of formats that you are likely to encounter in your real-world projects. In the next section, I will introduce you to a tool in RStudio that makes importing data even easier.</p>
 
 </div>
 </div>
