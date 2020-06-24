@@ -1,0 +1,64 @@
+# Appendix: Alternative table formats {-}
+
+This is a temporary appendix intended for gathering feedback about the use of alternative table formats only. I'm curious to know which format for displaying data frames readers find most useful. I think it's possible that the answer partially depends on the size of the data frame (and possibly other factors), so I have two examples below -- one smaller data frame and one larger data frame.
+
+## Smaller data frame
+
+```{r}
+demo <- tibble(
+  id       = c("001", "002", "003", "004"),
+  age      = c(30, 67, 52, 56),
+  edu      = c(3, 1, 4, 2),
+  edu_char = c("Some college", "Less than high school", "College graduate", 
+                     "High school graduate")
+)
+```
+
+### Default method for printing the data frame to the screen
+
+```{r}
+demo
+```
+
+This method produces the least aesthetically pleasing results, but they are also the most similar to the results you actually see when you run the code on your computer. For example, this output shows the type of each column.
+
+However, the two methods below produce much more attractive looking tables. Perhaps that's more desirable to readers?
+
+### Using the kable function
+
+```{r}
+knitr::kable(demo)
+```
+
+### Using the datatable function
+
+```{r}
+DT::datatable(demo)
+```
+
+## Larger data frame
+
+```{r}
+aws <- readxl::read_excel("/Users/bradcannell/Dropbox/Datasets/Aging Women Study/aws.xlsx")
+```
+
+### Default method for printing the data frame to the screen
+
+```{r}
+head(aws, 100)
+```
+
+### Using the kable function
+
+```{r}
+knitr::kable(head(aws, 100)) %>% 
+  kableExtra::scroll_box(height = "300px", width = "100%")
+```
+
+### Using the datatable function
+
+```{r}
+DT::datatable(head(aws, 20), options = list(scrollX = TRUE))
+```
+
+
