@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>25 Creating and modifying columns | R for Epidemiology</title>
+  <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="25 Creating and modifying columns | R for Epidemiology" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://brad-cannell.github.io/r4epi/" />
+  
+  <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="github-repo" content="brad-cannell/r4epi" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="25 Creating and modifying columns | R for Epidemiology" />
+  
+  <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  
+
+<meta name="author" content="Brad Cannell" />
+
+
+<meta name="date" content="2020-06-28" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introduction-to-data-management.html"/>
+<link rel="next" href="subsetting-data-frames.html"/>
+<script src="libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.13/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R for Epidemiology</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html"><i class="fa fa-check"></i><b>1</b> Installing R and RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-mac"><i class="fa fa-check"></i><b>1.1</b> Download and install on a Mac</a></li>
+<li class="chapter" data-level="1.2" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-pc"><i class="fa fa-check"></i><b>1.2</b> Download and install on a PC</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="what-is-r.html"><a href="what-is-r.html"><i class="fa fa-check"></i><b>2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="what-is-r.html"><a href="what-is-r.html#what-is-data"><i class="fa fa-check"></i><b>2.1</b> What is data?</a></li>
+<li class="chapter" data-level="2.2" data-path="what-is-r.html"><a href="what-is-r.html#what-is-r-1"><i class="fa fa-check"></i><b>2.2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="what-is-r.html"><a href="what-is-r.html#transferring-data"><i class="fa fa-check"></i><b>2.2.1</b> Transferring data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="what-is-r.html"><a href="what-is-r.html#managing-data"><i class="fa fa-check"></i><b>2.2.2</b> Managing data</a></li>
+<li class="chapter" data-level="2.2.3" data-path="what-is-r.html"><a href="what-is-r.html#analyzing-data"><i class="fa fa-check"></i><b>2.2.3</b> Analyzing data</a></li>
+<li class="chapter" data-level="2.2.4" data-path="what-is-r.html"><a href="what-is-r.html#presenting-data"><i class="fa fa-check"></i><b>2.2.4</b> Presenting data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html"><i class="fa fa-check"></i><b>3</b> Navigating the RStudio interface</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-console"><i class="fa fa-check"></i><b>3.1</b> The console</a></li>
+<li class="chapter" data-level="3.2" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-environment-pane"><i class="fa fa-check"></i><b>3.2</b> The environment pane</a></li>
+<li class="chapter" data-level="3.3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-files-pane"><i class="fa fa-check"></i><b>3.3</b> The files pane</a></li>
+<li class="chapter" data-level="3.4" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-source-pane"><i class="fa fa-check"></i><b>3.4</b> The source pane</a></li>
+<li class="chapter" data-level="3.5" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#rstudio-preferences"><i class="fa fa-check"></i><b>3.5</b> RStudio preferences</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html"><i class="fa fa-check"></i><b>4</b> Speaking R’s language</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#r-is-a-language"><i class="fa fa-check"></i><b>4.1</b> R is a <em>language</em></a></li>
+<li class="chapter" data-level="4.2" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#the-r-interpreter"><i class="fa fa-check"></i><b>4.2</b> The R interpreter</a></li>
+<li class="chapter" data-level="4.3" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#errors"><i class="fa fa-check"></i><b>4.3</b> Errors</a></li>
+<li class="chapter" data-level="4.4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#functions"><i class="fa fa-check"></i><b>4.4</b> Functions</a></li>
+<li class="chapter" data-level="4.5" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#objects"><i class="fa fa-check"></i><b>4.5</b> Objects</a></li>
+<li class="chapter" data-level="4.6" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#comments"><i class="fa fa-check"></i><b>4.6</b> Comments</a></li>
+<li class="chapter" data-level="4.7" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#packages"><i class="fa fa-check"></i><b>4.7</b> Packages</a></li>
+<li class="chapter" data-level="4.8" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#programming-style"><i class="fa fa-check"></i><b>4.8</b> Programming style</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lets-get-programming.html"><a href="lets-get-programming.html"><i class="fa fa-check"></i><b>5</b> Let’s get programming</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#simulating-data"><i class="fa fa-check"></i><b>5.1</b> Simulating data</a></li>
+<li class="chapter" data-level="5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vectors"><i class="fa fa-check"></i><b>5.2</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vector-types"><i class="fa fa-check"></i><b>5.2.1</b> Vector types</a></li>
+<li class="chapter" data-level="5.2.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#double-vectors"><i class="fa fa-check"></i><b>5.2.2</b> Double vectors</a></li>
+<li class="chapter" data-level="5.2.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#integer-vectors"><i class="fa fa-check"></i><b>5.2.3</b> Integer vectors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#logical-vectors"><i class="fa fa-check"></i><b>5.2.4</b> Logical vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#data-frames"><i class="fa fa-check"></i><b>5.3</b> Data frames</a></li>
+<li class="chapter" data-level="5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#missing-data"><i class="fa fa-check"></i><b>5.4</b> Missing data</a></li>
+<li class="chapter" data-level="5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#our-first-analysis"><i class="fa fa-check"></i><b>5.5</b> Our first analysis</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#manual-calculation-of-the-mean"><i class="fa fa-check"></i><b>5.5.1</b> Manual calculation of the mean</a></li>
+<li class="chapter" data-level="5.5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#dollar-sign-notation"><i class="fa fa-check"></i><b>5.5.2</b> Dollar sign notation</a></li>
+<li class="chapter" data-level="5.5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#bracket-notation"><i class="fa fa-check"></i><b>5.5.3</b> Bracket notation</a></li>
+<li class="chapter" data-level="5.5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-sum-function"><i class="fa fa-check"></i><b>5.5.4</b> The sum function</a></li>
+<li class="chapter" data-level="5.5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#nesting-functions"><i class="fa fa-check"></i><b>5.5.5</b> Nesting functions</a></li>
+<li class="chapter" data-level="5.5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-length-function"><i class="fa fa-check"></i><b>5.5.6</b> The length function</a></li>
+<li class="chapter" data-level="5.5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-mean-function"><i class="fa fa-check"></i><b>5.5.7</b> The mean function</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#some-common-errors"><i class="fa fa-check"></i><b>5.6</b> Some common errors</a></li>
+<li class="chapter" data-level="5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#summary"><i class="fa fa-check"></i><b>5.7</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Coding Tools and Best Practices</b></span></li>
+<li class="chapter" data-level="6" data-path="r-scripts.html"><a href="r-scripts.html"><i class="fa fa-check"></i><b>6</b> R scripts</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="r-scripts.html"><a href="r-scripts.html#creating-r-scripts"><i class="fa fa-check"></i><b>6.1</b> Creating R scripts</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="r-markdown.html"><a href="r-markdown.html"><i class="fa fa-check"></i><b>7</b> R markdown</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="r-markdown.html"><a href="r-markdown.html#what-is-r-markdown"><i class="fa fa-check"></i><b>7.1</b> What is R markdown?</a></li>
+<li class="chapter" data-level="7.2" data-path="r-markdown.html"><a href="r-markdown.html#why-use-r-markdown"><i class="fa fa-check"></i><b>7.2</b> Why use R markdown?</a></li>
+<li class="chapter" data-level="7.3" data-path="r-markdown.html"><a href="r-markdown.html#create-an-r-markdown-file"><i class="fa fa-check"></i><b>7.3</b> Create an R markdown file</a></li>
+<li class="chapter" data-level="7.4" data-path="r-markdown.html"><a href="r-markdown.html#yaml-headers"><i class="fa fa-check"></i><b>7.4</b> YAML headers</a></li>
+<li class="chapter" data-level="7.5" data-path="r-markdown.html"><a href="r-markdown.html#r-code-chunks"><i class="fa fa-check"></i><b>7.5</b> R code chunks</a></li>
+<li class="chapter" data-level="7.6" data-path="r-markdown.html"><a href="r-markdown.html#markdown"><i class="fa fa-check"></i><b>7.6</b> Markdown</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="r-projects.html"><a href="r-projects.html"><i class="fa fa-check"></i><b>8</b> R projects</a></li>
+<li class="chapter" data-level="9" data-path="coding-best-practices.html"><a href="coding-best-practices.html"><i class="fa fa-check"></i><b>9</b> Coding best practices</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#general-principles"><i class="fa fa-check"></i><b>9.1</b> General principles</a></li>
+<li class="chapter" data-level="9.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#code-comments"><i class="fa fa-check"></i><b>9.2</b> Code comments</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#defining-key-variables"><i class="fa fa-check"></i><b>9.2.1</b> Defining key variables</a></li>
+<li class="chapter" data-level="9.2.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#what-this-code-is-trying-to-accomplish"><i class="fa fa-check"></i><b>9.2.2</b> What this code is trying to accomplish</a></li>
+<li class="chapter" data-level="9.2.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#why-i-chose-this-particular-strategy"><i class="fa fa-check"></i><b>9.2.3</b> Why I chose this particular strategy</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#style-guidelines"><i class="fa fa-check"></i><b>9.3</b> Style guidelines</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#object-variable-names"><i class="fa fa-check"></i><b>9.3.1</b> Object (variable) names</a></li>
+<li class="chapter" data-level="9.3.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#use-names-that-are-informative"><i class="fa fa-check"></i><b>9.3.2</b> Use names that are informative</a></li>
+<li class="chapter" data-level="9.3.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#file-names"><i class="fa fa-check"></i><b>9.3.3</b> File Names</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="using-pipes.html"><a href="using-pipes.html"><i class="fa fa-check"></i><b>10</b> Using pipes</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="using-pipes.html"><a href="using-pipes.html#what-are-pipes"><i class="fa fa-check"></i><b>10.1</b> What are pipes?</a></li>
+<li class="chapter" data-level="10.2" data-path="using-pipes.html"><a href="using-pipes.html#how-do-pipes-work"><i class="fa fa-check"></i><b>10.2</b> How do pipes work?</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="using-pipes.html"><a href="using-pipes.html#keyboard-shortcut"><i class="fa fa-check"></i><b>10.2.1</b> Keyboard shortcut</a></li>
+<li class="chapter" data-level="10.2.2" data-path="using-pipes.html"><a href="using-pipes.html#pipe-style"><i class="fa fa-check"></i><b>10.2.2</b> Pipe style</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="using-pipes.html"><a href="using-pipes.html#final-thought-on-pipes"><i class="fa fa-check"></i><b>10.3</b> Final thought on pipes</a></li>
+</ul></li>
+<li class="part"><span><b>III Data Transfer</b></span></li>
+<li class="chapter" data-level="11" data-path="introduction-to-data-transfer.html"><a href="introduction-to-data-transfer.html"><i class="fa fa-check"></i><b>11</b> Introduction to data transfer</a></li>
+<li class="chapter" data-level="12" data-path="file-paths.html"><a href="file-paths.html"><i class="fa fa-check"></i><b>12</b> File paths</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="file-paths.html"><a href="file-paths.html#finding-file-paths"><i class="fa fa-check"></i><b>12.1</b> Finding file paths</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html"><i class="fa fa-check"></i><b>13</b> Importing plain text files</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#packages-for-importing-data"><i class="fa fa-check"></i><b>13.1</b> Packages for importing data</a></li>
+<li class="chapter" data-level="13.2" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#importing-space-delimited-files"><i class="fa fa-check"></i><b>13.2</b> Importing space delimited files</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#specifying-missing-data-values"><i class="fa fa-check"></i><b>13.2.1</b> Specifying missing data values</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#importing-tab-delimited-files"><i class="fa fa-check"></i><b>13.3</b> Importing tab delimited files</a></li>
+<li class="chapter" data-level="13.4" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#importing-fixed-width-format-files"><i class="fa fa-check"></i><b>13.4</b> Importing fixed width format files</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#vector-of-column-widths"><i class="fa fa-check"></i><b>13.4.1</b> Vector of column widths</a></li>
+<li class="chapter" data-level="13.4.2" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#paired-vector-of-start-and-end-positions"><i class="fa fa-check"></i><b>13.4.2</b> Paired vector of start and end positions</a></li>
+<li class="chapter" data-level="13.4.3" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#using-named-arguments"><i class="fa fa-check"></i><b>13.4.3</b> Using named arguments</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#importing-comma-separated-values-files"><i class="fa fa-check"></i><b>13.5</b> Importing comma separated values files</a></li>
+<li class="chapter" data-level="13.6" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#additional-arguments"><i class="fa fa-check"></i><b>13.6</b> Additional arguments</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="importing-binary-files.html"><a href="importing-binary-files.html"><i class="fa fa-check"></i><b>14</b> Importing binary files</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="importing-binary-files.html"><a href="importing-binary-files.html#packages-for-importing-data-1"><i class="fa fa-check"></i><b>14.1</b> Packages for importing data</a></li>
+<li class="chapter" data-level="14.2" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-microsoft-excel-spreadsheets"><i class="fa fa-check"></i><b>14.2</b> Importing Microsoft Excel spreadsheets</a></li>
+<li class="chapter" data-level="14.3" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-data-from-other-statistical-analysis-software"><i class="fa fa-check"></i><b>14.3</b> Importing data from other statistical analysis software</a></li>
+<li class="chapter" data-level="14.4" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-sas-data-sets"><i class="fa fa-check"></i><b>14.4</b> Importing SAS data sets</a></li>
+<li class="chapter" data-level="14.5" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-stata-data-sets"><i class="fa fa-check"></i><b>14.5</b> Importing Stata data sets</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="rstudios-data-import-tool.html"><a href="rstudios-data-import-tool.html"><i class="fa fa-check"></i><b>15</b> RStudio’s data import tool</a></li>
+<li class="chapter" data-level="16" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>16</b> Exporting data</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="exporting-data.html"><a href="exporting-data.html#plain-text-files"><i class="fa fa-check"></i><b>16.1</b> Plain text files</a></li>
+<li class="chapter" data-level="16.2" data-path="exporting-data.html"><a href="exporting-data.html#factor-vectors"><i class="fa fa-check"></i><b>16.2</b> Factor vectors</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="exporting-data.html"><a href="exporting-data.html#coerce-a-numeric-variable"><i class="fa fa-check"></i><b>16.2.1</b> Coerce a numeric variable</a></li>
+<li class="chapter" data-level="16.2.2" data-path="exporting-data.html"><a href="exporting-data.html#coerce-a-character-variable"><i class="fa fa-check"></i><b>16.2.2</b> Coerce a character variable</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="exporting-data.html"><a href="exporting-data.html#r-binary-files"><i class="fa fa-check"></i><b>16.3</b> R binary files</a></li>
+</ul></li>
+<li class="part"><span><b>IV Descriptive Analysis</b></span></li>
+<li class="chapter" data-level="17" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html"><i class="fa fa-check"></i><b>17</b> Introduction to descriptive analysis</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-is-descriptive-analysis-and-why-would-we-do-it"><i class="fa fa-check"></i><b>17.1</b> What is descriptive analysis and why would we do it?</a></li>
+<li class="chapter" data-level="17.2" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-kind-of-descriptive-analysis-should-we-perform"><i class="fa fa-check"></i><b>17.2</b> What kind of descriptive analysis should we perform?</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html"><i class="fa fa-check"></i><b>18</b> Numerical descriptions of categorical variables</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#height-and-weight-data"><i class="fa fa-check"></i><b>18.1</b> Height and Weight Data</a>
+<ul>
+<li class="chapter" data-level="18.1.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#view-the-data"><i class="fa fa-check"></i><b>18.1.1</b> View the data</a></li>
+</ul></li>
+<li class="chapter" data-level="18.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-frequencies"><i class="fa fa-check"></i><b>18.2</b> Calculating frequencies</a>
+<ul>
+<li class="chapter" data-level="18.2.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-base-r-table-function"><i class="fa fa-check"></i><b>18.2.1</b> The base R table function</a></li>
+<li class="chapter" data-level="18.2.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-gmodels-crosstable-function"><i class="fa fa-check"></i><b>18.2.2</b> The gmodels CrossTable function</a></li>
+<li class="chapter" data-level="18.2.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-tidyverse-way"><i class="fa fa-check"></i><b>18.2.3</b> The tidyverse way</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-percentages"><i class="fa fa-check"></i><b>18.3</b> Calculating percentages</a></li>
+<li class="chapter" data-level="18.4" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#missing-data-1"><i class="fa fa-check"></i><b>18.4</b> Missing data</a></li>
+<li class="chapter" data-level="18.5" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#formatting-results"><i class="fa fa-check"></i><b>18.5</b> Formatting results</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html"><i class="fa fa-check"></i><b>19</b> Measures of central tendency</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mean"><i class="fa fa-check"></i><b>19.1</b> Calculate the mean</a></li>
+<li class="chapter" data-level="19.2" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-median"><i class="fa fa-check"></i><b>19.2</b> Calculate the median</a></li>
+<li class="chapter" data-level="19.3" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mode"><i class="fa fa-check"></i><b>19.3</b> Calculate the mode</a></li>
+<li class="chapter" data-level="19.4" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#compare-mean-median-and-mode"><i class="fa fa-check"></i><b>19.4</b> Compare mean, median, and mode</a></li>
+<li class="chapter" data-level="19.5" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#data-checking"><i class="fa fa-check"></i><b>19.5</b> Data checking</a></li>
+<li class="chapter" data-level="19.6" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#properties-of-mean-median-and-mode"><i class="fa fa-check"></i><b>19.6</b> Properties of mean, median, and mode</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html"><i class="fa fa-check"></i><b>20</b> Measures of dispersion</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html#comparing-distributions"><i class="fa fa-check"></i><b>20.1</b> Comparing distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><i class="fa fa-check"></i><b>21</b> Describing the relationship between a continuous outcome and a continuous predictor</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html#pearson-correlation-coefficient"><i class="fa fa-check"></i><b>21.1</b> Pearson Correlation Coefficient</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html#calculating-r"><i class="fa fa-check"></i><b>21.1.1</b> Calculating r</a></li>
+<li class="chapter" data-level="21.1.2" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html#correlation-intuition"><i class="fa fa-check"></i><b>21.1.2</b> Correlation intuition</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><i class="fa fa-check"></i><b>22</b> Describing the relationship between a continuous outcome and a categorical predictor</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html#single-predictor-and-single-outcome"><i class="fa fa-check"></i><b>22.1</b> Single predictor and single outcome</a></li>
+<li class="chapter" data-level="22.2" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html#multiple-predictors"><i class="fa fa-check"></i><b>22.2</b> Multiple predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"><i class="fa fa-check"></i><b>23</b> Describing the relationship between a categorical outcome and a categorical predictor</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html#comparing-two-variables"><i class="fa fa-check"></i><b>23.1</b> Comparing two variables</a></li>
+</ul></li>
+<li class="part"><span><b>V Data Management</b></span></li>
+<li class="chapter" data-level="24" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html"><i class="fa fa-check"></i><b>24</b> Introduction to data management</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#multiple-paradigms-for-data-management-in-r"><i class="fa fa-check"></i><b>24.1</b> Multiple paradigms for data management in R</a></li>
+<li class="chapter" data-level="24.2" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#the-dplyr-package"><i class="fa fa-check"></i><b>24.2</b> The dplyr package</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#the-dplyr-verbs"><i class="fa fa-check"></i><b>24.2.1</b> The dplyr verbs</a></li>
+<li class="chapter" data-level="24.2.2" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#the-.data-argument"><i class="fa fa-check"></i><b>24.2.2</b> The .data argument</a></li>
+<li class="chapter" data-level="24.2.3" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#the-argument"><i class="fa fa-check"></i><b>24.2.3</b> The … argument</a></li>
+<li class="chapter" data-level="24.2.4" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#non-standard-evaluation"><i class="fa fa-check"></i><b>24.2.4</b> Non-standard evaluation</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html"><i class="fa fa-check"></i><b>25</b> Creating and modifying columns</a>
+<ul>
+<li class="chapter" data-level="25.1" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#creating-data-frames"><i class="fa fa-check"></i><b>25.1</b> Creating data frames</a></li>
+<li class="chapter" data-level="25.2" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#dollar-sign-notation-1"><i class="fa fa-check"></i><b>25.2</b> Dollar sign notation</a></li>
+<li class="chapter" data-level="25.3" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#bracket-notation-1"><i class="fa fa-check"></i><b>25.3</b> Bracket notation</a></li>
+<li class="chapter" data-level="25.4" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#modify-individual-values"><i class="fa fa-check"></i><b>25.4</b> Modify individual values</a></li>
+<li class="chapter" data-level="25.5" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#the-mutate-function"><i class="fa fa-check"></i><b>25.5</b> The mutate() function</a>
+<ul>
+<li class="chapter" data-level="25.5.1" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#adding-or-modifying-a-single-column"><i class="fa fa-check"></i><b>25.5.1</b> Adding or modifying a single column</a></li>
+<li class="chapter" data-level="25.5.2" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#recycling-rules"><i class="fa fa-check"></i><b>25.5.2</b> Recycling rules</a></li>
+<li class="chapter" data-level="25.5.3" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#using-existing-variables-in-name-value-pairs"><i class="fa fa-check"></i><b>25.5.3</b> Using existing variables in name-value pairs</a></li>
+<li class="chapter" data-level="25.5.4" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#adding-or-modifying-multiple-columns"><i class="fa fa-check"></i><b>25.5.4</b> Adding or modifying multiple columns</a></li>
+<li class="chapter" data-level="25.5.5" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#rowwise-mutations"><i class="fa fa-check"></i><b>25.5.5</b> Rowwise mutations</a></li>
+<li class="chapter" data-level="25.5.6" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#group_by-mutations"><i class="fa fa-check"></i><b>25.5.6</b> Group_by mutations</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html"><i class="fa fa-check"></i><b>26</b> Subsetting data frames</a>
+<ul>
+<li class="chapter" data-level="26.1" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#the-select-function"><i class="fa fa-check"></i><b>26.1</b> The select() function</a></li>
+<li class="chapter" data-level="26.2" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#the-rename-function"><i class="fa fa-check"></i><b>26.2</b> The rename() function</a></li>
+<li class="chapter" data-level="26.3" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#the-filter-function"><i class="fa fa-check"></i><b>26.3</b> The filter() function</a>
+<ul>
+<li class="chapter" data-level="26.3.1" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#subgroup-analysis"><i class="fa fa-check"></i><b>26.3.1</b> Subgroup analysis</a></li>
+<li class="chapter" data-level="26.3.2" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#complete-case-analysis"><i class="fa fa-check"></i><b>26.3.2</b> Complete case analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="26.4" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#deduplication"><i class="fa fa-check"></i><b>26.4</b> Deduplication</a>
+<ul>
+<li class="chapter" data-level="26.4.1" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#the-distinct-function"><i class="fa fa-check"></i><b>26.4.1</b> The distinct() function</a></li>
+<li class="chapter" data-level="26.4.2" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#complete-duplicate-row-add-tag"><i class="fa fa-check"></i><b>26.4.2</b> Complete duplicate row add tag</a></li>
+<li class="chapter" data-level="26.4.3" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#partial-duplicate-rows"><i class="fa fa-check"></i><b>26.4.3</b> Partial duplicate rows</a></li>
+<li class="chapter" data-level="26.4.4" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#partial-duplicate-rows---add-tag"><i class="fa fa-check"></i><b>26.4.4</b> Partial duplicate rows - add tag</a></li>
+<li class="chapter" data-level="26.4.5" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#count-the-number-of-duplicates"><i class="fa fa-check"></i><b>26.4.5</b> Count the number of duplicates</a></li>
+<li class="chapter" data-level="26.4.6" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#what-to-do-about-duplicates"><i class="fa fa-check"></i><b>26.4.6</b> What to do about duplicates</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VI Presenting Results</b></span></li>
+<li class="chapter" data-level="27" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html"><i class="fa fa-check"></i><b>27</b> Creating tables with R and Microsoft Word</a>
+<ul>
+<li class="chapter" data-level="27.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#table-1"><i class="fa fa-check"></i><b>27.1</b> Table 1</a></li>
+<li class="chapter" data-level="27.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#opioid-drug-use"><i class="fa fa-check"></i><b>27.2</b> Opioid drug use</a></li>
+<li class="chapter" data-level="27.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#table-columns"><i class="fa fa-check"></i><b>27.3</b> Table columns</a></li>
+<li class="chapter" data-level="27.4" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#table-rows"><i class="fa fa-check"></i><b>27.4</b> Table rows</a></li>
+<li class="chapter" data-level="27.5" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#make-the-table-skeleton"><i class="fa fa-check"></i><b>27.5</b> Make the table skeleton</a></li>
+<li class="chapter" data-level="27.6" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-column-headers"><i class="fa fa-check"></i><b>27.6</b> Fill in column headers</a>
+<ul>
+<li class="chapter" data-level="27.6.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#group-sample-sizes"><i class="fa fa-check"></i><b>27.6.1</b> Group sample sizes</a></li>
+<li class="chapter" data-level="27.6.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-column-headers"><i class="fa fa-check"></i><b>27.6.2</b> Formatting column headers</a></li>
+</ul></li>
+<li class="chapter" data-level="27.7" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-row-headers"><i class="fa fa-check"></i><b>27.7</b> Fill in row headers</a>
+<ul>
+<li class="chapter" data-level="27.7.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#label-statistics"><i class="fa fa-check"></i><b>27.7.1</b> Label statistics</a></li>
+<li class="chapter" data-level="27.7.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-row-headers"><i class="fa fa-check"></i><b>27.7.2</b> Formatting row headers</a></li>
+</ul></li>
+<li class="chapter" data-level="27.8" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-data-values"><i class="fa fa-check"></i><b>27.8</b> Fill in data values</a>
+<ul>
+<li class="chapter" data-level="27.8.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#manually-type-values"><i class="fa fa-check"></i><b>27.8.1</b> Manually type values</a></li>
+<li class="chapter" data-level="27.8.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#copy-and-paste-values"><i class="fa fa-check"></i><b>27.8.2</b> Copy and paste values</a></li>
+<li class="chapter" data-level="27.8.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#knit-a-word-document"><i class="fa fa-check"></i><b>27.8.3</b> Knit a Word document</a></li>
+<li class="chapter" data-level="27.8.4" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#flextable-and-officer"><i class="fa fa-check"></i><b>27.8.4</b> flextable and officer</a></li>
+<li class="chapter" data-level="27.8.5" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#significant-digits"><i class="fa fa-check"></i><b>27.8.5</b> Significant digits</a></li>
+<li class="chapter" data-level="27.8.6" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-data-values"><i class="fa fa-check"></i><b>27.8.6</b> Formatting data values</a></li>
+</ul></li>
+<li class="chapter" data-level="27.9" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-title"><i class="fa fa-check"></i><b>27.9</b> Fill in title</a></li>
+<li class="chapter" data-level="27.10" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-footnotes"><i class="fa fa-check"></i><b>27.10</b> Fill in footnotes</a>
+<ul>
+<li class="chapter" data-level="27.10.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-footnotes"><i class="fa fa-check"></i><b>27.10.1</b> Formatting footnotes</a></li>
+</ul></li>
+<li class="chapter" data-level="27.11" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#final-formatting"><i class="fa fa-check"></i><b>27.11</b> Final formatting</a>
+<ul>
+<li class="chapter" data-level="27.11.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#adjust-column-widths"><i class="fa fa-check"></i><b>27.11.1</b> Adjust column widths</a></li>
+<li class="chapter" data-level="27.11.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#merge-cells"><i class="fa fa-check"></i><b>27.11.2</b> Merge cells</a></li>
+<li class="chapter" data-level="27.11.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#remove-cell-borders"><i class="fa fa-check"></i><b>27.11.3</b> Remove cell borders</a></li>
+</ul></li>
+<li class="chapter" data-level="27.12" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#summary-1"><i class="fa fa-check"></i><b>27.12</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>VII Appendix</b></span></li>
+<li class="chapter" data-level="" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i>Appendix A: Glossary</a></li>
+<li class="chapter" data-level="" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html"><i class="fa fa-check"></i>Appendix: Alternative table formats</a>
+<ul>
+<li class="chapter" data-level="27.13" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#smaller-data-frame"><i class="fa fa-check"></i><b>27.13</b> Smaller data frame</a>
+<ul>
+<li class="chapter" data-level="27.13.1" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#default-method-for-printing-the-data-frame-to-the-screen"><i class="fa fa-check"></i><b>27.13.1</b> Default method for printing the data frame to the screen</a></li>
+<li class="chapter" data-level="27.13.2" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#using-the-kable-function"><i class="fa fa-check"></i><b>27.13.2</b> Using the kable function</a></li>
+<li class="chapter" data-level="27.13.3" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#using-the-datatable-function"><i class="fa fa-check"></i><b>27.13.3</b> Using the datatable function</a></li>
+</ul></li>
+<li class="chapter" data-level="27.14" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#larger-data-frame"><i class="fa fa-check"></i><b>27.14</b> Larger data frame</a>
+<ul>
+<li class="chapter" data-level="27.14.1" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#default-method-for-printing-the-data-frame-to-the-screen-1"><i class="fa fa-check"></i><b>27.14.1</b> Default method for printing the data frame to the screen</a></li>
+<li class="chapter" data-level="27.14.2" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#using-the-kable-function-1"><i class="fa fa-check"></i><b>27.14.2</b> Using the kable function</a></li>
+<li class="chapter" data-level="27.14.3" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#using-the-datatable-function-1"><i class="fa fa-check"></i><b>27.14.3</b> Using the datatable function</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R for Epidemiology</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="creating-and-modifying-columns" class="section level1" number="25">
+<h1><span class="header-section-number">25</span> Creating and modifying columns</h1>
+<!--
+Dollar sign notation
+Bracket notation
+mutate
+
+I start with dollar sign and bracket because they were exposed to those before 
+mutate already in the book.
+-->
+<p>Two of the most fundamental data management tasks are to create new columns in your data frame and to modify existing columns in your data frame. In fact, we’ve already talked about creating and modifying columns at a few different places in the book.</p>
+<p>In this book, we are actually going to learn 4 different methods for creating and modifying columns of a data frame. They are:</p>
+<ol style="list-style-type: decimal">
+<li><p>Using name-value pairs to add columns to a data frame during its initial creation. This was one of the first methods we used in this book for creating columns in a data frame. However, this method does not apply to creating or modifying columns in <em>a data frame that already exists</em>. Therefore, we won’t discuss it much in this chapter.</p></li>
+<li><p>Dollar sign notation. This is probably the most commonly used base R way of creating and modifying columns in a data frame. In this book, we won’t use it as much as we use <code>dplyr::mutate()</code>, but you will see it all over the place in the R community.</p></li>
+<li><p>Bracket notation. Again, we won’t use bracket notation very often in this book. However, we will use it later on when we learn about <a href="#for-loops">for loops</a>. Therefore, I’m going to introduce you to using bracket notation to create and modify data frame columns now.</p></li>
+<li><p>The <code>mutate()</code> function from the <code>dplyr</code> package. This is the method that I will use the vast majority of the time in this book (and in my real-life projects). I’m going to recommend that you do the same.</p></li>
+</ol>
+<div id="creating-data-frames" class="section level2" number="25.1">
+<h2><span class="header-section-number">25.1</span> Creating data frames</h2>
+<p>Very early on, in the <a href="lets-get-programming.html#lets-get-programming">Let’s get programming</a> chapter, we learned how to create data frame columns using name-value pairs passed directly into the <code>data.frame()</code> function.</p>
+<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb326-1"><a href="creating-and-modifying-columns.html#cb326-1"></a>class &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb326-2"><a href="creating-and-modifying-columns.html#cb326-2"></a>  <span class="dt">names   =</span> <span class="kw">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>),</span>
+<span id="cb326-3"><a href="creating-and-modifying-columns.html#cb326-3"></a>  <span class="dt">heights =</span> <span class="kw">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
+<span id="cb326-4"><a href="creating-and-modifying-columns.html#cb326-4"></a>)</span>
+<span id="cb326-5"><a href="creating-and-modifying-columns.html#cb326-5"></a>class</span></code></pre></div>
+<pre><code>##   names heights
+## 1  John      68
+## 2 Sally      63
+## 3  Brad      71
+## 4  Anne      72</code></pre>
+<p>This is an absolutely fundamental R programming skill, and one that you will likely use often. However, most people would not consider this to be a “data management” task, which is the focus of this part of the book. Further, we’ve really already covered all we need to cover about creating columns this way. So, I’m not going to write anything further about this method.</p>
+</div>
+<div id="dollar-sign-notation-1" class="section level2" number="25.2">
+<h2><span class="header-section-number">25.2</span> Dollar sign notation</h2>
+<p>Later in the <a href="lets-get-programming.html#lets-get-programming">Let’s get programming</a> chapter, we learned about <strong>dollar sign notation</strong>. At that time, we used dollar sign notation to access or “get” values from a column.</p>
+<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="creating-and-modifying-columns.html#cb328-1"></a>class<span class="op">$</span>heights</span></code></pre></div>
+<pre><code>## [1] 68 63 71 72</code></pre>
+<p>However, we can also use dollar sign notation to create and/or modify columns in our data frame. For example:</p>
+<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="creating-and-modifying-columns.html#cb330-1"></a>class<span class="op">$</span>heights &lt;-<span class="st"> </span>class<span class="op">$</span>heights <span class="op">/</span><span class="st"> </span><span class="dv">12</span></span>
+<span id="cb330-2"><a href="creating-and-modifying-columns.html#cb330-2"></a>class</span></code></pre></div>
+<pre><code>##   names  heights
+## 1  John 5.666667
+## 2 Sally 5.250000
+## 3  Brad 5.916667
+## 4  Anne 6.000000</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>We modified the values in the <code>heights</code> column of our <code>class</code> data frame using dollar sign notation. More specifically, we converted the values in the <code>heights</code> column from inches to feet. We did this by telling R to “get” the values for the <code>heights</code> column and divide them by 12 (<code>class$heights / 12</code>) and then assign those new values back to the <code>heights</code> column (<code>class$heights &lt;-</code>). In this case, that has the effect of modifying the values of a column that already exists.</li>
+</ul>
+<p class="note">
+🗒<strong>Side Note:</strong> I would actually suggest that you don’t typically do what I just did above in a real-world analysis. It’s typically safer to create a new variable with the modified values (e.g. <code>height_feet</code>) and leave the original values in the original variable as-is.
+</p>
+<p>We can also create a <em>new</em> variable in our data frame in a similar way. All we have to do is use a valid column name (that doesn’t already exist in the data frame) on the left side of our assignment arrow. For example:</p>
+<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="creating-and-modifying-columns.html#cb332-1"></a>class<span class="op">$</span>grades &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">89</span>, <span class="dv">92</span>, <span class="dv">86</span>, <span class="dv">98</span>)</span>
+<span id="cb332-2"><a href="creating-and-modifying-columns.html#cb332-2"></a>class</span></code></pre></div>
+<pre><code>##   names  heights grades
+## 1  John 5.666667     89
+## 2 Sally 5.250000     92
+## 3  Brad 5.916667     86
+## 4  Anne 6.000000     98</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>We created a new column in our <code>class</code> data frame using dollar sign notation. We assigned the values 89, 92, 86, and 98 to that column with the assignment arrow.</li>
+</ul>
+</div>
+<div id="bracket-notation-1" class="section level2" number="25.3">
+<h2><span class="header-section-number">25.3</span> Bracket notation</h2>
+<p>We also learned how to access or “get” values from a column using bracket notation in the <a href="lets-get-programming.html#lets-get-programming">Let’s get programming</a> chapter. There, we actually used a combination of dollar sign and bracket notation to access single individual values from a data frame column. For example:</p>
+<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="creating-and-modifying-columns.html#cb334-1"></a>class<span class="op">$</span>heights[<span class="dv">3</span>]</span></code></pre></div>
+<pre><code>## [1] 5.916667</code></pre>
+<p>But, we can also use bracket notation to access or “get” the entire column. For example:</p>
+<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="creating-and-modifying-columns.html#cb336-1"></a>class[[<span class="st">&quot;heights&quot;</span>]]</span></code></pre></div>
+<pre><code>## [1] 5.666667 5.250000 5.916667 6.000000</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>We used bracket notation to get all of the values from the <code>heights</code> column of the <code>class</code> data frame.</li>
+</ul>
+<p>I’d like you to notice a couple of things about the example above. First, notice that this is the exact same result we got from (<code>class$heights</code>). Well, technically, the heights are now in feet instead of inches, but you know what I mean. R returned a numeric vector containing the values from the <code>heights</code> column to us. Second, notice that we used double brackets (i.e., two brackets on each side of the column name), and that the column name is wrapped in quotation marks. Both are required to get this result.</p>
+<p>Similar to dollar sign notation, we can also create and/or modify columns in our data frame using bracket notation. For example, let’s convert those heights back to inches using bracket notation:</p>
+<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="creating-and-modifying-columns.html#cb338-1"></a>class[[<span class="st">&quot;heights&quot;</span>]] &lt;-<span class="st"> </span>class[[<span class="st">&quot;heights&quot;</span>]] <span class="op">*</span><span class="st"> </span><span class="dv">12</span></span>
+<span id="cb338-2"><a href="creating-and-modifying-columns.html#cb338-2"></a>class</span></code></pre></div>
+<pre><code>##   names heights grades
+## 1  John      68     89
+## 2 Sally      63     92
+## 3  Brad      71     86
+## 4  Anne      72     98</code></pre>
+<p>And, let’s go ahead and add one more variable to our data frame using bracket notation.</p>
+<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="creating-and-modifying-columns.html#cb340-1"></a>class[[<span class="st">&quot;rank&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>)</span>
+<span id="cb340-2"><a href="creating-and-modifying-columns.html#cb340-2"></a>class</span></code></pre></div>
+<pre><code>##   names heights grades rank
+## 1  John      68     89    3
+## 2 Sally      63     92    2
+## 3  Brad      71     86    4
+## 4  Anne      72     98    1</code></pre>
+<p>Somewhat confusingly, we can also access, create, and modify data frame columns using single brackets. For example:</p>
+<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="creating-and-modifying-columns.html#cb342-1"></a>class[<span class="st">&quot;heights&quot;</span>]</span></code></pre></div>
+<pre><code>##   heights
+## 1      68
+## 2      63
+## 3      71
+## 4      72</code></pre>
+<p>Notice, however, that this returns a different result than <code>class$heights</code> and <code>class[["heights]]</code>. The results returned from <code>class$heights</code> and <code>class[["heights]]</code> were numeric vectors with 4 elements. The result returned from <code>class["heights"]</code> was a data frame with 1 column and 4 rows.</p>
+<p>I don’t want you to get too hung up on the difference between single and double brackets right now. As I said, we are primarily going to use <code>mutate()</code> to create and modify data frame columns in this book. For now, it’s enough for you to simply be aware that single brackets and double brackets are a thing, and they can sometimes return different results. I will make sure to point out whether or not that matters when we use bracket notation later in the book.</p>
+</div>
+<div id="modify-individual-values" class="section level2" number="25.4">
+<h2><span class="header-section-number">25.4</span> Modify individual values</h2>
+<p>Before moving on to the <code>mutate()</code> function, I wanted to quickly discuss using dollar sign and bracket notation for modifying individual values in a column. Recall that we already learned how to access individual column values in the <a href="lets-get-programming.html#lets-get-programming">Let’s get programming</a> chapter.</p>
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="creating-and-modifying-columns.html#cb344-1"></a>class<span class="op">$</span>heights[<span class="dv">3</span>]</span></code></pre></div>
+<pre><code>## [1] 71</code></pre>
+<p>As you may have guessed, we can also get the result above using only bracket notation.</p>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="creating-and-modifying-columns.html#cb346-1"></a>class[[<span class="st">&quot;heights&quot;</span>]][<span class="dv">3</span>]</span></code></pre></div>
+<pre><code>## [1] 71</code></pre>
+<p>Not only can we use these methods to get individual values from a column in a data frame, but we can also use these methods to <em>modify</em> an individual value in a column of a data frame. When might we want to do this? Well, I generally do this in one of two different circumstances.</p>
+<ul>
+<li><p>First, I may do this when I’m writing my own R functions (you’ll learn how to do this later) and I want to make sure the function still behaves in the way I intended when there are small changes to the data. So, I may add a missing value to a column or something like that.</p></li>
+<li><p>The second circumstance is when there are little one-off typos in the data. For example, let’s say I imported a data frame that looked like this:</p></li>
+</ul>
+<pre><code>## # A tibble: 4 x 2
+##      id site 
+##   &lt;dbl&gt; &lt;chr&gt;
+## 1     1 TX   
+## 2     2 CA   
+## 3     3 tx   
+## 4     4 CA</code></pre>
+<p>Notice that <code>tx</code> in the third row of data isn’t capitalized. Remember, R is a case-sensitive language, so this will likely cause us problems down the road if we don’t fix it. The easiest way to do so is probably:</p>
+<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb349-1"><a href="creating-and-modifying-columns.html#cb349-1"></a>study_data<span class="op">$</span>site[<span class="dv">3</span>] &lt;-<span class="st"> &quot;TX&quot;</span></span>
+<span id="cb349-2"><a href="creating-and-modifying-columns.html#cb349-2"></a>study_data</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##      id site 
+##   &lt;dbl&gt; &lt;chr&gt;
+## 1     1 TX   
+## 2     2 CA   
+## 3     3 TX   
+## 4     4 CA</code></pre>
+<p>Keep in mind that I said that I fix <em>little one-off typos</em>. If I needed to change <code>tx</code> to <code>TX</code> in multiple different places in the data, I wouldn’t use this method. Instead, I would use a <a href="#conditional-operations">conditional operation</a>, which we will discuss later in the book.</p>
+</div>
+<div id="the-mutate-function" class="section level2" number="25.5">
+<h2><span class="header-section-number">25.5</span> The mutate() function</h2>
+<div class="sourceCode" id="cb351"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb351-1"><a href="creating-and-modifying-columns.html#cb351-1"></a><span class="co"># Load dplyr for the mutate function</span></span>
+<span id="cb351-2"><a href="creating-and-modifying-columns.html#cb351-2"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
+<p>We first discussed <code>mutate()</code> in the <a href="exporting-data.html#coerce-a-numeric-variable">chapter on exporting data</a>, and again in the <a href="introduction-to-data-management">Introduction to data management chapter</a>. As I said there, the first two arguments to <code>mutate()</code> are <code>.data</code> and <code>...</code>.</p>
+<p>The value passed to <code>.data</code> should always be a data frame. In this book, we will often pass data frames to the <code>.data</code> argument using the pipe operator (e.g., <code>df %&gt;% mutate()</code>).</p>
+<p>The value passed to the <code>...</code> argument should be a name-value pair or multiple name value pairs separated by commas. The <code>...</code> argument is where you will tell <code>mutate()</code> to create or modify columns in your data frame and how.</p>
+<ul>
+<li>Name-value pairs look like this: <code>column name = value</code>. The only thing that distinguishes whether you are creating or modifying a column is the column name in the name-value pair. If the column name in the name-value pair matches the name of an existing column in the data frame, then <code>mutate()</code> will modify that existing column. If the column name in the name-value pair does NOT match the name of an existing column in the data frame, then <code>mutate()</code> will create a <em>new</em> column in the data frame with a matching column name.</li>
+</ul>
+<p>Let’s take a look at a couple of examples. To get us started, let’s simulate some data that is a little more interesting than the class data we used above.</p>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="creating-and-modifying-columns.html#cb352-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb352-2"><a href="creating-and-modifying-columns.html#cb352-2"></a></span>
+<span id="cb352-3"><a href="creating-and-modifying-columns.html#cb352-3"></a>drug_trial &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb352-4"><a href="creating-and-modifying-columns.html#cb352-4"></a>  <span class="co"># Study id, there are 20 people enrolled in the trial.</span></span>
+<span id="cb352-5"><a href="creating-and-modifying-columns.html#cb352-5"></a>  <span class="dt">id =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, <span class="dt">each =</span> <span class="dv">3</span>),</span>
+<span id="cb352-6"><a href="creating-and-modifying-columns.html#cb352-6"></a>  <span class="co"># Follow-up year, 0 = baseline, 1 = year one, 2 = year two.</span></span>
+<span id="cb352-7"><a href="creating-and-modifying-columns.html#cb352-7"></a>  <span class="dt">year =</span> <span class="kw">rep</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">times =</span> <span class="dv">20</span>),</span>
+<span id="cb352-8"><a href="creating-and-modifying-columns.html#cb352-8"></a>  <span class="co"># Participant age a baseline. Must be between the ages of 35 and 75 at </span></span>
+<span id="cb352-9"><a href="creating-and-modifying-columns.html#cb352-9"></a>  <span class="co"># baseline to be eligible for the study</span></span>
+<span id="cb352-10"><a href="creating-and-modifying-columns.html#cb352-10"></a>  <span class="dt">age =</span> <span class="kw">sample</span>(<span class="dv">35</span><span class="op">:</span><span class="dv">75</span>, <span class="dv">20</span>, <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rep</span>(<span class="dt">each =</span> <span class="dv">3</span>),</span>
+<span id="cb352-11"><a href="creating-and-modifying-columns.html#cb352-11"></a>  <span class="co"># Drug the participant received, Placebo or active</span></span>
+<span id="cb352-12"><a href="creating-and-modifying-columns.html#cb352-12"></a>  <span class="dt">drug =</span> <span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Placebo&quot;</span>, <span class="st">&quot;Active&quot;</span>), <span class="dv">20</span>, <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb352-13"><a href="creating-and-modifying-columns.html#cb352-13"></a><span class="st">    </span><span class="kw">rep</span>(<span class="dt">each =</span> <span class="dv">3</span>),</span>
+<span id="cb352-14"><a href="creating-and-modifying-columns.html#cb352-14"></a>  <span class="co"># Reported headaches side effect, Y/N</span></span>
+<span id="cb352-15"><a href="creating-and-modifying-columns.html#cb352-15"></a>  <span class="dt">se_headache =</span> <span class="kw">if_else</span>(</span>
+<span id="cb352-16"><a href="creating-and-modifying-columns.html#cb352-16"></a>    drug <span class="op">==</span><span class="st"> &quot;Placebo&quot;</span>, </span>
+<span id="cb352-17"><a href="creating-and-modifying-columns.html#cb352-17"></a>    <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">95</span>,.<span class="dv">05</span>)), </span>
+<span id="cb352-18"><a href="creating-and-modifying-columns.html#cb352-18"></a>    <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">10</span>, <span class="fl">.90</span>))</span>
+<span id="cb352-19"><a href="creating-and-modifying-columns.html#cb352-19"></a>  ),</span>
+<span id="cb352-20"><a href="creating-and-modifying-columns.html#cb352-20"></a>  <span class="co"># Report diarrhea side effect, Y/N</span></span>
+<span id="cb352-21"><a href="creating-and-modifying-columns.html#cb352-21"></a>  <span class="dt">se_diarrhea =</span> <span class="kw">if_else</span>(</span>
+<span id="cb352-22"><a href="creating-and-modifying-columns.html#cb352-22"></a>    drug <span class="op">==</span><span class="st"> &quot;Placebo&quot;</span>, </span>
+<span id="cb352-23"><a href="creating-and-modifying-columns.html#cb352-23"></a>    <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">98</span>,.<span class="dv">02</span>)), </span>
+<span id="cb352-24"><a href="creating-and-modifying-columns.html#cb352-24"></a>    <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">20</span>, <span class="fl">.80</span>))</span>
+<span id="cb352-25"><a href="creating-and-modifying-columns.html#cb352-25"></a>  ),</span>
+<span id="cb352-26"><a href="creating-and-modifying-columns.html#cb352-26"></a>  <span class="co"># Report dry mouth side effect, Y/N</span></span>
+<span id="cb352-27"><a href="creating-and-modifying-columns.html#cb352-27"></a>  <span class="dt">se_dry_mouth =</span> <span class="kw">if_else</span>(</span>
+<span id="cb352-28"><a href="creating-and-modifying-columns.html#cb352-28"></a>    drug <span class="op">==</span><span class="st"> &quot;Placebo&quot;</span>, </span>
+<span id="cb352-29"><a href="creating-and-modifying-columns.html#cb352-29"></a>    <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">97</span>,.<span class="dv">03</span>)), </span>
+<span id="cb352-30"><a href="creating-and-modifying-columns.html#cb352-30"></a>    <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">30</span>, <span class="fl">.70</span>))</span>
+<span id="cb352-31"><a href="creating-and-modifying-columns.html#cb352-31"></a>  ),</span>
+<span id="cb352-32"><a href="creating-and-modifying-columns.html#cb352-32"></a>  <span class="co"># Participant had myocardial infarction in study year, Y/N</span></span>
+<span id="cb352-33"><a href="creating-and-modifying-columns.html#cb352-33"></a>  <span class="dt">mi =</span> <span class="kw">if_else</span>(</span>
+<span id="cb352-34"><a href="creating-and-modifying-columns.html#cb352-34"></a>    drug <span class="op">==</span><span class="st"> &quot;Placebo&quot;</span>, </span>
+<span id="cb352-35"><a href="creating-and-modifying-columns.html#cb352-35"></a>    <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">85</span>, <span class="fl">.15</span>)), </span>
+<span id="cb352-36"><a href="creating-and-modifying-columns.html#cb352-36"></a>    <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">80</span>, <span class="fl">.20</span>))</span>
+<span id="cb352-37"><a href="creating-and-modifying-columns.html#cb352-37"></a>  )</span>
+<span id="cb352-38"><a href="creating-and-modifying-columns.html#cb352-38"></a>)</span></code></pre></div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We are simulating some drug trial data that includes the following variables:</p>
+<ul>
+<li><p>id: Study id, there are 20 people enrolled in the trial.</p></li>
+<li><p>year: Follow-up year, 0 = baseline, 1 = year one, 2 = year two.</p></li>
+<li><p>age: Participant age a baseline. Must be between the ages of 35 and 75 at baseline to be eligible for the study.</p></li>
+<li><p>drug: Drug the participant received, Placebo or active.</p></li>
+<li><p>se_headache: Reported headaches side effect, Y/N.</p></li>
+<li><p>se_diarrhea: Report diarrhea side effect, Y/N.</p></li>
+<li><p>se_dry_mouth: Report dry mouth side effect, Y/N.</p></li>
+<li><p>mi: Participant had myocardial infarction in study year, Y/N.</p></li>
+</ul></li>
+<li><p>We used the <code>tibble()</code> function above to create our data frame instead of the <code>data.frame()</code> function. This allows us to pass the <code>drug</code> column as an value to the <code>if_else()</code> function when we create <code>se_headache</code>, <code>se_diarrhea</code>, <code>se_dry_mouth</code>, and <code>mi</code>. If we had used <code>data.frame()</code> instead, we would have had to create <code>se_headache</code>, <code>se_diarrhea</code>, <code>se_dry_mouth</code>, and <code>mi</code> in a separate step.</p></li>
+<li><p>We used a new function, <code>if_else()</code>, above to help us simulate this data. This function allows us to do something called <strong>conditional operations</strong>. There will be an entire chapter on [conditional operations] later in the book.</p></li>
+<li><p>We used a new function, <code>sample()</code>, above to help us simulate this data. We used this function to randomly assign values to <code>age</code>, <code>drug</code>, <code>se_headache</code>, <code>se_diarrhea</code>, <code>se_dry_mouth</code>, and <code>mi</code> instead of manually assigning each value ourselves.</p>
+<ul>
+<li><p>You can type <code>?sample</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>sample()</code> function is the <code>x</code> argument. You should pass a vector of values you want R to randomly choose from. For example, we told R to select values from a vector of numbers that spanned between 35 and 75 to fill-in the <code>age</code> column. Alternatively, we told R to select values from a character vector that included the values “Placebo” and “Active” to fill-in the <code>drug</code> column.</p></li>
+<li><p>The second argument to the <code>sample()</code> function is the <code>size</code> argument. You should pass a number to the size argument. That number tells R how many times to choose a value from the vector of possible values passed to the <code>x</code> argument.</p></li>
+<li><p>The third argument to the <code>sample()</code> function is the <code>replace</code> argument. The default value passed to the <code>replace</code> argument is <code>FALSE</code>. This tells R that once it has chosen a value from the vector of possible values passed to the <code>x</code> argument, it can’t choose that value again. If you want R to be able to choose the same value more than once, then you have to pass the value <code>TRUE</code> to the <code>replace</code> argument.</p></li>
+<li><p>The fourth argument to the <code>sample()</code> function is the <code>prob</code> argument. The default value passed to the <code>prob</code> argument is <code>NULL</code>. This just means that this argument is <em>optional</em>. Passing a vector of probabilities to this argument allows you to adjust how likely it is that R will choose certain values from the vector of possible values passed to the <code>x</code> argument.</p></li>
+<li><p>Finally, notice that we also used the <code>set.seed()</code> function at the very top of the code chunk. We did this because, the <code>sample()</code> function chooses values at random. That means, every time we run the code above, we get different values. That makes it difficult for me to write about the data because it’s constantly changing. When we use the <code>set.seed()</code> function, the values will still be randomly selected, but they will be the <em>same</em> randomly selected values every time. It doesn’t matter what numbers you pass to the <code>set.seed()</code> function as long as you pass the same numbers every time you want to get the same random values. For example:</p></li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="creating-and-modifying-columns.html#cb353-1"></a><span class="co"># No set.seed - Random values</span></span>
+<span id="cb353-2"><a href="creating-and-modifying-columns.html#cb353-2"></a><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>##  [1]  5 29 50 70 74 26 73 11  6 96</code></pre>
+<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb355-1"><a href="creating-and-modifying-columns.html#cb355-1"></a><span class="co"># No set.seed - Different random values</span></span>
+<span id="cb355-2"><a href="creating-and-modifying-columns.html#cb355-2"></a><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>##  [1] 76 83 91 56 96 27 94 68 88 28</code></pre>
+<div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb357-1"><a href="creating-and-modifying-columns.html#cb357-1"></a><span class="co"># Use set.seed - Random values</span></span>
+<span id="cb357-2"><a href="creating-and-modifying-columns.html#cb357-2"></a><span class="kw">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb357-3"><a href="creating-and-modifying-columns.html#cb357-3"></a><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>##  [1] 35 38 85 27 25 78 31 73 79 90</code></pre>
+<div class="sourceCode" id="cb359"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb359-1"><a href="creating-and-modifying-columns.html#cb359-1"></a><span class="co"># Use set.seed again - Same random values</span></span>
+<span id="cb359-2"><a href="creating-and-modifying-columns.html#cb359-2"></a><span class="kw">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb359-3"><a href="creating-and-modifying-columns.html#cb359-3"></a><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>##  [1] 35 38 85 27 25 78 31 73 79 90</code></pre>
+<div class="sourceCode" id="cb361"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb361-1"><a href="creating-and-modifying-columns.html#cb361-1"></a><span class="co"># Use set.seed with different value - Different random values</span></span>
+<span id="cb361-2"><a href="creating-and-modifying-columns.html#cb361-2"></a><span class="kw">set.seed</span>(<span class="dv">789</span>)</span>
+<span id="cb361-3"><a href="creating-and-modifying-columns.html#cb361-3"></a><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>##  [1]  45  12  42  26  99  37 100  43  67  70</code></pre>
+<ul>
+<li>It’s not important that you fully understand the <code>sample()</code> function at this point. I’m just including it for those of you who are interested in simulating some slightly more complex data than we have simulated so far. The rest of you can just copy and paste the code if you want to follow along.</li>
+</ul>
+<div id="adding-or-modifying-a-single-column" class="section level3" number="25.5.1">
+<h3><span class="header-section-number">25.5.1</span> Adding or modifying a single column</h3>
+<p>This is probably the simplest case of adding a new column. We are going to use <code>mutate()</code> to add a single new column to the <code>drug_trial</code> data frame. Let’s say we want to add a column called <code>complete</code> that is equal to <code>1</code> if the participant showed up for all follow-up visits and equal to <code>0</code> if they didn’t. In this case, we simulated our data in such a way that we have complete follow-up for every participant. So, the value for complete should be <code>0</code> in all 60 rows of the data frame. We can do this in a few different ways.</p>
+<div class="sourceCode" id="cb363"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb363-1"><a href="creating-and-modifying-columns.html#cb363-1"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb363-2"><a href="creating-and-modifying-columns.html#cb363-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">complete =</span> <span class="kw">c</span>(</span>
+<span id="cb363-3"><a href="creating-and-modifying-columns.html#cb363-3"></a>    <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb363-4"><a href="creating-and-modifying-columns.html#cb363-4"></a>    <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb363-5"><a href="creating-and-modifying-columns.html#cb363-5"></a>    <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb363-6"><a href="creating-and-modifying-columns.html#cb363-6"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 9
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+##  1     1     0    65 Active            0           1            1     0        0
+##  2     1     1    65 Active            1           1            1     0        0
+##  3     1     2    65 Active            1           1            0     0        0
+##  4     2     0    49 Active            1           1            1     0        0
+##  5     2     1    49 Active            0           0            1     0        0
+##  6     2     2    49 Active            1           1            1     0        0
+##  7     3     0    48 Placebo           0           0            0     0        0
+##  8     3     1    48 Placebo           0           0            0     0        0
+##  9     3     2    48 Placebo           0           0            0     0        0
+## 10     4     0    37 Placebo           0           0            0     0        0
+## # … with 50 more rows</code></pre>
+<p>So, that works, but typing that out is no fun. Not to mention, this isn’t scalable at all. What if we needed 1,000 zeros? There’s actually a much easier way to get the result above, which may surprise you. Take a look 👀:</p>
+<div class="sourceCode" id="cb365"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb365-1"><a href="creating-and-modifying-columns.html#cb365-1"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb365-2"><a href="creating-and-modifying-columns.html#cb365-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">complete =</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 9
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+##  1     1     0    65 Active            0           1            1     0        0
+##  2     1     1    65 Active            1           1            1     0        0
+##  3     1     2    65 Active            1           1            0     0        0
+##  4     2     0    49 Active            1           1            1     0        0
+##  5     2     1    49 Active            0           0            1     0        0
+##  6     2     2    49 Active            1           1            1     0        0
+##  7     3     0    48 Placebo           0           0            0     0        0
+##  8     3     1    48 Placebo           0           0            0     0        0
+##  9     3     2    48 Placebo           0           0            0     0        0
+## 10     4     0    37 Placebo           0           0            0     0        0
+## # … with 50 more rows</code></pre>
+<p>How easy is that? Just pass the value to the name-value pair once and R will use it in every row. This works because of something called the recycling rules ♻️. In a nutshell, this means that R will change the length of vectors in certain situations all by itself when it thinks it knows what you “meant.” So, above we passed gave R a length 1 vector <code>0</code> (i.e. a numeric vector with one value in it), and R changed it to a length 60 vector behind the scenes so that it could complete the operation it thought you were trying to complete.</p>
+</div>
+<div id="recycling-rules" class="section level3" number="25.5.2">
+<h3><span class="header-section-number">25.5.2</span> Recycling rules</h3>
+<p>♻️The recycling rules work as long as the length of the longer vector is an integer multiple of the length of the shorter vector. For example, every vector (column) in R data frames must have the same length. In this case, 60. The length of the value we used in the name-value pair above was 1 (i.e., a single <code>0</code>). Therefore, the longer vector had a length of 60 and the shorter vector had a length of 1. Because 60 * 1 = But, what if we had tried to pass the values 0 and 1 to the column instead of just zero?</p>
+<div class="sourceCode" id="cb367"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb367-1"><a href="creating-and-modifying-columns.html#cb367-1"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb367-2"><a href="creating-and-modifying-columns.html#cb367-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">complete =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## Error: Problem with `mutate()` input `complete`.
+## x Input `complete` can&#39;t be recycled to size 60.
+## ℹ Input `complete` is `c(0, 1)`.
+## ℹ Input `complete` must be size 60 or 1, not 2.</code></pre>
+<p>This doesn’t work, but it actually isn’t for the reason you may be thinking. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). However, <code>tidyverse</code> functions throw errors when you try to recycle anything other than a single number. They are designed this way to protect you from accidently getting unexpected results. So, I’m going to switch back over to using base R to round out our discussion of the recycling rules. Let’s try our example above again using base R:</p>
+<div class="sourceCode" id="cb369"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb369-1"><a href="creating-and-modifying-columns.html#cb369-1"></a>drug_trial<span class="op">$</span>complete &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## Error: Assigned data `c(0, 1)` must be compatible with existing data.
+## x Existing data has 60 rows.
+## x Assigned data has 2 rows.
+## ℹ Only vectors of size 1 are recycled.</code></pre>
+<div class="sourceCode" id="cb371"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb371-1"><a href="creating-and-modifying-columns.html#cb371-1"></a>drug_trial</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 8
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
+##  1     1     0    65 Active            0           1            1     0
+##  2     1     1    65 Active            1           1            1     0
+##  3     1     2    65 Active            1           1            0     0
+##  4     2     0    49 Active            1           1            1     0
+##  5     2     1    49 Active            0           0            1     0
+##  6     2     2    49 Active            1           1            1     0
+##  7     3     0    48 Placebo           0           0            0     0
+##  8     3     1    48 Placebo           0           0            0     0
+##  9     3     2    48 Placebo           0           0            0     0
+## 10     4     0    37 Placebo           0           0            0     0
+## # … with 50 more rows</code></pre>
+<p>Wait, why are we still getting an error? Well, take a look at the output below and see if you can figure it out.</p>
+<div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb373-1"><a href="creating-and-modifying-columns.html#cb373-1"></a><span class="kw">class</span>(drug_trial)</span></code></pre></div>
+<pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
+<p>It may not be totally obvious, but this is telling us that <code>drug_trial</code> is a tibble – an enhanced data frame. Remember, we created <code>drug_trial</code> using the <code>tibble()</code> function instead of the <code>data.frame()</code> function. Because tibbles are part of the <code>tidyverse</code> they throw the same recycling errors that the <code>mutate()</code> function did above. So, we’ll need to create a non-tibble version of <code>drug_trial</code> to finish our discussion of recycling rules.</p>
+<div class="sourceCode" id="cb375"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb375-1"><a href="creating-and-modifying-columns.html#cb375-1"></a>drug_trial_df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(drug_trial)</span>
+<span id="cb375-2"><a href="creating-and-modifying-columns.html#cb375-2"></a><span class="kw">class</span>(drug_trial_df)</span></code></pre></div>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<p>There we go! A regular old data frame.</p>
+<div class="sourceCode" id="cb377"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb377-1"><a href="creating-and-modifying-columns.html#cb377-1"></a>drug_trial_df<span class="op">$</span>complete &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb377-2"><a href="creating-and-modifying-columns.html#cb377-2"></a>drug_trial_df</span></code></pre></div>
+<pre><code>##    id year age    drug se_headache se_diarrhea se_dry_mouth mi complete
+## 1   1    0  65  Active           0           1            1  0        0
+## 2   1    1  65  Active           1           1            1  0        1
+## 3   1    2  65  Active           1           1            0  0        0
+## 4   2    0  49  Active           1           1            1  0        1
+## 5   2    1  49  Active           0           0            1  0        0
+## 6   2    2  49  Active           1           1            1  0        1
+## 7   3    0  48 Placebo           0           0            0  0        0
+## 8   3    1  48 Placebo           0           0            0  0        1
+## 9   3    2  48 Placebo           0           0            0  0        0
+## 10  4    0  37 Placebo           0           0            0  0        1
+## 11  4    1  37 Placebo           0           0            0  0        0
+## 12  4    2  37 Placebo           0           0            0  1        1
+## 13  5    0  71 Placebo           0           0            0  0        0
+## 14  5    1  71 Placebo           0           0            0  0        1
+## 15  5    2  71 Placebo           0           0            0  0        0
+## 16  6    0  48 Placebo           0           0            0  0        1
+## 17  6    1  48 Placebo           0           0            0  1        0
+## 18  6    2  48 Placebo           0           0            0  1        1
+## 19  7    0  59  Active           1           1            1  0        0
+## 20  7    1  59  Active           1           1            0  0        1
+## 21  7    2  59  Active           1           1            1  0        0
+## 22  8    0  60 Placebo           0           0            0  0        1
+## 23  8    1  60 Placebo           0           0            0  0        0
+## 24  8    2  60 Placebo           0           0            0  0        1
+## 25  9    0  61  Active           1           1            1  0        0
+## 26  9    1  61  Active           0           1            1  0        1
+## 27  9    2  61  Active           1           0            0  0        0
+## 28 10    0  39  Active           1           0            1  0        1
+## 29 10    1  39  Active           1           0            0  0        0
+## 30 10    2  39  Active           1           1            1  0        1
+## 31 11    0  61 Placebo           0           0            0  0        0
+## 32 11    1  61 Placebo           0           0            0  1        1
+## 33 11    2  61 Placebo           0           0            0  0        0
+## 34 12    0  62 Placebo           1           0            1  0        1
+## 35 12    1  62 Placebo           0           0            0  0        0
+## 36 12    2  62 Placebo           0           0            0  0        1
+## 37 13    0  43 Placebo           0           0            0  0        0
+## 38 13    1  43 Placebo           0           0            0  0        1
+## 39 13    2  43 Placebo           0           0            0  0        0
+## 40 14    0  63 Placebo           0           0            0  0        1
+## 41 14    1  63 Placebo           0           0            0  0        0
+## 42 14    2  63 Placebo           0           0            0  0        1
+## 43 15    0  69  Active           1           1            1  0        0
+## 44 15    1  69  Active           1           0            1  0        1
+## 45 15    2  69  Active           1           1            1  0        0
+## 46 16    0  42 Placebo           0           0            0  0        1
+## 47 16    1  42 Placebo           0           0            1  0        0
+## 48 16    2  42 Placebo           0           0            0  1        1
+## 49 17    0  60 Placebo           0           0            0  0        0
+## 50 17    1  60 Placebo           0           0            0  0        1
+## 51 17    2  60 Placebo           1           0            0  0        0
+## 52 18    0  41  Active           1           1            1  0        1
+## 53 18    1  41  Active           1           1            1  0        0
+## 54 18    2  41  Active           1           1            0  1        1
+## 55 19    0  43 Placebo           0           0            0  0        0
+## 56 19    1  43 Placebo           0           0            0  0        1
+## 57 19    2  43 Placebo           0           0            0  0        0
+## 58 20    0  53 Placebo           0           0            0  0        1
+## 59 20    1  53 Placebo           0           0            0  0        0
+## 60 20    2  53 Placebo           0           0            0  0        1</code></pre>
+<p>As you can see, the values 0 and 1 are now recycled as expected. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). Now, what happens in a situation where the length of the longer vector is <em>not</em> an integer multiple of the length of the shorter vector.</p>
+<div class="sourceCode" id="cb379"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb379-1"><a href="creating-and-modifying-columns.html#cb379-1"></a>drug_trial_df<span class="op">$</span>complete &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>) <span class="co"># 7 values</span></span></code></pre></div>
+<pre><code>## Error in `$&lt;-.data.frame`(`*tmp*`, complete, value = c(0, 1, 2, 3, 4, : replacement has 7 rows, data has 60</code></pre>
+<p>60 / 7 = 8.571429 – not an integer. Because there is no integer value that we can multiply by 7 to get the number 60, R throws us an error telling us that it isn’t able to use the recycling rules.</p>
+<p>Finally, the recycling rules don’t only apply to creating new data frame columns. It applies in all cases where R is using two vectors to perform an operation. For example, R uses the recycling rules in mathematical operations.</p>
+<div class="sourceCode" id="cb381"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb381-1"><a href="creating-and-modifying-columns.html#cb381-1"></a>nums &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span></span>
+<span id="cb381-2"><a href="creating-and-modifying-columns.html#cb381-2"></a>nums</span></code></pre></div>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+<p>To demonstrate, we create a simple numeric vector above. This vector just contains the numbers 1 through 10. Now, we can add 1 to each of those numbers like so:</p>
+<div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb383-1"><a href="creating-and-modifying-columns.html#cb383-1"></a>nums <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span></code></pre></div>
+<pre><code>##  [1]  2  3  4  5  6  7  8  9 10 11</code></pre>
+<p>Notice how R used the recycling rules to add 1 to every number in the <code>nums</code> vector. We didn’t have to explicitly tell R to add 1 to each number. This sometimes referred to as <strong>vectorization</strong>. Functions that perform an action on <em>all</em> elements of a vector, rather than having to be explicitly programmed to perform an action on <em>each</em> element of a vector, is a <strong>vectorized</strong> function. Remember, that mathematical operators – including <code>+</code> – <em>are functions</em> in R. More specifically, <code>+</code> is a <strong>vectorized</strong> function. In fact, most built-in R functions are vectorized. Why am I telling you this? It isn’t intended to confuse you, but when I was learning R I came across this term all the time in R resources and help pages, and I had no idea what it meant. I hope that this very simple example above makes it easy to understand what vectorization means, and you won’t be intimidated when it pops up while you’re trying to get help with your R programs.</p>
+<p>Ok, so what happens when we add a longer vector and a shorter vector?</p>
+<div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb385-1"><a href="creating-and-modifying-columns.html#cb385-1"></a>nums <span class="op">+</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>##  [1]  2  4  4  6  6  8  8 10 10 12</code></pre>
+<p>As expected, R uses the recycling rules to change the length of the short vector to match the length of the longer vector, and then performs the operation – in this case, addition. So, the net result is 1 + 1 = <code>2</code>, 2 + 2 = <code>4</code>, 3 + 1 = <code>4</code>, 4 + 2 = <code>6</code>, etc. You probably already guessed what’s going to happen if we try to add a length 3 vector to <code>nums</code>, but let’s go ahead and take a look for the sake of completeness:</p>
+<div class="sourceCode" id="cb387"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb387-1"><a href="creating-and-modifying-columns.html#cb387-1"></a>nums <span class="op">+</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## Warning in nums + c(1, 2, 3): longer object length is not a multiple of shorter
+## object length</code></pre>
+<pre><code>##  [1]  2  4  6  5  7  9  8 10 12 11</code></pre>
+<p>Yep, we get an error. 10 / 3 = 3.333333 – not an integer. Because there is no integer value that we can multiply by 3 to get the number 10, R throws us an error telling us that it isn’t able to use the recycling rules.</p>
+<p>Now that you understand R’s recycling rules, let’s return to our motivating example.</p>
+<div class="sourceCode" id="cb390"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb390-1"><a href="creating-and-modifying-columns.html#cb390-1"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb390-2"><a href="creating-and-modifying-columns.html#cb390-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">complete =</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 9
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+##  1     1     0    65 Active            0           1            1     0        0
+##  2     1     1    65 Active            1           1            1     0        0
+##  3     1     2    65 Active            1           1            0     0        0
+##  4     2     0    49 Active            1           1            1     0        0
+##  5     2     1    49 Active            0           0            1     0        0
+##  6     2     2    49 Active            1           1            1     0        0
+##  7     3     0    48 Placebo           0           0            0     0        0
+##  8     3     1    48 Placebo           0           0            0     0        0
+##  9     3     2    48 Placebo           0           0            0     0        0
+## 10     4     0    37 Placebo           0           0            0     0        0
+## # … with 50 more rows</code></pre>
+<p>This method works, but not always. And, it can sometimes give us intended results. You may have originally thought to yourself, “we’ve already learned the <code>rep()</code> function. Let’s use that.” In fact, that’s a great idea!</p>
+<div class="sourceCode" id="cb392"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb392-1"><a href="creating-and-modifying-columns.html#cb392-1"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb392-2"><a href="creating-and-modifying-columns.html#cb392-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">complete =</span> <span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">60</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 9
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+##  1     1     0    65 Active            0           1            1     0        0
+##  2     1     1    65 Active            1           1            1     0        0
+##  3     1     2    65 Active            1           1            0     0        0
+##  4     2     0    49 Active            1           1            1     0        0
+##  5     2     1    49 Active            0           0            1     0        0
+##  6     2     2    49 Active            1           1            1     0        0
+##  7     3     0    48 Placebo           0           0            0     0        0
+##  8     3     1    48 Placebo           0           0            0     0        0
+##  9     3     2    48 Placebo           0           0            0     0        0
+## 10     4     0    37 Placebo           0           0            0     0        0
+## # … with 50 more rows</code></pre>
+<p>That’s a lot less typing than the first method we tried, and it also has the added benefit of providing code that is easier for humans to read. We can both look at the code we used in the first method and tell that there are a bunch of zeros, but it’s hard to guess exactly how many, and it’s hard to feel completely confident that there isn’t a 1 in there somewhere that our eyes are missing. By contrast, it’s easy to look at <code>rep(0, 60)</code> and know that there are exactly 60 zeros, and only 60 zeros.</p>
+</div>
+<div id="using-existing-variables-in-name-value-pairs" class="section level3" number="25.5.3">
+<h3><span class="header-section-number">25.5.3</span> Using existing variables in name-value pairs</h3>
+<p>In the example above, we create a new column called <code>complete</code> by directly supplying values for that column in the name-value pair. In my experience, it is probably more common to create new columns in our data frames by combining or transforming the values of columns that already exist in our data frame. You’ve already seen an example of doing so when <a href="exporting-data.html#factor-vectors">we created factor versions of variables</a>. As an additional example, we could create a factor version of our <code>mi</code> variable like this:</p>
+<div class="sourceCode" id="cb394"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb394-1"><a href="creating-and-modifying-columns.html#cb394-1"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb394-2"><a href="creating-and-modifying-columns.html#cb394-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mi_f =</span> <span class="kw">factor</span>(mi, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="kw">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)))</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 9
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi mi_f 
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;fct&gt;
+##  1     1     0    65 Active            0           1            1     0 No   
+##  2     1     1    65 Active            1           1            1     0 No   
+##  3     1     2    65 Active            1           1            0     0 No   
+##  4     2     0    49 Active            1           1            1     0 No   
+##  5     2     1    49 Active            0           0            1     0 No   
+##  6     2     2    49 Active            1           1            1     0 No   
+##  7     3     0    48 Placebo           0           0            0     0 No   
+##  8     3     1    48 Placebo           0           0            0     0 No   
+##  9     3     2    48 Placebo           0           0            0     0 No   
+## 10     4     0    37 Placebo           0           0            0     0 No   
+## # … with 50 more rows</code></pre>
+<p>Notice that in the code above, we didn’t tell R what values to use for <code>mi_f</code> by typing them explicitly in the name-value pair. Instead, we told R to go get the values of the column <code>mi</code>, do some stuff to those values, and then assign those modified values to a column in the data frame and name that column <code>mi_f</code>.</p>
+<p>Here’s another example. It’s common to mean-center numeric values for many different kinds of analyses. For example, this is often done in regression analysis to aid in the interpretation of regression coefficients. We can easily mean-center numeric variables inside our <code>mutate()</code> function like so:</p>
+<div class="sourceCode" id="cb396"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb396-1"><a href="creating-and-modifying-columns.html#cb396-1"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb396-2"><a href="creating-and-modifying-columns.html#cb396-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_center =</span> age <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(age))</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 9
+##       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt;
+##  1     1     0    65 Acti…           0           1            1     0       11.3
+##  2     1     1    65 Acti…           1           1            1     0       11.3
+##  3     1     2    65 Acti…           1           1            0     0       11.3
+##  4     2     0    49 Acti…           1           1            1     0       -4.7
+##  5     2     1    49 Acti…           0           0            1     0       -4.7
+##  6     2     2    49 Acti…           1           1            1     0       -4.7
+##  7     3     0    48 Plac…           0           0            0     0       -5.7
+##  8     3     1    48 Plac…           0           0            0     0       -5.7
+##  9     3     2    48 Plac…           0           0            0     0       -5.7
+## 10     4     0    37 Plac…           0           0            0     0      -16.7
+## # … with 50 more rows</code></pre>
+<p>Notice how succinctly we were able to express this fairly complicated task. We had to figure out the find the mean of the variable <code>age</code> in the <code>drug_trial</code> data frame, subtract that value from the value for <code>age</code> in each row of the data frame, and then create a new column in the data frame containing the mean-centered values. Because of the fact that <code>mutate()</code>’s name-value pairs can accept complex expressions a value, and because all of the functions used in the code above are vectorized, we can perform this task using only a single, easy-to-read line of code (<code>age_center = age - mean(age)</code>).</p>
+</div>
+<div id="adding-or-modifying-multiple-columns" class="section level3" number="25.5.4">
+<h3><span class="header-section-number">25.5.4</span> Adding or modifying multiple columns</h3>
+<p>In all of the examples above, we passed a single name-value pair to the <code>...</code> argument of the <code>mutate()</code> function. If we want to create or modify multiple columns, we don’t need to keep typing the <code>mutate()</code> function over and over. We can simply pass multiple name-value pairs, separated by columns, to the <code>...</code> argument. And, there is no limit to the number of pairs we can pass. This is part of the beauty of the <code>...</code> argument in R. For example, we have three variables in <code>drug_trial</code> that capture information about whether or not the participant reported side effects including headache, diarrhea, and dry mouth. Currently, those are all stored as integer vectors that can take the values <code>0</code> and <code>1</code>. Let’s say that we want to also create factor versions of those vectors:</p>
+<div class="sourceCode" id="cb398"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb398-1"><a href="creating-and-modifying-columns.html#cb398-1"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb398-2"><a href="creating-and-modifying-columns.html#cb398-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb398-3"><a href="creating-and-modifying-columns.html#cb398-3"></a>    <span class="dt">se_headache_f  =</span> <span class="kw">factor</span>(se_headache, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="kw">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)),</span>
+<span id="cb398-4"><a href="creating-and-modifying-columns.html#cb398-4"></a>    <span class="dt">se_diarrhea_f  =</span> <span class="kw">factor</span>(se_diarrhea, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="kw">c</span>(<span class="st">&quot;N0&quot;</span>, <span class="st">&quot;Yes&quot;</span>)),</span>
+<span id="cb398-5"><a href="creating-and-modifying-columns.html#cb398-5"></a>    <span class="dt">se_dry_mouth_f =</span> <span class="kw">factor</span>(se_dry_mouth, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="kw">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</span>
+<span id="cb398-6"><a href="creating-and-modifying-columns.html#cb398-6"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 11
+##       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
+##  1     1     0    65 Acti…           0           1            1     0
+##  2     1     1    65 Acti…           1           1            1     0
+##  3     1     2    65 Acti…           1           1            0     0
+##  4     2     0    49 Acti…           1           1            1     0
+##  5     2     1    49 Acti…           0           0            1     0
+##  6     2     2    49 Acti…           1           1            1     0
+##  7     3     0    48 Plac…           0           0            0     0
+##  8     3     1    48 Plac…           0           0            0     0
+##  9     3     2    48 Plac…           0           0            0     0
+## 10     4     0    37 Plac…           0           0            0     0
+## # … with 50 more rows, and 3 more variables: se_headache_f &lt;fct&gt;,
+## #   se_diarrhea_f &lt;fct&gt;, se_dry_mouth_f &lt;fct&gt;</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created three new factor columns in the <code>drug_trial</code> data called <code>se_headache_f</code>, <code>se_diarrhea_f</code>, and <code>se_dry_mouth_f</code>.</p></li>
+<li><p>We created all columns inside a single <code>mutate()</code> function.</p></li>
+<li><p>Notice that I created one variable per line. I suggest you do the same. It just makes your code much easier to read.</p></li>
+</ul>
+<p>So, adding or modifying multiple columns is really easy with <code>mutate()</code>. But, did any of you notice an error? Take a look at the structure of the data the line of code that creates <code>se_diarrhea_f</code>. Instead of writing the “No” label with an “N” and an “o”, I accidently wrote it with an “N” and a zero. I find that when I have to type something over and over like this, I am more likely to make a mistake. Further, if I ever need to change the levels or labels, I will have to change them in every <code>factor()</code> function in the code above.</p>
+<p>For these reasons (and others), programmers of many languages – including R – are taught <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">the DRY principle</a>. DRY stands for don’t repeat yourself. We will discuss the DRY principle again in the chapter on <a href="#repeated-operations">repeated operations</a>, but for now, it just means that you typically don’t want to type code that is the same (or nearly the same) over and over in your programs. Here’s one way we could reduce the repetition in the code above:</p>
+<div class="sourceCode" id="cb400"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb400-1"><a href="creating-and-modifying-columns.html#cb400-1"></a><span class="co"># Create a vector of 0/1 levels that can be reused below.</span></span>
+<span id="cb400-2"><a href="creating-and-modifying-columns.html#cb400-2"></a>yn_levs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb400-3"><a href="creating-and-modifying-columns.html#cb400-3"></a><span class="co"># Create a vector of &quot;No&quot;/&quot;Yes&quot; labels that can be reused below.</span></span>
+<span id="cb400-4"><a href="creating-and-modifying-columns.html#cb400-4"></a>yn_labs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)</span>
+<span id="cb400-5"><a href="creating-and-modifying-columns.html#cb400-5"></a></span>
+<span id="cb400-6"><a href="creating-and-modifying-columns.html#cb400-6"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb400-7"><a href="creating-and-modifying-columns.html#cb400-7"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb400-8"><a href="creating-and-modifying-columns.html#cb400-8"></a>    <span class="dt">se_headache_f  =</span> <span class="kw">factor</span>(se_headache, yn_levs, yn_labs),</span>
+<span id="cb400-9"><a href="creating-and-modifying-columns.html#cb400-9"></a>    <span class="dt">se_diarrhea_f  =</span> <span class="kw">factor</span>(se_diarrhea, yn_levs, yn_labs),</span>
+<span id="cb400-10"><a href="creating-and-modifying-columns.html#cb400-10"></a>    <span class="dt">se_dry_mouth_f =</span> <span class="kw">factor</span>(se_dry_mouth, yn_levs, yn_labs)</span>
+<span id="cb400-11"><a href="creating-and-modifying-columns.html#cb400-11"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 11
+##       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
+##  1     1     0    65 Acti…           0           1            1     0
+##  2     1     1    65 Acti…           1           1            1     0
+##  3     1     2    65 Acti…           1           1            0     0
+##  4     2     0    49 Acti…           1           1            1     0
+##  5     2     1    49 Acti…           0           0            1     0
+##  6     2     2    49 Acti…           1           1            1     0
+##  7     3     0    48 Plac…           0           0            0     0
+##  8     3     1    48 Plac…           0           0            0     0
+##  9     3     2    48 Plac…           0           0            0     0
+## 10     4     0    37 Plac…           0           0            0     0
+## # … with 50 more rows, and 3 more variables: se_headache_f &lt;fct&gt;,
+## #   se_diarrhea_f &lt;fct&gt;, se_dry_mouth_f &lt;fct&gt;</code></pre>
+<p>Notice that in the code above we type <code>c(0, 1)</code> and <code>c("No", "Yes")</code> once each instead of 3 times each. In the chapter on <a href="#repeated-operations">repeated operations</a> we will learn techniques for removing even more repetition from the code above.</p>
+</div>
+<div id="rowwise-mutations" class="section level3" number="25.5.5">
+<h3><span class="header-section-number">25.5.5</span> Rowwise mutations</h3>
+<p>In all the examples above we used the values from <em>a single</em> already existing variable in our name-value pair. However, we can also use the values from <em>multiple</em> variables in our name-value pairs.</p>
+<p>For example, we have three variables in our <code>drug_trial</code> data that capture information about whether or not the participant reported side effects including headache, diarrhea, and dry mouth (sounds like every drug commercial that exists 😂). What if we want to know if our participants reported <em>any</em> side effect at each follow-up? That requires us to combine and transform data from across three different columns! This is one of those situations where there are many different ways we could accomplish this task, but I’m going to use <code>dplyr</code>’s <code>rowwise()</code> function to do so in the following code:</p>
+<div class="sourceCode" id="cb402"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb402-1"><a href="creating-and-modifying-columns.html#cb402-1"></a>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb402-2"><a href="creating-and-modifying-columns.html#cb402-2"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb402-3"><a href="creating-and-modifying-columns.html#cb402-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">any_se_year =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 9
+## # Rowwise: 
+##       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
+##  1     1     0    65 Acti…           0           1            1     0
+##  2     1     1    65 Acti…           1           1            1     0
+##  3     1     2    65 Acti…           1           1            0     0
+##  4     2     0    49 Acti…           1           1            1     0
+##  5     2     1    49 Acti…           0           0            1     0
+##  6     2     2    49 Acti…           1           1            1     0
+##  7     3     0    48 Plac…           0           0            0     0
+##  8     3     1    48 Plac…           0           0            0     0
+##  9     3     2    48 Plac…           0           0            0     0
+## 10     4     0    37 Plac…           0           0            0     0
+## # … with 50 more rows, and 1 more variable: any_se_year &lt;lgl&gt;</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created a new column in the <code>drug_trial</code> data called <code>any_se_year</code> using the <code>mutate()</code> function.</p></li>
+<li><p>We used the <code>rowwise()</code> function to tell R to group the data frame by rows. Said another way, <code>rowwise()</code> tells R to do any calculations that follow <em>across</em> columns instead <em>within</em> columns. Don’t worry, there are more examples below.</p></li>
+<li><p>The value we passed to the name-value pair inside <code>mutate()</code> was actually the result of two calculations.</p>
+<ul>
+<li><p>First, R summed the values of se_headache, se_diarrhea, and se_dry_mouth (i.e., <code>sum(se_headache, se_diarrhea, se_dry_mouth)</code>).</p></li>
+<li><p>Next, R compared that the summed value to <code>0</code>. If the summed value was greater than 0, then the value assigned to <code>any_se_year</code> was <code>TRUE</code>. Otherwise, the value assigned to <code>any_se_year</code> was <code>FALSE</code>.</p></li>
+</ul></li>
+</ul>
+<p>Because there is some new stuff in the code above, I’m going break it down a little bit further. We’ll start with <code>rowwise()</code>. And, to reduce distractions a much as possible, I’m going to create a new data frame with only the columns we need for this example (sneak peek at the next chapter):</p>
+<div class="sourceCode" id="cb404"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb404-1"><a href="creating-and-modifying-columns.html#cb404-1"></a>drug_trial_sub &lt;-<span class="st"> </span>drug_trial <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb404-2"><a href="creating-and-modifying-columns.html#cb404-2"></a><span class="st">  </span><span class="kw">select</span>(id, year, <span class="kw">starts_with</span>(<span class="st">&quot;se&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb404-3"><a href="creating-and-modifying-columns.html#cb404-3"></a><span class="st">  </span><span class="kw">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 5
+##       id  year se_headache se_diarrhea se_dry_mouth
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;
+##  1     1     0           0           1            1
+##  2     1     1           1           1            1
+##  3     1     2           1           1            0
+##  4     2     0           1           1            1
+##  5     2     1           0           0            1
+##  6     2     2           1           1            1
+##  7     3     0           0           0            0
+##  8     3     1           0           0            0
+##  9     3     2           0           0            0
+## 10     4     0           0           0            0
+## # … with 50 more rows</code></pre>
+<p>Let’s start by discussing what <code>rowwise()</code> does. As we discussed above, most built-in R functions are vectorized. They <em>do things</em> to entire vectors, and data frame columns <em>are</em> vectors. So, without using <code>rowwise()</code> the <code>sum()</code> function would have returned the value <code>54</code>:</p>
+<div class="sourceCode" id="cb406"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb406-1"><a href="creating-and-modifying-columns.html#cb406-1"></a>drug_trial_sub <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb406-2"><a href="creating-and-modifying-columns.html#cb406-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">any_se_year =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth))</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 6
+##       id  year se_headache se_diarrhea se_dry_mouth any_se_year
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;       &lt;int&gt;
+##  1     1     0           0           1            1          54
+##  2     1     1           1           1            1          54
+##  3     1     2           1           1            0          54
+##  4     2     0           1           1            1          54
+##  5     2     1           0           0            1          54
+##  6     2     2           1           1            1          54
+##  7     3     0           0           0            0          54
+##  8     3     1           0           0            0          54
+##  9     3     2           0           0            0          54
+## 10     4     0           0           0            0          54
+## # … with 50 more rows</code></pre>
+<p>Any guesses why it returns 54? Here’s a hint:</p>
+<div class="sourceCode" id="cb408"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb408-1"><a href="creating-and-modifying-columns.html#cb408-1"></a><span class="kw">sum</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb410"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb410-1"><a href="creating-and-modifying-columns.html#cb410-1"></a><span class="kw">sum</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<div class="sourceCode" id="cb412"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb412-1"><a href="creating-and-modifying-columns.html#cb412-1"></a><span class="kw">sum</span>(</span>
+<span id="cb412-2"><a href="creating-and-modifying-columns.html#cb412-2"></a>  <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb412-3"><a href="creating-and-modifying-columns.html#cb412-3"></a>  <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb412-4"><a href="creating-and-modifying-columns.html#cb412-4"></a>)</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<p>When we pass a single numeric vector to the <code>sum()</code> function, it adds together all the numbers in that function. When we pass two or more numeric vectors to the <code>sum()</code> function, it adds together all the numbers in all the vectors combined. Our data frame columns are no different:</p>
+<div class="sourceCode" id="cb414"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb414-1"><a href="creating-and-modifying-columns.html#cb414-1"></a><span class="kw">sum</span>(drug_trial_sub<span class="op">$</span>se_headache)</span></code></pre></div>
+<pre><code>## [1] 20</code></pre>
+<div class="sourceCode" id="cb416"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb416-1"><a href="creating-and-modifying-columns.html#cb416-1"></a><span class="kw">sum</span>(drug_trial_sub<span class="op">$</span>se_diarrhea)</span></code></pre></div>
+<pre><code>## [1] 16</code></pre>
+<div class="sourceCode" id="cb418"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb418-1"><a href="creating-and-modifying-columns.html#cb418-1"></a><span class="kw">sum</span>(drug_trial_sub<span class="op">$</span>se_dry_mouth)</span></code></pre></div>
+<pre><code>## [1] 18</code></pre>
+<div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb420-1"><a href="creating-and-modifying-columns.html#cb420-1"></a><span class="kw">sum</span>(</span>
+<span id="cb420-2"><a href="creating-and-modifying-columns.html#cb420-2"></a>  drug_trial_sub<span class="op">$</span>se_headache,</span>
+<span id="cb420-3"><a href="creating-and-modifying-columns.html#cb420-3"></a>  drug_trial_sub<span class="op">$</span>se_diarrhea,</span>
+<span id="cb420-4"><a href="creating-and-modifying-columns.html#cb420-4"></a>  drug_trial_sub<span class="op">$</span>se_dry_mouth</span>
+<span id="cb420-5"><a href="creating-and-modifying-columns.html#cb420-5"></a>)</span></code></pre></div>
+<pre><code>## [1] 54</code></pre>
+<p>Hopefully, you see that the <code>sum()</code> function is taking the total of all three vectors added together, which is a single number (<code>54</code>), and then using recycling rules to assign that value to every row of <code>any_se_year</code>.</p>
+<p>Using <code>rowwise()</code> tells R to add <em>across</em> the columns instead of <em>within</em> the columns. So, add the first value for <code>se_headache</code> to the first value for <code>se_diarrhea</code> to the first value for <code>se_dry_mouth</code>, assign that value to the first value of <code>any_se_year</code>, and then repeat for each subsequent row. This is what that result looks like:</p>
+<div class="sourceCode" id="cb422"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb422-1"><a href="creating-and-modifying-columns.html#cb422-1"></a>drug_trial_sub <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb422-2"><a href="creating-and-modifying-columns.html#cb422-2"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb422-3"><a href="creating-and-modifying-columns.html#cb422-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">any_se_year =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth))</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 6
+## # Rowwise: 
+##       id  year se_headache se_diarrhea se_dry_mouth any_se_year
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;       &lt;int&gt;
+##  1     1     0           0           1            1           2
+##  2     1     1           1           1            1           3
+##  3     1     2           1           1            0           2
+##  4     2     0           1           1            1           3
+##  5     2     1           0           0            1           1
+##  6     2     2           1           1            1           3
+##  7     3     0           0           0            0           0
+##  8     3     1           0           0            0           0
+##  9     3     2           0           0            0           0
+## 10     4     0           0           0            0           0
+## # … with 50 more rows</code></pre>
+<p>Because the value for each side effect could only be 0 (if not reported) or 1 (if reported) then the rowwise sum of those numbers is a count of the number of side effects reported in each row. For example, person 1 reported not having headaches (<code>0</code>), having diarrhea (<code>1</code>), and having dry mouth (<code>1</code>) at baseline (<code>year</code> == <code>0</code>). And, 0 + 1 + 1 = 2 – the same value you see for <code>any_se_year</code> in that row. For instructional purposes, let’s run the code above again, but change the name of the variable to <code>n_se_year</code> (i.e., the count of side effects a participant reported in a given year).</p>
+<p>This may be a useful result in and of itself. However, we said we wanted a variable that captured whether a participant reported <em>any</em> side effect at each follow-up. Well, because <code>any_se_year</code> is currently a count of side effects reported for that participant in that year, then where the value of <code>any_se_year</code> is <code>0</code> no side effects were reported. If the current value of <code>any_se_year</code> is greater than <code>0</code>, then one or more side effects were reported. Generally, we can test inequalities like this in the following way:</p>
+<div class="sourceCode" id="cb424"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb424-1"><a href="creating-and-modifying-columns.html#cb424-1"></a><span class="co"># Is 0 greater than 0?</span></span>
+<span id="cb424-2"><a href="creating-and-modifying-columns.html#cb424-2"></a><span class="dv">0</span> <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span></span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb426"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb426-1"><a href="creating-and-modifying-columns.html#cb426-1"></a><span class="co"># Is 2 greater than 0?</span></span>
+<span id="cb426-2"><a href="creating-and-modifying-columns.html#cb426-2"></a><span class="dv">2</span> <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p>In our specific situation, instead of using a number on the left side of the inequality, we can use our calculated <code>n_se_year</code> variable values on the left side of the inequality:</p>
+<div class="sourceCode" id="cb428"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb428-1"><a href="creating-and-modifying-columns.html#cb428-1"></a>drug_trial_sub <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb428-2"><a href="creating-and-modifying-columns.html#cb428-2"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb428-3"><a href="creating-and-modifying-columns.html#cb428-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb428-4"><a href="creating-and-modifying-columns.html#cb428-4"></a>    <span class="dt">n_se_year   =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb428-5"><a href="creating-and-modifying-columns.html#cb428-5"></a>    <span class="dt">any_se_year =</span> n_se_year <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span></span>
+<span id="cb428-6"><a href="creating-and-modifying-columns.html#cb428-6"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 7
+## # Rowwise: 
+##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
+##  1     1     0           0           1            1         2 TRUE       
+##  2     1     1           1           1            1         3 TRUE       
+##  3     1     2           1           1            0         2 TRUE       
+##  4     2     0           1           1            1         3 TRUE       
+##  5     2     1           0           0            1         1 TRUE       
+##  6     2     2           1           1            1         3 TRUE       
+##  7     3     0           0           0            0         0 FALSE      
+##  8     3     1           0           0            0         0 FALSE      
+##  9     3     2           0           0            0         0 FALSE      
+## 10     4     0           0           0            0         0 FALSE      
+## # … with 50 more rows</code></pre>
+<p>In this way, <code>any_se_year</code> is TRUE if the participant reported any side effect in that year and false if they reported no side effects in that year. We could write the code more succinctly like this:</p>
+<div class="sourceCode" id="cb430"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb430-1"><a href="creating-and-modifying-columns.html#cb430-1"></a>drug_trial_sub <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb430-2"><a href="creating-and-modifying-columns.html#cb430-2"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb430-3"><a href="creating-and-modifying-columns.html#cb430-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">any_se_year =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 6
+## # Rowwise: 
+##       id  year se_headache se_diarrhea se_dry_mouth any_se_year
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;lgl&gt;      
+##  1     1     0           0           1            1 TRUE       
+##  2     1     1           1           1            1 TRUE       
+##  3     1     2           1           1            0 TRUE       
+##  4     2     0           1           1            1 TRUE       
+##  5     2     1           0           0            1 TRUE       
+##  6     2     2           1           1            1 TRUE       
+##  7     3     0           0           0            0 FALSE      
+##  8     3     1           0           0            0 FALSE      
+##  9     3     2           0           0            0 FALSE      
+## 10     4     0           0           0            0 FALSE      
+## # … with 50 more rows</code></pre>
+<p>But, is that really what we want to do? The answer is it depends. If we are going to stop here, then the succinct code may be what we want. But, what if we want to also know if the participant reported <em>all</em> side effects in each year. Perhaps, you’ve already worked out what that code would look like. Perhaps you’re thinking something like:</p>
+<div class="sourceCode" id="cb432"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb432-1"><a href="creating-and-modifying-columns.html#cb432-1"></a>drug_trial_sub <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb432-2"><a href="creating-and-modifying-columns.html#cb432-2"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb432-3"><a href="creating-and-modifying-columns.html#cb432-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb432-4"><a href="creating-and-modifying-columns.html#cb432-4"></a>    <span class="dt">any_se_year =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb432-5"><a href="creating-and-modifying-columns.html#cb432-5"></a>    <span class="dt">all_se_year =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth) <span class="op">==</span><span class="st"> </span><span class="dv">3</span></span>
+<span id="cb432-6"><a href="creating-and-modifying-columns.html#cb432-6"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 7
+## # Rowwise: 
+##       id  year se_headache se_diarrhea se_dry_mouth any_se_year all_se_year
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;      
+##  1     1     0           0           1            1 TRUE        FALSE      
+##  2     1     1           1           1            1 TRUE        TRUE       
+##  3     1     2           1           1            0 TRUE        FALSE      
+##  4     2     0           1           1            1 TRUE        TRUE       
+##  5     2     1           0           0            1 TRUE        FALSE      
+##  6     2     2           1           1            1 TRUE        TRUE       
+##  7     3     0           0           0            0 FALSE       FALSE      
+##  8     3     1           0           0            0 FALSE       FALSE      
+##  9     3     2           0           0            0 FALSE       FALSE      
+## 10     4     0           0           0            0 FALSE       FALSE      
+## # … with 50 more rows</code></pre>
+<p>That works, and hopefully, you’re able to reason out why it works. But, there we go repeating code again! So, in this case, we have to choose between more succinct code and the DRY principle. When presented with that choice, I will typically favor the DRY principle. Therefore, my code would look like this:</p>
+<div class="sourceCode" id="cb434"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb434-1"><a href="creating-and-modifying-columns.html#cb434-1"></a>drug_trial_sub <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb434-2"><a href="creating-and-modifying-columns.html#cb434-2"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb434-3"><a href="creating-and-modifying-columns.html#cb434-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb434-4"><a href="creating-and-modifying-columns.html#cb434-4"></a>    <span class="dt">n_se_year   =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb434-5"><a href="creating-and-modifying-columns.html#cb434-5"></a>    <span class="dt">any_se_year =</span> n_se_year <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb434-6"><a href="creating-and-modifying-columns.html#cb434-6"></a>    <span class="dt">all_se_year =</span> n_se_year <span class="op">==</span><span class="st"> </span><span class="dv">3</span></span>
+<span id="cb434-7"><a href="creating-and-modifying-columns.html#cb434-7"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 8
+## # Rowwise: 
+##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
+##  1     1     0           0           1            1         2 TRUE       
+##  2     1     1           1           1            1         3 TRUE       
+##  3     1     2           1           1            0         2 TRUE       
+##  4     2     0           1           1            1         3 TRUE       
+##  5     2     1           0           0            1         1 TRUE       
+##  6     2     2           1           1            1         3 TRUE       
+##  7     3     0           0           0            0         0 FALSE      
+##  8     3     1           0           0            0         0 FALSE      
+##  9     3     2           0           0            0         0 FALSE      
+## 10     4     0           0           0            0         0 FALSE      
+## # … with 50 more rows, and 1 more variable: all_se_year &lt;lgl&gt;</code></pre>
+<p>Not only am I less like to make a typing error in this code, but I think the differences between each line of code (i.e., what that line of code is doing) stands out more. In other words, the intent of the code isn’t buried in unneeded words.</p>
+<p>Before moving on, I also want to point out that the method above would not have worked on factors. For example:</p>
+<div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="creating-and-modifying-columns.html#cb436-1"></a>drug_trial_sub <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb436-2"><a href="creating-and-modifying-columns.html#cb436-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb436-3"><a href="creating-and-modifying-columns.html#cb436-3"></a>    <span class="dt">se_headache  =</span> <span class="kw">factor</span>(se_headache, yn_levs, yn_labs),</span>
+<span id="cb436-4"><a href="creating-and-modifying-columns.html#cb436-4"></a>    <span class="dt">se_diarrhea  =</span> <span class="kw">factor</span>(se_diarrhea, yn_levs, yn_labs),</span>
+<span id="cb436-5"><a href="creating-and-modifying-columns.html#cb436-5"></a>    <span class="dt">se_dry_mouth =</span> <span class="kw">factor</span>(se_dry_mouth, yn_levs, yn_labs)</span>
+<span id="cb436-6"><a href="creating-and-modifying-columns.html#cb436-6"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb436-7"><a href="creating-and-modifying-columns.html#cb436-7"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb436-8"><a href="creating-and-modifying-columns.html#cb436-8"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb436-9"><a href="creating-and-modifying-columns.html#cb436-9"></a>    <span class="dt">n_se_year   =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb436-10"><a href="creating-and-modifying-columns.html#cb436-10"></a>    <span class="dt">any_se_year =</span> n_se_year <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb436-11"><a href="creating-and-modifying-columns.html#cb436-11"></a>    <span class="dt">all_se_year =</span> n_se_year <span class="op">==</span><span class="st"> </span><span class="dv">3</span></span>
+<span id="cb436-12"><a href="creating-and-modifying-columns.html#cb436-12"></a>  )</span></code></pre></div>
+<pre><code>## Error: Problem with `mutate()` input `n_se_year`.
+## x &#39;sum&#39; not meaningful for factors
+## ℹ Input `n_se_year` is `sum(se_headache, se_diarrhea, se_dry_mouth)`.
+## ℹ The error occured in row 1.</code></pre>
+<p>The <code>sum()</code> function cannot add factors. Back when I <a href="exporting-data.html#factor-vectors">first introduced factors in this book</a>, I suggested that you keep the numeric version of your variables in your data frames and create factors as new variables. I said that I thought this was a good idea because I often find that it can be useful to have both versions of the variable hanging around during the analysis process. The situation above is an example of what I was talking about.</p>
+</div>
+<div id="group_by-mutations" class="section level3" number="25.5.6">
+<h3><span class="header-section-number">25.5.6</span> Group_by mutations</h3>
+<p>So far, we’ve created variables that tell us if our participants reported <em>any</em> side effects in a given and if they reported <em>all 3</em> side effects in a given year. The next logical question might be to ask if each participant experienced <em>any</em> side effect in <em>any year</em>. For that, we will need <code>dplyr</code>’s <code>group_by()</code> function. Before discussing <code>group_by()</code>, I’m going to show you the code I would use to accomplish this task:</p>
+<div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="creating-and-modifying-columns.html#cb438-1"></a>drug_trial_sub <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb438-2"><a href="creating-and-modifying-columns.html#cb438-2"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb438-3"><a href="creating-and-modifying-columns.html#cb438-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb438-4"><a href="creating-and-modifying-columns.html#cb438-4"></a>    <span class="dt">n_se_year   =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb438-5"><a href="creating-and-modifying-columns.html#cb438-5"></a>    <span class="dt">any_se_year =</span> n_se_year <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb438-6"><a href="creating-and-modifying-columns.html#cb438-6"></a>    <span class="dt">all_se_year =</span> n_se_year <span class="op">==</span><span class="st"> </span><span class="dv">3</span></span>
+<span id="cb438-7"><a href="creating-and-modifying-columns.html#cb438-7"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb438-8"><a href="creating-and-modifying-columns.html#cb438-8"></a><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb438-9"><a href="creating-and-modifying-columns.html#cb438-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">any_se =</span> <span class="kw">sum</span>(any_se_year) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 9
+## # Groups:   id [20]
+##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
+##  1     1     0           0           1            1         2 TRUE       
+##  2     1     1           1           1            1         3 TRUE       
+##  3     1     2           1           1            0         2 TRUE       
+##  4     2     0           1           1            1         3 TRUE       
+##  5     2     1           0           0            1         1 TRUE       
+##  6     2     2           1           1            1         3 TRUE       
+##  7     3     0           0           0            0         0 FALSE      
+##  8     3     1           0           0            0         0 FALSE      
+##  9     3     2           0           0            0         0 FALSE      
+## 10     4     0           0           0            0         0 FALSE      
+## # … with 50 more rows, and 2 more variables: all_se_year &lt;lgl&gt;, any_se &lt;lgl&gt;</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created a new column in the <code>drug_trial_sub</code> data called <code>any_se</code> using the <code>mutate()</code> function. The <code>any_se</code> column is TRUE if the participant reported <em>any</em> side effect in <em>any year</em> and FALSE if they <em>never</em> reported a side effect in <em>any year</em>.</p></li>
+<li><p>We first grouped the data by <code>id</code> using the <code>group_by()</code> function. Note that grouping the data by <code>id</code> with <code>group_by()</code> overrides grouping the data by row with <code>rowwise()</code> as soon as R gets to that point in the code. In other words, the data is grouped by row from <code>rowwise() %&gt;%</code> to <code>group_by(id) %&gt;%</code> and grouped by <code>id</code> after.</p></li>
+</ul>
+<p class="note">
+🗒<strong>Side Note:</strong> You can use <code>dplyr::ungroup()</code> to ungroup your data frames. This works regardless of whether you grouped them with <code>rowwise()</code> or <code>group_by()</code>.
+</p>
+<p>I already introduced <code>group_by()</code> in the chapter on <a href="numerical-descriptions-of-categorical-variables.html#the-tidyverse-way">numerical descriptions of categorical variables</a>. I also said that <code>group_by()</code> operationalizes the <strong>Split - Apply - Combine</strong> strategy for data analysis. That means is that we split our data frame up into smaller data frames, apply our calculation separately to each smaller data frame, and then combine those individual results back together as a single result.</p>
+<p>So, in the example above, the <code>drug_trial_sub</code> data frame was split into twenty separate little data frames (i.e., one for each study id). Because there are 3 rows for each study id, each of these 20 little data frames had three rows.</p>
+<p>Each of those 20 little data frames was then passed to the <code>mutate()</code> function. The name-value pair inside the <code>mutate()</code> function <code>any_se = sum(any_se_year) &gt; 0</code> told R to add up all the values for the column <code>any_se_year</code> (i.e., <code>sum(any_se_year)</code>), compare that summed value to <code>0</code> (i.e., <code>sum(any_se_year) &gt; 0</code>), and then assign <code>TRUE</code> to <code>any_se</code> if the summed value is greater than zero and <code>FALSE</code> otherwise. Then, all 20 of the little data frames are combined back together and returned to us as a single data frame.</p>
+<div class="sourceCode" id="cb440"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb440-1"><a href="creating-and-modifying-columns.html#cb440-1"></a>drug_trial_sub <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb440-2"><a href="creating-and-modifying-columns.html#cb440-2"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb440-3"><a href="creating-and-modifying-columns.html#cb440-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb440-4"><a href="creating-and-modifying-columns.html#cb440-4"></a>    <span class="dt">n_se_year   =</span> <span class="kw">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb440-5"><a href="creating-and-modifying-columns.html#cb440-5"></a>    <span class="dt">any_se_year =</span> n_se_year <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb440-6"><a href="creating-and-modifying-columns.html#cb440-6"></a>    <span class="dt">all_se_year =</span> n_se_year <span class="op">==</span><span class="st"> </span><span class="dv">3</span></span>
+<span id="cb440-7"><a href="creating-and-modifying-columns.html#cb440-7"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb440-8"><a href="creating-and-modifying-columns.html#cb440-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">any_se =</span> <span class="kw">sum</span>(any_se_year) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 60 x 9
+## # Rowwise: 
+##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
+##  1     1     0           0           1            1         2 TRUE       
+##  2     1     1           1           1            1         3 TRUE       
+##  3     1     2           1           1            0         2 TRUE       
+##  4     2     0           1           1            1         3 TRUE       
+##  5     2     1           0           0            1         1 TRUE       
+##  6     2     2           1           1            1         3 TRUE       
+##  7     3     0           0           0            0         0 FALSE      
+##  8     3     1           0           0            0         0 FALSE      
+##  9     3     2           0           0            0         0 FALSE      
+## 10     4     0           0           0            0         0 FALSE      
+## # … with 50 more rows, and 2 more variables: all_se_year &lt;lgl&gt;, any_se &lt;lgl&gt;</code></pre>
+<p>You may be wondering why I used the <code>sum()</code> function when the values for <code>any_se_year</code> are not numbers. The way R treats logical vectors can actually be pretty useful in situations like this. That is, when mathematical operations are applied to logical vectors, R treats FALSE as a 0 and TRUE as a 1. So, for participant 1, R calculated the value for <code>any_se</code> something like this:</p>
+<div class="sourceCode" id="cb442"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb442-1"><a href="creating-and-modifying-columns.html#cb442-1"></a>any_se_year &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>)</span>
+<span id="cb442-2"><a href="creating-and-modifying-columns.html#cb442-2"></a>any_se_year</span></code></pre></div>
+<pre><code>## [1] TRUE TRUE TRUE</code></pre>
+<div class="sourceCode" id="cb444"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb444-1"><a href="creating-and-modifying-columns.html#cb444-1"></a>sum_any_se_year &lt;-<span class="st"> </span><span class="kw">sum</span>(any_se_year)</span>
+<span id="cb444-2"><a href="creating-and-modifying-columns.html#cb444-2"></a>sum_any_se_year</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<div class="sourceCode" id="cb446"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb446-1"><a href="creating-and-modifying-columns.html#cb446-1"></a>any_se &lt;-<span class="st"> </span>sum_any_se_year <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span></span>
+<span id="cb446-2"><a href="creating-and-modifying-columns.html#cb446-2"></a>any_se</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p>R used the recycling rules to copy that result to the other two rows of data from participant 1. R then repeated that process for every other participant, and then returned the combined data frame to us.</p>
+<p>I hope you found the example above useful. I think it’s fairly representative of the kinds of data management stuff I tend to do on a day-to-day basis. Of course, missing data always complicates things (more to come on that!). In the next chapter, we will round out our introduction to the basics of data management by learning how to subset rows and columns of a data frame.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction-to-data-management.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="subsetting-data-frames.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
