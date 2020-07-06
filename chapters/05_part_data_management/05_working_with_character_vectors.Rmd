@@ -1,0 +1,533 @@
+# Working with character strings
+
+<!--
+To upper, To lower, Title case
+Separating words in character strings
+Converting to dummy variables
+Save reggex for advanced
+Link to complete reggex
+-->
+
+In previous chapters, we learned how to create character vectors, which can be useful on their own. We also learned how to coerce character vectors to factor vectors that we can use for categorical data analysis. However, up to this point, we haven't done a lot of manipulation of the values stored inside of the character stings themselves. Sometimes, however, we will need to manipulate the character string before we can complete other data management tasks or analysis. Some common examples from my projects include separating character strings into multiple parts and creating dummy variables from character strings that can take multiple values. In this chapter, we'll see some specific example of both, and we'll learn a few new tools for working with character strings along the way.
+
+To get started, feel free to [download the simulated electronic health record that we will use in the following examples](https://www.dropbox.com/s/qy778lzafids0om/ehr.Rds?dl=1). Additionally, we will use the `readr`, `dplyr`, and `stringr` packages in the code below. You will be able to recognize functions from the `stringr` package because they will all begin with `str_`.
+
+```{r message=FALSE}
+library(readr)
+library(dplyr)
+library(stringr) # All stringr functions begin with "str_"
+```
+
+```{r}
+ehr <- read_rds("/Users/bradcannell/Dropbox/Datasets/epcr/ehr.Rds")
+```
+
+```{r rows.print=15}
+ehr 
+```
+
+👆**Here's what we did above:**
+
+* We used the `read_csv()` function to import a .Rds file containing simulated data into R. 
+
+* The simulated data contains admission date (`admit_date`), the patient's name (`name`), the patient's date of birth (`dob`), the patient's address (`address`), the city the patient lives in (`city`), and column that contains the symptoms each patient was experiencing at admission (`symptoms`).
+
+* In this data, date of birth is recorded in the four most common formats that I typically come across.
+
+A common initial question we may need to ask of this kind of data is, _"how many unique people are represented in this data?"_ Well, there are 15 rows, so a good first guess might be 15 unique people. However, let's arrange the data by the `name` column and see if that guess still looks reasonable.
+
+```{r rows.print=15}
+ehr %>% 
+  group_by(name) %>% 
+  mutate(dup = row_number() > 1) %>% 
+  arrange(name) %>% 
+  select(name, dup, dob, address, city)
+```
+
+Clearly, some of these people are the same. However, little data entry discrepancies in their name values would prevent us from calculating the number of unique people in a programmatic way. Let's take a closer look at the values in the `name` column and see if we can figure out exactly what these data entry discrepancies are:
+
+```{r}
+ehr %>% 
+  arrange(name) %>% 
+  pull(name)
+```
+
+👆**Here's what we did above:**
+
+* We `dplyr`'s `pull()` function to return the `name` column as a character vector. Doing so makes it easier to see some of the discrepancies in the way the patient's names were entered into the ehr. 
+
+* Notice that Arabella George's name is written in title case one time and written in all caps another time. Remember that R is case sensitive. So, these two values -- "Arabella George" and "ARABELLA GEORGE" -- are different values to R.
+
+* Notice that in one instance of Ivy Mccann's name someone accidently typed two spaces between her first and last name. These two values -- "Ivy Mccann" and "Ivy   Mccann" -- are different values to R.
+
+* Notice that in one instance of Ryan Edwards' name someone accidently typed an extra space after his last name. These two values -- "Ryan Edwards" and "Ryan Edwards  " -- are different values to R.
+
+* Notice that Tatum Chavez's name was entered into the ehr _with_ his middle initial on one instance. These two values -- "Tatum Chavez" and "Tatum S Chavez" -- are different values to R.
+
+* Notice that Weston Fox's name was entered into the ehr with a comma immediately following his last name on one instance. These two values -- "Weston Fox" and "Weston Fox," -- are different values to R.
+
+## Coerce to lowercase
+
+A good place to start cleaning these character strings is by coercing them all to lowercase. We've already used base R's `tolower()` function a couple of times before. So, you may have already guessed how to complete this task. However, before moving on to coercing all the names in our ehr data to lowercase, I want to show you some of the other functions that the `stringr` package contains for changing the case of character strings. For example:
+
+### Lowercase
+
+```{r}
+ehr %>% 
+  arrange(name) %>% 
+  pull(name) %>% 
+  str_to_lower()
+```
+
+### Upper case
+
+```{r}
+ehr %>% 
+  arrange(name) %>% 
+  pull(name) %>% 
+  str_to_upper()
+```
+
+### Title case
+
+```{r}
+ehr %>% 
+  arrange(name) %>% 
+  pull(name) %>% 
+  str_to_title()
+```
+
+### Sentence case
+
+```{r}
+ehr %>% 
+  arrange(name) %>% 
+  pull(name) %>% 
+  str_to_sentence()
+```
+
+Each of the function above can come in handy from time-to-time. So, you may just want to keep them in your back pocket. Let's go ahead and use the `str_to_lower()` function now as the first step in cleaning our data:
+
+```{r rows.print=15}
+ehr <- ehr %>% 
+  mutate(name = str_to_lower(name)) %>% 
+  print()
+```
+
+👆**Here's what we did above:**
+
+* We used `stringr`'s `str_to_lower()` function to coerce all the letters in the `name` column to lowercase. 
+
+Now, let's check and see how many unique people R finds in our data?
+
+```{r rows.print=15}
+ehr %>% 
+  group_by(name) %>% 
+  mutate(dup = row_number() > 1) %>% 
+  arrange(name) %>% 
+  select(name, dup, dob, address, city)
+```
+
+In the output above, there are 15 rows. R has identified 1 row with a duplicate name (dup == TRUE), which results in a count of 14 unique people. So, simply coercing all the letters to lower case alone helped R figure out that there was a duplicate name value for arabella george. Next, let's go ahead and remove the trailing space from Ryan Edwards' name.
+
+## Trim white space
+
+We can use `stringr`'s `str_trim()` function to "trim" white space from the beginning and end of character strings. For example:
+
+```{r}
+str_trim("Ryan Edwards  ")
+```
+
+Let's go ahead and use the `str_trim()` function now as the next step in cleaning our data:
+
+```{r}
+ehr <- ehr %>% 
+  mutate(name = str_trim(name))
+```
+
+Now, let's check and see how many unique people R finds in our data?
+
+```{r rows.print=15}
+ehr %>% 
+  group_by(name) %>% 
+  mutate(dup = row_number() > 1) %>% 
+  arrange(name) %>% 
+  select(name, dup, dob, address, city)
+```
+
+In the output above, there are 15 rows. R has identified 2 rows with a duplicate name (dup == TRUE), which results in a count of 13 unique people. We're getting closer. 👏 However, the rest of the discrepancies in the `name` column that we want to address are a little more complicated. There isn't a pre-made base R or `stringr` function that will fix them. Instead, we'll need to learn how to use something called **regular expressions**.
+
+## Regular expressions
+
+Regular expressions, also called **regex** or **regexps**, can be really intimidating at first. In fact, I debated whether or not to even include a discussion of regular expressions at this point in the book. However, regular expressions are _the_ most powerful and flexible tool for manipulating character strings that I am aware of. So, I think it's important for you to get a little exposure to regular expressions, even if you aren't a regular expressions expert by the end of this chapter. 
+
+The first time you see regular expressions, you will probably think they look like gibberish. For example, here's a regular expression that I recently used to clean a data set `(\d{1,2}\/\d{1,2}\/\d{2})`. You can think of regular expressions as an entirely different programming language that the R interpreter can also understand. Regular expressions aren't unique to R. Many programming languages can accept regular expressions as a way to manipulate character strings. 
+
+In the examples that follow, I hope   
+  1. To give you a feel for how regular expression can be useful.    
+  2. Provide you with some specific regular expressions that you may want to save for your epi work (or your class assignments).   
+  3. Provide you with some resources to help you take your regular expression skills to the next level when you are ready.   
+
+### Remove the comma
+
+For our first example, let's remove the comma from Weston Fox's last name.
+
+```{r}
+str_replace(
+  string      = "weston fox,", 
+  pattern     = ",",
+  replacement = ""
+)
+```
+
+👆**Here's what we did above:**
+
+* We used `stringr`'s `str_replace()` function remove the comma from the character string "weston fox,".
+
+* The first argument to the `str_replace()` function is `string`. The value passed the `string` argument should be the character string, or vector of character stings, we want to manipulate.
+
+* The second argument to the `str_replace()` function is `pattern`. The value passed the `pattern` argument should be regular expression. It should tell the `str_replace()` function what part of the character string we want to replace. In this case, it is a comma (`","`). We are telling the `str_replace()` function that we want it to replace the first comma it sees in the character sting "weston fox," with the value we pass to the `replacement` argument.
+
+* The third argument to the `str_replace()` function is `replacement`. The value passed the `replacement` argument should also be regular expression. It should tell the `str_replace()` function to what replace the value identified in the `pattern` argument with. In this case, it is nothing (`""`) -- two double quotes with nothing in-between. We are telling the `str_replace()` function that we want it to replace the first comma it sees in the character sting "weston fox," with nothing. This is sort of a long-winded way of saying, "delete the comma."
+
+<p class="warning"> ⚠️**Warning:** Notice that our regular expressions above are wrapped in quotes. Regular expressions should always be wrapped in quotes.</p>
+
+Let's go ahead and use the `str_replace()` function now as the next step in cleaning our data:
+
+```{r rows.print=15}
+ehr <- ehr %>% 
+  mutate(name = str_replace(name, ",", ""))
+```
+
+Now, let's check and see how many unique people R finds in our data?
+
+```{r rows.print=15}
+ehr %>% 
+  group_by(name) %>% 
+  mutate(dup = row_number() > 1) %>% 
+  arrange(name) %>% 
+  select(name, dup, dob, address, city)
+```
+
+In the output above, there are 15 rows. R has identified 3 rows with a duplicate name (dup == TRUE), which results in a count of 12 unique people.
+
+### Remove middle initial
+
+Next, let's remove the middle initial from Tatum Chavez's name.
+
+```{r}
+str_replace(
+  string      = "tatum s chavez",
+  pattern     = " \\w ",
+  replacement = " "
+)
+```
+
+👆**Here's what we did above:**
+
+* We used `stringr`'s `str_replace()` function remove the "s" from the character string "tatum s chavez".
+
+* The first argument to the `str_replace()` function is `string`. The value passed the `string` argument should be the character string, or vector of character stings, we want to manipulate.
+
+* The second argument to the `str_replace()` function is `pattern`. The value passed the `pattern` argument should be regular expression. It should tell the `str_replace()` function what part of the character string we want to replace. In this case, it is `" \\w "`. That is a space, two backslashes, and a space. This regular expression looks a little stranger than the last one we saw. 
+
+  - The `\w` is called a **token** in regular expression lingo. The `\w` token means "Any word character." Any word character includes all the letters of the alphabet upper and lowercase (i.e., `[a-zA-Z]`), all numbers (i.e., `[0-9`]), and the underscore character (`_`). 
+  
+  - When passing regular expression to R, we must always add an additional backslash in front of any other backslash in the regular expression. In this case, `\\w` instead of `\w`.
+  
+  - If we had stopped here (`"\\w"`), this regular expression would have told the `str_replace()` function that we want it to replace the first word character it sees in the character sting "tatum s chavez" with the value we pass to the `replacement` argument. In this case, that would have been the "t" at the beginning of "tatum s chavez".
+  
+  - The final component of the regular expression we passed to the `pattern` argument is spaces on both sides of the `\\w` token. The complete regular expression, `" \\w "`, tells the `str_replace()` function that we want it to replace the first time it sees a space, followed by any word character, followed by another space in the character sting "tatum s chavez" with the value we pass to the `replacement` argument. The first section of the character string above that matches that pattern is the " s " in "tatum s chavez".
+
+* The third argument to the `str_replace()` function is `replacement`. The value passed the `replacement` argument should also be regular expression. It should tell the `str_replace()` function what to replace the value identified in the `pattern` argument with. In this case, it is a single space (`" "`).
+
+Let's go ahead and use the `str_replace()` function now as the next step in cleaning our data:
+
+```{r rows.print=15}
+ehr <- ehr %>% 
+  mutate(name = str_replace(name, " \\w ", " "))
+```
+
+And, let's once again check and see how many unique people R finds in our data?
+
+```{r rows.print=15}
+ehr %>% 
+  group_by(name) %>% 
+  mutate(dup = row_number() > 1) %>% 
+  arrange(name) %>% 
+  select(name, dup, dob, address, city)
+```
+
+In the output above, there are 15 rows. R has identified 4 rows with a duplicate name (dup == TRUE), which results in a count of 11 unique people.
+
+### Remove double spaces
+
+Finally, let's remove the double space from Ivy Mccann's name.
+
+```{r}
+str_replace(
+  string      = "Ivy   Mccann",
+  pattern     = "\\s{2,}",
+  replacement = " "
+)
+```
+
+👆**Here's what we did above:**
+
+* We used `stringr`'s `str_replace()` function remove the double space from the character string "Ivy   Mccann".
+
+* The first argument to the `str_replace()` function is `string`. The value passed the `string` argument should be the character string, or vector of character stings, we want to manipulate.
+
+* The second argument to the `str_replace()` function is `pattern`. The value passed the `pattern` argument should be regular expression. It should tell the `str_replace()` function what part of the character string we want to replace. In this case, it is `\\s{2,}`. This regular expression looks even more strange than the last one we saw. 
+
+  - The `\s` is another token. The `\s` token means "Any whitespace character." 
+  
+  - When passing regular expression to R, we must always add an additional backslash in front of any other backslash in the regular expression. In this case, `\\s` instead of `\s`.
+  
+  - The curly braces with numbers inside is called a **quantifier** in regular expression lingo. The first number inside the curly braces tells `str_replace()` to look for _at least_ this many occurrences of whatever is immediately before the curly braces in the regular expression. The second number inside the curly braces tells `str_replace()` to look for _no more than_ this many occurrences of whatever is immediately before the curly braces in the regular expression. When there is no number in the first position, that means that there is no minimum number of occurrences that count. When there is no number is the second position, that means that there is no upper limit of occurrences that count. In this case, the thing immediately before the curly braces in the regular expression was a whitespace (`\\s`), and the `{2,}` tells `str_replace()` to look for between 2 and unlimited consecutive occurrences of whitespace. 
+
+* The third argument to the `str_replace()` function is `replacement`. The value passed the `replacement` argument should also be regular expression. It should tell the `str_replace()` function what to replace the value identified in the `pattern` argument with. In this case, it is a single space (`" "`).
+
+Let's go ahead and use the `str_replace()` function now as the final step in cleaning our `name` column:
+
+```{r rows.print=15}
+ehr <- ehr %>% 
+  mutate(name = str_replace(name, "\\s{2,}", " "))
+```
+
+Let's check one final time to see how many unique people R finds in our data.
+
+```{r rows.print=15}
+ehr %>% 
+  group_by(name) %>% 
+  mutate(dup = row_number() > 1) %>% 
+  arrange(name) %>% 
+  select(name, dup, dob, address, city)
+```
+
+In the output above, there are 15 rows. R has identified 5 rows with a duplicate name (dup == TRUE), which results in a count of 10 unique people. This is the answer we wanted! 👏
+
+If our data frame was too big to count unique people manually, we could have R calculate the number of unique people for us like this:
+
+```{r}
+ehr %>% 
+  group_by(name) %>% 
+  filter(row_number() == 1) %>% 
+  ungroup() %>% 
+  summarise(`Unique People` = n())
+```
+
+👆**Here's what we did above:**
+
+* With the exception of `filter(row_number() == 1)`, you should have seen all of the elements in the code above before.
+
+* We saw the `row_number()` function used before inside of `mutate()` to sequentially count the number of rows that belong to each group created with `group_by()`. We could have done that in the code above. The `filter(row_number() == 1)` code is really just a shorthand way to write `mutate(row = row_number()) %>% filter(row == 1)`. It has the effect of telling R to just keep the first row for each group created by `group_by()`. In this case, just keep the first row for each name in the data frame.
+
+Now that we know how many unique people are in our data, let's say we want to know how many of them live in each city that our data contains.
+
+First, we will subset our data to include one row only for each person:
+
+```{r}
+ehr_unique <- ehr %>% 
+  group_by(name) %>% 
+  filter(row_number() == 1) %>% 
+  ungroup() %>% 
+  print()
+```
+
+Let's go ahead and get an initial count of how many people live in each city:
+
+```{r message=FALSE}
+ehr %>% 
+  group_by(city) %>% 
+  summarise(n = n())
+```
+
+I'm sure you saw this coming, but we have more data entry discrepancies that are preventing us from completing our analysis. Now that you've gotten your feet wet with character string manipulation and regular expressions, what do we need to do in order to complete our analysis?
+
+Hopefully, your first instinct by now is to coerce all the letters to lowercase. In fact, one of the first things I typically do is coerce all character columns to lowercase. Let's do that now.
+
+```{r}
+ehr <- ehr %>% 
+  mutate(
+    address = tolower(address),
+    city    = tolower(city)
+  )
+```
+
+Now how many people live in each city?
+
+```{r message=FALSE}
+ehr %>% 
+  group_by(city) %>% 
+  summarise(n = n())
+```
+
+We're getting closer to the right answer, but we still need to remove "city of" from some of the values. This sounds like another job for `str_replace()`.
+
+```{r}
+str_replace(
+  string      = "city of fort worth",
+  pattern     = "city of ",
+  replacement = ""
+)
+```
+
+That regular expression looks like it will work. Let's go ahead and use it to remove "city of" from the values in the `address_city` column now.
+
+```{r}
+ehr <- ehr %>% 
+  mutate(city = str_replace(city, "city of ", ""))
+```
+
+One last time, how many people live in each city?
+
+```{r message=FALSE}
+ehr %>% 
+  group_by(city) %>% 
+  summarise(n = n())
+```
+
+## Separate values into component parts
+
+Another common task that I perform on character stings is to separate the strings into multiple parts. For example, sometimes we may want to separate full names into two columns. One for fist name and one for last name. To complete this task, we will once again use regular expressions. We will also learn how to use the `str_extract()` function to pull values out of a character string when the match a pattern we create with a regular expression.
+
+```{r}
+str_extract("zariah hernandez", "^\\w+")
+```
+
+👆**Here's what we did above:**
+
+* We used `stringr`'s `str_extract()` function pull the first name out of the full name "zariah hernandez".
+
+* The first argument to the `str_extract()` function is `string`. The value passed the `string` argument should be the character string, or vector of character stings, we want to manipulate.
+
+* The second argument to the `str_extract()` function is `pattern`. The value passed the `pattern` argument should be regular expression. It should tell the `str_extract()` function what part of the character string we want to pull out of the character string. In this case, it is `^\\w+`.
+
+  - We've already seen that the `\w` token means "Any word character." 
+  
+  - When passing regular expression to R, we must always add an additional backslash in front of any other backslash in the regular expression. In this case, `\\w` instead of `\w`.
+  
+  - The carrot (`^`) is a type of **anchor** in regular expression lingo. It tells the `str_extract()` function to look for the pattern at the start of the character sting only.
+  
+  - The plus sign (`+`) is another quantifier. It means, "match the pattern one or more times."
+
+  -Taken together, `^\\w+` tells the `str_extract()` function to look for one or more consecutive word characters beginning at the start of the character sting and extract them. 
+  
+  - The first word character at the start of the string is "z", then "a", then "riah". Finally, R gets to the space between "zariah" and "hernandez", which isn't a word character, and stops the extraction. The result is "zariah".
+
+We can pull the last name from the character string in a similar way:
+
+```{r}
+str_extract("zariah hernandez", "\\w+$")
+```
+
+👆**Here's what we did above:**
+
+* We used `stringr`'s `str_extract()` function pull the last name out of the full name "zariah hernandez".
+
+* The first argument to the `str_extract()` function is `string`. The value passed the `string` argument should be the character string, or vector of character stings, we want to manipulate.
+
+* The second argument to the `str_extract()` function is `pattern`. The value passed the `pattern` argument should be regular expression. It should tell the `str_extract()` function what part of the character string we want to pull out of the character string. In this case, it is `\\w+$`.
+
+  - We've already seen that the `\w` token means "Any word character." 
+  
+  - When passing regular expression to R, we must always add an additional backslash in front of any other backslash in the regular expression. In this case, `\\w` instead of `\w`.
+  
+  - The carrot (`$`) is another type of anchor. It tells the `str_extract()` function to look for the pattern at the end of the string only.
+  
+  - We've already seen that the plus sign (`+`) is a quantifier that means, "match the pattern one or more times."
+
+  -Taken together, `\\w+$` tells the `str_extract()` function to look for one or more consecutive word characters beginning at the end of the string and extract them. 
+  
+  - The first word character at the end of the string is "z", then "e", then "dnanreh". Finally, R gets to the space between "zariah" and "hernandez", which isn't a word character, and stops the extraction. The result is "hernandez".
+  
+Now, let's use `str_extract()` to separate full name into `name_first` and `name_last`.
+
+```{r}
+ehr <- ehr %>% 
+  mutate(
+    # Separate name into first name and last name
+    name_first = str_extract(name, "^\\w+"),
+    name_last  = str_extract(name, "\\w+$")
+  ) 
+```
+
+```{r}
+ehr %>% 
+  select(name, name_first, name_last)
+```
+
+The regular expressions we used in the examples above weren't super complex. I hope that leaves you feeling like you can use regular expression to complete data cleaning tasks that are actually useful, even if you haven't totally mastered them yet (I haven't totally mastered them either). 
+
+Before moving on, I want to introduce you to a free tool I use when I have to do more complex character string manipulations with regular expressions. It is the [regular expressions 101 online regex tester and debugger](https://regex101.com/#python).
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/05_working_with_character_vectors/regex101.png")
+```
+
+In the screenshot above, I highlight some of the really cool features of the regex tester and debugger.
+
+* First, you don't have to login to use the regex tester, but I always. If you do login, then you can save your regular expressions and use them again later. 
+
+* The top input box on the screen corresponds to what you would type into the `pattern` argument of the `str_replace()` function.
+
+* The middle input box on the screen corresponds to what you would type into the `string` argument of the `str_replace()` function.
+
+* The third input box on the screen corresponds to what you would type into the `replacement` argument of the `str_replace()` function, and the results are presented below.
+
+* In addition, the regex tester and debugger has a quick reference pane that allows you to lookup different elements you might want to use in your regular expression. It also has an explanation pane that tells you what each of the elements in the current regular expression you typed out mean. 
+
+## Dummy variables
+
+Data collection tools in epidemiology often include "check all that apply" questions. In our `ehr` example data, patients were asked about what symptoms they were experiencing at admission. The choices were pain, headache, and nausea. They were allowed to check any combination of the three that they wanted. That results in a `symptoms` column in our data frame that looks like this:
+
+```{r rows.print=15}
+ehr %>% 
+  select(name_first, name_last, symptoms)
+```
+
+Notice that some people didn't report their symptoms (`NA`), some people reported only one symptom, and some people reported multiple symptoms. The way the data is currently formatted is not ideal for analysis. For example, if I asked you to tell me how many people ever came in complaining of headache, how would you do that? Maybe like this:
+
+```{r}
+ehr %>% 
+  group_by(symptoms) %>% 
+  summarise(n = n())
+```
+
+In this case, you could probably count manually and get the right answer. But what if we had many more possible symptoms and many more rows. Counting would quickly become tedious and error prone. The solution is to create dummy variables. We can create dummy variables like this:
+
+```{r}
+ehr <- ehr %>% 
+  mutate(
+    pain     = str_detect(symptoms, "Pain"),
+    headache = str_detect(symptoms, "Headache"),
+    nausea   = str_detect(symptoms, "Nausea")
+  )
+```
+
+
+```{r}
+ehr %>% 
+  select(symptoms, pain, headache, nausea)
+```
+
+👆**Here's what we did above:**
+
+* We used `stringr`'s `str_detect()` function create three new dummy variables in our data frame. 
+
+* The first argument to the `str_detect()` function is `string`. The value passed the `string` argument should be the character string, or vector of character stings, we want to manipulate.
+
+* The second argument to the `str_detect()` function is `pattern`. The value passed the `pattern` argument should be regular expression. The `str_detect()` function returns `TRUE` if it finds the pattern in the string and `FALSE` if it does not find the pattern in the string.
+
+* Instead of having a single `symptoms` column that can take different combinations of the values `pain`, `headache`, and `nausea`, we create a new column for each value -- the so-called dummy variables. 
+
+* Each dummy variable can take the value `TRUE`, `FALSE`, or `NA`. The value for each dummy variable is `TRUE` in rows were that symptom was reported and `FALSE` in rows where the symptom was not reported. For example, the value in the first row of the `pain` column is `TRUE` because the value in the first row of `symptoms` column ("Pain", "Headache", "Nausea") includes "Pain". However, the value in the fourth row of the `pain` column is `FALSE` because the value in the fourth row of `symptoms` column ("Nausea", "Headache") does not include "Pain".
+
+Now, we can much more easily figure out how many people had each symptom.
+
+```{r}
+table(ehr$headache)
+```
+
+That concludes the chapter on working with character stings. Don't beat yourself up if you're feeling confused about regular expressions. They are really tough to wrap your head around at first! But, at least now you know they exist and can be useful for manipulating character strings. If you come across more complicated situations in the future, I suggest starting by checking out the [stringr cheat sheet](https://stringr.tidyverse.org/index.html) and practicing with the [regular expressions 101 online regex tester and debugger](https://regex101.com/#python) before writing any R code.
