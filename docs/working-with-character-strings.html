@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2020-07-05" />
+<meta name="date" content="2020-07-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1052,6 +1052,9 @@ Link to complete reggex
 <div id="dummy-variables" class="section level2" number="28.5">
 <h2><span class="header-section-number">28.5</span> Dummy variables</h2>
 <p>Data collection tools in epidemiology often include “check all that apply” questions. In our <code>ehr</code> example data, patients were asked about what symptoms they were experiencing at admission. The choices were pain, headache, and nausea. They were allowed to check any combination of the three that they wanted. That results in a <code>symptoms</code> column in our data frame that looks like this:</p>
+<p class="note">
+🗒<strong>Side Note:</strong> Any categorical variable can be transformed into dummy variables. Not just the variables that result from “check all that apply” survey questions. However, the “check all that apply” survey questions often require extra data cleaning steps relative to categorical variables that can only take a single value in each row.
+</p>
 <div class="sourceCode" id="cb682"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb682-1"><a href="working-with-character-strings.html#cb682-1"></a>ehr <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb682-2"><a href="working-with-character-strings.html#cb682-2"></a><span class="st">  </span><span class="kw">select</span>(name_first, name_last, symptoms)</span></code></pre></div>
 <pre><code>## # A tibble: 15 x 3
@@ -1076,7 +1079,6 @@ Link to complete reggex
 <div class="sourceCode" id="cb684"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb684-1"><a href="working-with-character-strings.html#cb684-1"></a>ehr <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb684-2"><a href="working-with-character-strings.html#cb684-2"></a><span class="st">  </span><span class="kw">group_by</span>(symptoms) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb684-3"><a href="working-with-character-strings.html#cb684-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</span></code></pre></div>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 7 x 2
 ##   symptoms                                 n
 ##   &lt;chr&gt;                                &lt;int&gt;
@@ -1088,14 +1090,14 @@ Link to complete reggex
 ## 6 &quot;Pain&quot;                                   4
 ## 7  &lt;NA&gt;                                    3</code></pre>
 <p>In this case, you could probably count manually and get the right answer. But what if we had many more possible symptoms and many more rows. Counting would quickly become tedious and error prone. The solution is to create dummy variables. We can create dummy variables like this:</p>
-<div class="sourceCode" id="cb687"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb687-1"><a href="working-with-character-strings.html#cb687-1"></a>ehr &lt;-<span class="st"> </span>ehr <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb687-2"><a href="working-with-character-strings.html#cb687-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb687-3"><a href="working-with-character-strings.html#cb687-3"></a>    <span class="dt">pain     =</span> <span class="kw">str_detect</span>(symptoms, <span class="st">&quot;Pain&quot;</span>),</span>
-<span id="cb687-4"><a href="working-with-character-strings.html#cb687-4"></a>    <span class="dt">headache =</span> <span class="kw">str_detect</span>(symptoms, <span class="st">&quot;Headache&quot;</span>),</span>
-<span id="cb687-5"><a href="working-with-character-strings.html#cb687-5"></a>    <span class="dt">nausea   =</span> <span class="kw">str_detect</span>(symptoms, <span class="st">&quot;Nausea&quot;</span>)</span>
-<span id="cb687-6"><a href="working-with-character-strings.html#cb687-6"></a>  )</span></code></pre></div>
-<div class="sourceCode" id="cb688"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb688-1"><a href="working-with-character-strings.html#cb688-1"></a>ehr <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb688-2"><a href="working-with-character-strings.html#cb688-2"></a><span class="st">  </span><span class="kw">select</span>(symptoms, pain, headache, nausea)</span></code></pre></div>
+<div class="sourceCode" id="cb686"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb686-1"><a href="working-with-character-strings.html#cb686-1"></a>ehr &lt;-<span class="st"> </span>ehr <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb686-2"><a href="working-with-character-strings.html#cb686-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb686-3"><a href="working-with-character-strings.html#cb686-3"></a>    <span class="dt">pain     =</span> <span class="kw">str_detect</span>(symptoms, <span class="st">&quot;Pain&quot;</span>),</span>
+<span id="cb686-4"><a href="working-with-character-strings.html#cb686-4"></a>    <span class="dt">headache =</span> <span class="kw">str_detect</span>(symptoms, <span class="st">&quot;Headache&quot;</span>),</span>
+<span id="cb686-5"><a href="working-with-character-strings.html#cb686-5"></a>    <span class="dt">nausea   =</span> <span class="kw">str_detect</span>(symptoms, <span class="st">&quot;Nausea&quot;</span>)</span>
+<span id="cb686-6"><a href="working-with-character-strings.html#cb686-6"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb687"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb687-1"><a href="working-with-character-strings.html#cb687-1"></a>ehr <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb687-2"><a href="working-with-character-strings.html#cb687-2"></a><span class="st">  </span><span class="kw">select</span>(symptoms, pain, headache, nausea)</span></code></pre></div>
 <pre><code>## # A tibble: 15 x 4
 ##    symptoms                             pain  headache nausea
 ##    &lt;chr&gt;                                &lt;lgl&gt; &lt;lgl&gt;    &lt;lgl&gt; 
@@ -1123,10 +1125,33 @@ Link to complete reggex
 <li><p>Each dummy variable can take the value <code>TRUE</code>, <code>FALSE</code>, or <code>NA</code>. The value for each dummy variable is <code>TRUE</code> in rows were that symptom was reported and <code>FALSE</code> in rows where the symptom was not reported. For example, the value in the first row of the <code>pain</code> column is <code>TRUE</code> because the value in the first row of <code>symptoms</code> column (“Pain”, “Headache”, “Nausea”) includes “Pain”. However, the value in the fourth row of the <code>pain</code> column is <code>FALSE</code> because the value in the fourth row of <code>symptoms</code> column (“Nausea”, “Headache”) does not include “Pain”.</p></li>
 </ul>
 <p>Now, we can much more easily figure out how many people had each symptom.</p>
-<div class="sourceCode" id="cb690"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb690-1"><a href="working-with-character-strings.html#cb690-1"></a><span class="kw">table</span>(ehr<span class="op">$</span>headache)</span></code></pre></div>
+<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb689-1"><a href="working-with-character-strings.html#cb689-1"></a><span class="kw">table</span>(ehr<span class="op">$</span>headache)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
 ##     4     8</code></pre>
+<p>I should acknowledge that dummy variables typically take the values 0 and 1 instead of FALSE and TRUE. We can easily coerce our dummy variable values to 0/1 using the <code>as.numeric()</code> function. For example:</p>
+<div class="sourceCode" id="cb691"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb691-1"><a href="working-with-character-strings.html#cb691-1"></a>ehr <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb691-2"><a href="working-with-character-strings.html#cb691-2"></a><span class="st">  </span><span class="kw">select</span>(pain) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb691-3"><a href="working-with-character-strings.html#cb691-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pain_01 =</span> <span class="kw">as.numeric</span>(pain))</span></code></pre></div>
+<pre><code>## # A tibble: 15 x 2
+##    pain  pain_01
+##    &lt;lgl&gt;   &lt;dbl&gt;
+##  1 TRUE        1
+##  2 TRUE        1
+##  3 TRUE        1
+##  4 FALSE       0
+##  5 TRUE        1
+##  6 FALSE       0
+##  7 TRUE        1
+##  8 NA         NA
+##  9 TRUE        1
+## 10 NA         NA
+## 11 FALSE       0
+## 12 TRUE        1
+## 13 FALSE       0
+## 14 TRUE        1
+## 15 NA         NA</code></pre>
+<p>However, this step is sort of unnecessary in most cases because R treats <code>TRUE</code> and <code>FALSE</code> as <code>1</code> and <code>0</code> respectively when logical (i.e., TRUE/FALSE) vectors are passed to functions or operators that performs a mathematical operation.</p>
 <p>That concludes the chapter on working with character stings. Don’t beat yourself up if you’re feeling confused about regular expressions. They are really tough to wrap your head around at first! But, at least now you know they exist and can be useful for manipulating character strings. If you come across more complicated situations in the future, I suggest starting by checking out the <a href="https://stringr.tidyverse.org/index.html">stringr cheat sheet</a> and practicing with the <a href="https://regex101.com/#python">regular expressions 101 online regex tester and debugger</a> before writing any R code.</p>
 
 </div>
