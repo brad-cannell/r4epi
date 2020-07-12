@@ -1,0 +1,615 @@
+# Conditional Operations
+
+<!--
+- if_else()
+- case_when()
+- Different than ifelse()
+- Different than if {} else {} - not vectorized
+- Missing data - see script.
+-->
+
+There will often be times that we want to modify the values in our data in some way based on the values in one or more columns in our data. For example, maybe we want to create a column that contains the region of the country someone is from, based on another column that contains the state they are from. 
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/06_conditional_processing/values.png")
+```
+
+We don't really have a way to do this with the tools we currently have in our toolbox. We can manually type out all the region values, but that isn't very scalable. Wouldn't it be nice if we could just give R some rules, or conditions (e.g., TX is in the South, CA is in the West), and have R fill in the region values for us? Well, that's exactly what we are going to learn how to do in this chapter.
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/06_conditional_processing/conditions.png")
+```
+
+These kinds of operations are called conditional operations because we type in a set of conditions, R evaluates those conditions, and then executes a different process or procedure based on whether or not the condition is met.
+
+As a silly example, let’s say that I want my daughter to wear a raincoat if it’s raining outside, but I don't want her to wear a raincoat if it is not raining outside. So, I give her a conditional request: “If it’s raining outside, then make sure to wear your raincoat, please. Otherwise, please don't wear your raincoat.” 
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/06_conditional_processing/rain.png")
+```
+
+In this hypothetical scenario, she then says, “yes, dad,” and goes to the window to see if it’s raining. She either puts on, or does not put on, her raincoat depending on whether or not the condition (raining) is met. 
+
+Just like I have to ask my daughter to put on a raincoat using conditional logic, I have to ask sometimes ask R to execute commands using conditional logic, and I have to put them in a form that R understands. One such form is `dplyr`'s `if_else()` function. Let's go ahead and take a look at an example now:
+
+```{r message=FALSE}
+library(dplyr)
+```
+
+```{r}
+rainy_days <- tibble(
+  day     = 1:5,
+  weather = c("rain", "rain", "no rain", "rain", "no rain")
+) %>% 
+  print()
+```
+
+👆**Here's what we did above:**
+
+* We simulated some data that contains information about whether or not it rained on each of 5 days. 
+
+Now, let's say that we want to create a new column in our data frame called `raincoat`. We want the value of `raincoat` to be `wear` rainy days and `no wear` on days when it isn't raining. Here's how we can do that with the if_else() function:
+
+```{r}
+rainy_days %>% 
+  mutate(
+    raincoat = if_else(
+      condition = weather == "rain", 
+      true      = "wear", 
+      false     = "no wear"
+    )
+  )
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `if_else()` function to assign the values `wear` and `no wear` to the column `raincoat` conditional on the values in each row of the `weather` column.
+
+* You can type `?if_else` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* The first argument to the `if_else()` function is the `condition` argument. The condition should typically be composed of a series of operands and operators (we'll talk more about these soon) that tell R the condition(s) that we want it to test. For example, is the value of `weather` equal to `rain`?
+
+* The second argument to the `if_else()` function is the `true` argument. The value passed to the `true` argument tells R what value the `if_else()` function should return when the condition is `TRUE`. In this case, we told R to return the character value `wear`.
+
+* The third argument to the `if_else()` function is the `false` argument. The value passed to the `false` argument tells R what value the `if_else()` function should return when the condition is `FALSE`. In this case, we told R to return the character value `no wear`.
+
+* Finally, we assigned all the values returned by the `if_else()` function to a new column that we named `raincoat`.
+
+<p class="note"> 🗒**Side Note:** For the rest of the book, I will pass values to the `if_else()` function by position instead of name. In other words, I won't write `condition =`, `true =`, or `false =` anymore. However, the first value passed to the `if_else()` function will always be passed to the `condition` argument, the second value will always be passed to the `true` argument, and the third value will always be passed to the `false` argument.</p>
+
+Before moving on, let's dive into this a little further. R must always be able to reduce whatever value we pass to the `condition` argument of `if_else()` to TRUE or FALSE. That's how R views any expression we pass to the `condition` argument. We can literally even pass the value `TRUE` or the value `FALSE` (not that doing so has much practical application):
+
+```{r}
+if_else(TRUE, "wear", "no wear")
+```
+
+Because the value passed to the `condition` argument is `TRUE` (in this case, literally), the `if_else()` function returns the value `wear`. What happens if we use this code to assign values to the `raincoat` column?
+
+```{r}
+rainy_days %>% 
+  mutate(
+    raincoat = if_else(TRUE, "wear", "no wear")
+  )
+```
+
+Again, the `if_else()` function returns the value `wear` because the value passed to the `condition` argument is `TRUE`. Then, R uses its recycling rules to copy the value `wear` to every row of the `raincoat` column. What would do you think will happen if we pass the value `FALSE` to the `condition` argument instead?
+
+```{r}
+rainy_days %>% 
+  mutate(
+    raincoat = if_else(FALSE, "wear", "no wear")
+  )
+```
+
+Hopefully, that was the result you expected. The `if_else()` function returns the value `no wear` because the value passed to the `condition` argument is `FALSE`. Then, R uses its recycling rules to copy the value `no wear` to every row of the `raincoat` column.
+
+We can take this  a step further and actually pass a vector of logical (`TRUE`/`FALSE`) values to the `condition` argument. For example:
+
+```{r}
+rainy_days %>% 
+  mutate(
+    raincoat = if_else(c(TRUE, TRUE, FALSE, TRUE, FALSE), "wear", "no wear")
+  )
+```
+
+In reality, that's sort of what we did in the very first `if_else()` example above. But, instead of typing the values manually, we used an expression that returned a vector of logical values. Specifically, we used the equality operator (`==`) to check whether or not each value in the `weather` column was equal to the value "rain" or not. 
+
+```{r}
+rainy_days$weather == "rain"
+```
+
+That pretty much covers the basics of how the `if_else()` function works. Next, let's take a look at some of the different combinations of operands and operators that we can combine and pass to the `condition` argument of the `if_else()` function.
+
+## Operands and operators
+
+Let's start by taking a look at some commonly used operands:
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/06_conditional_processing/operands.png")
+```
+
+As you can see in the table above, operands are the _values_ we want to check, or test. Operands can be variables, or they can be individual values (also called constants). The example above (`weather == "rain"`) contained two operands; the variable `weather` and the character constant `"rain"`. The operator we used in this case was the equality operator (`==`). Next, let's take a look at some other commonly used operators.
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/06_conditional_processing/comparison-numeric.png")
+```
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/06_conditional_processing/comparison-character.png")
+```
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/06_conditional_processing/arithmetic.png")
+```
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/06_conditional_processing/logical.png")
+```
+
+I think that most of the operators above will be familiar, or a least intuitive, for most of you. However, I do want to provide a little bit of commentary for a few of them.
+
+* We haven't seen the `%in%` operator before, but I will wait to discuss it below. 
+
+* Some of you may have been a little surprised by the results we get from using less than (`<`) and greater than (`>`) with characters. It's basically just testing alphabetical order. A comes before B in the alphabet, so A is less than B. Additionally, when two letters are the same, the upper-case letter is considered greater than the lowercase letter. However, alphabetical order takes precedence over case. So, b is still greater than A even though b is lowercase and A is upper case.
+
+* Many of you may not have seen the modulus operator (`%%`) before. The modulus operator returns the remainder that is left after dividing two numbers. For example, 4 divided by 2 is 2 with a remainder of 0 because 2 goes into 4 _exactly_ two times. Said another way, 2 * 2 = 4 and 4 - 4 = 0. So, `4 %% 2 = 0`. However, 3 divided by 2 is 1 with a remainder of 1 because 2 goes into 3 one time with 1 left over. Said another way, 2 * 1 = 2 and 3 - 2 = 1. So, `3 %% 2 = 1`.  How is this useful? Well, the only times I can remember using the modulus operator have been when I needed to separate even and odd rows of a data frame. For example, let's say that we have a data frame where for each person has two rows. The first row always corresponds to treatment A and the second row always corresponds to treatment B. However, for some reason (maybe blinding?), there was no `treatment` column in the data when we received it. We could use the modulus operator to add a `treatment` column like this:
+
+```{r}
+df <- tibble(
+  id        = c(1, 1, 2, 2),
+  outcome   = c(0, 1, 1, 1)
+) %>% 
+  print()
+```
+
+```{r}
+df %>% 
+  mutate(
+    # Odd rows are treatment A
+    # Even rows are treatment B
+    treatment = if_else(row_number() %% 2 == 1, "A", "B")
+  )
+```
+
+* I also want to remind you that we should always use the `is.na()` function to check for missing values. Not the equality operator. Using the equality operator when there are missing values can give results that may be unexpected. For example:
+
+```{r}
+df <- tibble(
+  name1 = c("Jon", "John", NA),
+  name2 = c("Jon", "Jon", "Jon")
+)
+```
+
+```{r}
+df %>% 
+  mutate(
+    name_match = name1 == name2
+  )
+```
+
+Many of us would expect the third value of the `name_match` column to be `FALSE` instead of `NA`. There are a couple of different ways we can get `FALSE` in the third row instead of `NA`. One way, although not necessarily the best way, is to use the `if_else()` function:
+
+```{r}
+df %>% 
+  mutate(
+    name_match = name1 == name2,
+    name_match = if_else(is.na(name_match), FALSE, name_match)
+  )
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `if_else()` function to assign the value `FALSE` to the column `name_match` where the original value of `name_match` was `NA`. 
+
+* The value we passed to the `condition` argument was `NA`. In doing so, we asked R to check each value of the `name_match` and see if it was `NA`. 
+
+* If it was `NA`, then we want to return the value that we passed to the `true` argument. Somewhat confusingly, the value we passed to the `true` argument was `FALSE`.  
+
+* If the value in `name_match` was NOT `NA`, then we want to return the value that we passed to the `false` argument. In this case, we asked R to return the value that already exists in the `name_match` column.
+
+* In more informal language, we asked R to replace missing values in the `name_match` column with `FALSE` and leave the rest of the values unchanged. 
+
+## Testing multiple conditions simultaneously
+
+So far, we have only ever passed one condition to the `condition` argument of the `if_else()` function. However, we can pass as many conditions as we want. Having said that, more than 2 or maybe 3 gets very convoluted. Let's go ahead and take a look at a couple of examples now. We'll start by simulating some blood pressure data:
+
+```{r}
+blood_pressure <- tibble(
+  id     = 1:10,
+  sysbp  = c(152, 120, 119, 123, 135, 83, 191, 147, 209, 166),
+  diasbp = c(78, 60, 88, 76, 85, 54, 116, 95, 100, 106)
+) %>% 
+  print()
+```
+
+A person may be categorized as having normal blood pressure when their systolic blood pressure is less than 120 mmHG _AND_ their diastolic blood pressure is less than 80 mmHG. We can use this information and the `if_else()` function to create a new column in our data frame that contains information about whether each person in our simulated data frame has normal blood pressure or not:
+
+```{r}
+blood_pressure %>% 
+  mutate(bp = if_else(sysbp < 120 & diasbp < 80, "Normal", "Not Normal"))
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `if_else()` function to create a new column in our data frame (`bp`) that contains information about whether each person has normal blood pressure or not. 
+
+* We actually passed two conditions to the `condition` argument. The first condition was that the value of `sysbp` had to be less than `120`. The second condition was that  the value of `diasbp` had to be less than `80`. 
+
+* Because we separated these conditions with the AND operator (`&`), both conditions had to be true in order for the `if_else()` function to return the value we passed to the `true` argument -- `Normal`. Otherwise, the `if_else()` function returned the value we passed to the `false` argument -- `Not Normal`.
+
+* Participant 2 had a systolic blood pressure of 120 and a diastolic blood pressure of 60. Although 60 is less than 80 (condition number 2), 120 is not less than 120 (condition number 2). So, the value returned by the `if_else()` function was `Not Normal`.
+
+* Participant 3 had a systolic blood pressure of 119 and a diastolic blood pressure of 88 Although 119 is less than 120 (condition number 1), 88 is not less than 80 (condition number 2). So, the value returned by the `if_else()` function was `Not Normal`.
+
+* Participant 6 had a systolic blood pressure of 83 and a diastolic blood pressure of 54. In this case, conditions 1 _and_ 2 were met. So, the value returned by the `if_else()` function was `Normal`.
+
+This is useful! However, in some cases, we need to be able to test conditions sequentially, rather than simultaneously, and return a different value for each condition. 
+
+## Testing a sequence of conditions
+
+Let's say that we wanted to create a new column in our `blood_pressure` data frame that contains each person's blood pressure category according to the following scale:
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/06_conditional_processing/logical.png")
+```
+
+This is the perfect opportunity to use `dplyr`'s `case_when()` function. Take a look:
+
+```{r}
+blood_pressure %>% 
+  mutate(
+    bp = case_when(
+      sysbp < 120 & diasbp < 80                               ~ "Normal",
+      sysbp >= 120 & sysbp < 130 & diasbp < 80                ~ "Elevated",
+      sysbp >= 130 & sysbp < 140 | diasbp >= 80 & diasbp < 90 ~ "Hypertension Stage 1",
+      sysbp >= 140 | diasbp >= 90                             ~ "Hypertension Stage 2"
+    )
+  )
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `case_when()` function to create a new column in our data frame (`bp`) that contains information about each person's blood pressure category. 
+
+* You can type `?case_when` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* The `case_when()` function only has a single argument -- the `...` argument. You should pass one or more two-sided formulas separated by commas to this argument. What in the heck does that mean?
+
+  - When the help documentation refers to a two-sided formula, it means this: `LHS ~ RHS`. Here, `LHS` means left hand side and `RHS` means right hand side. 
+  
+  - The `LHS` should be the condition or conditions that we want to test. You can think of this as being equivalent to the `condition` argument of the `if_else()` function. 
+  
+  - The `RHS` should be the value you want the `case_when()` function to return when the condition on the left-hand side is met. You can think of this as being equivalent to the `true` argument of the `if_else()` function. 
+  
+  - The tilde symbol (`~`) is used to separate the conditions on the left-hand side and the return values on the right hand side. 
+  
+* The `case_when()` function doesn't have a direct equivalent to the `if_else()` functions `false` argument. Instead, it evaluates each two-sided formula sequentially, until if finds a condition that is met. If it never finds a condition that is met, then it returns an `NA`. I will expand on this more below.
+
+* Finally, we assigned all the values returned by the `case_when()` function to a new column that we named `bp`.
+  
+  <p class="note"> 🗒**Side Note:** Traditionally, the tilde symbol is used to represent relationships in a statistical model. Here, it doesn't have that meaning. I assume this symbol was picked somewhat out of necessity. Remember, any of the comparison operators, arithmetic operators, and logical operators may be used to define a condition in the left-hand side, and commas are used to separated multiple two-sided formulas. Therefore, there aren't very many symbols left to choose from. Therefore, tilde it is. That's my guess anyway.</p>
+
+The `case_when()` function was really useful for creating the `bp` column above, but there was also a lot going on there. Let's take a look at a slightly less complex example and clarify a few things along the way. 
+
+## Recoding variables
+
+In epidemiology, recoding variables is really common. For example, we may collect information about people's ages as a continuous variable, but decide to that it makes more sense to **collapse** age into age categories for our analysis. Let's say that our analysis plan calls for assigning each of our participants to one of the following age categories: 
+
+1 = `child` when the participant is less than 12 years old   
+2 = `adolescent` when the participant is between the ages of 12 and less than 18   
+3 = `adult` when the participant is 18 years or older   
+
+<p class="note"> 🗒**Side Note:** You may not have ever heard of **collapsing** variables before. It simply means combing two or more values of your variable. We can collapse continuous variables into categories, as we discussed in the example above, or we can collapse categories into broader categories (as you will see with the race category example below). After we collapse a variable, there are always fewer possible values than before we collapsed it.</p>
+
+I'm going to show you how to do this below using the `case_when()` function. However, I'm going to do it piecemeal so that I can highlight a few important concepts First, let's simulate some data that includes 10 participant's ages.
+
+```{r}
+# Simulate some age data
+set.seed(123)
+ages <- tibble(
+  id  = 1:10,
+  age = c(sample(1:30, 9, TRUE), NA)
+) %>% 
+  print()
+```
+
+```{r}
+ages %>% 
+  mutate(
+    age_3cat = case_when(
+      age < 12 ~ 1
+    )
+  )
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `case_when()` function to create a new column in our data frame (`age_3cat`) that will eventually categorize each participant into one of 3 categories depending on their continuous age value.
+
+* Notice that we only passed one two-sided formula to the `case_when()` function -- `age < 12 ~ 1`. 
+
+  - The `RHS` of the two-sided formula is `age < 12`. This tells the `case_when()` function to check whether or not every value in the `age` column is less than `12` or not. 
+  
+  - The `LHS` of the two-sided formula is `1`. This tells the `case_when()` function what value to return each time it finds a value less than `12` in the `age` column.
+  
+  - The tilde symbol is used to separate the `RHS` and the `LHS` of the two-sided formula.
+  
+* Here is how the `case_when()` function basically works. It will test the condition on the left-hand side for each value of the variable, or variables, passed to the left-hand side (i.e., `age`). If the condition is met (i.e., `< 12`), then it will return the value on the right-hand side of the tilde (i.e., `1`). If the condition is not met, it will test the condition in the next two-sided formula. When there are no more two-sided formulas, then it will return an `NA`.
+  
+  - Above, the first value in `age` is `15`. `15` is _NOT_ less than `12`. So, `case_when()` tries to move on to the next two-sided formula. However, there is no next two-sided formula. So, the first value returned by the `case_when()` function is `NA`. The same is true for the next two values of age. 
+
+  -  The fourth value in `age` is `3`. `3` is less than `12`. So, the fourth value returned by the `case_when()` function is `1`. And so on...
+  
+  - Finally, after the `case_when()` function has tested all conditions, the returned values are assigned to a new column that we named `age_3cat`.
+  
+* Notice that I named the new variable `age_3cat`. I'm not sure where I picked up this naming convention, but I use it a lot when I collapse variables. The basic format is name of variable I'm collapsing, an underscore, and the number of categories in the collapsed variable. I like using this convention for two reasons. First, it's meaningful and informative. Second, I don't have to spend any time trying to think of a different meaningful or informative name for my new variable. It's totally fine if you don't adopt this naming convention, but I would recommend that try to use names that are more informative than `age2` or something like that.
+
+* Notice that I used a number (`1`) on the right-hand side of the two-sided formula above. We could have used a character value instead (i.e., `child`); however, for reasons I discussed in the section on factor variables, I prefer to recode my variables using numeric categories and then later creating a factor version of the variable using the `_f` naming convention.
+
+Now, let's add a second two-sided formula to our `case_when()` function.
+
+```{r}
+ages %>% 
+  mutate(
+    age_3cat = case_when(
+      age < 12             ~ 1,
+      age >= 12 & age < 18 ~ 2
+    )
+  )
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `case_when()` function to create a new column in our data frame (`age_3cat`) that will eventually categorize each participant into one of 3 categories depending on their continuous age value.
+
+* Notice that this time we passed two two-sided formulas to the `case_when()` function -- `age < 12 ~ 1` and `age >= 12 & age < 18 ~ 2`. 
+
+  - Notice that we separated the two two-sided formulas with a comma (i.e., immediately after the `1` in `age < 12 ~ 1`.
+  
+  - Notice that the second two-sided formula is actually testing two conditions. First, it tests whether or not the value of age is greater than or equal to 12. Then, it tests whether or not the value of age is less than 18.
+  
+  - Because we separated the two conditions with the and operator (`&`), both must be TRUE for `case_when()` to return the value `2`. Otherwise, it will move on to the next two-sided formula.
+  
+  - Above, the first value in `age` is `15`. `15` is _NOT_ less than `12`. So, `case_when()` moves on to evaluate the next two-sided formula. `15` is greater than or equal to `12` _AND_ `15` is less than `18`. Because both conditions of the second two-sided formula were met, `case-when()` returns the value on the right hands side of the second two-sided formula -- `2`. So, the first value returned by the `case_when()` function is `2`. 
+  
+  - The second value in `age` is `19`. `19` is _NOT_ less than `12`. So, `case_when()` moves on to evaluate the next two-sided formula. `19` is greater than or equal to `12`, but `19` is _NOT_ less than `18`. So, `case_when()` tries to move on to the next two-sided formula. However, there is no next two-sided formula. So, the first value returned by the `case_when()` function is `NA`.
+
+  -  The fourth value in `age` is `3`. `3` is less than `12`. So, the fourth value returned by the `case_when()` function is `1`. **At this point, `case_when()` does not continue checking two-sided formulas. It moves on to the next value of `age`.**
+  
+  - Finally, after the `case_when()` function has tested all conditions, the returned values are assigned to a new column that we named `age_3cat`.
+  
+* In everyday speech, we may express the second two-sided condition above as "categorize all people between the ages of 12 and 18 as an adolescent." I want to make two points about that before moving on.
+
+  - First, while that statement may be totally reasonable in everyday speech, it is quite specific enough for what we are trying to do here. Between 12 and 18 is a little bit ambiguous. What category is a person put in if they are exactly 12? What category are they put in if they are exactly 18? So, clearly we need to be more precise. I'm not aware of any hard and fast rules, but I tend to _include_ the lower end of the range in the current category and _exclude_ the value on the upper end of the range in the current category. So, in the example above, I would say, "categorize all people between the ages of 12 and less than 18 as an adolescent."
+  
+  - Second, when we are testing for a "between" condition like this one, I often see students write code like this: `age >= 12 & < 18`. R won't understand that. You have to use the column name in each condition to be tested, even doesn't change. Otherwise, you get an error that looks something like this:
+  
+```{r error=TRUE}
+ages %>% 
+  mutate(
+    age_3cat = case_when(
+      age < 12             ~ 1,
+      age >= 12 & < 18     ~ 2
+    )
+  )
+```
+
+Next, let's wrap up this age category variable:
+
+```{r}
+ages %>% 
+  mutate(
+    age_3cat = case_when(
+      age < 12             ~ 1,
+      age >= 12 & age < 18 ~ 2,
+      age >= 18            ~ 3
+    )
+  )
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `case_when()` function to create a new column in our data frame (`age_3cat`) that categorized each participant into one of 3 categories depending on their continuous age value.
+
+## case_when() is lazy
+
+What do I mean when I say that `case_when()` is lazy? Well, it may not have registered when I mentioned it above, but `case_when()` stops evaluating two-sided functions for a value as soon as it finds one that is `TRUE`. For example:
+
+```{r}
+df <- tibble(
+  number = c(1, 2, 3)
+) %>% 
+  print()
+```
+
+```{r}
+df %>% 
+  mutate(
+    size = case_when(
+      number < 2 ~ "Small",
+      number < 3 ~ "Medium",
+      number < 4 ~ "Large"
+    )
+  )
+```
+
+Why wasn't the value for the `size` column `Large` in every row of the data frame? After all, `1`, `2`, and `3` are all less than `4`, and `number < 4` was the final possible two-sided formula that could have been evaluated for each value of `number`. The answer is that `case_when()` is lazy. The first value in `number` is `1`. `1` is less than `2`. So, the condition in the first two-sided formula evaluates to `TRUE`. So, `case_when()` immediately returns the value on the right-hand side (`Small`) and **does not continue checking two-sided formulas. It moves on to the next value of `number`.**
+
+The fact that `case_when()` is lazy isn't a bad thing. It's just something to be aware of. In fact, we can often use it to our advantage. For example, we can use `case_when()`'s laziness to rewrite the `age_3cat` code from above a little more succinctly:
+
+```{r}
+ages %>% 
+  mutate(
+    age_3cat = case_when(
+      age < 12  ~ 1,
+      age < 18  ~ 2,
+      age >= 18 ~ 3
+    )
+  )
+```
+
+👆**Here's what we did above:**
+
+* Because `case_when()` is lazy, we were able to omit the `age >= 12` condition from the second two-sided formula. It's unnecessary because the value `1` is immediately returned for every person with an `age` value less than `12`. By definition, any value being evaluated in the second two-sided function (`age < 18`) has an age value greater than or equal to 12.
+
+## Recode missing
+
+We've already talked about how R uses the special `NA` value to represent missing data. We've also learned how to convert other representation of missing data (e.g., ".") to `NA` when we are importing data. However, It is extremely common for data sets that we use in epidemiology to include "don't know" and "refused" answer options. By convention, those options are often coded as `7` and `9`. For questions that include 7 or more response options (e.g., month), then `77` and `99` are commonly used to represent "don't know" and "refused". For questions that include 77 or more response options (e.g., age), then `777` and `999` are commonly used to represent "don't know" and "refused". 
+  
+While differentiating between true missing (i.e., the respondent was never asked the question or just left the response blank on a written questionnaire), don't know (i.e., the respondent doesn't know the answer), and refused to answer (i.e., the respondent knows the answer, but doesn't want to reveille it -- possibly out of shame, fear, or embarrassment) can be of some interest for survey design purposes, but they typically all amount to missing data by the time you get around to the substantive analyses. In other words, knowing that a person refused to give their age doesn't help me figure out how old they are any more than if they had never been asked at all. Therefore, we commonly use conditional operations in epidemiology to recode these kinds of values to missing. 
+
+We'll walk through an example below, but first we will simulate some additional data. Specifically, we'll add a `race` column and a `hispanic` column to our `ages` data frame, and name the new data frame `demographics`.
+
+Let's assume that we have a survey that asks people what race they most identify with. For the moment, let's assume that they can only select one race. Further, let's say that the options they are given to select from are:
+
+1 = White   
+2 = Black or African American   
+3 = American Indian or Alaskan Native   
+4 = Asian    
+5 = Pacific Islander   
+7 = Don't know    
+9 = Refused    
+
+Let's say that we also ask if they self-identify their ethnicity as Hispanic or not. The options they are given to select from are:
+
+0 = No, not Hispanic   
+1 = Yes, Hispanic   
+7 = Don't know    
+9 = Refused 
+
+```{r}
+demographics <- ages %>% 
+  mutate(
+    race     = c(1, 2, 1, 4, 7, 1, 2, 9, 1, 3),
+    hispanic = c(7, 0, 1, 0, 1, 0, 1, 9, 0, 1)
+  ) %>% 
+  print()
+```
+
+A very common way that we may want to transform data like this is to collapse race and ethnicity into as single combined race and ethnicity column. Further, notice that American Indian or Alaskan Native race and Asian race are only observed once each, and Pacific Islander race is not observed at all. When values are observed very few times in the data like this, it is common to collapse them into an "other" category. Therefore, our new combined race and ethnicity column will have the following possible values:
+
+1 = White, non-Hispanic   
+2 = Black, non-Hispanic   
+3 = Hispanic, any race   
+4 = Other race, non-Hispanic   
+
+There are multiple ways that we can create this new column. We could start by using `if_else()` to recode `7` and `9` to missing:
+
+```{r error=TRUE}
+demographics %>% 
+  mutate(
+    # Recode 7 and 9 to missing
+    race_recode = if_else(race == 7 | race == 9, NA, race),
+    hispanic_recode = if_else(hispanic == 7 | hispanic == 9, NA, hispanic)
+  )
+```
+
+I intentionally made this error because it's a really easy one to make, and you will probably make it too. If you look back to the [Let's get programming chapter](#missing-data), you will see that I briefly discussed the `NA` value being type logical by default. I also talked about "type coercion" and how most of the time you don’t have to worry about it. I said that R generally coerces `NA` to `NA_character` or `NA_double` or whatever for you under the hood, automatically. I also said that sometimes it doesn’t, especially when using the if_else() and case_when() functions, and it will cause R to give you an error. Finally, I said I would discuss it later. It's later now. Long story short, the developers of the `if_else()` function do this on purpose to make the function's returned result more predictable and slightly faster. 
+
+For you, it just means that you have to remember to use `NA_character`, `NA_integer`, or `NA_real` as appropriate. For example, there error message above says, "`false` must be a logical vector, not a double vector." This means that the value we passed to the `false` argument was type double, but `if_else()` was expecting it to be type logical. Why? Well, `if_else()` was expecting it to be type logical because the value we passed to the `true` argument (`NA`) is type logical, and vectors can only ever have one type. To fix this error, we simply need to change the value we are passing to the `true` argument from logical (`NA`) to double (`NA_real`) so that it matches the values we are passing to the `false` argument.
+
+```{r error=TRUE}
+demographics %>% 
+  mutate(
+    # Recode 7 and 9 to missing
+    race_recode     = if_else(race == 7 | race == 9, NA_real_, race),
+    hispanic_recode = if_else(hispanic == 7 | hispanic == 9, NA_real_, hispanic),
+    race_eth_4cat   = case_when(
+      # White, non-Hispanic
+      race_recode == 1 & hispanic_recode == 0 ~ 1,
+      # Black, non-Hispanic
+      race_recode == 2 & hispanic_recode == 0 ~ 2,
+      # American Indian or Alaskan Native to Other race, non-Hispanic
+      race_recode == 3 & hispanic_recode == 0 ~ 4,
+      # Asian to Other race, non-Hispanic
+      race_recode == 4 & hispanic_recode == 0 ~ 4,
+      # Pacific Islander to Other race, non-Hispanic
+      race_recode == 4 & hispanic_recode == 0 ~ 4,
+      # Hispanic, any race
+      hispanic_recode == 1                    ~ 3
+    )
+  )
+```
+
+The code above works, and it is very explicit. However, we can definitely make it more succinct and easier to read.
+
+```{r}
+demographics %>% 
+  mutate(
+    race_eth_4cat = case_when(
+      is.na(hispanic) | hispanic %in% c(7, 9) ~ NA_real_, # Unknown ethnicity
+      hispanic == 1                           ~ 3,        # Hispanic, any race
+      is.na(race) | race %in% c(7, 9)         ~ NA_real_, # non-Hispanic, unknown race
+      race == 1                               ~ 1,        # White, non-Hispanic
+      race == 2                               ~ 2,        # Black, non-Hispanic
+      TRUE                                    ~ 4         # Other race, non-Hispanic
+    )
+  )
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `case_when()` function to create a new column in our data frame (`race_eth_4cat`) that categorized each participant into one of 4 race and ethnicity categories depending on their values in the `race` column and the `hispanic` column.
+
+* Compared to the first method we used, the second method doesn't explicitly create new `race` and `hispanic` columns with the `7`'s and `9`'s recoded to `NA`. In the second method, those columns aren't needed.
+
+* The very first two-sided formula tells `case_when()` to set the value of `race_eth_4cat` to `NA_real_` when the value of `hispanic` is missing. 
+
+  - We put this two-sided formula first because if we don't know a person's Hispanic ethnicity, then we can't put them into any category of `race_eth_4cat`. All categories of `race_eth_4cat` are dependent on a value for `hispanic`. For example, look at participant number 1. They reported being white, but they don't give their ethnicity. Which category do we put them in? We can't put them in `White, non-Hispanic` because they very well could be Hispanic. We can't put them in `Hispanic, any race` because they very well could be non-Hispanic. We don't know. We never will. We code them as missing and don't evaluate any further. And because `case_when()` is lazy, any other participants with a missing value for `hispanic` would only have this first two-sided formula evaluated.  
+  
+  - There were no actual `NA` values in the `hispanic` column, but I put it in the code for completeness. There will be some true missing (`NA`) values in most real-world data sets.
+  
+  - Notice that we finally used the `%in%` operator above (`hispanic %in% c(7, 9)`). This is equivalent to typing `hispanic == 7 | hispanic == 9`. Notice that's an _OR_. In this case, it doesn't save us a ton of typing and visual clutter, but in many cases it can. 
+  
+* The second two-sided formula tells `case_when()` to set the value of `race_eth_4cat` to `3` (i.e., Hispanic any-race) when the value of `hispanic` is `1`. Why did we put this second? If we know that someone is Hispanic, does it matter what race they reported? Nope! No matter what race they reported, even missing race, they get coded as Hispanic, any race. And because `case_when()` is lazy, putting this two-sided formula second has two advantages:
+
+  - Any other participants with a missing value of `1` for `hispanic` would only have the first two two-sided formulas evaluated. In other words, for each Hispanic participant, R would evaluate 2 two-sided formulas instead of the 6 we used in the first method. With only 10 participants in the data, we won't notice any performance improvement. But, this performance improvement can add up when we have thousands or millions of rows.
+  
+  - It allows us to remove the `hispanic == 0` from the remaining two-sided formulas. Think about it. All participants with a missing value for `hispanic` were accounted for in the first two-sided formula. All participants with a `1` for `hispanic` were accounted for in the second two-sided formula. By definition, any participant left in the data must have a value of `0` for `hispanic`. There's no need to write that code and there's no need for R to evaluate that condition. Less typing for us and further performance improvements to boot.
+  
+* The third two-sided formula tells `case_when()` to set the value of `race_eth_4cat` to `NA_real_` when the value of `race` is missing. At this point in the code, there are no participants left with a value of `1` for `hispanic`. Therefore, if they are missing a value for `race` we won't be able to assign them a value for `race_eth_4cat`. We code them as missing and don't evaluate any further.
+
+* The fourth and fifth two-sided formulas tell `case_when()` to set the value of `race_eth_4cat` to `1` and `2` respectively when the value of `race` is `1` and `2`.
+
+* The final two-sided formula is simply `TRUE ~ 4`. This tells `case_when()` to set the value of `race_eth_4cat` to `4` when none of the other two-sided formulas above evaluated to `TRUE`. Why did we do this? Well, every participant with missing data has been accounted for, every `Hispanic` participant has been accounted for, every `White, non-Hispanic` participant has been accounted for, and every `Black, non-Hispanic` participant has been accounted for. Because case_when() is lazy, we know that any participant that makes it to this part of the code must fall into the `Other race, non-Hispanic` category. 
+
+  - Notice that there is nothing at all about `race` or `hispanic` in this two-sided formula. It just says `TRUE`. What does `case_when()` do when a condition on the left-hand side evaluates to `TRUE`? It returns the value on the right-hand side. In this case `4`.  
+  
+<p class="warning"> ⚠️**Warning:** Sometimes, adding an a final `TRUE` condition like the one above can be really useful. However, you have to be really careful. You can easily get unintended results if you aren't absolutely sure that you've already accounted for every possible combination of relevant conditions in the two-sided formulas that come before.</p>
+
+Let's go ahead and wrap up this chapter with one consolidated code chunk that cleans our demographics data:
+
+```{r}
+demographics %>% 
+  # Recode variables
+  mutate(
+    # Collapse continuous age into 3 categories
+    age_3cat = case_when(
+      age < 12  ~ 1, # child
+      age < 18  ~ 2, # adolescent
+      age >= 18 ~ 3  # adult
+    ),
+    age_3cat_f = factor(
+      age_3cat, 
+      labels = c("child", "adolescent", "adult")
+    ),
+    # Combine race and ethnicity
+    race_eth_4cat = case_when(
+      is.na(hispanic) | hispanic %in% c(7, 9) ~ NA_real_, # Unknown ethnicity
+      hispanic == 1                           ~ 3,        # Hispanic, any race
+      is.na(race) | race %in% c(7, 9)         ~ NA_real_, # non-Hispanic, unknown race
+      race == 1                               ~ 1,        # White, non-Hispanic
+      race == 2                               ~ 2,        # Black, non-Hispanic
+      TRUE                                    ~ 4         # Other race, non-Hispanic
+    ),
+    race_eth_4cat_f = factor(
+      race_eth_4cat,
+      labels = c(
+        "White, non-Hispanic", "Black, non-Hispanic", "Hispanic, any race",
+        "Other race, non-Hispanic"
+      )
+    )
+  )
+```
+
+Now that we've mastered conditional operations, we can use them to help us navigate another common data collection technique in epidemiology -- skip patterns.
