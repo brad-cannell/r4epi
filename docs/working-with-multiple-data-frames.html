@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2020-07-16" />
+<meta name="date" content="2020-07-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -541,21 +541,20 @@ Joining data frames deterministically
 Joining data frames probabilistically 
 Add link to cheat sheet
 -->
-<p>Up to this point, the data we’ve needed has always been stored in a single data set or data frame. However, that won’t always be the case.</p>
-<p>At times you may need to combine data from multiple agencies in order to complete your analysis.</p>
+<p>Up to this point, the data we’ve needed has always been stored in a single data frame. However, that won’t always be the case. At times you may need to combine data from multiple agencies in order to complete your analysis.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/agencies.png" /><!-- --></p>
 <p>Additionally, large studies often gather data at multiple sites.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/sites.png" /><!-- --></p>
-<p>Or, data is sometimes gathered over long periods of time. When this happens, it is not uncommon for observations for the sites or times to be stored as separate data sets.</p>
+<p>Or, data is sometimes gathered over long periods of time. When this happens, it is not uncommon for observations across the study sites or times to be stored as separate data sets.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/time.png" /><!-- --></p>
 <p>Another common scenario in which you end up with multiple data sets for the same study is when researchers use different data sets to record the results of different survey instruments or groups of similar instruments.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/instruments.png" /><!-- --></p>
 <p>In any of these cases, you may need to combine data from across data sets in order to complete your analysis.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/datasets.png" /><!-- --></p>
-<p>This combining of data comes in two basic forms: combining vertically and combining horizontally. First you’ll learn about combining vertically, or adding rows. Later, you’ll learn about combining horizontally, or adding columns.</p>
+<p>This combining of data comes in two basic forms: combining vertically and combining horizontally. First we’ll learn about combining vertically, or adding rows. Later, we’ll learn about combining horizontally, or adding columns.</p>
 <p>Below we have two separate data frames - data frame one and data frame two. In this case both data frames contain the exact same variables: Var1, Var2, and Var3. However, they aren’t identical because they contain different observations.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/two_data_sets1.png" /><!-- --></p>
-<p>Now you want to combine these two data frames and end up with one data frame that includes the observations from data frame two listed directly below the observations from data frame one. In this chapter you will learn how combine these data frames vertically.</p>
+<p>Now, you want to combine these two data frames and end up with one data frame that includes the observations from data frame two listed directly below the observations from data frame one. This is a situation where we want to combine data frames vertically.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/two_data_sets2.png" /><!-- --></p>
 <p>When combining data frames vertically, one of the most important questions to ask is, “do the data frames have variables in common?” Just by examining data frame one and data frame two, you can see that the variables have the same names. How can you check to make sure that the variables also contain the same type of data? Well, you can use the <code>str()</code> or <code>glimpse()</code> functions to compare the details of the columns in the two data frames.</p>
 <p>Sometimes, you might find that columns that have different names across data frames contain the same data. For example, suppose that data frame one has a variable named ID and data frame two has a variable named subject ID. In this situation you might want R to combine these two variables when you combine data frames.</p>
@@ -563,7 +562,7 @@ Add link to cheat sheet
 <p>As you may have guessed, when combining data frames vertically, it’s easiest to combine data frames that have identical variables. However, you will also learn how to combine data frames that have different variables.</p>
 <div id="combining-data-frames-vertically-adding-rows" class="section level2" number="30.1">
 <h2><span class="header-section-number">30.1</span> Combining data frames vertically: Adding rows</h2>
-<p>Suppose you are working on a multisite clinical trial recruiting participants from Chicago, San Diego, Denver, and Fort Worth over multiple years. You have a data frame named Trial, that stores the number of participants recruited each year, as well as the number of participants who experienced the outcome of interest. Another data frame named Trial_2020 was just sent to you with the recruitment numbers for the year 2020.</p>
+<p>Suppose you are working on a multisite clinical trial recruiting participants over multiple years. You have a data frame named Trial, that stores the number of participants recruited each year, as well as the number of participants who experienced the outcome of interest. Another data frame named Trial_2020 was just sent to you with the recruitment numbers for the year 2020.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/trial.png" /><!-- --></p>
 <p>You want to add the observations about the participants recruited in 2020 to the master data frame so that it contains the information about all years. To do this, you bind the rows in the <code>trial_2020</code> data frame to the <code>trial</code> data frame.</p>
 <p>Let’s go ahead and load <code>dplyr</code>:</p>
@@ -636,12 +635,12 @@ Add link to cheat sheet
 </div>
 <div id="adding-rows-with-differing-columns" class="section level3" number="30.1.2">
 <h3><span class="header-section-number">30.1.2</span> Adding rows with differing columns</h3>
-<p>What happens when the data frames we want to combine have identical sets of columns? For example, let’s say that we started collecting data on adverse events for the first time in 2020. In this case, <code>trials_2020</code> would contain a column that <code>trials</code> doesn’t contain. Could we still row bind our two data frames? Let’s see:</p>
+<p>What happens when the data frames we want to combine don’t have identical sets of columns? For example, let’s say that we started collecting data on adverse events for the first time in 2020. In this case, <code>trials_2020</code> would contain a column that <code>trials</code> doesn’t contain. Can we still row bind our two data frames? Let’s see:</p>
 <div class="sourceCode" id="cb762"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb762-1"><a href="working-with-multiple-data-frames.html#cb762-1"></a>trial_<span class="dv">2020</span> &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
 <span id="cb762-2"><a href="working-with-multiple-data-frames.html#cb762-2"></a>  <span class="dt">year      =</span> <span class="dv">2020</span>,</span>
 <span id="cb762-3"><a href="working-with-multiple-data-frames.html#cb762-3"></a>  <span class="dt">n         =</span> <span class="dv">500</span>,</span>
 <span id="cb762-4"><a href="working-with-multiple-data-frames.html#cb762-4"></a>  <span class="dt">outcome   =</span> <span class="dv">48</span>,</span>
-<span id="cb762-5"><a href="working-with-multiple-data-frames.html#cb762-5"></a>  <span class="dt">adv_event =</span> <span class="dv">3</span></span>
+<span id="cb762-5"><a href="working-with-multiple-data-frames.html#cb762-5"></a>  <span class="dt">adv_event =</span> <span class="dv">3</span> <span class="co"># Here is the new column</span></span>
 <span id="cb762-6"><a href="working-with-multiple-data-frames.html#cb762-6"></a>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb762-7"><a href="working-with-multiple-data-frames.html#cb762-7"></a><span class="st">  </span><span class="kw">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 4
@@ -666,8 +665,8 @@ Add link to cheat sheet
 <div class="sourceCode" id="cb766"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb766-1"><a href="working-with-multiple-data-frames.html#cb766-1"></a>trial_<span class="dv">2020</span> &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
 <span id="cb766-2"><a href="working-with-multiple-data-frames.html#cb766-2"></a>  <span class="dt">year      =</span> <span class="dv">2020</span>,</span>
 <span id="cb766-3"><a href="working-with-multiple-data-frames.html#cb766-3"></a>  <span class="dt">n         =</span> <span class="dv">500</span>,</span>
-<span id="cb766-4"><a href="working-with-multiple-data-frames.html#cb766-4"></a>  <span class="dt">adv_event =</span> <span class="dv">3</span>,</span>
-<span id="cb766-5"><a href="working-with-multiple-data-frames.html#cb766-5"></a>  <span class="dt">outcome   =</span> <span class="dv">48</span></span>
+<span id="cb766-4"><a href="working-with-multiple-data-frames.html#cb766-4"></a>  <span class="dt">adv_event =</span> <span class="dv">3</span>, <span class="co"># This was previously the fourth column</span></span>
+<span id="cb766-5"><a href="working-with-multiple-data-frames.html#cb766-5"></a>  <span class="dt">outcome   =</span> <span class="dv">48</span> <span class="co"># This is the thrid column in trial</span></span>
 <span id="cb766-6"><a href="working-with-multiple-data-frames.html#cb766-6"></a>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb766-7"><a href="working-with-multiple-data-frames.html#cb766-7"></a><span class="st">  </span><span class="kw">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 4
@@ -756,7 +755,7 @@ Add link to cheat sheet
 <h2><span class="header-section-number">30.2</span> Combining data frames horizontally: Adding columns</h2>
 <p>In this section we will once again begin with two separate data frames - data frame one and data frame two. But, unlike before, these data frames share only one variable in common. And, the data contained in both data frames pertains to the same observations.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/two_data_sets_horiz.png" /><!-- --></p>
-<p>Our goal is once again to combine these data frames. But, this time we want to combine them horizontally. In other words, we want a combined data frame that contains all the columns in data frame one <em>and</em> data frame two.</p>
+<p>Our goal is once again to combine these data frames. But, this time we want to combine them horizontally. In other words, we want a combined data frame that combines all the <em>columns</em> from data frame one and data frame two.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/goal.png" /><!-- --></p>
 <p>Combining data frames horizontally can be slightly more complicated than combining them vertically. As shown in the following flow chart, we can either match the rows of our two data frames up by position or by key values.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/flow_chart.png" /><!-- --></p>
@@ -797,7 +796,7 @@ Add link to cheat sheet
 ## 3 blue  large       3    30</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
-<li><p>We used <code>dplyr</code>’s <code>bind_cols()</code> function to horizontally bind the columns in <code>demographics</code> to the columns in <code>grip_strength</code>.</p></li>
+<li><p>We used <code>dplyr</code>’s <code>bind_cols()</code> function to horizontally bind the columns in <code>df1</code> to the columns in <code>df2</code>.</p></li>
 <li><p>You can type <code>?bind_cols</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
 <li><p>The only argument to the <code>bind_cols()</code> function is the <code>...</code> argument. Typically, we will pass one or more data frames that we want to combine to the <code>...</code> argument.</p></li>
 </ul>
@@ -813,8 +812,8 @@ Add link to cheat sheet
 <p>When we merge data frames it’s important to ask ourselves, “what is the relationship between the observations in the original data frames?” The observations can be related in several different ways.</p>
 <p>In a one-to-one relationship, a single observation in one data frame is related to no more than one observation in the other data frame. We know how to align, or connect, the rows in the two data frames based on the values of one or more common variables.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_one.png" /><!-- --></p>
-<p>This common variable, or set of common variables, is also called a <strong>key</strong>. When we use the values in the key to match rows in our data frames we can say that we are <em>matching on key values</em>.</p>
-<p>In the example above, There is one key column – <code>Var1</code>. Both data frames contain the column named <code>Var1</code>, and the values of that column tell us how to align the rows in both data frames so that all the values in that row contain data are about the same person, place, or thing. In the example above, we know that the first row of data frame one goes with the <em>second</em> row of data frame two because both rows have the same key value – <code>1</code>.</p>
+<p>This common variable, or set of common variables, is also called a <strong>key</strong>. When we use the values in the key to match rows in our data frames, we can say that we are <em>matching on key values</em>.</p>
+<p>In the example above, There is one key column – <code>Var1</code>. Both data frames contain the column named <code>Var1</code>, and the values of that column tell R how to align the rows in both data frames so that all the values in that row contain data are about the same person, place, or thing. In the example above, we know that the first row of data frame one goes with the <em>second</em> row of data frame two because both rows have the same key value – <code>1</code>.</p>
 <p>In a one-to-many relationship, a single observation in one data frame is related to multiple observations in the other data frame.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_many.png" /><!-- --></p>
 <p>And finally, in a many-to-many relationship, multiple observations in one data frame are related to multiple observations in the other data frame.</p>
@@ -843,7 +842,7 @@ Add link to cheat sheet
 </ol>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/inner_join.png" /><!-- --></p>
 <p>Now that we have a common vocabulary, let’s take a look at some more concrete examples.</p>
-<p>Suppose we are analyzing data from a study of aging and functional ability. At baseline, we assign a study id to each of our participants. We then ask them their date of birth and their race and ethnicity. We saved that information in a data file called <code>demographics</code>.</p>
+<p>Suppose we are analyzing data from a study of aging and functional ability. At baseline, we assigned a study id to each of our participants. We then ask them their date of birth and their race and ethnicity. We saved that information in a data frame called <code>demographics</code>.</p>
 <div class="sourceCode" id="cb784"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb784-1"><a href="working-with-multiple-data-frames.html#cb784-1"></a>demographics &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
 <span id="cb784-2"><a href="working-with-multiple-data-frames.html#cb784-2"></a>  <span class="dt">id       =</span> <span class="kw">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>),</span>
 <span id="cb784-3"><a href="working-with-multiple-data-frames.html#cb784-3"></a>  <span class="dt">dob      =</span> <span class="kw">as.Date</span>(<span class="kw">c</span>(<span class="st">&quot;1968-12-14&quot;</span>, <span class="st">&quot;1952-08-03&quot;</span>, <span class="st">&quot;1949-05-27&quot;</span>, <span class="st">&quot;1955-03-12&quot;</span>)),</span>
@@ -857,7 +856,7 @@ Add link to cheat sheet
 ## 2 1002  1952-08-03        2
 ## 3 1003  1949-05-27        2
 ## 4 1004  1955-03-12        4</code></pre>
-<p>Then, we asked our participants to do a series of functional tests. The functional tests include measuring grip strength in their right hand (<code>grip_r</code>) and grip strength in their left hand (<code>grip_l</code>). We save each measure, along with their study id, in a separate file called <code>grip_strength</code>.</p>
+<p>Then, we asked our participants to do a series of functional tests. The functional tests included measuring grip strength in their right hand (<code>grip_r</code>) and grip strength in their left hand (<code>grip_l</code>). We saved each measure, along with their study id, in a separate data frame called <code>grip_strength</code>.</p>
 <div class="sourceCode" id="cb786"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb786-1"><a href="working-with-multiple-data-frames.html#cb786-1"></a>grip_strength &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
 <span id="cb786-2"><a href="working-with-multiple-data-frames.html#cb786-2"></a>  <span class="dt">id     =</span> <span class="kw">c</span>(<span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>),</span>
 <span id="cb786-3"><a href="working-with-multiple-data-frames.html#cb786-3"></a>  <span class="dt">grip_r =</span> <span class="kw">c</span>(<span class="dv">32</span>, <span class="dv">28</span>, <span class="dv">32</span>, <span class="dv">22</span>),</span>
@@ -892,7 +891,7 @@ Add link to cheat sheet
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>dplyr</code>’s <code>bind_cols()</code> function to horizontally bind the columns in <code>demographics</code> to the columns in <code>grip_strength</code>. <strong>This was a bad idea!</strong></p></li>
-<li><p>Notice the message that <code>bind_cols()</code> gave us this time: <code>New names: * id -&gt; id...1 * id -&gt; id...2</code>. This is telling us that both data frames had a column named <code>id</code>. If we <code>bind_cols()</code> had left the column names as-is, then the resulting combined data frame would have had two columns named <code>id</code>, which isn’t allowed.</p></li>
+<li><p>Notice the message that <code>bind_cols()</code> gave us this time: <code>New names: * id -&gt; id...1 * id -&gt; id...2</code>. This is telling us that both data frames had a column named <code>id</code>. If <code>bind_cols()</code> had left the column names as-is, then the resulting combined data frame would have had two columns named <code>id</code>, which isn’t allowed.</p></li>
 <li><p><strong>More importantly</strong>, notice the demographic data for participant 1001 is now aligned with the grip strength data for participant 1002, and vice versa. The grip strength data was recorded in the order that participants came in to have their grip strength measured. In this case, participant 1002 came in before 1001. Remember that <code>bind_cols()</code> matches rows by position, which results in mismatched data in this case.</p></li>
 </ul>
 <p>Now, let’s learn a better way to merge these two data frames – <code>dplyr</code>’s <code>left_join()</code> function:</p>
@@ -913,7 +912,7 @@ Add link to cheat sheet
 <li><p>The second argument to the <code>left_join()</code> function is the <code>y</code> argument. You should pass a data frame to the <code>y</code> argument.</p></li>
 <li><p>The third argument to the <code>left_join()</code> function is the <code>by</code> argument. You should pass the name of the column, or columns, that contain the key values. The column name should be wrapped in quotes.</p></li>
 <li><p>Notice that the demographics and grip strength data are now correctly aligned for participants 1001 and 1002 even though they were still misaligned in the original data frames. That’s because row position is irrelevant when we match by key values.</p></li>
-<li><p>Notice that the result above only includes a single <code>id</code> column. This is because we aren’t simply smooshing two data frames together, side-by-side. We are integrating data from across the two data frames based on the value of the key column – <code>id</code>.</p></li>
+<li><p>Notice that the result above only includes a single <code>id</code> column. This is because we aren’t simply smooshing two data frames together, side-by-side. We are integrating information from across the two data frames based on the value of the key column – <code>id</code>.</p></li>
 </ul>
 <p>The merge we did above is about as simple as it gets. It was a one-to-one merge where every key value in the <code>x</code> data frame had one, and only one, matching key value in the <code>y</code> data frame. Therefore, in this simple case, all four join types give us the same result:</p>
 <div class="sourceCode" id="cb793"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb793-1"><a href="working-with-multiple-data-frames.html#cb793-1"></a><span class="co"># Right join</span></span>
@@ -990,7 +989,7 @@ Add link to cheat sheet
 ## 4 1004  1955-03-12        4     22     22
 ## 5 1005  1942-06-07        3     NA     NA</code></pre>
 <p>The resulting data frame includes <em>all</em> rows from the <code>demographics</code> data frame <em>and all</em> the rows from the <code>grip_strength</code> data frame. Because participant 1005 never had their grip strength measured, and therefore, had no rows in the <code>grip_strength</code> data frame, their values for <code>grip_r</code> and <code>grip_l</code> are set to missing.</p>
-<p>This scenario is a little a different than the one above. It’s still a one-to-one relationship because each participant in <code>demographics</code> has no more than one corresponding row in <code>grip_strength</code>. However, every key value in the <code>x</code> data frame no longer has one, and only one, matching key value in the <code>y</code> data frame. Therefore, we will now get different results depending on which join function we choose, and the order in which we pass our data frames to the <code>x</code> and <code>y</code> arguments. Before reading further, think about what you expect the results from each join function to look like. Think about you expect the results of switching the data frame order to look like.</p>
+<p>This scenario is a little a different than the one above. It’s still a one-to-one relationship because each participant in <code>demographics</code> has no more than one corresponding row in <code>grip_strength</code>. However, every key value in the <code>x</code> data frame no longer has one, and only one, matching key value in the <code>y</code> data frame. Therefore, we will now get different results depending on which join function we choose, and the order in which we pass our data frames to the <code>x</code> and <code>y</code> arguments. Before reading further, think about what you expect the results from each join function to look like. Think about what you expect the results of switching the data frame order to look like.</p>
 <div class="sourceCode" id="cb805"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb805-1"><a href="working-with-multiple-data-frames.html#cb805-1"></a><span class="co"># Right join</span></span>
 <span id="cb805-2"><a href="working-with-multiple-data-frames.html#cb805-2"></a>demographics <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb805-3"><a href="working-with-multiple-data-frames.html#cb805-3"></a><span class="st">  </span><span class="kw">right_join</span>(grip_strength, <span class="dt">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
@@ -1022,7 +1021,6 @@ Add link to cheat sheet
 ## 2 1002  1952-08-03        2     32     30
 ## 3 1003  1949-05-27        2     32     28
 ## 4 1004  1955-03-12        4     22     22</code></pre>
-<p>Additionally, aside from the order of the rows and columns in the resulting combined data frame, it makes no difference which data frame you pass to the <code>x</code> and <code>y</code> arguments in this case:</p>
 <div class="sourceCode" id="cb811"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb811-1"><a href="working-with-multiple-data-frames.html#cb811-1"></a><span class="co"># Switching order</span></span>
 <span id="cb811-2"><a href="working-with-multiple-data-frames.html#cb811-2"></a>grip_strength <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb811-3"><a href="working-with-multiple-data-frames.html#cb811-3"></a><span class="st">  </span><span class="kw">left_join</span>(demographics, <span class="dt">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
@@ -1102,7 +1100,7 @@ Add link to cheat sheet
 ## 8 1004  post      27     26</code></pre>
 <p>Now what is the relationship of these two data frames?</p>
 <p>These data frames have a one-to-many relationship because at least one observation in one data frame is related to multiple observations in the other data frame. The <code>demographics</code> data frame has one observation for each value of <code>id</code>. The <code>grip_strength</code> data frame has two observations for each value of the <code>id</code>’s <code>1001</code> through <code>1004</code>.</p>
-<p>Now, to conduct our analysis, we need to combine the data in <code>demographics</code> with the data in the longitudinal <code>grip_strength</code> data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to-many merge, we use the exact same syntax as you used to perform a one-to-one merge. R will figure out the relationship between the data frames automatically. Take a look:</p>
+<p>Now, to conduct our analysis, we need to combine the data in <code>demographics</code> with the data in the longitudinal <code>grip_strength</code> data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to-many merge, we use the exact same syntax that we used to perform a one-to-one merge. R will figure out the relationship between the data frames automatically. Take a look:</p>
 <div class="sourceCode" id="cb823"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb823-1"><a href="working-with-multiple-data-frames.html#cb823-1"></a>demographics <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb823-2"><a href="working-with-multiple-data-frames.html#cb823-2"></a><span class="st">  </span><span class="kw">left_join</span>(grip_strength, <span class="dt">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 9 x 6
@@ -1153,7 +1151,7 @@ Add link to cheat sheet
 ## 7 1004  1955-03-12        4 pre       22     22
 ## 8 1004  1955-03-12        4 post      27     26
 ## 9 1005  1942-06-07        3 &lt;NA&gt;      NA     NA</code></pre>
-<p>Of course, that doesn’t work because <code>left_join()</code> can only merge two data frames at a time – <code>x</code> and <code>y</code>. So, our next attempt might look like this:</p>
+<p>Of course, that doesn’t work because <code>left_join()</code> can only merge two data frames at a time – <code>x</code> and <code>y</code>. The <code>emr</code> data frame was ignored. Then we think, “hmmm, maybe we should try merging them sequentially.” In other words, merge <code>demographics</code> and <code>grip_strength</code> first. Then merge the combined <code>demographics</code>/<code>grip_strength</code> data frame with <code>emr</code>. So, our next attempt might look like this:</p>
 <div class="sourceCode" id="cb829"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb829-1"><a href="working-with-multiple-data-frames.html#cb829-1"></a>demographics <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb829-2"><a href="working-with-multiple-data-frames.html#cb829-2"></a><span class="st">  </span><span class="kw">left_join</span>(grip_strength, <span class="dt">by =</span> <span class="st">&quot;id&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb829-3"><a href="working-with-multiple-data-frames.html#cb829-3"></a><span class="st">  </span><span class="kw">left_join</span>(emr, <span class="dt">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
@@ -1177,7 +1175,12 @@ Add link to cheat sheet
 ## 15 1004  1955-03-12        4 post        27     26 pre        170
 ## 16 1004  1955-03-12        4 post        27     26 post       175
 ## 17 1005  1942-06-07        3 &lt;NA&gt;        NA     NA &lt;NA&gt;        NA</code></pre>
-<p>But, if you look closely, that isn’t what we want either. Each participant didn’t have four visits. They only had two. The problem here is that our second merge has two key columns now instead of one. In other words, we need to align every row in the combined <code>demographics</code>/<code>grip_strength</code> data with its matching row in the <code>emr</code> data by <code>id</code> <em>and</em> <code>visit</code>. Here is how we do that:</p>
+<p>But, if you look closely, that isn’t what we want either. Each participant didn’t have four visits. They only had two. Here’s the problem. Each participant in the combined <code>demographics</code>/<code>grip_strength</code> data frame has two rows (i.e., one for pre and one for post). Each participant in the <code>emr</code> data frame also has two rows (i.e., one for pre and one for post). Above, we told <code>left_join()</code> to join by <code>id</code>. So, <code>left_join()</code> aligns all rows with matching key values – <code>id</code>’s.</p>
+<p>For example, row one in the combined <code>demographics</code>/<code>grip_strength</code> data frame has the key value <code>1001</code>. So, <code>left_join()</code> aligns row one in the combined <code>demographics</code>/<code>grip_strength</code> data frame with rows one <em>and</em> two in the <code>emr</code> data frame. Next, row <em>two</em> in the combined <code>demographics</code>/<code>grip_strength</code> data frame has the key value <code>1001</code>. So, <code>left_join()</code> aligns row <em>two</em> in the combined <code>demographics</code>/<code>grip_strength</code> data frame with rows one <em>and</em> two in the <code>emr</code> data frame. This results in 2 * 2 = 4 rows for each id - a <strong>many-to-many</strong> merge.</p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/many_to_many_emr.png" /><!-- --></p>
+<p>But in reality, study id alone no longer uniquely identifies observations in our data. Now, observations are uniquely identified by study id and visit. For example, <code>1001</code> <em>and</em> <code>pre</code> are a unique observation, <code>1001</code> <em>and</em> <code>post</code> are a unique observation, <code>1002</code> <em>and</em> <code>pre</code> are a unique observation, and so on. We now have two key columns that identify unique observations. And once we give that information to <code>left_join</code>, the relationship between the data frames becomes a one-to-one relationship. In other words, each observation (defined by <code>id</code> <em>and</em> <code>visit</code>) in one data frame is related to no more than one observation (defined by <code>id</code> <em>and</em> <code>visit</code>) in the other data frame.</p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_one_emr.png" /><!-- --></p>
+<p>Here is how we tell <code>left_join()</code> to merge our data frames by <code>id</code> <em>and</em> <code>visit</code>:</p>
 <div class="sourceCode" id="cb831"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb831-1"><a href="working-with-multiple-data-frames.html#cb831-1"></a>demographics <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb831-2"><a href="working-with-multiple-data-frames.html#cb831-2"></a><span class="st">  </span><span class="kw">left_join</span>(grip_strength, <span class="dt">by =</span> <span class="st">&quot;id&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb831-3"><a href="working-with-multiple-data-frames.html#cb831-3"></a><span class="st">  </span><span class="kw">left_join</span>(emr, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;visit&quot;</span>))</span></code></pre></div>
@@ -1195,9 +1198,10 @@ Add link to cheat sheet
 ## 9 1005  1942-06-07        3 &lt;NA&gt;      NA     NA     NA</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
-<li><p>We used <code>dplyr</code>’s <code>left_join()</code> function to perform a one-to-many merge of the <code>demographics</code> data frame with the <code>grip_strength</code> data frame. Then, we used <code>left_join()</code> again to perform a one-to-many merge of the combined <code>demographics</code>/<code>grip_strength</code> data frame with the <code>emr</code> data frame.</p></li>
-<li><p>We told <code>left_join()</code> that it needed to match the values in the <code>id</code> key column <em>and</em> the values in the <code>visit</code> key column in order to align the rows in the combined <code>demographics</code>/<code>grip_strength</code> data frame with the <code>emr</code> data frame. In other words, it wasn’t enough to ask <code>left_join()</code> to “match id 1 with id 1.” Instead we had to ask <code>left_join()</code> to “match id 1, visit pre with id 1, visit pre.” We did so by passing a character vector of key column names to the <code>by</code> argument.</p></li>
+<li><p>We used <code>dplyr</code>’s <code>left_join()</code> function to perform a one-to-many merge of the <code>demographics</code> data frame with the <code>grip_strength</code> data frame. Then, we used <code>left_join()</code> again to perform a one-to-one merge of the combined <code>demographics</code>/<code>grip_strength</code> data frame with the <code>emr</code> data frame.</p></li>
+<li><p>We told <code>left_join()</code> that it needed to match the values in the <code>id</code> key column <em>and</em> the values in the <code>visit</code> key column in order to align the rows in the combined <code>demographics</code>/<code>grip_strength</code> data frame with the <code>emr</code> data frame.</p></li>
 </ul>
+<p>We now have a robust set of tools we can use to work with data that is stored in more than one data frame – a common occurrence in epidemiology!</p>
 
 </div>
 </div>

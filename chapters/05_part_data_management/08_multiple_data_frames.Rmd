@@ -9,9 +9,7 @@ Joining data frames probabilistically
 Add link to cheat sheet
 -->
 
-Up to this point, the data we’ve needed has always been stored in a single data set or data frame. However, that won’t always be the case. 
-
-At times you may need to combine data from multiple agencies in order to complete your analysis. 
+Up to this point, the data we’ve needed has always been stored in a single data frame. However, that won’t always be the case. At times you may need to combine data from multiple agencies in order to complete your analysis. 
 
 ```{r echo=FALSE}
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/agencies.png")
@@ -23,7 +21,7 @@ Additionally, large studies often gather data at multiple sites.
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/sites.png")
 ```
 
-Or, data is sometimes gathered over long periods of time. When this happens, it is not uncommon for observations for the sites or times to be stored as separate data sets.
+Or, data is sometimes gathered over long periods of time. When this happens, it is not uncommon for observations across the study sites or times to be stored as separate data sets.
 
 ```{r echo=FALSE}
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/time.png")
@@ -41,7 +39,7 @@ In any of these cases, you may need to combine data from across data sets in ord
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/datasets.png")
 ```
 
-This combining of data comes in two basic forms: combining vertically and combining horizontally. First you’ll learn about combining vertically, or adding rows. Later, you’ll learn about combining horizontally, or adding columns.
+This combining of data comes in two basic forms: combining vertically and combining horizontally. First we’ll learn about combining vertically, or adding rows. Later, we’ll learn about combining horizontally, or adding columns.
 
 Below we have two separate data frames - data frame one and data frame two. In this case both data frames contain the exact same variables: Var1, Var2, and Var3. However, they aren’t identical because they contain different observations.
 
@@ -49,7 +47,7 @@ Below we have two separate data frames - data frame one and data frame two. In t
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/two_data_sets1.png")
 ```
 
-Now you want to combine these two data frames and end up with one data frame that includes the observations from data frame two listed directly below the observations from data frame one. In this chapter you will learn how combine these data frames vertically.
+Now, you want to combine these two data frames and end up with one data frame that includes the observations from data frame two listed directly below the observations from data frame one. This is a situation where we want to combine data frames vertically.
 
 ```{r echo=FALSE}
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/two_data_sets2.png")
@@ -65,7 +63,7 @@ As you may have guessed, when combining data frames vertically, it’s easiest t
 
 ## Combining data frames vertically: Adding rows
 
-Suppose you are working on a multisite clinical trial recruiting participants from Chicago, San Diego, Denver, and Fort Worth over multiple years. You have a data frame named Trial, that stores the number of participants recruited each year, as well as the number of participants who experienced the outcome of interest. Another data frame named Trial_2020 was just sent to you with the recruitment numbers for the year 2020. 
+Suppose you are working on a multisite clinical trial recruiting participants over multiple years. You have a data frame named Trial, that stores the number of participants recruited each year, as well as the number of participants who experienced the outcome of interest. Another data frame named Trial_2020 was just sent to you with the recruitment numbers for the year 2020. 
 
 ```{r echo=FALSE}
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/trial.png")
@@ -134,14 +132,14 @@ trial %>%
 
 ### Adding rows with differing columns
 
-What happens when the data frames we want to combine have identical sets of columns? For example, let's say that we started collecting data on adverse events for the first time in 2020. In this case, `trials_2020` would contain a column that `trials` doesn't contain. Could we still row bind our two data frames? Let's see:
+What happens when the data frames we want to combine don't have identical sets of columns? For example, let's say that we started collecting data on adverse events for the first time in 2020. In this case, `trials_2020` would contain a column that `trials` doesn't contain. Can we still row bind our two data frames? Let's see:
 
 ```{r}
 trial_2020 <- tibble(
   year      = 2020,
   n         = 500,
   outcome   = 48,
-  adv_event = 3
+  adv_event = 3 # Here is the new column
 ) %>% 
   print()
 ```
@@ -161,8 +159,8 @@ Next, let's say that the person doing data entry accidently put the columns in a
 trial_2020 <- tibble(
   year      = 2020,
   n         = 500,
-  adv_event = 3,
-  outcome   = 48
+  adv_event = 3, # This was previously the fourth column
+  outcome   = 48 # This is the thrid column in trial
 ) %>% 
   print()
 ```
@@ -235,7 +233,7 @@ In this section we will once again begin with two separate data frames - data fr
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/two_data_sets_horiz.png")
 ```
 
-Our goal is once again to combine these data frames. But, this time we want to combine them horizontally. In other words, we want a combined data frame that contains all the columns in data frame one _and_ data frame two.
+Our goal is once again to combine these data frames. But, this time we want to combine them horizontally. In other words, we want a combined data frame that combines all the _columns_ from data frame one and data frame two.
 
 ```{r echo=FALSE}
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/goal.png")
@@ -280,7 +278,7 @@ df1 %>%
 
 👆**Here's what we did above:**
 
-* We used `dplyr`'s `bind_cols()` function to horizontally bind the columns in `demographics` to the columns in `grip_strength`.
+* We used `dplyr`'s `bind_cols()` function to horizontally bind the columns in `df1` to the columns in `df2`.
 
 * You can type `?bind_cols` into your R console to view the help documentation for this function and follow along with the explanation below.
 
@@ -308,9 +306,9 @@ In a one-to-one relationship, a single observation in one data frame is related 
 knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/one_to_one.png")
 ```
 
-This common variable, or set of common variables, is also called a **key**. When we use the values in the key to match rows in our data frames we can say that we are _matching on key values_. 
+This common variable, or set of common variables, is also called a **key**. When we use the values in the key to match rows in our data frames, we can say that we are _matching on key values_. 
 
-In the example above, There is one key column -- `Var1`. Both data frames contain the column named `Var1`, and the values of that column tell us how to align the rows in both data frames so that all the values in that row contain data are about the same person, place, or thing. In the example above, we know that the first row of data frame one goes with the _second_ row of data frame two because both rows have the same key value -- `1`.
+In the example above, There is one key column -- `Var1`. Both data frames contain the column named `Var1`, and the values of that column tell R how to align the rows in both data frames so that all the values in that row contain data are about the same person, place, or thing. In the example above, we know that the first row of data frame one goes with the _second_ row of data frame two because both rows have the same key value -- `1`.
 
 In a one-to-many relationship, a single observation in one data frame is related to multiple observations in the other data frame.
 
@@ -360,7 +358,7 @@ knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/inn
 
 Now that we have a common vocabulary, let's take a look at some more concrete examples. 
 
-Suppose we are analyzing data from a study of aging and functional ability. At baseline, we assign a study id to each of our participants. We then ask them their date of birth and their race and ethnicity. We saved that information in a data file called `demographics`. 
+Suppose we are analyzing data from a study of aging and functional ability. At baseline, we assigned a study id to each of our participants. We then ask them their date of birth and their race and ethnicity. We saved that information in a data frame called `demographics`. 
 
 ```{r}
 demographics <- tibble(
@@ -371,7 +369,7 @@ demographics <- tibble(
   print()
 ```
 
-Then, we asked our participants to do a series of functional tests. The functional tests include measuring grip strength in their right hand (`grip_r`) and grip strength in their left hand (`grip_l`). We save each measure, along with their study id, in a separate file called `grip_strength`.
+Then, we asked our participants to do a series of functional tests. The functional tests included measuring grip strength in their right hand (`grip_r`) and grip strength in their left hand (`grip_l`). We saved each measure, along with their study id, in a separate data frame called `grip_strength`.
 
 ```{r}
 grip_strength <- tibble(
@@ -399,7 +397,7 @@ demographics %>%
 
 * We used `dplyr`'s `bind_cols()` function to horizontally bind the columns in `demographics` to the columns in `grip_strength`. **This was a bad idea!** 
 
-* Notice the message that `bind_cols()` gave us this time: `New names: * id -> id...1 * id -> id...2`. This is telling us that both data frames had a column named `id`. If we `bind_cols()` had left the column names as-is, then the resulting combined data frame would have had two columns named `id`, which isn't allowed.
+* Notice the message that `bind_cols()` gave us this time: `New names: * id -> id...1 * id -> id...2`. This is telling us that both data frames had a column named `id`. If `bind_cols()` had left the column names as-is, then the resulting combined data frame would have had two columns named `id`, which isn't allowed.
 
 * **More importantly**, notice the demographic data for participant 1001 is now aligned with the grip strength data for participant 1002, and vice versa. The grip strength data was recorded in the order that participants came in to have their grip strength measured. In this case, participant 1002 came in before 1001. Remember that `bind_cols()` matches rows by position, which results in mismatched data in this case.
 
@@ -424,7 +422,7 @@ demographics %>%
 
 * Notice that the demographics and grip strength data are now correctly aligned for participants 1001 and 1002 even though they were still misaligned in the original data frames. That's because row position is irrelevant when we match by key values.
 
-* Notice that the result above only includes a single `id` column. This is because we aren't simply smooshing two data frames together, side-by-side. We are integrating data from across the two data frames based on the value of the key column -- `id`.
+* Notice that the result above only includes a single `id` column. This is because we aren't simply smooshing two data frames together, side-by-side. We are integrating information from across the two data frames based on the value of the key column -- `id`.
 
 The merge we did above is about as simple as it gets. It was a one-to-one merge where every key value in the `x` data frame had one, and only one, matching key value in the `y` data frame. Therefore, in this simple case, all four join types give us the same result:
 
@@ -480,7 +478,7 @@ demographics %>%
 
 The resulting data frame includes _all_ rows from the `demographics` data frame _and all_ the rows from the `grip_strength` data frame. Because participant 1005 never had their grip strength measured, and therefore, had no rows in the `grip_strength` data frame, their values for `grip_r` and `grip_l` are set to missing. 
 
-This scenario is a little a different than the one above. It's still a one-to-one relationship because each participant in `demographics` has no more than one corresponding row in `grip_strength`. However, every key value in the `x` data frame no longer has one, and only one, matching key value in the `y` data frame. Therefore, we will now get different results depending on which join function we choose, and the order in which we pass our data frames to the `x` and `y` arguments. Before reading further, think about what you expect the results from each join function to look like. Think about you expect the results of switching the data frame order to look like.
+This scenario is a little a different than the one above. It's still a one-to-one relationship because each participant in `demographics` has no more than one corresponding row in `grip_strength`. However, every key value in the `x` data frame no longer has one, and only one, matching key value in the `y` data frame. Therefore, we will now get different results depending on which join function we choose, and the order in which we pass our data frames to the `x` and `y` arguments. Before reading further, think about what you expect the results from each join function to look like. Think about what you expect the results of switching the data frame order to look like.
 
 ```{r}
 # Right join
@@ -499,8 +497,6 @@ demographics %>%
 demographics %>% 
   inner_join(grip_strength, by = "id")
 ```
-
-Additionally, aside from the order of the rows and columns in the resulting combined data frame, it makes no difference which data frame you pass to the `x` and `y` arguments in this case:
 
 ```{r}
 # Switching order
@@ -563,7 +559,7 @@ Now what is the relationship of these two data frames?
 
 These data frames have a one-to-many relationship because at least one observation in one data frame is related to multiple observations in the other data frame. The `demographics` data frame has one observation for each value of `id`. The `grip_strength` data frame has two observations for each value of the `id`'s `1001` through `1004`.
 
-Now, to conduct our analysis, we need to combine the data in `demographics` with the data in the longitudinal `grip_strength` data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to-many merge, we use the exact same syntax as you used to perform a one-to-one merge. R will figure out the relationship between the data frames automatically. Take a look:
+Now, to conduct our analysis, we need to combine the data in `demographics` with the data in the longitudinal `grip_strength` data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to-many merge, we use the exact same syntax that we used to perform a one-to-one merge. R will figure out the relationship between the data frames automatically. Take a look:
 
 ```{r}
 demographics %>% 
@@ -590,7 +586,7 @@ demographics %>%
   left_join(grip_strength, emr, by = "id")
 ```
 
-Of course, that doesn't work because `left_join()` can only merge two data frames at a time -- `x` and `y`. So, our next attempt might look like this:
+Of course, that doesn't work because `left_join()` can only merge two data frames at a time -- `x` and `y`. The `emr` data frame was ignored. Then we think, "hmmm, maybe we should try merging them sequentially." In other words, merge `demographics` and `grip_strength` first. Then merge the combined `demographics`/`grip_strength` data frame with `emr`. So, our next attempt might look like this:
 
 ```{r}
 demographics %>% 
@@ -598,7 +594,22 @@ demographics %>%
   left_join(emr, by = "id")
 ```
 
-But, if you look closely, that isn't what we want either. Each participant didn't have four visits. They only had two. The problem here is that our second merge has two key columns now instead of one. In other words, we need to align every row in the combined `demographics`/`grip_strength` data with its matching row in the `emr` data by `id` _and_ `visit`. Here is how we do that:
+But, if you look closely, that isn't what we want either. Each participant didn't have four visits. They only had two. Here's the problem. Each participant in the combined `demographics`/`grip_strength` data frame has two rows (i.e., one for pre and one for post). Each participant in the `emr` data frame also has two rows (i.e., one for pre and one for post). Above, we told `left_join()` to join by `id`. So, `left_join()` aligns all rows with matching key values -- `id`’s. 
+
+For example, row one in the combined `demographics`/`grip_strength` data frame has the key value `1001`. So, `left_join()` aligns row one in the combined `demographics`/`grip_strength` data frame with rows one _and_ two in the `emr` data frame. Next, row _two_ in the combined `demographics`/`grip_strength` data frame has the key value `1001`. So, `left_join()` aligns row _two_ in the combined `demographics`/`grip_strength` data frame with rows one _and_ two in the `emr` data frame. This results in 2 * 2 = 4 rows for each id - a **many-to-many** merge.
+ 
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/many_to_many_emr.png")
+```
+
+But in reality, study id alone no longer uniquely identifies observations in our data. Now, observations are uniquely identified by study id and visit. For example, `1001` _and_ `pre` are a unique observation, `1001` _and_ `post` are a unique observation, `1002` _and_ `pre` are a unique observation, and so on. We now have two key columns that identify unique observations. And once we give that information to `left_join`, the relationship between the data frames becomes a one-to-one relationship. In other words, each observation (defined by `id` _and_ `visit`) in one data frame is related to no more than one observation (defined by `id` _and_ `visit`) in the other data frame.
+
+```{r echo=FALSE}
+knitr::include_graphics("img/05_part_data_management/08_multiple_data_frames/one_to_one_emr.png")
+```
+
+Here is how we tell `left_join()` to merge our data frames by `id` _and_ `visit`:
 
 ```{r}
 demographics %>% 
@@ -608,6 +619,9 @@ demographics %>%
 
 👆**Here's what we did above:**
 
-* We used `dplyr`'s `left_join()` function to perform a one-to-many merge of the `demographics` data frame with the `grip_strength` data frame. Then, we used `left_join()` again to perform a one-to-many merge of the combined `demographics`/`grip_strength` data frame with the `emr` data frame.
+* We used `dplyr`'s `left_join()` function to perform a one-to-many merge of the `demographics` data frame with the `grip_strength` data frame. Then, we used `left_join()` again to perform a one-to-one merge of the combined `demographics`/`grip_strength` data frame with the `emr` data frame.
 
-* We told `left_join()` that it needed to match the values in the `id` key column _and_ the values in the `visit` key column in order to align the rows in the combined `demographics`/`grip_strength` data frame with the `emr` data frame. In other words, it wasn't enough to ask `left_join()` to "match id 1 with id 1." Instead we had to ask `left_join()` to "match id 1, visit pre with id 1, visit pre." We did so by passing a character vector of key column names to the `by` argument.
+* We told `left_join()` that it needed to match the values in the `id` key column _and_ the values in the `visit` key column in order to align the rows in the combined `demographics`/`grip_strength` data frame with the `emr` data frame.
+
+We now have a robust set of tools we can use to work with data that is stored in more than one data frame – a common occurrence in epidemiology!
+
