@@ -4,7 +4,7 @@
 Use elapsed time as an example of long to wide?
 -->
 
-We haven't explicitly discussed the structure of our data frames yet. When I say structure, I basically mean the way the data is organized into columns and rows. Traditionally, data are described as being organized in one of two ways:    
+We've already seen data frames with a couple of different structures, but we haven't explicitly discussed those structures yet. When I say structure, I basically mean the way the data is organized into columns and rows. Traditionally, data are described as being organized in one of two ways:    
 
 1. With a **person-level**, or **wide**, structure. In person-level data, each person (observational unit) has one observation (row) and a separate column contains data for each measurement. For example:
 
@@ -44,7 +44,7 @@ knitr::include_graphics("img/05_part_data_management/10_restructuring/long2.png"
 
 Notice that each baby in the person-period table has four rows – one for each weight measurement. Also notice that there is a new variable in the person-period data that explicitly records time (i.e., `months`). 
 
-<p class="note"> 🗒**Side Note:** Let's quickly learn a couple of new terms: _time-varying_ and _time-invariant_ variables. In the data above, `sex` is time invariant. It remains constant over all 4 measurement occasions for each baby. Not only that, but for all intents and purposes it isn’t really _allowed_ to change. The `weight` variable, on the other hand, is time varying. The weight values change over time. And not only do they change, the amount, rate, and/or shape of their change is may be precisely what this researcher is interested in.</p>
+<p class="note"> 🗒**Side Note:** Let's quickly learn a couple of new terms: _time-varying_ and _time-invariant_ variables. In the data above, `sex` is time invariant. It remains constant over all 4 measurement occasions for each baby. Not only that, but for all intents and purposes it isn’t really _allowed_ to change. The `weight` variable, on the other hand, is time varying. The weight values change over time. And not only do they change, but the amount, rate, and/or shape of their change may be precisely what this researcher is interested in.</p>
 
 Below, we can compare the person-level version of the baby weight data to the person-period version of the baby weight data. I'm only including babies 1001 and 1002 in the interest of saving space. As you can see, given the same data, the person-level structure is wider (i.e., more _columns_) than the person-period data and the person-period structure is longer (i.e., more _rows_) than the person-level data. That's why the two structures are sometimes referred to as wide and long respectively.
 
@@ -70,7 +70,7 @@ Notice all the missing data in this format -- even with only two babies. For exa
 knitr::include_graphics("img/05_part_data_management/10_restructuring/days_long.png")
 ```
 
-3. For essentially the same reasons already discussed above, the person-period format is better suited for handling time-varying predictors. In the baby weight data, the only predictor variable to us (other than time) was sex, which is time invariant. Regardless of which structure we us, sex only requires one column in the data frame because it never changes. However, imagine scenario were we also collect height and information about diet at each visit. Using a person-level structure to store these variables would have the same limitations that we already discussed above (i.e., no explicit meassure of time, incompatibility with many analysis techniques, and potentially inefficient storage).
+3. For essentially the same reasons already discussed above, the person-period format is better suited for handling time-varying predictors. In the baby weight data, the only predictor variable (other than time) was sex, which is time invariant. Regardless of which structure we us, sex only requires one column in the data frame because it never changes. However, imagine scenario were we also collect height and information about diet at each visit. Using a person-level structure to store these variables would have the same limitations that we already discussed above (i.e., no explicit meassure of time, incompatibility with many analysis techniques, and potentially inefficient storage).
 
 4. Many of the "tidyverse" packages we use in this book (e.g., `dplyr` and `ggplot2`) assume, or at least work best, with data organized in a person-period, or long, format. 
 
@@ -82,15 +82,15 @@ So, does this mean that we should _never_ organize our data frames in a person-l
 
 3. There are times when our data is easier to manipulate when it is organized in a person-level format.
 
-4. There are times when restructure statistical results from a longer format to a wider format to present our results in the most effective way possible.
+4. There are times when it's advantageous to restructure statistical results from a longer format to a wider format to present them in the most effective way possible.
 
-Luckily, we rarely have to choose one structure or the other in an absolute sense. The `tidyr` package generally makes it very easy for us to restructure ("reshape" is another commonly used term) our data frames from wide to long and back again. These allows us to organize our data in the manner that is best suited for the particular task at hand. Let's go ahead and take a look at some examples.
+Luckily, we rarely have to choose one structure or the other in an absolute sense. The `tidyr` package generally makes it very easy for us to restructure ("reshape" is another commonly used term) our data frames from wide to long and back again. This allows us to organize our data in the manner that is best suited for the particular task at hand. Let's go ahead and take a look at some examples.
 
 ## The tidyr package
 
 The tools we will use for restructuring our data will primarily come from a package we haven't used before in this book -- `tidyr`. If you haven't already done so, and you'd like to follow along, please install and load `tidyr`, `dplyr`, and `ggplot2` now.
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(tidyr)
 library(dplyr)
 library(ggplot2)
@@ -141,7 +141,7 @@ babies_long <- babies %>%
 
 * The second argument to the `pivot_longer()` function is the `cols` argument. You should pass the name of the columns you want to make longer to the `cols` argument. Above, we passed the names of the four weight columns to the `cols` argument. The `cols` argument actually accepts tidy-select argument modifiers. We first discussed tidy-select argument modifiers in the [chapter on subsetting data frames](the-select-function). In the example above, we used the `starts_with()` tidy-select modifier to simplify our code. Instead of passing each column name directly to the `cols` argument, we asked `starts_with()` to pass the name of any column that has a column name that starts with the word "weight" to the `cols` argument.
 
-* The third argument to the `pivot_longer()` function is the `names_to` argument. You should pass the `names_to` argument a character string or character vector that tells `pivot_longer()` what you want to name the column that will contain the previous column names that were pivoted. By default, the value passed to the `names_to` argument is `"name"`. We passed the value `"months"` to the `names_to` argument. This tells `pivot_longer()` what to name the column that contains the names of the previous column names. If that seems really confusing, I'm with you. I wrote it and it's confusing to me. Unfortunately, I don't know a better way to write it, but I will _show_ you what the `names_to` argument does below.
+* The third argument to the `pivot_longer()` function is the `names_to` argument. You should pass the `names_to` argument a character string or character vector that tells `pivot_longer()` what you want to name the column that will contain the previous column names that were pivoted. By default, the value passed to the `names_to` argument is `"name"`. We passed the value `"months"` to the `names_to` argument. This tells `pivot_longer()` what to name the column that contains the names of the previous column names. If that seems really confusing, I'm with you. Unfortunately, I don't currently know a better way to write it, but I will _show_ you what the `names_to` argument does below.
 
 * The fourth argument to the `pivot_longer()` function is the `names_prefix` argument. You should pass the `names_prefix` argument a regular expression that tells `pivot_longer()` what to remove from the start of each of the previous column names that we pivoted. By default, the value passed to the `names_prefix` argument is `NULL` (i.e., it doesn't remove anything). We passed the value `"weight_"` to the `names_prefix` argument. This tells `pivot_longer()` that we want remove the character string "weight_" from the start of each of the previous column names that we pivoted. For example, removing "weight_" from "weight_3" results in the value "3", removing "weight_" from "weight_6" results in the value "6", and so on.  Again, I will show you what the `names_prefix` argument does below.
 
@@ -206,7 +206,7 @@ The official help documentation for `pivot_longer()` says that the value passed 
 knitr::include_graphics("img/05_part_data_management/10_restructuring/values_to.png")
 ```
 
-By default, `pivot_longer()` names that column "value." However, that name isn't very informative. We will go ahead and change the column name to "weight" because that's what the values in that column are -- weights. We do so by passing the value `"weight"` to the `values_to` argument like this:
+By default, `pivot_longer()` names that column "value." However, we will once again want a more informative column name in our new data frame. So, we'll go ahead and change the column name to "weight" because that's what the values in that column are -- weights. We do so by passing the value `"weight"` to the `values_to` argument like this:
 
 ```{r}
 babies %>% 
@@ -284,7 +284,7 @@ babies %>%
 
 Next, we'll walk through getting to this result step-by-step.
 
-We are once again starting with a person-level data frame, and we once again want to restructure it to a person-period data frame. If we start with the same code we used to restructure the data frame above, this is the result we get:
+We are once again starting with a person-level data frame, and we once again want to restructure it to a person-period data frame. This is the result we get if we use the same code we previously used to restructure the data frame that didn't include each baby's length:
 
 ```{r}
 babies_long <- babies %>% 
@@ -378,7 +378,7 @@ knitr::include_graphics("img/05_part_data_management/10_restructuring/names_sep1
 
 We are asking `pivot_longer()` to break up each column name (e.g., `weight_3`) at the underscore. That results in creating two separate character strings. In this case, the character string "weight" and the character string "3". However, we only passed one value to the `names_to` argument -- `"months"`. So, which character string should `pivot_longer()` put in the `months` column? Of course, we know that the answer is "3", but `pivot_longer()` doesn't know that. 
 
-So, we have to pass two values to the names_to argument. But, values should we pass?
+So, we have to pass two values to the names_to argument. But, what values should we pass?
 
 ```{r echo=FALSE}
 knitr::include_graphics("img/05_part_data_management/10_restructuring/names_sep2.png")
@@ -423,7 +423,7 @@ babies_long <- babies %>%
 
 And that is exactly the result we wanted. However, there was one little detail we didn't cover. How does `.value` know to create a new column for each unique character string that is in _front_ of the underscore. Why didn't it create a new column for each unique character string that is _behind_ the underscore?
 
-The answer is simple. It knows because of the ordering we used in the value we passed to the `names_to` argument. If we changed the order to `c("months", ".value")`, `pivot_longer()` _would_ have created a new column for each unique character string that is _behind_ the underscore. Take a look:
+The answer is simple. It knows because of the ordering we used in the value we passed to the `names_to` argument. If we changed the order to `c("months", ".value")`, `pivot_longer()` would have created a new column for each unique character string that is _behind_ the underscore. Take a look:
 
 ```{r error=TRUE}
 babies %>% 
@@ -438,7 +438,7 @@ So, be careful about the ordering of the values you pass to the `names_to` argum
 
 ### Why person-period?
 
-Why might we want the `babies` data in this person-period format? Well, as we discussed above, there are many analytic techniques that require our data to be in this format. Unfortunately, those techniques are beyond the scope of this chapter. However, this person-period format is still necessary for something a simple as plotting baby weight against baby height as we've done in the scatter plot below:
+Why might we want the `babies` data in this person-period format? Well, as we discussed above, there are many analytic techniques that require our data to be in this format. Unfortunately, those techniques are beyond the scope of this chapter. However, this person-period format is still necessary for something as simple as plotting baby weight against baby height as we've done in the scatter plot below:
 
 ```{r}
 babies_long %>% 
@@ -463,7 +463,7 @@ We'll start by learning how to restructure, or reshape, our person-period `babie
 babies_long
 ```
 
-As you probably guessed, we will use `tidyr`'s `pivot_wider()` function to do so.
+As you probably guessed, we will use `tidyr`'s `pivot_wider()` function to restructure the data:
 
 ```{r}
 babies <- babies_long %>% 
@@ -495,7 +495,7 @@ df <- tribble(
   print()
 ```
 
-* In the data frame above, the values in column named `measure` are what we want to use as column names in our wide data frame. Therefore, we would pass `"measure"` to the `names_to` argument of `pivot_wider()`:
+* In the data frame above, the values in the column named `measure` are what we want to use as column names in our wide data frame. Therefore, we would pass `"measure"` to the `names_to` argument of `pivot_wider()`:
 
 ```{r}
 df %>% pivot_wider(
@@ -508,7 +508,7 @@ df %>% pivot_wider(
 
 * The ninth argument (we left the fourth through eighth arguments at their default value) to the `pivot_wider()` function is the `values_from` argument. You should pass this argument the name of a column, or columns, that exists in the data frame you passed to the `data` argument. The column(s) you choose should contain values for the new columns you want to create in the new wide data frame. In our `babies` data frame, we wanted to pull the values from the `weight` and `length` columns respectively. 
 
-* The combination of arguments (i.e., `names_from  = "months"` and `values_from = c("weight", "length")`) that we passed to `pivot_wider()` above essentially said, "make new columns from each combination of the values in the column named `months` and the column names `weight` and `length`. So, `weight_3`, `weight_6`, etc. Then values you put in each column should come from the intersection of `month` and `weight` (for the `weight_#`) columns, or `month` and `length` (for the `length_#`) columns.
+* The combination of arguments (i.e., `names_from  = "months"` and `values_from = c("weight", "length")`) that we passed to `pivot_wider()` above essentially said, "make new columns from each combination of the values in the column named `months` and the column names `weight` and `length`. So, `weight_3`, `weight_6`, etc. Then, the values you put in each column should come from the intersection of `month` and `weight` (for the `weight_#`) columns, or `month` and `length` (for the `length_#`) columns.
 
 ### Why person-level?
 
@@ -521,7 +521,7 @@ babies %>%
 
 ## Pivoting summary statistics
 
-What do I mean by pivoting "summary statistics?" Well, in all the examples above, we were manipulating the actual data values that were gathered about our observational units -- babies. However, the ultimate goal of doing this kind of data management is typically to analyze it. In other words, we can often learn more from collapsing our data into a relatively small number of summary statistics than we can by viewing the actual data values themselves. Having said that, not all ways of organizing our summary statistics are equally informative. Or, perhaps it's more accurate to say that not all ways of organizing our summary statistics convey the information with equal efficiency.
+What do I mean by pivoting "summary statistics?" Well, in all the examples above we were manipulating the actual data values that were gathered about our observational units -- babies. However, the ultimate goal of doing this kind of data management is typically to analyze it. In other words, we can often learn more from collapsing our data into a relatively small number of summary statistics than we can by viewing the actual data values themselves. Having said that, not all ways of organizing our summary statistics are equally informative. Or, perhaps it's more accurate to say that not all ways of organizing our summary statistics convey the information with equal efficiency.
 
 There are probably a near-infinite number of possible examples of manipulating summary statistics that we could discuss. Obviously, I can't cover them all. However, I will walk through two examples below that are intended to give you a feel for what we are talking about.
 
@@ -561,23 +561,23 @@ mean_weights %>%
 
 * We used `tidyr`'s `pivot_longer()` function to restructure our data frame of summary statistics from wide to long.
 
-* The only new argument above is the `names_pattern` argument. You should pass a regular expression to the `names_pattern` argument. This regular expression will tell `pivot_longer()` how to break up the original column names and repurpose them for the new column names. This regular expression is not intended to be the main lesson here, but I'm sure some of you will be curious, so I will try to briefly explain it below. In a way, this is how R interprets the regular expression above (feel free to skip if you aren't interested):
+* The only new argument above is the `names_pattern` argument. You should pass a regular expression to the `names_pattern` argument. This regular expression will tell `pivot_longer()` how to break up the original column names and repurpose them for the new column names. The regular expression we used above is not intended to be the main lesson here. But, I'm sure that some of you will be curious about how it works, so I will try to briefly explain it below. In a way, this is how R interprets the regular expression above (feel free to skip if you aren't interested):
 
 ```{r}
 stringr::str_match("mean(weight_3)", "(\\w+)\\((\\w+)_(\\d+)")
 ```
 
-* We haven't used parentheses yet in our regular expressions, but they create something called "capturing groups." Instead of saying, look for this _one thing_ in the character string, look for these _chunks of things_ in this character string.
+* We haven't used parentheses yet in our regular expressions, but they create something called "capturing groups." Instead of saying, "look for this _one thing_ in the character string," we say "look for these _groups of things_ in this character string."
 
-* The first capture group in the regular expression is `(\\w+)`. This tells R to look for one or more word characters. The value that R grabs as part of this first capture group is given under the second result (i.e., `[,2]`) above -- `mean`.
+* The first capture group in the regular expression is `(\\w+)`. This tells R to look for one or more word characters. The value that R grabs as part of this first capture group is given under the second result (i.e., `[,2]`) above -- `"mean"`.
 
 * Then, the regular expression tells R to look for a literal open parenthesis `\\(`. However, this parenthesis is not included in a capture group. In this case, it's really just used as landmark to tell R where the first capture group stops, and the second capture group starts.
 
-* The second capture group in the regular expression is another `(\\w+)`. This again tells R to look for one or more word characters, but this time, R starts look for the word characters _after_ the open parenthesis. The value that R grabs as part of the second capture group is given under the third result (i.e., `[,3]`) above -- `weight`.
+* The second capture group in the regular expression is another `(\\w+)`. This again tells R to look for one or more word characters, but this time, R starts look for the word characters _after_ the open parenthesis. The value that R grabs as part of the second capture group is given under the third result (i.e., `[,3]`) above -- `"weight"`.
 
 * Next, the regular expression tells R to look for a literal underscore `_`. However, this underscore is not included in a capture group. In this case, it's really just used as landmark to tell R where the second capture group stops, and the third capture group starts.
 
-* The third and final capture group in the regular expression is `(\\d+)`. This tells R to look for one or more word digits after the underscore. The value that R grabs as part of the third capture group is given under the third result (i.e., `[,4]`) above -- `3`.
+* The third and final capture group in the regular expression is `(\\d+)`. This tells R to look for one or more digits after the underscore. The value that R grabs as part of the third capture group is given under the third result (i.e., `[,4]`) above -- `"3"`.
 
 * Finally, R matches the values it grabs in each of the three capture groups with the three values passed to the `names_to` argument, which are `".value"`, `"measure"`, and `"months"`. We already discussed the .value special value above. Similar to before, .value will create a new column for each unique value captured in the first capture group. In this case, `mean` and `sd`. Next, the values captured in the second capture group are assigned to a column named `measure`. Finally, the values captured in the third capture group are assigned to a column named `months`.
 
@@ -648,7 +648,7 @@ As I said above, the person-level (wide) and person-period (long) data structure
 
 The three basic guidelines for tidy data are:
 
-1. Each variable (i.e., measurement type or characteristic of the observational unit) must have its own column.
+1. Each variable (i.e., measurement or characteristic about the observational unit) must have its own column.
 
 2. Each observation (i.e. the people, places, or things we are interested in characterizing or comparing _at a particular occasion_) must have its own row.   
 
@@ -793,6 +793,14 @@ reports <- tibble(
   print()
 ```
 
+Where:
+
+* `date` is the date the report was made to APS.
+
+* `emp_id` is a unique identifier for each EMT or paramedic.
+
+* `report_id` is the unique identifier APS assigns to the incoming report.
+
 Let's say that the researchers were interested in calculating the average number of reports per day. We would first need to count the number of reports made each day:
 
 ```{r}
@@ -808,7 +816,7 @@ reports %>%
   summarise(mean_reports_per_day = mean(n))
 ```
 
-And conclude that the mean number of reports made per day was 1.67. However, there is a problem with this strategy. Our study period wasn't three days long. It was seven days long (i.e., October 28th, 2019 to November 3rd, 2019). However, because there weren't any reports made on 2019-10-28, 2019-10-31, 2019-11-01, or 2019-11-03 they don't exist in our count data. But, their absence doesn't represent a missing or unknown value. Their absence represents zero reports being made. We need to explicitly encode that in our count data if we want to accurately calculate the mean number of reports per day. In this tiny little simulated data frame, it's trivial to do this calculation manually. However, the real data set was collected over a three-year period. That's over 1,000 days that would have to be manually accounted for. 
+And conclude that the mean number of reports made per day was 1.67. However, there is a problem with this strategy. Our study period wasn't three days long. It was seven days long (i.e., October 28th, 2019 to November 3rd, 2019). Because there weren't any reports made on 2019-10-28, 2019-10-31, 2019-11-01, or 2019-11-03 they don't exist in our count data. But, their absence doesn't represent a missing or unknown value. Their absence represents zero reports being made on that day. We need to explicitly encode that information in our count data if we want to accurately calculate the mean number of reports per day. In this tiny little simulated data frame, it's trivial to do this calculation manually. However, the real data set was collected over a three-year period. That's over 1,000 days that would have to be manually accounted for. 
 
 Luckily, we can use `tidyr`'s `complete()` function, along with the `seq.Date()` function we learned in the chapter on working with date variables, to fill-in the holes in our count data in an automated way:
 
@@ -832,7 +840,7 @@ reports %>%
 
 * The first argument to the `complete()` function is the `data` argument. You should pass the name of the data frame that contains the column you want to fill-in to the `data` argument. Above, we passed the `reports` data frame to the `data` argument using a pipe operator.
 
-* The second argument to the `complete()` function is the `...` argument. This is where you tell the `complete()` function which column you want to fill-in, or expand, and give it instructions for doing so. Above, asked `complete()` to make sure that each day between 2019-10-28 and 2019-11-03 were included in our date column. We did so by asking `complete()` to set the date column equal to the returned values from the `seq.Date()` function. 
+* The second argument to the `complete()` function is the `...` argument. This is where you tell the `complete()` function which column you want to fill-in, or expand, and give it instructions for doing so. Above, we asked `complete()` to make sure that each day between 2019-10-28 and 2019-11-03 was included in our `date` column. We did so by asking `complete()` to set the date column equal to the returned values from the `seq.Date()` function. 
 
 Notice that all the days during our period of interest are now included in our count data. However, by default, the value for each new row of the `n` column is set to `NA`. But, as we already discussed, `n` isn't missing for those days, it's zero. We can change those values from `NA` to zero by adjusting the value we pass to the `fill` argument. We'll do that next:
 
