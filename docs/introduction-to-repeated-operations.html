@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Appendix A: Glossary | R for Epidemiology</title>
+  <title>32 Introduction to repeated operations | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Appendix A: Glossary | R for Epidemiology" />
+  <meta property="og:title" content="32 Introduction to repeated operations | R for Epidemiology" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://brad-cannell.github.io/r4epi/" />
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="brad-cannell/r4epi" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Appendix A: Glossary | R for Epidemiology" />
+  <meta name="twitter:title" content="32 Introduction to repeated operations | R for Epidemiology" />
   
   <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="creating-tables-with-r-and-microsoft-word.html"/>
-<link rel="next" href="appendix-alternative-table-formats.html"/>
+<link rel="prev" href="restructuring-data-frames.html"/>
+<link rel="next" href="creating-tables-with-r-and-microsoft-word.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -568,42 +568,75 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="appendix-a-glossary" class="section level1 unnumbered" number="">
-<h1>Appendix A: Glossary</h1>
-<p><strong>Console</strong>. Coming soon.</p>
-<p><strong>Data frame</strong>. For our purposes, data frames are just R’s term for data set or data table. Data frames are made up of columns (variables) and rows (observations). In R, all columns of a data frame must have the same length.</p>
-<p><strong>Functions</strong>. Coming soon.</p>
+<div id="introduction-to-repeated-operations" class="section level1" number="32">
+<h1><span class="header-section-number">32</span> Introduction to repeated operations</h1>
+<!--
+We rarely _have_ to use the techniques that we will learn in this part of the book to accomplish a given task.
+-->
+<p>This part of the book is all about the DRY principle. We first discussed the DRY principle in the <a href="creating-and-modifying-columns.html#adding-or-modifying-multiple-columns">section on creating and modifying multiple columns</a>. As a reminder, <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> is an acronym for “Don’t Repeat Yourself.” But, what does that mean?</p>
+<p><img src="img/05_part_data_management/06_conditional_processing/rain.png" width="900" /></p>
+<p>Well, think back to the conditional operations chapter. In that chapter, I compared conditional statements in R with asking my daughter to wear a raincoat if it’s raining. To extend the analogy, now imagine that I wake up one morning and say, “please wear your raincoat if it’s raining today - July 1st.” Then, I wake up the next morning and say, “please wear your raincoat if it’s raining today - July 2nd.” Then, I wake up the next morning and say, “please wear your raincoat if it’s raining today - July 3rd.” And, that pattern continues every morning until my daughter moves out of the house. That’s a ton of repitition!! Alternatively, wouldn’t it be much more efficient for me to just say, “please wear your raincoat on every day that it rains,” just once?</p>
+<p>The same logic applies to our R code. We often want to do the same (or very similar) thing to multiple different objects with our R code. This can result in many lines of code that are very similar and unnecissarily repatitve. This unnecissary repetition can occur in all phases of our projects.</p>
+<p><img src="img/01_part_getting_started/02_what_is_r/competencies_overview.png" width="900" /></p>
+<p>For example:</p>
 <ul>
-<li><p><strong>Arguments:</strong> Arguments always go <em>inside</em> the parentheses of a function and give the function the information it needs to give us the result we want.</p></li>
-<li><p><strong>Pass:</strong> In programming lingo, you <em>pass</em> a value to a function argument. For example, in the funtion call <code>seq(from = 2, to = 100, by = 2)</code> we could say that we passed a value of 2 to the <code>from</code> argument, we passed a value of 100 to the <code>to</code> argument, and we passed a value of 2 to the <code>by</code> argument.</p></li>
-<li><p><strong>Returns:</strong> Instead of saying, “the <code>seq()</code> function <em>gives us</em> a sequence of numbers…” we could say, “the <code>seq()</code> function <em>returns</em> us a sequence of numbers…” In programming lingo, functions <em>return</em> one or more results.</p></li>
+<li><p>We may need to write R code to imporant many different data sets. In such a situation, it isn’t uncommon for the code that imports the data to be the same for each data set – only the file name changes.</p></li>
+<li><p>We may need to recode certain values in multiple columns of our data frame to missing. In such a situation, it isn’t uncommon for the code that recodes the values to be the same for each column – only the column name changes.</p></li>
+<li><p>We may need to caclulate the same set of statistical measures for many different variables in our data frame. In such a situation, the code to calculate the statistical measures doesn’t change – only the variables being passed to the code.</p></li>
+<li><p>We may need to create a table of results that includes statistical measures for many different variables in our data frame. In such a situation, the code to prepare and combine the statistical measures into a single table of results doesn’t change – only the variables being passed to the code.</p></li>
 </ul>
-<p><strong>Global environment</strong>. Coming soon.</p>
-<p><strong>Objects</strong>. Coming soon.</p>
-<p><strong>R</strong>. R is an integrated suite of software facilities for data manipulation, calculation and graphical display. R is very much a vehicle for newly developing methods of interactive data analysis. It has developed rapidly and has been extended by a large collection of packages. However, most programs written in R are essentially ephemeral, written for a single piece of data analysis. <span class="citation"><a href="#ref-R_Development_Core_Team2020-sj" role="doc-biblioref">7</a></span></p>
-<p><strong>R markdown documents</strong>. R markdown documents are text files that can be used to clean and analyze your data interactively as well as share your final results in many different formats (e.g., Microsoft Word, PDF, and even websites). R markdown documents weave together R code, narrative text, and multimedia content together into a polished final product. <span class="citation"><a href="#ref-RStudio2020-yx" role="doc-biblioref">8</a></span></p>
-<p><strong>RStudio</strong>. RStudio is an integrated development environment (IDE) for R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management. RStudio is available in open source and commercial editions and runs on the desktop (Windows, Mac, and Linux) or in a browser connected to RStudio Server or RStudio Server Pro (Debian/Ubuntu, Red Hat/CentOS, and SUSE Linux). <span class="citation"><a href="#ref-RStudio2020-fe" role="doc-biblioref">9</a></span></p>
+<p>In all of these situations we are asking our R code to do something repeatedly, or iteratively, but with a slight change each time. We can write a separate line of code for each time we want to do that thing, or we write one line of code that asks R to do thing thing over and over. Writing code in the later way will often result in R programs that:</p>
+<ul>
+<li><p>Are more concise. In other words, we can write one line of code (or relatively few lines of code) instead of many lines of code. Further, such code generally removes “visual clutter” (i.e., the repetative stuff) that can obscure what the overarching <em>intent</em> if the code is.</p></li>
+<li><p>Contain fewer typos. Every keystroke we make is an opportunity to press the wrong key. If we are writing fewer lines of code, then it logically follows that we are making fewer keystrokes and creating fewer opportunities to hit the wrong key. Similarly, if we are repeatedly copying and pasting code, we are creating opportunites to accidently forget to change a column name, date, file name, etc. in the pasted code.</p></li>
+<li><p>Are easier to maintain. If we want to change our code, we only have to change it one place instead of many places. For example, let’s say that we write R code to check the weather every morning. Later, we decide that we want our R to check the weather <em>and</em> the traffic every morning. Would you rather add that additional request (i.e., check the traffic) to a separate line of code for each day or to the one line of code that asks R to check the weather every day?</p></li>
+</ul>
+<p class="note">
+🗒<strong>Side Note:</strong> When I say “one line of code” above, I mean figuratively. The code we use to remove unnecissary repetition will not necessarily be on one line; however, it should generally require less typing than code that includes unnecissary repetition.
+</p>
+<p>So, writing code that is highly repetative is usually not a great idea, and this part of the book is all about teaching you to recognize and remove unnecissary repetition from your code. As is often the case with R, there are multiple different methods we can use.</p>
+<div id="multiple-methods-for-repeated-operations-in-r" class="section level2" number="32.1">
+<h2><span class="header-section-number">32.1</span> Multiple methods for repeated operations in R</h2>
+<p>In the chapters that follow, we will learn four different methods for removing unnecissary repetition from your code. They are:</p>
+<div class="figure"><span id="fig:unnamed-chunk-684"></span>
+<img src="img/07_part_repeated_operations/01_intro/stickers.png" alt="Four methods for removing unnecissary repetition." width="900" />
+<p class="caption">
+Figure 32.1: Four methods for removing unnecissary repetition.
+</p>
+</div>
+<ol style="list-style-type: decimal">
+<li><p>Writing our own functions that can be reused throughout our code.</p></li>
+<li><p>Using the “scoped variants” of <code>dplyr</code>’s verbs.</p></li>
+<li><p>Using for loops.</p></li>
+<li><p>Using the <code>purrr</code> package.</p></li>
+</ol>
+<p>It’s also important to recognize that each of the methods above can be used independently or in combination with each other. We will see examples of both.</p>
+</div>
+<div id="tidy-evaluation" class="section level2" number="32.2">
+<h2><span class="header-section-number">32.2</span> Tidy evaluation</h2>
+<p>In case it isn’t obvious to you by now, I’m a fan of the <code>tidyverse</code> packages (i.e., <code>dplyr</code>, <code>ggplot2</code>, <code>tidyr</code>, etc.). I use <code>dplyr</code>, in particular, in virtually every single one of my R programs. The use of <strong>non-standard evaluation</strong> is just one of the many aspects of the <code>tidyverse</code> packages that I am a fan of. As a reminder, among other things, <a href="introduction-to-data-management.html#non-standard-evaluation">non-standard evaluation</a> is what allows us to refer to data frame columns without using dollar sign or bracket notation (i.e., data masking). However, non-standard evaluation will create some challenges for us when try to use functions from <code>tidyverse</code> packages inside of functions and for loops that we write on our ourselves. Therefore, we will have to learn more about <em>tidy evaluation</em> if we want to continue to use the <code>tidyverse</code> packages that we’ve been using throughout the book so far.</p>
+<p>I don’t blame you if you are scratching your head a little bit right now. Tidy evaluation can even be tricky for experienced R programmers to wrap their heads around at first. Therefore, I don’t think it will be productive for us to try to learn a lot about the theory behind, or internals of, tidy evaluation as a standalone concept. Instead, in the chapters that follow, I plan to sprinkle in just enough tidy evaluation to accomplish the task at hand. As a little preview, a telltale sign that we are using tidy evaluation will be when you start seeing the <code>{{</code> (said, curly-currly) operator and the <code>!!</code> (said, bang bang) operator. Hopefully, this will all make more sense in the next chapter when we start to get into some examples.</p>
+<p>I recommend the following resources for those of you who are interested in developing a deeper understanding of <code>rlang</code> and tidy evaluation:</p>
+<ol style="list-style-type: decimal">
+<li><p>Programming with dplyr. Accessed July 31, 2020. <a href="https://dplyr.tidyverse.org/articles/programming.html" class="uri">https://dplyr.tidyverse.org/articles/programming.html</a></p></li>
+<li><p>Wickham H. Introduction. In: Advanced R. Accessed July 31, 2020. <a href="https://adv-r.hadley.nz/metaprogramming.html" class="uri">https://adv-r.hadley.nz/metaprogramming.html</a></p></li>
+</ol>
+<p>Now, let’s learn how to write our own functions.</p>
 
 </div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-R_Development_Core_Team2020-sj">
-<p>7. R Development Core Team. <em>An Introduction to R</em>.; 2020.</p>
 </div>
-<div id="ref-RStudio2020-yx">
-<p>8. RStudio. R markdown. Published online 2020.</p>
-</div>
-<div id="ref-RStudio2020-fe">
-<p>9. RStudio. RStudio. Published online 2020.</p>
-</div>
+
+
+
+
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="creating-tables-with-r-and-microsoft-word.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="appendix-alternative-table-formats.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="restructuring-data-frames.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="creating-tables-with-r-and-microsoft-word.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
