@@ -1,0 +1,1016 @@
+# Writing functions
+
+<!--
+
+-->
+
+Have you noticed how we will often calculate the same statistical measures for many different variables in our data? For example, let's say that we have some pretty standard data about some study participants: 
+
+```{r message=FALSE}
+library(dplyr)
+```
+
+```{r}
+study <- tibble(
+  age       = c(32, 30, 32, 29, 24, 38, 25, 24, 48, 29, 22, 29, 24, 28, 24, 25, 
+                25, 22, 25, 24, 25, 24, 23, 24, 31, 24, 29, 24, 22, 23, 26, 23, 
+                24, 25, 24, 33, 27, 25, 26, 26, 26, 26, 26, 27, 24, 43, 25, 24, 
+                27, 28, 29, 24, 26, 28, 25, 24, 26, 24, 26, 31, 24, 26, 31, 34, 
+                26, 25, 27, NA),
+  age_group = c(2, 2, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+                1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 
+                1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 
+                2, 1, 1, 1, NA),
+  gender    = c(2, 1, 1, 2, 1, 1, 1, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 
+                1, 1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 
+                1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 1, 1, 2, 1, 2, 1, 
+                1, 1, 2, 1, NA),
+  ht_in     = c(70, 63, 62, 67, 67, 58, 64, 69, 65, 68, 63, 68, 69, 66, 67, 65, 
+                64, 75, 67, 63, 60, 67, 64, 73, 62, 69, 67, 62, 68, 66, 66, 62, 
+                64, 68, NA, 68, 70, 68, 68, 66, 71, 61, 62, 64, 64, 63, 67, 66, 
+                69, 76, NA, 63, 64, 65, 65, 71, 66, 65, 65, 71, 64, 71, 60, 62, 
+                61, 69, 66, NA),
+  wt_lbs    = c(216, 106, 145, 195, 143, 125, 138, 140, 158, 167, 145, 297, 146, 
+                125, 111, 125, 130, 182, 170, 121, 98, 150, 132, 250, 137, 124, 
+                186, 148, 134, 155, 122, 142, 110, 132, 188, 176, 188, 166, 136, 
+                147, 178, 125, 102, 140, 139, 60, 147, 147, 141, 232, 186, 212, 
+                110, 110, 115, 154, 140, 150, 130, NA, 171, 156, 92, 122, 102, 
+                163, 141, NA),
+  bmi       = c(30.99, 18.78, 26.52, 30.54, 22.39, 26.12, 23.69, 20.67, 26.29, 
+                25.39, 25.68, 45.15, 21.56, 20.17, 17.38, 20.8, 22.31, 22.75, 
+                26.62, 21.43, 19.14, 23.49, 22.66, 32.98, 25.05, 18.31, 29.13, 
+                27.07, 20.37, 25.01, 19.69, 25.97, 18.88, 20.07, NA, 26.76, 
+                26.97, 25.24, 20.68, 23.72, 24.82, 23.62, 18.65, 24.03, 23.86, 
+                10.63, 23.02, 23.72, 20.82, 28.24, NA, 37.55, 18.88, 18.3, 
+                19.13, 21.48, 22.59, 24.96, 21.63, NA, 29.35, 21.76, 17.97, 
+                22.31, 19.27, 24.07, 22.76, NA),
+  bmi_3cat  = c(3, 1, 2, 3, 1, 2, 1, 1, 2, 2, 2, 3, 1, 1, 1, 1, 1, 1, 2, 1, 1, 
+                1, 1, 3, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1, NA, 2, 2, 2, 1, 1, 1, 1, 
+                1, 1, 1, 1, 1, 1, 1, 2, NA, 3, 1, 1, 1, 1, 1, 1, 1, NA, 2, 1, 
+                1, 1, 1, 1, 1, NA)
+) %>% 
+  mutate(
+    age_group = factor(age_group, labels = c("Younger than 30", "30 and Older")),
+    gender    = factor(gender, labels = c("Female", "Male")),
+    bmi_3cat  = factor(bmi_3cat, labels = c("Normal", "Overweight", "Obese"))
+  ) %>% 
+  print()
+```
+
+When we have data like this, it's pretty common to calculate something like the number of missing values, mean, median, min, and max for all of the continuous variables. So, we might use the following code to calculate these measures for `age` first:
+
+```{r}
+study %>% 
+  summarise(
+    n_miss = sum(is.na(age)),
+    mean   = mean(age, na.rm = TRUE),
+    median = median(age, na.rm = TRUE),
+    min    = min(age, na.rm = TRUE),
+    max    = max(age, na.rm = TRUE)
+  )
+```
+
+Great! Next, we want to do the same calculations for `ht_in`. Of course, we don't want to type everything in that code chunk again, so we copy and paste. And change all the instances of `age` to `ht_in`:
+
+```{r}
+study %>% 
+  summarise(
+    n_miss = sum(is.na(ht_in)),
+    mean   = mean(ht_in, na.rm = TRUE),
+    median = median(ht_in, na.rm = TRUE),
+    min    = min(ht_in, na.rm = TRUE),
+    max    = max(ht_in, na.rm = TRUE)
+  )
+```
+
+Now, let's do the same calculations for `wt_lbs` and `bmi`. Again, we will copy and paste, and change the variable name as needed:
+
+```{r}
+study %>% 
+  summarise(
+    n_miss = sum(is.na(wt_lbs)),
+    mean   = mean(wt_lbs, na.rm = TRUE),
+    median = median(wt_lbs, na.rm = TRUE),
+    min    = min(ht_in, na.rm = TRUE),
+    max    = max(wt_lbs, na.rm = TRUE)
+  )
+```
+
+```{r}
+study %>% 
+  summarise(
+    n_miss = sum(is.na(bmi)),
+    mean   = mean(bmi, na.rm = TRUE),
+    median = median(bmi, na.rm = TRUE),
+    min    = min(bmi, na.rm = TRUE),
+    max    = max(bmi, na.rm = TRUE)
+  )
+```
+
+And, we're done! We got the stats we wanted. However, there's a problem. Did you spot it? We accidently forgot to change `ht_in` to `wt_lbs` in the min calculation above. Therefore, our results incorrectly indicate that the minimum weight was 58 lbs. Part of the reason for making this mistake in the first place is that there is a fair amount of visual clutter in each code chunk. What I mean is that it's hard to quickly scan each chunk and see only the elements that are _changing_. Finally, each code chunk was about 8 lines of code. Even with only 4 variables, that's still 32 lines. I think we can improve on this code by writing our own function:
+
+```{r}
+continuous_stats <- function(var) {
+  study %>% 
+    summarise(
+      n_miss = sum(is.na({{ var }})),
+      mean   = mean({{ var }}, na.rm = TRUE),
+      median = median({{ var }}, na.rm = TRUE),
+      min    = min({{ var }}, na.rm = TRUE),
+      max    = max({{ var }}, na.rm = TRUE)
+    )
+}
+```
+
+```{r}
+continuous_stats(age)
+```
+
+```{r}
+continuous_stats(ht_in)
+```
+
+```{r}
+continuous_stats(wt_lbs)
+```
+
+```{r}
+continuous_stats(bmi)
+```
+
+We've now reduced 32 lines of code to 13 lines of code! Additionally, it's very easy to quickly scan our code and see that the only thing changing from chunk-to-chunk is the name of the variable that we are passing to our function and ensure that it is _actually_ changing. As an added bonus, because we've strategically given our function an informative name, the intent behind what we are trying to accomplish is clearer now -- we are calculating summary statistics about our continuous variables.
+
+I hope that this little demonstration has left you feeling like writing your own functions can be really useful, and maybe even kind of cool. I'm going to get into the nuts and bolts of _how_ to write your own functions shortly, but first I want to briefly discuss _when_ to write your own functions.
+
+## When to write functions
+
+I'll again quote Hadley Wickham, prolific R developer and teacher. He says, "You should consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e. you now have three copies of the same code)." @Grolemund2017-qp I'm agree completely with this general sentiment. I'm only going to amend my advice to you slightly. Specifically, you should consider using an appropriate method for repeating operations whenever you’ve copied and pasted a block of code more than twice. In other words, _writing a function_ is not the _only_ option available to us when we notice ourselves copying and pasting code.
+
+## How to write functions
+
+Now, the fun part -- writing our own functions. I know that writing functions can seem intimidating to many people at first. However, the basics are actually pretty simple. 
+
+### The function() function
+
+It all starts with the `function()` function. It is how you tell the R interpreter that you are about to write your own function.
+
+```{r echo=FALSE, fig.cap="The function() function."}
+knitr::include_graphics("img/07_part_repeated_operations/02_functions/function.png")
+```
+
+If you think back to the chapter on [Speaking R's language](#functions), we talked about the analogy that is sometimes drawn between functions and factories. 
+
+```{r echo=FALSE, fig.cap="A factory making bicycles."}
+knitr::include_graphics("img/01_part_getting_started/04_speaking_r/factory1.png")
+```
+
+To build on that analogy, the`function()` is sort of like the factory building. Without it, there is no factory, but an empty building alone doesn't do anything interesting:
+
+```{r error=TRUE}
+function()
+```
+
+In order to build our bicycles, we need to add some workers and equipment to our empty factory building. The R function equivalent to the workers and equipment is the **function body.**
+
+```{r echo=FALSE, fig.cap="The function body."}
+knitr::include_graphics("img/07_part_repeated_operations/02_functions/body.png")
+```
+
+And just like the factory needs doors to contain our workers and equipment and keep them safe (I'm admittedly reaching a little on this one, but just go with it), our function body needs to be wrapped with curly braces.
+
+```{r echo=FALSE, fig.cap="Curly braces around the function body."}
+knitr::include_graphics("img/07_part_repeated_operations/02_functions/braces.png")
+```
+
+We already talked about how, in this analogy, **arguments** are raw material inputs that go into the factory.
+
+```{r echo=FALSE, fig.cap="The function argument(s)."}
+knitr::include_graphics("img/07_part_repeated_operations/02_functions/arguments.png")
+```
+
+In the bicycle factory example, the raw materials were steel and rubber. In the function displayed above, the raw materials are variables.
+
+If we want to be able to call our function (i.e., use it), then we have to have some way to refer to it. Therefore, we will assign our function a name.
+
+```{r echo=FALSE, fig.cap="The named function."}
+knitr::include_graphics("img/07_part_repeated_operations/02_functions/name.png")
+```
+
+I should mention that I've intentionally left out some technical details above. I've done so for two reasons. First, I'm trying to prevent you from feeling afraid of writing functions. Second, many of the technical details are irrelevant for the level we are currently at. However, there is one technical detail that may be worth mentioning now. Most of the functions we will create will have a name. However, functions do not technically _have_ to have a name. When functions don't have a name, they are called ** anonymous functions.** For now, just be aware that anonymous functions are a thing. Later, I will show you how they can sometimes be useful.
+
+### The function writing process
+
+So, we have some idea about _why_ writing our own functions can be a good idea. We have some idea about _when_ to write functions (i.e., don't repeat yourself... more than twice). And, we now know what the basic components of functions are. They are the `function()` function, the function body (wrapped in curly braces), the function argument(s), and the function name. But, if this is your first time dealing with functions, then you may still be feeling like you aren't quite sure where to start. So, here's a little example of how my workflow typically goes. 
+
+First, let's simulate some new data for this example. Let's say we have two data frames that contain peoples first and last names:
+
+```{r}
+people_1 <- tribble(
+  ~id_1, ~name_first_1, ~name_last_1, ~street_1,
+  1,     "Easton",      NA,           "Alameda",
+  2,     "Elias",       "Salazar",    "Crissy Field",
+  3,     "Colton",      "Fox",        "San Bruno",
+  4,     "Cameron",     "Warren",     "Nottingham",
+  5,     "Carson",      "Mills",      "Jersey",
+  6,     "Addison",     "Meyer",      "Tingley",
+  7,     "Aubrey",      "Rice",       "Buena Vista",
+  8,     "Ellie",       "Schmidt",    "Division",
+  9,     "Robert",      "Garza",      "Red Rock",
+  10,    "Stella",      "Daniels",    "Holland"
+) %>% 
+  print()
+```
+
+```{r}
+people_2 <- tribble(
+  ~id_2, ~name_first_2, ~name_last_2, ~street_2,
+  1,     "Easton",      "Stone",      "Alameda",
+  2,     "Elas",        "Salazar",    "Field",
+  3,     NA,            "Fox",        NA,
+  4,     "Cameron",     "Waren",      "Notingham",
+  5,     "Carsen",      "Mills",      "Jersey",
+  6,     "Adison",      NA,           NA,
+  7,     "Aubrey",      "Rice",       "Buena Vista",
+  8,     NA,            "Schmidt",    "Division",
+  9,     "Bob",         "Garza",      "Red Rock",
+  10,    "Stella",      NA,           "Holland"
+) %>% 
+  print()
+```
+
+In this scenario, we want to see if first name, last name, and street name match at each ID between our data frames. More specifically, we want to combine the two data frames into a single data frame and create three new dummy variables that indicate whether first name, last name, and address match respectively. Let's go ahead and combine the data frames now:
+
+```{r}
+people <- people_1 %>% 
+  bind_cols(people_2) %>% 
+  print()
+```
+
+Now, our first attempt might look something like this:
+
+```{r}
+people %>% 
+  mutate(
+    name_first_match = name_first_1 == name_first_2,
+    name_last_match  = name_last_1 == name_last_2,
+    street_match     = street_1 == street_2
+  ) %>% 
+  # Order like columns next to each other for easier comparison
+  select(id_1, starts_with("name_f"), starts_with("name_l"), starts_with("s"))
+```
+
+Ok, in row 1 we see that "Easton" and "Easton" match, and the value for `name_first_match` is `TRUE`. So far, so good. In row 2, we see that "Elias" and "Ela" do not match, and the value for `name_first_match` is `FALSE`. That is also the result we wanted. In row 3, we see that "Colton" and "NA" do not match; however, the value in `name_first_match` is `NA`. In this case, this is not the result we want. We have a problem. That brings us to the first step in my typical workflow.
+
+#### I spot a need for a function
+
+In some cases, the need I spot is purely repetitive code -- like the example at the beginning of this chapter. In other cases, like this one, a built-in R function is not giving me the result I want. 
+
+Here is the basic problem:
+
+```{r}
+1 == 1
+```
+
+```{r}
+1 == 2
+```
+
+```{r}
+1 == NA
+```
+
+```{r}
+NA == 2
+```
+
+```{r}
+NA == NA
+```
+
+
+The equality operator (`==`) always returns `NA` when one, or both, of the values being tested is `NA`. Often, that is exactly the result we want. In this case, however, it is not. Fortunately, we can get the result we want by writing our own function. That brings us to step 2 in the workflow.
+
+#### I make the code work for one specific case
+
+Don't try to solve the entire problem for every case right out of the gate. Instead, solve one problem for a specific case, and then build on that win! Let's start by trying to figure out how to get the result we want for `name_first_match` in row 3 of our example data.
+
+```{r}
+"Colton" == NA
+```
+
+This is essentially what we already had above. But, we want to change our result from `NA` to `FALSE`. Let's start by saving the result to an object that we can manipulate:
+
+```{r}
+result <- "Colton" == NA
+result
+```
+
+So, now the value returned by the equality comparison is saved to an object named `result`. Let's go ahead and use a conditional operation to change the value of `result` to `FALSE` when it is initially `NA`, and leave it alone otherwise:
+
+```{r}
+result <- "Colton" == NA
+result <- if_else(is.na(result), FALSE, result)
+result
+```
+
+Alright! This worked! At least, it worked for this case. That brings us to step 3 in the workflow.
+
+#### I make the solution into a "function"
+
+How do I do that? Well, first I start with a skeleton of most the function components we discussed above. They are the `function()` function, the function body (wrapped in curly braces), and the function name. At the moment, we don't have any arguments. I'll explain why soon.
+
+```{r eval=FALSE}
+is_match <- function() {
+  
+}
+```
+
+Then, I literally copy the solution from above and paste it into the function body, making sure to indent the code. Next, we need to run the code chunk to _create_ the function. After doing so, you should see the function appear in your global environment. Keep in mind, this _creates_ the function so that we can use it later, but the function isn't immediately _run_.
+
+```{r}
+is_match <- function() {
+  result <- "Colton" == NA
+  result <- if_else(is.na(result), FALSE, result)
+  result
+}
+```
+
+Now, let's test out our shiny new function. To _run_ the function, we can simply type the function name, with the parentheses, and run the code chunk.
+
+```{r}
+is_match()
+```
+
+And, it works! When we ask R to run a function we are really asking R to run the _code_ in the _body_ of the function. In this case, we know that the code in the body of the function results in the value `FALSE` because this results in `FALSE`:
+
+```{r}
+result <- "Colton" == NA
+result <- if_else(is.na(result), FALSE, result)
+result
+```
+
+And all we did was stick that code in the function body. Said another way, this:
+
+```{r eval=FALSE}
+result <- "Colton" == NA
+result <- if_else(is.na(result), FALSE, result)
+result
+```
+
+and this:
+
+```{r eval=FALSE}
+is_match()
+```
+
+mean essentially the same thing to R now. I hope that makes sense. Stick with me even if it still isn't quite clear. We'll get more practice soon. 
+
+At this point, you may be wondering about the function arguments, and why there aren't any. Well, we can try passing a value to our `is_match()` function. How about we pass the name "Easton" from the first row of our example data above:
+
+```{r error=TRUE}
+is_match(name = "Easton")
+```
+
+But, we get an error. R doesn't know what the `name` argument is or what to do with the values we are passing to it. That's because we never said anything about any arguments when we created the `is_match()` function. We left the parentheses where the function arguments go empty.
+
+```{r}
+is_match <- function() {
+  result <- "Colton" == NA
+  result <- if_else(is.na(result), FALSE, result)
+  result
+}
+```
+
+Well, let's create `is_match()` again, but this time, let's add an argument:
+
+```{r}
+is_match <- function(name) {
+  result <- "Colton" == NA
+  result <- if_else(is.na(result), FALSE, result)
+  result
+}
+```
+
+```{r}
+is_match(name = "Easton")
+```
+
+Hmmm, let's add another argument and see what happens:
+
+```{r}
+is_match <- function(name_1, name_2) {
+  result <- "Colton" == NA
+  result <- if_else(is.na(result), FALSE, result)
+  result
+}
+```
+
+```{r}
+is_match(name_1 = "Easton", name_2 = "Easton")
+```
+
+It looks as though the arguments we are adding don't have any effect on our returned value. That's because they don't. I oversimplified how function arguments work just a little bit in our factory analogy earlier. When add arguments to function definition (i.e., when we create the function) it's really more like adding a loading dock to our factory. It's a place where our factory can receive raw materials. However, there still needs to be equipment inside the factory that can _use_ those raw materials. If we drop off a load of rubber at our bicycle factor, but there's nothing inside our bicycle factory that uses rubber, then we wouldn't expect dropping off the rubber to have any effect on the outputs coming out of the factory. 
+
+We have similar situation above. We dropped the name "Easton" off at our `is_match()` function, but nothing _inside_ our `is_match()` function can _use_ the name "Easton". There's no machinery to plug that name into. That brings us to step 4 in the workflow.
+
+#### I start generalizing the function
+
+As it stands right now, our `is_match()` function can't accept any new names. The only result we will ever get from the current version of our `is_match()` function is the result of testing the equality between the values "Colton" and NA, and then converting that value to `FALSE`. This isn't a problem if the only values we care about comparing are "Colton" and NA, but of course, that isn't the case. We need a way to make our function work for other values too. Said another way, we need to make our function more general.
+
+As you may have guessed already, that will require us creating an argument to receive input values _and_ a place to use those input values in the function body. Let's start by adding a `first_name` argument:
+
+```{r}
+is_match <- function(first_name) {
+  result <- first_name == NA
+  result <- if_else(is.na(result), FALSE, result)
+  result
+}
+```
+
+```{r}
+is_match(first_name = "Easton")
+```
+
+👆**Here's what we did above:**
+
+* We created once again created our `is_match()` function. However, this time we created it with a single argument -- `first_name`. We didn't have to name the argument `first_name`. We could have named it anything that we can name any other variable in R. But, `first_name` seemed like a reasonable choice since the value we want to pass to this argument is a person's first name.
+
+* The `first_name` argument will receive the first name values that we want to pass to this function.
+
+* We replaced the constant value "Colton" in the function body with the variable `first_name`. It isn't a coincidence that the name of the variable `first_name` matches the name of the argument `first_name`. R will take whatever value we give to the `first_name` argument and _pass_ it to the variable with a matching name inside the function body. Then, R will run the code inside the function body as though the variable _is_ the value we passed to it.
+
+So, when we type:
+
+```{r}
+is_match(first_name = "Easton")
+```
+
+R sees:
+
+```{r}
+result <- "Easton" == NA
+result <- if_else(is.na(result), FALSE, result)
+result
+```
+
+It looks like our `is_match()` function is still going to return a value of `FALSE` no matter what value we pass to the `first_name` function. That's because no matter what value we pass to `result <- first_name == NA`, `result` will equal `NA`. Then, `result <- if_else(is.na(result), FALSE, result)` will change the value of `result` to `FALSE`. So, we still need to make our function more general. As you may have guessed, we can do that by adding a second argument:
+
+```{r error=TRUE}
+is_match <- function(first_name, first_name) {
+  result <- first_name == first_name
+  result <- if_else(is.na(result), FALSE, result)
+  result
+}
+```
+
+Uh, oh! We got an error. This error is telling us that each function argument must have a unique name. Let's try again:
+
+```{r error=TRUE}
+is_match <- function(first_name_1, first_name_2) {
+  result <- first_name_1 == first_name_2
+  result <- if_else(is.na(result), FALSE, result)
+  result
+}
+```
+
+```{r}
+is_match(first_name_1 = "Easton", first_name_2 = "Colton")
+```
+
+Is this working or is our function still just returning `FALSE` no matter what we pass to the arguments? Let's try to pass "Easton" to `first_name_1` and `first_name_2` and see what happens:
+
+```{r}
+is_match(first_name_1 = "Easton", first_name_2 = "Easton")
+```
+
+We got a `TRUE`! That's exactly what we were wanting! Let's do one final check. Let's see what happens when we pass `NA` to our `is_match()` function:
+
+```{r}
+is_match(first_name_1 = "Easton", first_name_2 = NA)
+```
+
+Perfect! It looks like our function is finally ready to help us solve the problem we identified way back at step one. But, while we are talking about _generalizing_ our function, shouldn't we go ahead and use more general names for our function arguments? I mean, we were only using first names when we were _developing_ our function, but we are going to _use_ our function to compare last names and street names as well. In fact, our function will compare any two values and tell us whether or not they are a match. So, let's go ahead and change the argument names to `value_1` and `value_2`:
+
+```{r}
+is_match <- function(value_1, value_2) {
+  result <- value_1 == value_2  # Don't forget to change the variable names here!!
+  result <- if_else(is.na(result), FALSE, result)
+  result
+}
+```
+
+Now, we are ready to put our function to work testing whether or not the first name, last name, and street name match at each ID between our data frames:
+
+```{r}
+people %>% 
+  mutate(
+    name_first_match = is_match(name_first_1, name_first_2),
+    name_last_match  = is_match(name_last_1, name_last_2),
+    street_match     = is_match(street_1, street_2)
+  ) %>% 
+  # Order like columns next to each other for easier comparison
+  select(id_1, starts_with("name_f"), starts_with("name_l"), starts_with("s"))
+```
+
+Works like a charm! Notice, however, that we still have a lot of repetition in the code above. Unfortunately, we still don't have all the tools we need to remove it. But, we will soon.
+
+At this point in the chapter, my hope is that you are developing a feel for how to write your own functions and why that might be useful. With R, it's possible to write functions that are very complicated. But, I hope the examples above show you that functions don't have to be complicated to be useful. In that spirit, I'm hesitant to dive too much deeper into the details and technicalities of function writing at this point. However, there are a few details that I feel like I should at least mention so that you aren't caught off guard by them as you begin to write your own functions. I will touch on each below, and then wrap us this chapter with resources for those of you who wish to dive deeper.
+
+## Giving your function arguments default values
+
+I've been introducing new functions to you all throughout the book so far. Each time I do, I try to discuss some, or all, of the function's arguments -- including the default values that are passed to the arguments. I imagine that most of you have developed some sort of intuitive understanding of just what it meant for the argument to have a default value. However, this seems like an appropriate point in the book to talk about default arguments a little more explicitly and show you how to add them to the functions you write. 
+
+Let's say that we want to write a function that will increase the value of a number, or set of numbers, incrementally. We may start with something like this:
+
+```{r}
+increment <- function(x) {
+  x + 1
+}
+```
+
+👆**Here's what we did above:**
+
+* We _created_ our own function that will increase the value of a number, or set of numbers, incrementally. Specifically, when we pass a number to the `x` argument the value of that number plus one will be returned.
+
+Let's go ahead and use our function now:
+
+```{r}
+increment(2)
+```
+
+👆**Here's what we did above:**
+
+* We passed the value `2` to the `x` argument of our `increment()` function. The `x` argument then passed the value `2` to the `x` variable in the function body. Said another way, R replaced the `x` variable in the function body with the value `2`. Then, R executed the code in the function body. In this case, the code in the function body added the values `2` and `1`. Finally, the function returned the value `3`.
+
+Believe it or not, our simple little `increment()` function is a full-fledged R function. It is just as legitimate as any other R function we've used in this book. But, let's go ahead and add a little more to its functionality. For example, maybe we want to be able to increment by other values other than just one. How might we do that?
+
+Hopefully, your first thought was to replace the constant value `1` in the function body with a variable that can have _any_ number passed to it. That's exactly what we will do next:
+
+```{r}
+increment <- function(x, by) {
+  x + by
+}
+```
+
+👆**Here's what we did above:**
+
+* We _created_ our own function that will increase the value of a number, or set of numbers, incrementally. Specifically, when we pass a number to the `x` argument the value of that number will be incremented by the value passed to the `by` argument. 
+
+What value should `increment()` return if we pass `2` to the `x` argument and `2` to the `by` argument?
+
+```{r}
+increment(2, 2)
+```
+
+Hopefully, that's what you were expecting. But, now what happens if we don't pass any value to the `by` argument?
+
+```{r error=TRUE}
+increment(2)
+```
+
+We get an error saying that there wasn't any value passed to the `by` argument, and the `by` argument doesn't have a default value. But, we are really lazy, and it takes a lot of work to pass a value to the `by` argument every time we use the `increment()` function. Plus, we _almost_ always only want to increment our numbers by one. In this case, our best course of action is to set the default value of `by` to `1`. Fortunately for us, doing so is really easy!
+
+```{r}
+increment <- function(x, by = 1) {
+  x + by
+}
+```
+
+👆**Here's what we did above:**
+
+* We _created_ our own function that will increase the value of a number, or set of numbers, incrementally. Specifically, when we pass a number to the `x` argument the value of that number will be incremented by the value passed to the `by` argument. The default value passed to the `by` argument is `1`. Said another way, R will _pretend_ that we passed the value `1` to the `by` argument if we don't explicitly pass a number other than `1` to the `by` argument.
+
+* All we had to do to give `by` a default value was type `=` followed by the value (i.e., `1`) when we created the function.
+
+Now let's try out our latest version of `increment()`:
+
+```{r}
+# Default value
+increment(2)
+```
+
+```{r}
+# Passing the value 1
+increment(2, 1)
+```
+
+```{r}
+# Passing a value other than 1
+increment(2, 2)
+```
+
+```{r}
+# Passing a vector of numbers to the x argument
+increment(c(1, 2, 3), 2)
+```
+
+## The values your functions return
+
+When we run our functions, they typically execute each line of code in the function body, one after another, starting with the first line and ending at the last line. Therefore, the value that your function _returns_ (i.e., the thing that comes out of the factory) is typically dictated by the last line of code in your function body. 
+
+To show you what I mean, let's take another look at our `is_match()` function:
+
+```{r}
+is_match <- function(value_1, value_2) {
+  result <- value_1 == value_2                     # Do this first
+  result <- if_else(is.na(result), FALSE, result)  # Then this
+  result                                           # Then this
+}
+```
+
+Why did we type that third line of code? Afterall, that line of code isn't _doing_ anything. Well, let's see what happens if we take it out:
+
+```{r}
+is_match <- function(value_1, value_2) {
+  result <- value_1 == value_2 
+  result <- if_else(is.na(result), FALSE, result)
+}
+```
+
+```{r}
+is_match("Easton", "Easton")
+```
+
+It appears as though nothing happened! Did our function break?
+
+Let's think about with typically happens when we use R's built-in functions. When we don't _assign_ the value returned by the function to an object, then the returned value is printed to the screen:
+
+```{r}
+sum(1, 1)
+```
+
+But, when we do assign the value returned by the function to an object, then nothing is printed to the screen:
+
+```{r}
+x <- sum(1, 1)
+```
+
+The same thing is happening in our function above. The last line of our function body is assigning a value (i.e., `TRUE` or `FALSE`) to the variable `result`. Just like `x <- sum(1, 1)` didn't print to the screen, `result <- if_else(is.na(result), FALSE, result)` doesn't print to the screen when we run `is_match("Easton", "Easton")` using this version of `is_match()`.
+
+However, we can see in the example below that result of the operations being executed inside the function body can still be assigned to an object in our global environment, and we can print the contents of that object to screen:
+
+```{r}
+x <- is_match("Easton", "Easton")
+x
+```
+
+If all of that seems confusing, here is the bottom line. In general, it's a best practice for your function to print its return value to the screen. You can do this in one of three ways:
+
+1️⃣ The value that results from the code in the last line of the function body isn't assigned to anything. We saw an example of this above with our `increment()` function:
+
+```{r}
+increment <- function(x, by = 1) {
+  x + by # Last line doesn't assign the value to an object
+}
+```
+
+```{r}
+increment(2)
+```
+
+2️⃣ If you assign values to objects inside your function, then type the name of the object that contains the value you want your function to return on the last line of the function body. We saw an example of this with our `is_match()` function. We can also amend our `increment()` function follow this pattern:
+
+```{r}
+increment <- function(x, by = 1) {
+  out <- x + by # Now we assign the value to an object
+  out           # Type object name on last line of the function body 
+}
+```
+
+```{r}
+increment(2)
+```
+
+3️⃣ Use the `return()` function.
+
+```{r}
+increment <- function(x, by = 1) {
+  out <- x + by 
+  return(out)   
+}
+```
+
+```{r}
+increment(2)
+```
+
+So, which method _should_ you use? Well, for all but the simplest functions (like the one above) method 1 is not considered good coding practice. Method 3 may seem like it's the most explicit; however, it actually considered best practice to use the `return()` function only when you want your function to return its value before R reaches the last line of the function body. For example, let's add another line of code to our function body that adds another `1` to the value of out:
+
+```{r}
+increment <- function(x, by = 1) {
+  out <- x + by 
+  out <- out + 1 # Adding an extra 1
+  return(out)    # Return still in the last line
+}
+```
+
+```{r}
+increment(2)
+```
+
+Now, let's move `return(out)` to the second line of the function body -- above the line of code that adds an additional `1` to the value of `out`:
+
+```{r}
+increment <- function(x, by = 1) {
+  out <- x + by 
+  return(out)    # Return in the second line above adding an extra 1
+  out <- out + 1 # Adding an extra 1
+}
+```
+
+```{r}
+increment(2)
+```
+
+In the example above, the last `1` wasn't added to the value of `out` because we used the `return()` function. Said another way, `increment()` returned the value of `out` "early", and the last line of the function body was never executed. 
+
+In the example above, using the `return()` function in the way that we did obviously makes no sense. I was just meant to illustrate what the `return()` function _can_ do. The `return()` function doesn't actually become useful until we start writing more complex functions. But, because the `return()` function has the special ability to end the execution of the function body early, it's considered a best practice to only it for that purpose. 
+
+Therefore, in most situations, you will want to use method 2 (i.e., object name on last line) when writing your own functions.
+
+One final note before we move on to the next section. Notice that we never used the `print()` function on the last line of our code. This was intentional. Using `print()` will give you the result you expect when you don't assign the value that your function returns to an object in your global environment:
+
+```{r}
+increment <- function(x, by = 1) {
+  out <- x + by 
+  print(out)   
+}
+```
+
+```{r}
+increment(2)
+```
+
+But, it will not give you the result you want if you do assign the value that your function returns to an object in your global environment: 
+
+```{r}
+increment <- function(x, by = 1) {
+  out <- x + by 
+  print(out)   
+}
+```
+
+```{r}
+x <- increment(2)
+x
+```
+
+## Lexical scoping and functions
+
+If you have been following along with the code above on your computer, you may have noticed that the objects we create inside our functions do not appear in our global environment. If you haven't been following along, you may want to jump on your computer really quickly for this section (or just take my word for it).
+
+The reason the objects we created inside our functions do not appear in our global environment is that R actually has _multiple_ environments were objects can live. Additionally, R uses something called **lexical scoping rules** to look for the objects you refer to in your R code. The vast majority of the time, we won't need to concern ourselves much with any of these other environments or the lexical scoping rules. However, function writing does require us to have some minimal understanding of these concepts. At the very least, you should be aware of the following when writing your own functions:
+
+1️⃣ Objects we create inside of functions don't live in our global environment and we can't do anything with them outside of the function we created them in. 
+
+In the example below, we create an object named `out` inside of the `increment()` function:
+
+```{r}
+increment <- function(x, by = 1) {
+  out <- x + by # Assign the value to the out object inside the function
+  out           
+}
+```
+
+We then use the function:
+
+```{r}
+x <- increment(2)
+x
+```
+
+However, the `out` object is not available to us:
+
+```{r error=TRUE}
+out
+```
+
+2️⃣ If the function we write can't find the object it's looking for inside the function body, then it will try to find it in the global environment.
+
+For example, let's create a new function named `add` that adds the values of `x` and `y` together in its function body. Notice, however, that there is no `y` argument to pass a value to, and that `y` is never assigned a value inside of the `add()` function:
+
+```{r}
+add <- function(x) {
+  x + y
+}
+```
+
+When we call the function:
+
+```{r error=TRUE}
+add(2)
+```
+
+We get an error. R can't find the object `y`. Now let's create a `y` object in our global environment:
+
+```{r}
+y <- 100
+```
+
+And call the `add()` function again:
+
+```{r}
+add(2)
+```
+
+As you can see, R wasn't able to find a value for `y` _inside_ of the function body so it looked _outside_ of the function in the global environment. This is definitely something to be aware of, but usually isn't an actual problem. 
+
+For starters, I can't think of a good reason to add a variable to your function body without assigning it a value inside the function body or matching it to a function argument. In other words, there's generally no good reason to have variables that serve no purpose floating around inside your functions. 
+
+If you do assign it a value inside the function, then R will not look outside of the function for a value:
+
+```{r}
+add <- function(x) {
+  y <- 1
+  x + y
+}
+```
+
+```{r}
+y <- 100
+add(2)
+```
+
+Likewise, if you create the function with a matching argument, then R will not look outside of the function for a value:
+
+```{r}
+add <- function(x, y) {
+  x + y
+}
+```
+
+```{r error=TRUE}
+y <- 100
+add(2)
+```
+
+Again, this aspect of the lexical scoping rules is something to be aware of, but generally isn't a problem in practice.
+
+## Tidy evaluation
+
+Now that you have all the basics of function writing under your belt, let's take look at what happens when we try to write functions that use `tidyverse` package functions in the function body.
+
+For this section, let's return to our study data we used for the first example in this chapter. As a reminder, here's what the data looks like:
+
+```{r}
+study
+```
+
+We already calculated the number of missing values, mean, median, min, and max for all of the continuous variables. So, let's go ahead and calculate the number and percent of observations for each level of our categorical variables.
+
+We know that we have 3 categorical variables (i.e., `age_group`, `gender`, and `bmi_3cat`), and we know that we want to perform the same calculation on all of them. So, we decide to write our own function. Following the workflow we discussed earlier, our next step is to make the code work for one specific case:
+
+```{r}
+study %>% 
+  count(age_group) %>% 
+  mutate(percent = n / sum(n) * 100)
+```
+
+Great! Thanks to `dplyr`, we have the result we were looking for! The next step in the workflow is to make our solution into a function. Let's copy and paste our solution into a function skeleton like we did before:
+
+```{r}
+cat_stats <- function(var) {
+  study %>% 
+    count(age_group) %>% 
+    mutate(percent = n / sum(n) * 100)
+}
+```
+
+```{r}
+cat_stats()
+```
+
+So far, so good! Now, let's replace `age_group` with `var` in the function body to generalize our function:
+
+```{r}
+cat_stats <- function(var) {
+  study %>% 
+    count(var) %>% 
+    mutate(percent = n / sum(n) * 100)
+}
+```
+
+```{r error=TRUE}
+cat_stats(age_group)
+```
+
+Unfortunately, this doesn't work. As I said in the introduction to this part of the book, non-standard evaluation prevents us from using `dplyr` and other `tidyverse` packages inside of our functions in the same way that we might use other functions. Fortunately, the fix for this is pretty easy. All we need to do is **embrace** (i.e., wrap) the `var` variable with double curly braces:
+
+```{r}
+cat_stats <- function(var) {
+  study %>% 
+    count({{ var }}) %>% 
+    mutate(percent = n / sum(n) * 100)
+}
+```
+
+```{r}
+cat_stats(age_group)
+```
+
+Now, we can use our new function on the rest of our categorical variables:
+
+```{r}
+cat_stats(gender)
+```
+
+```{r}
+cat_stats(bmi_3cat)
+```
+
+This is working beautifully! However, we should probably make one final adjustment to our `cat_stats()` function. Let's say that we had another data frame with categorical variable we wanted to analyze:
+
+```{r}
+other_study <- tibble(
+  id = 1:10,
+  age_group = c(rep("Younger", 9), "Older"),
+) %>% 
+  print()
+```
+
+Now, let's pass age_group to our `cat_stats()` function:
+
+```{r}
+cat_stats(age_group)
+```
+
+Is that the result you expected? I hope not! That's the same result we got from the original study data. Have you figured out why this happened? Take another look at our function definition:
+
+```{r eval=FALSE}
+cat_stats <- function(var) {
+  study %>% 
+    count({{ var }}) %>% 
+    mutate(percent = n / sum(n) * 100)
+}
+```
+
+We have the `study` data frame hard coded into the first line of the function body. In the same way we need a matching argument-variable pair to pass multiple different columns into our function, we need a matching argument-variable pair to pass multiple different data frames into our function. We start by adding an argument to accept the data frame:
+
+```{r eval=FALSE}
+cat_stats <- function(data, var) {
+  study %>% 
+    count({{ var }}) %>% 
+    mutate(percent = n / sum(n) * 100)
+}
+```
+
+Again, we could name this argument almost anything, but `data` seems like a reasonable choice. Then, we replace `study` with `data` in the function body to generalize our function:
+
+```{r}
+cat_stats <- function(data, var) {
+  {{data}} %>% 
+    count({{ var }}) %>% 
+    mutate(percent = n / sum(n) * 100)
+}
+```
+
+And now we can use our `cat_stats()` function on any data frame -- including the `other_study` data frame we created above:
+
+```{r}
+cat_stats(other_study, age_group)
+```
+
+We can even use it with a pipe:
+
+```{r}
+other_study %>% 
+  cat_stats(age_group)
+```
+
+Some of you may be wondering why we didn't have to wrap `data` with double curly braces in the code above. Remember, we only have to use the curly braces with column names because of non-standard evaluation. More specifically, because of one aspect of non-standard evaluation called data masking. Data masking is what lets us refer to a column in a data frame without using dollar sign or bracket notation. For example, `age_group` doesn't exist in our global environment as a standalone object:
+
+```{r error=TRUE}
+age_group
+```
+
+It only exists as a part of (i.e. column in) the `other_study` object:
+
+```{r}
+other_study$age_group
+```
+
+But the data frames themselves are not data masked. They do exist as standalone objects in our global environment:
+
+```{r}
+other_study
+```
+
+Therefore, there is no need to wrap them with double curly braces. Having said that, it doesn't appear as though doing so will hurt anything:
+
+```{r}
+cat_stats <- function(data, var) {
+  {{data}} %>% 
+    count({{ var }}) %>% 
+    mutate(percent = n / sum(n) * 100)
+}
+```
+
+```{r}
+cat_stats(other_study, age_group)
+```
+
+That pretty much wraps up this chapter on the basics of writing function to reduce unnecessary repetition in your R code. If you're feeling good about writing your own functions, great! If you want to dig even deeper, take a look at the [functions chapter of the Advanced R book](https://adv-r.hadley.nz/functions.html). 
+
+If you're still feeling a little apprehensive or confused, don't feel bad. It takes most people (myself included) awhile to get comfortable with writing functions. Just remember, functions _can_ be complicated, but they don't _have_ to be. Even very simple functions can sometimes be useful. So, start simple and get more complex as your skills and confidence grow.
+
+If you find that you've written a function that is really useful, consider saving it for use again in the future. Early on, I would just save my functions as R scripts in a folder on my computer. I could then copy and paste those functions from the scripts into my R programs as needed. Then, I learned about the `source()` function, which allowed me to use my saved functions without having to manually copy and paste them. Eventually, I learned how to make my [own packages](http://r-pkgs.had.co.nz/) that contained groups of related functions and save them to my [Github account](https://github.com/). From there, I could use my functions on any computer, and even share them with others. Finally, in 2020, I published my first package on [CRAN](https://cran.r-project.org/). Publishing your packages on CRAN allows you to share your functions with a much broader audience.
