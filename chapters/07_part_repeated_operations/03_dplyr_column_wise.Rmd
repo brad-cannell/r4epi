@@ -16,7 +16,7 @@ knitr::include_graphics("img/dplyr.png")
 
 So far, however, we've always done these transformations and statistical analyses on one column of our data frame at a time. There isn't anything inherently "wrong" with this approach, but, for reasons we've already discussed, there are often advantages to telling R what you want to do one time, and then asking R to do that thing repeatedly _across_ all, or a subset of, the columns in your data frame. That is exactly what `dplyr`'s `across()` function allows us to do.
 
-There are so ways you might want to use the `across()` function in your R programs. I can't begin to cover, or even imagine, them all. Instead, the goal of this chapter is just to provide you with an overview of the `across()` function and show you some examples of using it with `filter()`, `mutate()`, and `summarise()` to get you thinking about how you might want to use it in your R programs.
+There are so many ways we might want to use the `across()` function in our R programs. I can't begin to cover, or even imagine, them all. Instead, the goal of this chapter is just to provide you with an overview of the `across()` function and show you some examples of using it with `filter()`, `mutate()`, and `summarise()` to get you thinking about how you might want to use it in your R programs.
 
 Before we discuss further, let's take a look at a quick example. The first thing we will need to do is load `dplyr`.
 
@@ -62,7 +62,7 @@ df %>%
 
 Now, you might ask why this is a better approach. Fair question. 
 
-In this case, using `across()` doesn't actually reduce the number of lines of code we wrote. In fact, we wrote two additional lines when we used the `across()` function. However, imagine if added 20 additional columns to our data frame. Using the first approach, we would have to write 20 additional lines of code inside the `summarise()` function. Using the `across()` approach, we wouldn't have to change our code at all.
+In this case, using `across()` doesn't actually reduce the number of lines of code we wrote. In fact, we wrote two additional lines when we used the `across()` function. However, imagine if we added 20 additional columns to our data frame. Using the first approach, we would have to write 20 additional lines of code inside the `summarise()` function. Using the `across()` approach, we wouldn't have to change our code at all.
 
 Perhaps _more importantly_, did you notice that I "accidently" forgot to replace `y` with `z` when I copied and pasted `z_mean = mean(y)` in the code chunk for the first approach? That mistake is fairly easy to catch and fix in this very simple example. But, in real-world projects, mistakes like this are easy to make, and not always so easy to catch. We are much less likely to make similar mistakes when we use `across()`.
 
@@ -147,7 +147,8 @@ df %>%
   summarise(
     across(
       .cols  = everything(),
-      .fns   = mean,
+      .fns   = mean, 
+      na.rm  = TRUE,
       .names = "{col}_{fn}"
     )
   )
@@ -240,12 +241,10 @@ df %>%
 
 The purrr-style lambda always begins with the tilde symbol (~). Then we type out a function call behind the tilde symbol. We place the special `.x` symbol inside the function call where we would normally want to type the name of the column we want the function to operate on. The `across()` function will then substitute each column name we passed to the `.cols` argument for `.x` sequentially. In the example above, there isn't really any good reason to use this syntax. However, this syntax can be useful at times. We will see some examples below. 
 
-That pretty much covers the basics of how to use the `across()` function. Let's go ahead and take a look at some examples that illustrate some of the ways in which it can be useful to us.
-
 ## Across with filter
 
-We've already discussed complete case analyses multiple times in this book. That is, including only the rows in our data frame that don't have any missing values in our analysis. 
-We've already seen how we can use the `filter()` function to remove rows of a _single_ column that includes missing data. For example:
+We've already discussed complete case analyses multiple times in this book. That is, including only the rows from our data frame that don't have any missing values in our analysis. 
+We've already seen how we can use the `filter()` function to remove the rows of a _single_ column where the data are missing. For example:
 
 ```{r}
 df %>% 
@@ -253,7 +252,7 @@ df %>%
   summarise(mean = mean(x))
 ```
 
-But, we can use the `across()` function inside the `filter()` function to remove _all_ rows with missing values from our data frame:
+We can use the `across()` function, inside the `filter()` function, to remove _all_ rows with missing values from our data frame:
 
 ```{r error=TRUE}
 df %>% 
@@ -310,11 +309,11 @@ df %>%
   )
 ```
 
-That is exactly the result we wanted. There's nothing wrong with this approach and we could easily stop the example here. However, we also have an opportunity to learn about **anonymous functions** by building on this example.
+That is exactly the result we wanted! 
 
-The `not_missing()` function we wrote above works great. But, what if we needed it for this specific case only, and we knew we weren't going to need it at any other place in our program. Well, in that circumstance we may choose to use an **anonymous function** instead of a **named function**. What do I mean by that? Well, when we _created_ `not_missing()` above, we gave it a _name_ -- "not_missing". Later, in a separate code chunk, we _called_ the `not_missing()` function by passing its name to the `.fns` argument. In other words, there were two steps: _creating_ the function and _calling_ the function. Because, _creating_ and _calling_ were separate steps, we had to give the function a name. How else we would call it at a later time?
+The `not_missing()` function we wrote above works great. But, what if we needed it for this specific case only, and we knew we weren't going to need it again at any other place in our program. Well, in that circumstance we may choose to use an **anonymous function** instead of a **named function**. What do I mean by that? Well, when we _created_ `not_missing()` above, we gave it a _name_ -- "not_missing". Later, in a separate code chunk, we _called_ the `not_missing()` function by passing its name to the `.fns` argument. In other words, there were two steps: _creating_ the function and _calling_ the function. Because, _creating_ and _calling_ were separate steps, we had to give the function a name. How else we would call it at a later time?
 
-However, it is possible to essentially combine these two steps into one. In other words, we can _call_, or _execute_, the code inside our function at the moment the function is created. When we do so, there is no need to name the function. It is _anonymous_. Aside from not assigning the function a name, however, it is identical to the named version. As a reminder, here's the  code we used to _define_, or _create_, the `not_missing()` function:
+However, it is possible to essentially combine these two steps into one. In other words, we can _call_, or execute the code inside our function, at the moment the function is created. When we do so, there is no need to name the function. Therefore, it's _anonymous_. Aside from not assigning the function a name, however, it is identical to the named version. As a reminder, here's the  code we used to _define_, or _create_, the `not_missing()` function:
 
 ```{r}
 not_missing <- function(col) {
@@ -354,9 +353,9 @@ df %>%
   )
 ```
 
-However, this code doesn't work because R doesn't know what the `col` inside `!is.na(col)` is. We are no longer defining it with `function(col)`. Do you remember which special symbol we can use pass the function in `.fns` each of the columns passed to `.cols`?
+However, this code doesn't work because R doesn't know what the `col` inside `!is.na(col)` is. We are no longer defining it with `function(col)`. Do you remember which special symbol we can use to pass the function in `.fns` each of the columns passed to `.cols`?
 
-We can us the place the special `.x` symbol inside the function call where we would normally want to type the name of the column we want the function to operate on:
+We can use the special `.x` symbol inside the function call where we would normally want to type the name of the column we want the function to operate on:
 
 ```{r}
 df %>% 
@@ -386,7 +385,7 @@ In this section, we learned how to use the `across()` function inside the `filte
 
 ## Across with mutate
 
-We've already seen a number of examples of manipulating columns in our data frame using the `mutate()` function. In this section, we are going to take a look at two examples where using the `across()` function inside `mutate()` will allow us to apply the same manipulation to multiple columns in our data frame at once.
+We've already seen a number of examples of manipulating columns of our data frames using the `mutate()` function. In this section, we are going to take a look at two examples where using the `across()` function inside `mutate()` will allow us to apply the same manipulation to multiple columns in our data frame at once.
 
 Let's go ahead and simulate the same `demographics` data frame we simulated for the [recoding missing](#recode-missing) section of the conditional operations chapter. Let's also add two new columns: a four-category education column and a six-category income column. For all columns except `id` and `age`, a value of `7` represents "Don't know" and a value of `9` represents "refused." 
 
@@ -408,15 +407,15 @@ When working with data like this, it's common to want to recode all the `7`'s an
 ```{r}
 demographics %>% 
   mutate(
-    race = if_else(race == 7 | race == 9, NA_real_, race),
+    race     = if_else(race == 7 | race == 9, NA_real_, race),
     hispanic = if_else(race == 7 | hispanic == 9, NA_real_, hispanic),
     edu_4cat = if_else(edu_4cat == 7 | edu_4cat == 9, NA_real_, edu_4cat)
   )
 ```
 
-🚩In the code above, we copied and pasted more than twice. That's a red flag that we should be thinking about removing unnecessary repetition from our code. 
+🚩In the code chunk above, we have essentially the same code copied more than twice. That's a red flag that we should be thinking about removing unnecessary repetition from our code. 
 
-Also, did you notice that I forgot to replace `race` with `hispanic` in `hispanic = if_else(race == 7 | hispanic == 9, NA_real_, hispanic)`? This time, I didn't write "forgot" in quotes because I _really did forget_ and only noticed it later. In this case, the error caused a value of `1` to be recoded to `NA` in the `hispanic` column. These things really do happen -- even to me!
+Also, did you notice that I forgot to replace `race` with `hispanic` in `hispanic = if_else(race == 7 | hispanic == 9, NA_real_, hispanic)`? This time, I didn't write "forgot" in quotes because I _really did forget_ and only noticed it later. In this case, the error caused a value of `1` to be recoded to `NA` in the `hispanic` column. These typos we've been talking about really do happen -- even to me!
 
 Here's how we can use `across()` in this situation:
 
@@ -432,7 +431,7 @@ demographics %>%
 
 👆**Here's what we did above:**
 
-* We used a purrr-style lambda to replace `7`'s and `9`'s in all columns in our data frame, except id and age, with `NA`. 
+* We used a purrr-style lambda to replace `7`'s and `9`'s in all columns in our data frame, except `id` and `age`, with `NA`. 
 
 * Remember, the special `.x` symbol is just shorthand for each column passed to the `.cols` argument. 
 
@@ -461,14 +460,14 @@ drug_trial %>%
   )
 ```
 
-🚩Once again, we copied and pasted more than twice. That's a red flag that we should be thinking about removing unnecessary repetition from our code. Here's how we can use `across()` to do so:
+🚩Once again, we have essentially the same code copied more than twice. That's a red flag that we should be thinking about removing unnecessary repetition from our code. Here's how we can use `across()` to do so:
 
 ```{r}
 drug_trial %>% 
   mutate(
     across(
-      .cols = starts_with("se"),
-      .fns  = ~ factor(.x, 0:1, c("No", "Yes")),
+      .cols  = starts_with("se"),
+      .fns   = ~ factor(.x, 0:1, c("No", "Yes")),
       .names = "{col}_f"
     )
   )
@@ -482,7 +481,7 @@ drug_trial %>%
 
 ## Across with summarise
 
-Let's return to the `ehr` data frame we used in the chapter on working with character strings:
+Let's return to the `ehr` data frame we used in the chapter on working with character strings for our first example of using `across()` inside of `summarise`:
 
 ```{r message=FALSE}
 library(readr)
@@ -521,7 +520,7 @@ And finally, we used the `table()` function to get a count of how many people re
 table(symptoms$headache)
 ```
 
-This is where we stopped in that example. However, what if we wanted to know how many people reported the other symptoms as well? Well, we could repeatedly call the `table()` function:
+This is where the example stopped in the chapter on working with character strings. However, what if we wanted to know how many people reported the other symptoms as well? Well, we could repeatedly call the `table()` function:
 
 ```{r}
 table(symptoms$pain)
@@ -577,7 +576,7 @@ symptoms %>%
   )
 ```
 
-At this point, we might think, "wouldn't it be nice to see the count _and_ the proportion in the same result?" Well, we can do that by supplying our purrr-style lambdas as functions in a list of name-function pairs like this: 
+Now, at this point, we might think, "wouldn't it be nice to see the count _and_ the proportion in the same result?" Well, we can do that by supplying our purrr-style lambdas as functions in a list of name-function pairs like this: 
 
 ```{r}
 symptom_summary <- symptoms %>% 
@@ -593,7 +592,9 @@ symptom_summary <- symptoms %>%
   print()
 ```
 
-In this case, it's probably fine to stop her. But, what if we had 20 or 30 symptoms that we were analyzing? It would be really difficult to read and compare them arranged horizontally like this. Do you recall us discussing restructuring our results in the chapter on restructuring data frames? This is a circumstance where we might want to use `pivot_longer()` to make our results easier to read and interpret:
+In this case, it's probably fine to stop here. But, what if we had 20 or 30 symptoms that we were analyzing? It would be really difficult to read and compare them arranged horizontally like this, wouldn't it? 
+
+Do you recall us discussing restructuring our results in the chapter on restructuring data frames? This is a circumstance where we might want to use `pivot_longer()` to make our results easier to read and interpret:
 
 ```{r}
 symptom_summary %>% 
@@ -604,9 +605,9 @@ symptom_summary %>%
   )
 ```
 
-Isn't that result much easier to read?
+There! Isn't that result much easier to read?
 
-For our final example of the chapter, let's return the first example from the writing functions chapter. We started with some simulated study data:
+For our final example of this chapter, let's return the first example from the writing functions chapter. We started with some simulated study data:
 
 ```{r}
 study <- tibble(
@@ -670,7 +671,7 @@ continuous_stats <- function(var) {
 }
 ```
 
-We then used that function to calculate are statistics of interest on each continuous variable:
+We then used that function to calculate our statistics of interest for each continuous variable:
 
 ```{r}
 continuous_stats(age)
@@ -721,6 +722,7 @@ summary_stats %>%
 What do you think the problem is here?
 
 Well, we passed an underscore to the `names_sep` argument. This tells `pivot_longer()` that that character string on the left side of the underscore should make up the values of the new `characteristic` column and each unique character string on the right side of the underscore should be used to create a new column name. In the symptoms data, this worked fine because all of the column names followed this pattern (e.g., `pain_count` and `pain_prop`). But, do the column names in `summary_stats` always follow this pattern? What about `age_n_miss` and `ht_in_n_miss`? All the extra underscores in the column names makes this pattern ineffective. 
+
 There are probably many ways we could address this problem. I think the most straightforward way is probably to go back to the code we used to create `summary_stats` and use the `.names` argument to separate the column name and statistic name with a character other than an underscore. Maybe a hyphen instead:
 
 ```{r}
@@ -741,7 +743,7 @@ summary_stats <- study %>%
   print()
 ```
 
-Now, we can simply pass a period to the `names_sep` argument to `pivot_longer()`:
+Now, we can simply pass a hyphen to the `names_sep` argument to `pivot_longer()`:
 
 ```{r}
 summary_stats %>% 
@@ -752,4 +754,6 @@ summary_stats %>%
   )
 ```
 
-I'm a big fan of using `across()` in conjunction with the `dplyr`. It allows me to remove a lot of the unnecessary repetition from my code in a way that integrates pretty seamlessly with the tools I'm already using. Perhaps you will see value in using `across()` as well. In the next chapter, we will learn about using **for loops** to remove unnecessary repetition from our code.
+Look at how much easier those results are to read!
+
+I'm a big fan of using `across()` in conjunction with the `theyr`. It  verbsallows me to remove a lot of the unnecessary repetition from my code in a way that integrates pretty seamlessly with the tools I'm already using. Perhaps you will see value in using `across()` as well. In the next chapter, we will learn about using **for loops** to remove unnecessary repetition from our code.
