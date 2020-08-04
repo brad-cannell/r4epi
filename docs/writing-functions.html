@@ -594,7 +594,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!--
 
 -->
-<p>Have you noticed how we will often calculate the same statistical measures for many different variables in our data? For example, let’s say that we have some pretty standard data about some study participants:</p>
+<p>Have you noticed how we will often calculate the same statistical measures for many different variables in our data? For example, let’s say that we have some pretty standard data about some study participants that looks like this:</p>
 <div class="sourceCode" id="cb925"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb925-1"><a href="writing-functions.html#cb925-1"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
 <div class="sourceCode" id="cb926"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb926-1"><a href="writing-functions.html#cb926-1"></a>study &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
 <span id="cb926-2"><a href="writing-functions.html#cb926-2"></a>  <span class="dt">age       =</span> <span class="kw">c</span>(<span class="dv">32</span>, <span class="dv">30</span>, <span class="dv">32</span>, <span class="dv">29</span>, <span class="dv">24</span>, <span class="dv">38</span>, <span class="dv">25</span>, <span class="dv">24</span>, <span class="dv">48</span>, <span class="dv">29</span>, <span class="dv">22</span>, <span class="dv">29</span>, <span class="dv">24</span>, <span class="dv">28</span>, <span class="dv">24</span>, <span class="dv">25</span>, </span>
@@ -654,7 +654,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  9    48 30 and Older    Male      65    158  26.3 Overweight
 ## 10    29 Younger than 30 Male      68    167  25.4 Overweight
 ## # … with 58 more rows</code></pre>
-<p>When we have data like this, it’s pretty common to calculate something like the number of missing values, mean, median, min, and max for all of the continuous variables. So, we might use the following code to calculate these measures for <code>age</code> first:</p>
+<p>When we have data like this, it’s pretty common to calculate something like the number of missing values, mean, median, min, and max for all of the continuous variables. So, we might use the following code to calculate these measures:</p>
 <div class="sourceCode" id="cb928"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb928-1"><a href="writing-functions.html#cb928-1"></a>study <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb928-2"><a href="writing-functions.html#cb928-2"></a><span class="st">  </span><span class="kw">summarise</span>(</span>
 <span id="cb928-3"><a href="writing-functions.html#cb928-3"></a>    <span class="dt">n_miss =</span> <span class="kw">sum</span>(<span class="kw">is.na</span>(age)),</span>
@@ -705,7 +705,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   n_miss  mean median   min   max
 ##    &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1      4  23.6   22.9  10.6  45.2</code></pre>
-<p>And, we’re done! We got the stats we wanted. However, there’s a problem. Did you spot it? We accidently forgot to change <code>ht_in</code> to <code>wt_lbs</code> in the min calculation above. Therefore, our results incorrectly indicate that the minimum weight was 58 lbs. Part of the reason for making this mistake in the first place is that there is a fair amount of visual clutter in each code chunk. What I mean is that it’s hard to quickly scan each chunk and see only the elements that are <em>changing</em>. Finally, each code chunk was about 8 lines of code. Even with only 4 variables, that’s still 32 lines. I think we can improve on this code by writing our own function:</p>
+<p>And, we’re done!</p>
+<p>However, there’s a problem. Did you spot it? We accidently forgot to change <code>ht_in</code> to <code>wt_lbs</code> in the min calculation above. Therefore, our results incorrectly indicate that the minimum weight was 58 lbs. Part of the reason for making this mistake in the first place is that there is a fair amount of visual clutter in each code chunk. What I mean is that it’s hard to quickly scan each chunk and see only the elements that are <em>changing</em>.</p>
+<p>Additionally, each code chunk was about 8 lines of code. Even with only 4 variables, that’s still 32 lines. I think we can improve on this code by writing our own function. That’s exactly what we will do in the code chunk below. For now, don’t worry if you don’t understand <em>how</em> the code works. We will dissect it later.</p>
 <div class="sourceCode" id="cb936"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb936-1"><a href="writing-functions.html#cb936-1"></a>continuous_stats &lt;-<span class="st"> </span><span class="cf">function</span>(var) {</span>
 <span id="cb936-2"><a href="writing-functions.html#cb936-2"></a>  study <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb936-3"><a href="writing-functions.html#cb936-3"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
@@ -716,6 +718,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb936-8"><a href="writing-functions.html#cb936-8"></a>      <span class="dt">max    =</span> <span class="kw">max</span>({{ var }}, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb936-9"><a href="writing-functions.html#cb936-9"></a>    )</span>
 <span id="cb936-10"><a href="writing-functions.html#cb936-10"></a>}</span></code></pre></div>
+<p>Now, let’s <em>use</em> the function we just created above to once again calculate the descriptive measures we are interested in.</p>
 <div class="sourceCode" id="cb937"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb937-1"><a href="writing-functions.html#cb937-1"></a><span class="kw">continuous_stats</span>(age)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 5
 ##   n_miss  mean median   min   max
@@ -736,18 +739,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   n_miss  mean median   min   max
 ##    &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1      4  23.6   22.9  10.6  45.2</code></pre>
-<p>We’ve now reduced 32 lines of code to 13 lines of code! Additionally, it’s very easy to quickly scan our code and see that the only thing changing from chunk-to-chunk is the name of the variable that we are passing to our function and ensure that it is <em>actually</em> changing. As an added bonus, because we’ve strategically given our function an informative name, the intent behind what we are trying to accomplish is clearer now – we are calculating summary statistics about our continuous variables.</p>
-<p>I hope that this little demonstration has left you feeling like writing your own functions can be really useful, and maybe even kind of cool. I’m going to get into the nuts and bolts of <em>how</em> to write your own functions shortly, but first I want to briefly discuss <em>when</em> to write your own functions.</p>
+<p>Pretty cool, right? We reduced 32 lines of code to 13 lines of code! Additionally, it’s very easy to quickly scan our code and see that the only thing changing from chunk-to-chunk is the name of the variable that we are passing to our function and ensure that it is <em>actually</em> changing. As an added bonus, because we’ve strategically given our function an informative name, the intent behind what we are trying to accomplish is clearer now – we are calculating summary statistics about our continuous variables.</p>
+<p>I hope that this little demonstration has left you feeling like writing your own functions can be really useful, and maybe even kind of fun. I’m going to get into the nuts and bolts of <em>how</em> to write your own functions shortly, but first I want to briefly discuss <em>when</em> to write your own functions.</p>
 <div id="when-to-write-functions" class="section level2" number="33.1">
 <h2><span class="header-section-number">33.1</span> When to write functions</h2>
-<p>I’ll again quote Hadley Wickham, prolific R developer and teacher. He says, “You should consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e. you now have three copies of the same code).” <span class="citation"><a href="#ref-Grolemund2017-qp" role="doc-biblioref">2</a></span> I’m agree completely with this general sentiment. I’m only going to amend my advice to you slightly. Specifically, you should consider using an appropriate method for repeating operations whenever you’ve copied and pasted a block of code more than twice. In other words, <em>writing a function</em> is not the <em>only</em> option available to us when we notice ourselves copying and pasting code.</p>
+<p>I’ll again quote Hadley Wickham, prolific R developer and teacher. He says, “You should consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e. you now have three copies of the same code).” <span class="citation"><a href="#ref-Grolemund2017-qp" role="doc-biblioref">2</a></span> I completely agree with this general sentiment. I’m only going to amend my advice to you slightly. Specifically, you should consider using an appropriate method for repeating operations whenever you’ve copied and pasted a block of code more than twice. In other words, <em>writing a function</em> is not the <em>only</em> option available to us when we notice ourselves copying and pasting code.</p>
 </div>
 <div id="how-to-write-functions" class="section level2" number="33.2">
 <h2><span class="header-section-number">33.2</span> How to write functions</h2>
 <p>Now, the fun part – writing our own functions. I know that writing functions can seem intimidating to many people at first. However, the basics are actually pretty simple.</p>
 <div id="the-function-function" class="section level3" number="33.2.1">
 <h3><span class="header-section-number">33.2.1</span> The function() function</h3>
-<p>It all starts with the <code>function()</code> function. It is how you tell the R interpreter that you are about to write your own function.</p>
+<p>It all starts with the <code>function()</code> function. This is how you tell R that you are about to write your own function.</p>
 <div class="figure"><span id="fig:unnamed-chunk-697"></span>
 <img src="img/07_part_repeated_operations/02_functions/function.png" alt="The function() function." width="900" />
 <p class="caption">
@@ -761,7 +764,7 @@ Figure 33.1: The function() function.
 Figure 33.2: A factory making bicycles.
 </p>
 </div>
-<p>To build on that analogy, the<code>function()</code> is sort of like the factory building. Without it, there is no factory, but an empty building alone doesn’t do anything interesting:</p>
+<p>To build on that analogy, the<code>function()</code> function is sort of like the factory building. Without it, there is no factory, but an empty building alone doesn’t do anything interesting:</p>
 <div class="sourceCode" id="cb945"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb945-1"><a href="writing-functions.html#cb945-1"></a><span class="cf">function</span>()</span></code></pre></div>
 <pre><code>## Error: &lt;text&gt;:2:0: unexpected end of input
 ## 1: function()
@@ -780,7 +783,7 @@ Figure 33.3: The function body.
 Figure 33.4: Curly braces around the function body.
 </p>
 </div>
-<p>We already talked about how, in this analogy, <strong>arguments</strong> are raw material inputs that go into the factory.</p>
+<p>We already talked about how the values we pass to <strong>arguments</strong> are raw material inputs that go into the factory.</p>
 <div class="figure"><span id="fig:unnamed-chunk-702"></span>
 <img src="img/07_part_repeated_operations/02_functions/arguments.png" alt="The function argument(s)." width="900" />
 <p class="caption">
@@ -788,19 +791,18 @@ Figure 33.5: The function argument(s).
 </p>
 </div>
 <p>In the bicycle factory example, the raw materials were steel and rubber. In the function displayed above, the raw materials are variables.</p>
-<p>If we want to be able to call our function (i.e., use it), then we have to have some way to refer to it. Therefore, we will assign our function a name.</p>
+<p>If we want to be able to call our function (i.e., use it) later, then we have to have some way to refer to it. Therefore, we will assign our function a name.</p>
 <div class="figure"><span id="fig:unnamed-chunk-703"></span>
 <img src="img/07_part_repeated_operations/02_functions/name.png" alt="The named function." width="900" />
 <p class="caption">
 Figure 33.6: The named function.
 </p>
 </div>
-<p>I should mention that I’ve intentionally left out some technical details above. I’ve done so for two reasons. First, I’m trying to prevent you from feeling afraid of writing functions. Second, many of the technical details are irrelevant for the level we are currently at. However, there is one technical detail that may be worth mentioning now. Most of the functions we will create will have a name. However, functions do not technically <em>have</em> to have a name. When functions don’t have a name, they are called ** anonymous functions.** For now, just be aware that anonymous functions are a thing. Later, I will show you how they can sometimes be useful.</p>
 </div>
 <div id="the-function-writing-process" class="section level3" number="33.2.2">
 <h3><span class="header-section-number">33.2.2</span> The function writing process</h3>
-<p>So, we have some idea about <em>why</em> writing our own functions can be a good idea. We have some idea about <em>when</em> to write functions (i.e., don’t repeat yourself… more than twice). And, we now know what the basic components of functions are. They are the <code>function()</code> function, the function body (wrapped in curly braces), the function argument(s), and the function name. But, if this is your first time dealing with functions, then you may still be feeling like you aren’t quite sure where to start. So, here’s a little example of how my workflow typically goes.</p>
-<p>First, let’s simulate some new data for this example. Let’s say we have two data frames that contain peoples first and last names:</p>
+<p>So, we have some idea about <em>why</em> writing our own functions can be a good idea. We have some idea about <em>when</em> to write functions (i.e., don’t repeat yourself… more than twice). And, we now know what the basic components of functions are. They are the <code>function()</code> function, the function body (wrapped in curly braces), the function argument(s), and the function name. But, if this is your first time being exposed to functions, then you may still be feeling like you aren’t quite sure how to get started with writing your own. So, here’s a little example of how my function writing workflow typically goes.</p>
+<p>First, let’s simulate some new data for this example. Let’s say we have two data frames that contain first and last names:</p>
 <div class="sourceCode" id="cb947"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb947-1"><a href="writing-functions.html#cb947-1"></a>people_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
 <span id="cb947-2"><a href="writing-functions.html#cb947-2"></a>  <span class="op">~</span>id_<span class="dv">1</span>, <span class="op">~</span>name_first_<span class="dv">1</span>, <span class="op">~</span>name_last_<span class="dv">1</span>, <span class="op">~</span>street_<span class="dv">1</span>,</span>
 <span id="cb947-3"><a href="writing-functions.html#cb947-3"></a>  <span class="dv">1</span>,     <span class="st">&quot;Easton&quot;</span>,      <span class="ot">NA</span>,           <span class="st">&quot;Alameda&quot;</span>,</span>
@@ -873,7 +875,7 @@ Figure 33.6: The named function.
 ##  9     9 Robert       Garza       Red Rock     9 Bob          Garza      
 ## 10    10 Stella       Daniels     Holland     10 Stella       &lt;NA&gt;       
 ## # … with 1 more variable: street_2 &lt;chr&gt;</code></pre>
-<p>Now, our first attempt might look something like this:</p>
+<p>Now, our first attempt at creating the dummy variables might look something like this:</p>
 <div class="sourceCode" id="cb953"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb953-1"><a href="writing-functions.html#cb953-1"></a>people <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb953-2"><a href="writing-functions.html#cb953-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
 <span id="cb953-3"><a href="writing-functions.html#cb953-3"></a>    <span class="dt">name_first_match =</span> name_first_<span class="dv">1</span> <span class="op">==</span><span class="st"> </span>name_first_<span class="dv">2</span>,</span>
@@ -897,11 +899,11 @@ Figure 33.6: The named function.
 ## 10    10 Stella       Stella       TRUE             Daniels     &lt;NA&gt;       
 ## # … with 4 more variables: name_last_match &lt;lgl&gt;, street_1 &lt;chr&gt;,
 ## #   street_2 &lt;chr&gt;, street_match &lt;lgl&gt;</code></pre>
-<p>Ok, in row 1 we see that “Easton” and “Easton” match, and the value for <code>name_first_match</code> is <code>TRUE</code>. So far, so good. In row 2, we see that “Elias” and “Ela” do not match, and the value for <code>name_first_match</code> is <code>FALSE</code>. That is also the result we wanted. In row 3, we see that “Colton” and “NA” do not match; however, the value in <code>name_first_match</code> is <code>NA</code>. In this case, this is not the result we want. We have a problem. That brings us to the first step in my typical workflow.</p>
+<p>Let’s take a moment to review the results we got. In row 1 we see that “Easton” and “Easton” match, and the value for <code>name_first_match</code> is <code>TRUE</code>. So far, so good. In row 2, we see that “Elias” and “Ela” do not match, and the value for <code>name_first_match</code> is <code>FALSE</code>. That is also the result we wanted. In row 3, we see that “Colton” and “NA” do not match; however, the value in <code>name_first_match</code> is <code>NA</code>. In this case, this is not the result we want. We have a problem. That brings us to the first step in my typical workflow.</p>
 <div id="i-spot-a-need-for-a-function" class="section level4" number="33.2.2.1">
 <h4><span class="header-section-number">33.2.2.1</span> I spot a need for a function</h4>
 <p>In some cases, the need I spot is purely repetitive code – like the example at the beginning of this chapter. In other cases, like this one, a built-in R function is not giving me the result I want.</p>
-<p>Here is the basic problem:</p>
+<p>Here is the basic problem in this particular case:</p>
 <div class="sourceCode" id="cb955"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb955-1"><a href="writing-functions.html#cb955-1"></a><span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span></span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <div class="sourceCode" id="cb957"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb957-1"><a href="writing-functions.html#cb957-1"></a><span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
@@ -932,7 +934,7 @@ Figure 33.6: The named function.
 </div>
 <div id="i-make-the-solution-into-a-function" class="section level4" number="33.2.2.3">
 <h4><span class="header-section-number">33.2.2.3</span> I make the solution into a “function”</h4>
-<p>How do I do that? Well, first I start with a skeleton of most the function components we discussed above. They are the <code>function()</code> function, the function body (wrapped in curly braces), and the function name. At the moment, we don’t have any arguments. I’ll explain why soon.</p>
+<p>How do I do that? Well, first I start with a skeleton of the function components we discussed above. They are the <code>function()</code> function, the function body (wrapped in curly braces), and the function name. At the moment, we don’t have any arguments. I’ll explain why soon.</p>
 <div class="sourceCode" id="cb971"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb971-1"><a href="writing-functions.html#cb971-1"></a>is_match &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
 <span id="cb971-2"><a href="writing-functions.html#cb971-2"></a>  </span>
 <span id="cb971-3"><a href="writing-functions.html#cb971-3"></a>}</span></code></pre></div>
@@ -966,7 +968,7 @@ Figure 33.6: The named function.
 <span id="cb981-3"><a href="writing-functions.html#cb981-3"></a>  result &lt;-<span class="st"> </span><span class="kw">if_else</span>(<span class="kw">is.na</span>(result), <span class="ot">FALSE</span>, result)</span>
 <span id="cb981-4"><a href="writing-functions.html#cb981-4"></a>  result</span>
 <span id="cb981-5"><a href="writing-functions.html#cb981-5"></a>}</span></code></pre></div>
-<p>Well, let’s create <code>is_match()</code> again, but this time, let’s add an argument:</p>
+<p>Let’s create <code>is_match()</code> again, but this time, let’s add an argument:</p>
 <div class="sourceCode" id="cb982"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb982-1"><a href="writing-functions.html#cb982-1"></a>is_match &lt;-<span class="st"> </span><span class="cf">function</span>(name) {</span>
 <span id="cb982-2"><a href="writing-functions.html#cb982-2"></a>  result &lt;-<span class="st"> &quot;Colton&quot;</span> <span class="op">==</span><span class="st"> </span><span class="ot">NA</span></span>
 <span id="cb982-3"><a href="writing-functions.html#cb982-3"></a>  result &lt;-<span class="st"> </span><span class="kw">if_else</span>(<span class="kw">is.na</span>(result), <span class="ot">FALSE</span>, result)</span>
@@ -982,7 +984,7 @@ Figure 33.6: The named function.
 <span id="cb985-5"><a href="writing-functions.html#cb985-5"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb986"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb986-1"><a href="writing-functions.html#cb986-1"></a><span class="kw">is_match</span>(<span class="dt">name_1 =</span> <span class="st">&quot;Easton&quot;</span>, <span class="dt">name_2 =</span> <span class="st">&quot;Easton&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
-<p>It looks as though the arguments we are adding don’t have any effect on our returned value. That’s because they don’t. I oversimplified how function arguments work just a little bit in our factory analogy earlier. When add arguments to function definition (i.e., when we create the function) it’s really more like adding a loading dock to our factory. It’s a place where our factory can receive raw materials. However, there still needs to be equipment inside the factory that can <em>use</em> those raw materials. If we drop off a load of rubber at our bicycle factor, but there’s nothing inside our bicycle factory that uses rubber, then we wouldn’t expect dropping off the rubber to have any effect on the outputs coming out of the factory.</p>
+<p>It looks as though the arguments we are adding don’t have any effect on our returned value. That’s because they don’t. I oversimplified how function arguments work just a little bit in our factory analogy earlier. When we add arguments to function our definition (i.e., when we create the function) it’s really more like adding a loading dock to our factory. It’s a place where our factory can <em>receive</em> raw materials. However, there still needs to be equipment inside the factory that can <em>use</em> those raw materials. If we drop off a load of rubber at our bicycle factory, but there’s no machine inside our bicycle factory that uses rubber, then we wouldn’t expect dropping off the rubber to have any effect on the outputs coming out of the factory.</p>
 <p>We have similar situation above. We dropped the name “Easton” off at our <code>is_match()</code> function, but nothing <em>inside</em> our <code>is_match()</code> function can <em>use</em> the name “Easton”. There’s no machinery to plug that name into. That brings us to step 4 in the workflow.</p>
 </div>
 <div id="i-start-generalizing-the-function" class="section level4" number="33.2.2.4">
@@ -998,8 +1000,7 @@ Figure 33.6: The named function.
 <pre><code>## [1] FALSE</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
-<li><p>We created once again created our <code>is_match()</code> function. However, this time we created it with a single argument – <code>first_name</code>. We didn’t have to name the argument <code>first_name</code>. We could have named it anything that we can name any other variable in R. But, <code>first_name</code> seemed like a reasonable choice since the value we want to pass to this argument is a person’s first name.</p></li>
-<li><p>The <code>first_name</code> argument will receive the first name values that we want to pass to this function.</p></li>
+<li><p>We once again created our <code>is_match()</code> function. However, this time we created it with a single argument – <code>first_name</code>. We didn’t have to name the argument <code>first_name</code>. We could have named it anything that we can name any other variable in R. But, <code>first_name</code> seemed like a reasonable choice since the value we want to pass to this argument is a person’s first name. The <code>first_name</code> argument will <em>receive</em> the first name values that we want to pass to this function.</p></li>
 <li><p>We replaced the constant value “Colton” in the function body with the variable <code>first_name</code>. It isn’t a coincidence that the name of the variable <code>first_name</code> matches the name of the argument <code>first_name</code>. R will take whatever value we give to the <code>first_name</code> argument and <em>pass</em> it to the variable with a matching name inside the function body. Then, R will run the code inside the function body as though the variable <em>is</em> the value we passed to it.</p></li>
 </ul>
 <p>So, when we type:</p>
@@ -1028,10 +1029,10 @@ Figure 33.6: The named function.
 <p>Is this working or is our function still just returning <code>FALSE</code> no matter what we pass to the arguments? Let’s try to pass “Easton” to <code>first_name_1</code> and <code>first_name_2</code> and see what happens:</p>
 <div class="sourceCode" id="cb1000"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1000-1"><a href="writing-functions.html#cb1000-1"></a><span class="kw">is_match</span>(<span class="dt">first_name_1 =</span> <span class="st">&quot;Easton&quot;</span>, <span class="dt">first_name_2 =</span> <span class="st">&quot;Easton&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<p>We got a <code>TRUE</code>! That’s exactly what we were wanting! Let’s do one final check. Let’s see what happens when we pass <code>NA</code> to our <code>is_match()</code> function:</p>
+<p>We got a <code>TRUE</code>! That’s exactly the result we wanted! Let’s do one final check. Let’s see what happens when we pass <code>NA</code> to our <code>is_match()</code> function:</p>
 <div class="sourceCode" id="cb1002"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1002-1"><a href="writing-functions.html#cb1002-1"></a><span class="kw">is_match</span>(<span class="dt">first_name_1 =</span> <span class="st">&quot;Easton&quot;</span>, <span class="dt">first_name_2 =</span> <span class="ot">NA</span>)</span></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
-<p>Perfect! It looks like our function is finally ready to help us solve the problem we identified way back at step one. But, while we are talking about <em>generalizing</em> our function, shouldn’t we go ahead and use more general names for our function arguments? I mean, we were only using first names when we were <em>developing</em> our function, but we are going to <em>use</em> our function to compare last names and street names as well. In fact, our function will compare any two values and tell us whether or not they are a match. So, let’s go ahead and change the argument names to <code>value_1</code> and <code>value_2</code>:</p>
+<p>Perfect! It looks like our function is finally ready to help us solve the problem we identified way back at step one. But, while we are talking about <em>generalizing</em> our function, shouldn’t we go ahead and use more general names for our function arguments? I mean, we were only using first names when we were <em>developing</em> our function, but we are going to use our function to compare last names and street names as well. In fact, our function will compare any two values and tell us whether or not they are a match. So, let’s go ahead and change the argument names to <code>value_1</code> and <code>value_2</code>:</p>
 <div class="sourceCode" id="cb1004"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1004-1"><a href="writing-functions.html#cb1004-1"></a>is_match &lt;-<span class="st"> </span><span class="cf">function</span>(value_<span class="dv">1</span>, value_<span class="dv">2</span>) {</span>
 <span id="cb1004-2"><a href="writing-functions.html#cb1004-2"></a>  result &lt;-<span class="st"> </span>value_<span class="dv">1</span> <span class="op">==</span><span class="st"> </span>value_<span class="dv">2</span>  <span class="co"># Don&#39;t forget to change the variable names here!!</span></span>
 <span id="cb1004-3"><a href="writing-functions.html#cb1004-3"></a>  result &lt;-<span class="st"> </span><span class="kw">if_else</span>(<span class="kw">is.na</span>(result), <span class="ot">FALSE</span>, result)</span>
@@ -1062,7 +1063,7 @@ Figure 33.6: The named function.
 ## # … with 4 more variables: name_last_match &lt;lgl&gt;, street_1 &lt;chr&gt;,
 ## #   street_2 &lt;chr&gt;, street_match &lt;lgl&gt;</code></pre>
 <p>Works like a charm! Notice, however, that we still have a lot of repetition in the code above. Unfortunately, we still don’t have all the tools we need to remove it. But, we will soon.</p>
-<p>At this point in the chapter, my hope is that you are developing a feel for how to write your own functions and why that might be useful. With R, it’s possible to write functions that are very complicated. But, I hope the examples above show you that functions don’t have to be complicated to be useful. In that spirit, I’m hesitant to dive too much deeper into the details and technicalities of function writing at this point. However, there are a few details that I feel like I should at least mention so that you aren’t caught off guard by them as you begin to write your own functions. I will touch on each below, and then wrap us this chapter with resources for those of you who wish to dive deeper.</p>
+<p>At this point in the chapter, my hope is that you are developing a feel for how to write your own functions and why that might be useful. With R, it’s possible to write functions that are very complicated. But, I hope the examples above show you that functions don’t have to be complicated to be useful. In that spirit, I’m hesitant to dive too much deeper into the details and technicalities of function writing at this point. However, there are a few details that I feel like I should at least mention so that you aren’t caught off guard by them as you begin to write your own functions. I will touch on each below, and then wrap up this chapter with resources for those of you who wish to dive deeper.</p>
 </div>
 </div>
 </div>
@@ -1082,9 +1083,9 @@ Figure 33.6: The named function.
 <pre><code>## [1] 3</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
-<li>We passed the value <code>2</code> to the <code>x</code> argument of our <code>increment()</code> function. The <code>x</code> argument then passed the value <code>2</code> to the <code>x</code> variable in the function body. Said another way, R replaced the <code>x</code> variable in the function body with the value <code>2</code>. Then, R executed the code in the function body. In this case, the code in the function body added the values <code>2</code> and <code>1</code>. Finally, the function returned the value <code>3</code>.</li>
+<li>We passed the value <code>2</code> to the <code>x</code> argument of our <code>increment()</code> function. The <code>x</code> argument then passed the value <code>2</code> to the <code>x</code> variable in the function body. Said another way, R replaced the <code>x</code> variable in the function body with the value <code>2</code>. Then, R executed the code in the function body. In this case, the code in the function body added the values <code>2</code> and <code>1</code> together. Finally, the function returned the value <code>3</code>.</li>
 </ul>
-<p>Believe it or not, our simple little <code>increment()</code> function is a full-fledged R function. It is just as legitimate as any other R function we’ve used in this book. But, let’s go ahead and add a little more to its functionality. For example, maybe we want to be able to increment by other values other than just one. How might we do that?</p>
+<p>Believe it or not, our simple little <code>increment()</code> function is a full-fledged R function. It is just as legitimate as any other R function we’ve used in this book. But, let’s go ahead and add a little more to its functionality. For example, maybe we want to be able to increment by values other than just one. How might we do that?</p>
 <p>Hopefully, your first thought was to replace the constant value <code>1</code> in the function body with a variable that can have <em>any</em> number passed to it. That’s exactly what we will do next:</p>
 <div class="sourceCode" id="cb1010"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1010-1"><a href="writing-functions.html#cb1010-1"></a>increment &lt;-<span class="st"> </span><span class="cf">function</span>(x, by) {</span>
 <span id="cb1010-2"><a href="writing-functions.html#cb1010-2"></a>  x <span class="op">+</span><span class="st"> </span>by</span>
@@ -1138,10 +1139,10 @@ Figure 33.6: The named function.
 <span id="cb1025-4"><a href="writing-functions.html#cb1025-4"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb1026"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1026-1"><a href="writing-functions.html#cb1026-1"></a><span class="kw">is_match</span>(<span class="st">&quot;Easton&quot;</span>, <span class="st">&quot;Easton&quot;</span>)</span></code></pre></div>
 <p>It appears as though nothing happened! Did our function break?</p>
-<p>Let’s think about with typically happens when we use R’s built-in functions. When we don’t <em>assign</em> the value returned by the function to an object, then the returned value is printed to the screen:</p>
+<p>Let’s think about what typically happens when we use R’s built-in functions. When we don’t <em>assign</em> the value returned by the function to an object, then the returned value is printed to the screen:</p>
 <div class="sourceCode" id="cb1027"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1027-1"><a href="writing-functions.html#cb1027-1"></a><span class="kw">sum</span>(<span class="dv">1</span>, <span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
-<p>But, when we do assign the value returned by the function to an object, then nothing is printed to the screen:</p>
+<p>But, when we do assign the value returned by the function to an object, nothing is printed to the screen:</p>
 <div class="sourceCode" id="cb1029"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1029-1"><a href="writing-functions.html#cb1029-1"></a>x &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="dv">1</span>, <span class="dv">1</span>)</span></code></pre></div>
 <p>The same thing is happening in our function above. The last line of our function body is assigning a value (i.e., <code>TRUE</code> or <code>FALSE</code>) to the variable <code>result</code>. Just like <code>x &lt;- sum(1, 1)</code> didn’t print to the screen, <code>result &lt;- if_else(is.na(result), FALSE, result)</code> doesn’t print to the screen when we run <code>is_match("Easton", "Easton")</code> using this version of <code>is_match()</code>.</p>
 <p>However, we can see in the example below that result of the operations being executed inside the function body can still be assigned to an object in our global environment, and we can print the contents of that object to screen:</p>
@@ -1169,7 +1170,7 @@ Figure 33.6: The named function.
 <span id="cb1038-4"><a href="writing-functions.html#cb1038-4"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb1039"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1039-1"><a href="writing-functions.html#cb1039-1"></a><span class="kw">increment</span>(<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## [1] 3</code></pre>
-<p>So, which method <em>should</em> you use? Well, for all but the simplest functions (like the one above) method 1 is not considered good coding practice. Method 3 may seem like it’s the most explicit; however, it actually considered best practice to use the <code>return()</code> function only when you want your function to return its value before R reaches the last line of the function body. For example, let’s add another line of code to our function body that adds another <code>1</code> to the value of out:</p>
+<p>So, which method <em>should</em> you use? Well, for all but the simplest functions (like the one above) method 1 is not considered good coding practice. Method 3 may seem like it’s the most explicit; however, it’s actually considered best practice to use the <code>return()</code> function only when you want your function to return its value before R reaches the last line of the function body. For example, let’s add another line of code to our function body that adds another <code>1</code> to the value of out:</p>
 <div class="sourceCode" id="cb1041"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1041-1"><a href="writing-functions.html#cb1041-1"></a>increment &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">by =</span> <span class="dv">1</span>) {</span>
 <span id="cb1041-2"><a href="writing-functions.html#cb1041-2"></a>  out &lt;-<span class="st"> </span>x <span class="op">+</span><span class="st"> </span>by </span>
 <span id="cb1041-3"><a href="writing-functions.html#cb1041-3"></a>  out &lt;-<span class="st"> </span>out <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="co"># Adding an extra 1</span></span>
@@ -1186,7 +1187,7 @@ Figure 33.6: The named function.
 <div class="sourceCode" id="cb1045"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1045-1"><a href="writing-functions.html#cb1045-1"></a><span class="kw">increment</span>(<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## [1] 3</code></pre>
 <p>In the example above, the last <code>1</code> wasn’t added to the value of <code>out</code> because we used the <code>return()</code> function. Said another way, <code>increment()</code> returned the value of <code>out</code> “early”, and the last line of the function body was never executed.</p>
-<p>In the example above, using the <code>return()</code> function in the way that we did obviously makes no sense. I was just meant to illustrate what the <code>return()</code> function <em>can</em> do. The <code>return()</code> function doesn’t actually become useful until we start writing more complex functions. But, because the <code>return()</code> function has the special ability to end the execution of the function body early, it’s considered a best practice to only it for that purpose.</p>
+<p>In the example above, using the <code>return()</code> function in the way that we did obviously makes no sense. It was just meant to illustrate what the <code>return()</code> function <em>can</em> do. The <code>return()</code> function doesn’t actually become useful until we start writing more complex functions. But, because the <code>return()</code> function has the special ability to end the execution of the function body early, it’s considered a best practice to only use it for that purpose.</p>
 <p>Therefore, in most situations, you will want to use method 2 (i.e., object name on last line) when writing your own functions.</p>
 <p>One final note before we move on to the next section. Notice that we never used the <code>print()</code> function on the last line of our code. This was intentional. Using <code>print()</code> will give you the result you expect when you don’t assign the value that your function returns to an object in your global environment:</p>
 <div class="sourceCode" id="cb1047"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1047-1"><a href="writing-functions.html#cb1047-1"></a>increment &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">by =</span> <span class="dv">1</span>) {</span>
@@ -1354,7 +1355,7 @@ Figure 33.6: The named function.
 ##  8     8 Younger  
 ##  9     9 Younger  
 ## 10    10 Older</code></pre>
-<p>Now, let’s pass age_group to our <code>cat_stats()</code> function:</p>
+<p>Now, let’s pass age_group to our <code>cat_stats()</code> function again:</p>
 <div class="sourceCode" id="cb1091"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1091-1"><a href="writing-functions.html#cb1091-1"></a><span class="kw">cat_stats</span>(age_group)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 3
 ##   age_group           n percent
@@ -1376,7 +1377,7 @@ Figure 33.6: The named function.
 <span id="cb1094-5"><a href="writing-functions.html#cb1094-5"></a>}</span></code></pre></div>
 <p>Again, we could name this argument almost anything, but <code>data</code> seems like a reasonable choice. Then, we replace <code>study</code> with <code>data</code> in the function body to generalize our function:</p>
 <div class="sourceCode" id="cb1095"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1095-1"><a href="writing-functions.html#cb1095-1"></a>cat_stats &lt;-<span class="st"> </span><span class="cf">function</span>(data, var) {</span>
-<span id="cb1095-2"><a href="writing-functions.html#cb1095-2"></a>  {{data}} <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1095-2"><a href="writing-functions.html#cb1095-2"></a>  data <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb1095-3"><a href="writing-functions.html#cb1095-3"></a><span class="st">    </span><span class="kw">count</span>({{ var }}) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb1095-4"><a href="writing-functions.html#cb1095-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">percent =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</span>
 <span id="cb1095-5"><a href="writing-functions.html#cb1095-5"></a>}</span></code></pre></div>
@@ -1398,7 +1399,7 @@ Figure 33.6: The named function.
 <p>Some of you may be wondering why we didn’t have to wrap <code>data</code> with double curly braces in the code above. Remember, we only have to use the curly braces with column names because of non-standard evaluation. More specifically, because of one aspect of non-standard evaluation called data masking. Data masking is what lets us refer to a column in a data frame without using dollar sign or bracket notation. For example, <code>age_group</code> doesn’t exist in our global environment as a standalone object:</p>
 <div class="sourceCode" id="cb1100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1100-1"><a href="writing-functions.html#cb1100-1"></a>age_group</span></code></pre></div>
 <pre><code>## Error in eval(expr, envir, enclos): object &#39;age_group&#39; not found</code></pre>
-<p>It only exists as a part of (i.e. column in) the <code>other_study</code> object:</p>
+<p>It only exists as a part of (i.e. a column in) the <code>other_study</code> object:</p>
 <div class="sourceCode" id="cb1102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1102-1"><a href="writing-functions.html#cb1102-1"></a>other_study<span class="op">$</span>age_group</span></code></pre></div>
 <pre><code>##  [1] &quot;Younger&quot; &quot;Younger&quot; &quot;Younger&quot; &quot;Younger&quot; &quot;Younger&quot; &quot;Younger&quot; &quot;Younger&quot;
 ##  [8] &quot;Younger&quot; &quot;Younger&quot; &quot;Older&quot;</code></pre>
@@ -1431,7 +1432,7 @@ Figure 33.6: The named function.
 ## 2 Younger       9      90</code></pre>
 <p>That pretty much wraps up this chapter on the basics of writing function to reduce unnecessary repetition in your R code. If you’re feeling good about writing your own functions, great! If you want to dig even deeper, take a look at the <a href="https://adv-r.hadley.nz/functions.html">functions chapter of the Advanced R book</a>.</p>
 <p>If you’re still feeling a little apprehensive or confused, don’t feel bad. It takes most people (myself included) awhile to get comfortable with writing functions. Just remember, functions <em>can</em> be complicated, but they don’t <em>have</em> to be. Even very simple functions can sometimes be useful. So, start simple and get more complex as your skills and confidence grow.</p>
-<p>If you find that you’ve written a function that is really useful, consider saving it for use again in the future. Early on, I would just save my functions as R scripts in a folder on my computer. I could then copy and paste those functions from the scripts into my R programs as needed. Then, I learned about the <code>source()</code> function, which allowed me to use my saved functions without having to manually copy and paste them. Eventually, I learned how to make my <a href="http://r-pkgs.had.co.nz/">own packages</a> that contained groups of related functions and save them to my <a href="https://github.com/">Github account</a>. From there, I could use my functions on any computer, and even share them with others. Finally, in 2020, I published my first package on <a href="https://cran.r-project.org/">CRAN</a>. Publishing your packages on CRAN allows you to share your functions with a much broader audience.</p>
+<p>If you find that you’ve written a function that is really useful, consider saving it for use again in the future. Early on, I would just save my functions as R scripts in a folder on my computer. I could then copy and paste those functions from the scripts into my R programs as needed. Then, I learned about the <code>source()</code> function, which allowed me to use my saved functions without having to manually copy and paste them. Eventually, I learned how to make my <a href="http://r-pkgs.had.co.nz/">own packages</a> that contained groups of related functions and save them to my <a href="https://github.com/">Github account</a>. From there, I could use my functions on any computer, and even share them with others. Finally, you can even publish your packages on <a href="https://cran.r-project.org/">CRAN</a> if you want to them with the broadest possible audience.</p>
 
 </div>
 </div>
