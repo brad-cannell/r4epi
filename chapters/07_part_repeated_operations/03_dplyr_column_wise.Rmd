@@ -24,7 +24,7 @@ Then, we will simulate some data. In this case, we are creating a data frame tha
 
 ```{r}
 set.seed(123)
-df <- tibble(
+df_xyz <- tibble(
   x = rnorm(10),
   y = rnorm(10),
   z = rnorm(10)
@@ -35,7 +35,7 @@ df <- tibble(
 Up to this point, if we wanted to find the mean of each column, we would probably have written code like this:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   summarise(
     x_mean = mean(x),
     y_mean = mean(y),
@@ -46,7 +46,7 @@ df %>%
 With the help of the `across()` function, we can now get the mean of each column like this:
 
 ```{r}
-df %>%
+df_xyz %>%
   summarise(
     across(
       .cols  = everything(),
@@ -77,16 +77,16 @@ To view the help documentation for `across()`, you can copy and paste `?dplyr::a
 3️⃣`...`. In this case, the `...` argument is where we pass any additional arguments to the function we passed to the `.fns` argument. For example, we passed the `mean` function to the `.fns` argument above. In the data frame above, none of the columns had any missing values. Let's go ahead and add some missing values so that we can take a look at how `...` works in `across()`. 
 
 ```{r}
-df$x[2] <- NA_real_
-df$y[4] <- NA_real_
-df$z[6] <- NA_real_
-df
+df_xyz$x[2] <- NA_real_
+df_xyz$y[4] <- NA_real_
+df_xyz$z[6] <- NA_real_
+df_xyz
 ```
 
 As we've already seen many times, R won't drop the missing values and carryout a complete case analysis by default:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   summarise(
     x_mean = mean(x),
     y_mean = mean(y),
@@ -97,7 +97,7 @@ df %>%
 Instead, we have to explicitly tell R to carry out a complete case analysis. We can do so by filtering our rows with missing data (more on this soon) or by changing the value of the `mean()` function's `na.rm` argument from `FALSE` (the default) to `TRUE`:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   summarise(
     x_mean = mean(x, na.rm = TRUE),
     y_mean = mean(y, na.rm = TRUE),
@@ -108,7 +108,7 @@ df %>%
 When we use `across()`, we will need to pass the `na.rm = TRUE` to the `mean()` function in `across()`'s `...` argument like this:
 
 ```{r}
-df %>%
+df_xyz %>%
   summarise(
     across(
       .cols  = everything(),
@@ -124,7 +124,7 @@ Notice that we do not actually type out `... = ` or anything like that.
 4️⃣`.names`. You can use this argument to adjust the column names that will result from the operation you pass to `.fns`. In the example above, we used the special `{cols}` keyword to use each of the column names that were passed to the `.cols` argument as the first part of each of the new columns' names. Then, we asked R to add a literal underscore and the word "mean" because these are all mean values. That resulted in the new column names you see above. The default value for `.names` is just `{cols}`. So, if we hadn't modified the value passed to the `.names` argument, our results would have looked like this:
 
 ```{r}
-df %>%
+df_xyz %>%
   summarise(
     across(
       .cols  = everything(),
@@ -139,7 +139,7 @@ There is also a special `{fn}` keyword that we can use to pass the name of each 
 First, we will keep the code exactly as it was, but replace "mean" with "{fn}" in the `.names` argument:
 
 ```{r}
-df %>%
+df_xyz %>%
   summarise(
     across(
       .cols  = everything(),
@@ -153,7 +153,7 @@ df %>%
 This is not the result we wanted. Because, we didn't _name_ the function that we passed to `.fns`, `across()` essentially used "function number 1" as its name. In order to get the result we want, we need to pass a list of name-function pairs to the `.fns` argument like this:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   summarise(
     across(
       .cols  = everything(),
@@ -167,7 +167,7 @@ df %>%
 Although it may not be self-evident from just looking at the code above, the first `mean` in the `list(mean = mean)` name-function pair is a name that we are choosing to be passed to the new column names. Theoretically, we could have picked any name. For example:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   summarise(
     across(
       .cols  = everything(),
@@ -181,7 +181,7 @@ df %>%
 The second `mean` in the `list(mean = mean)` name-function pair is the name of the actual function we want to apply to the columns in `.cols`. This part of the name-function pair must be the name of the function that we actually want to apply to the columns in `.cols`. Otherwise, we will get an error:
 
 ```{r error=TRUE}
-df %>% 
+df_xyz %>% 
   summarise(
     across(
       .cols  = everything(),
@@ -195,7 +195,7 @@ df %>%
 An additional advantage of passing a list of name-function pairs to the `.fns` argument is that we can pass _multiple_ functions at once. For example, let's say that we want the minimum and maximum value of each column in our data frame. Without `across()` we might do that analysis like this:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   summarise(
     x_min = min(x, na.rm = TRUE),
     x_max = max(x, na.rm = TRUE),
@@ -209,7 +209,7 @@ df %>%
 But, we can simply pass `min` and `max` as a list of name-function pairs if we use `across()`:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   summarise(
     across(
       .cols  = everything(),
@@ -225,7 +225,7 @@ How great is that?!?
 So, we've seen how to pass an individual function to the `.fns` argument and we've seen how to pass a list containing multiple functions to the `.fns` argument. There is actually a third syntax for passing functions to the `.fns` argument. The `across()` documentation calls it "a purrr-style lambda". This can be a little bit confusing, so I'm going to show you an example, and then walk through it step by step.
 
 ```{r}
-df %>% 
+df_xyz %>% 
   summarise(
     across(
       .cols  = everything(),
@@ -243,7 +243,7 @@ We've already discussed complete case analyses multiple times in this book. That
 We've already seen how we can use the `filter()` function to remove the rows of a _single_ column where the data are missing. For example:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   filter(!is.na(x)) %>% 
   summarise(mean = mean(x))
 ```
@@ -251,7 +251,7 @@ df %>%
 We can use the `across()` function, inside the `filter()` function, to remove _all_ rows with missing values from our data frame:
 
 ```{r error=TRUE}
-df %>% 
+df_xyz %>% 
   filter(
     across(
       .cols = everything(),
@@ -267,7 +267,7 @@ The reason the code above didn't work is because we actually passed _two_ functi
 Hmmm, well, above we passed two functions to the `.fns` argument using a list of name-function pairs. Maybe we should try that:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   filter(
     across(
       .cols = everything(),
@@ -289,14 +289,14 @@ not_missing <- function(col) {
 Next, let's test it out on a single column:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   filter(not_missing(x))
 ```
 
 It works! The result above only includes rows from our data frame where the value of the `x` column was non-missing. We can now use our `not_missing()` function inside of `across()`:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   filter(
     across(
       .cols = everything(),
@@ -320,7 +320,7 @@ not_missing <- function(col) {
 Now, here's how we might use the same code as an anonymous function:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   filter(
     across(
       .cols = everything(),
@@ -338,7 +338,7 @@ There's actually a way that we can reduce the amount of code we typed above even
 We first need to replace `function(col)` with a `~` to convert the traditional anonymous function syntax we used in the code chunk above to the purrr-style lambda syntax:
 
 ```{r error=TRUE}
-df %>% 
+df_xyz %>% 
   filter(
     across(
       .cols = everything(),
@@ -354,7 +354,7 @@ However, this code doesn't work because R doesn't know what the `col` inside `!i
 We can use the special `.x` symbol inside the function call where we would normally want to type the name of the column we want the function to operate on:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   filter(
     across(
       .cols = everything(),
@@ -368,7 +368,7 @@ df %>%
 Because our function body is on one line only, we can go ahead and get rid of the curly braces too:
 
 ```{r}
-df %>% 
+df_xyz %>% 
   filter(
     across(
       .cols = everything(),
@@ -378,6 +378,10 @@ df %>%
 ```
 
 In this section, we learned how to use the `across()` function inside the `filter()` function to drop all rows with a missing value from our data frame in an efficient way. This required us to write our own function, and we learned three different methods for passing the function we wrote to `across()`. We passed a named function, an anonymous function, and a purrr-style lambda. In this case, the method you choose to use is largely a matter of preference. 
+
+```{r echo=FALSE}
+rm(df_xyz, not_missing)
+```
 
 ## Across with mutate
 
@@ -474,6 +478,10 @@ drug_trial %>%
 * We used a purrr-style lambda to create a factor version of all the side effect columns in our data frame. 
 
 * We used the `.names` argument to add an "_f" to the end of the new column names.
+
+```{r echo=FALSE}
+rm(demographics, drug_trial)
+```
 
 ## Across with summarise
 
@@ -602,6 +610,10 @@ symptom_summary %>%
 ```
 
 There! Isn't that result much easier to read?
+
+```{r echo=FALSE}
+rm(ehr, symptom_summary, symptoms)
+```
 
 For our final example of this chapter, let's return the first example from the [writing functions chapter](#writing-functions). We started with some simulated study data:
 
@@ -751,5 +763,9 @@ summary_stats %>%
 ```
 
 Look at how much easier those results are to read!
+
+```{r echo=FALSE}
+rm(list = ls())
+```
 
 I'm a big fan of using `across()` in conjunction with the `dplyr` verbs. It allows me to remove a lot of the unnecessary repetition from my code in a way that integrates pretty seamlessly with the tools I'm already using. Perhaps you will see value in using `across()` as well. In the next chapter, we will learn about using **for loops** to remove unnecessary repetition from our code.
