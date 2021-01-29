@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2020-08-16" />
+<meta name="date" content="2021-01-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="rstudios-data-import-tool.html"/>
 <link rel="next" href="introduction-to-descriptive-analysis.html"/>
-<script src="libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,11 +51,10 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.13/datatables.js"></script>
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
@@ -628,11 +627,11 @@ Exporting data for use in R (Rds)
 We may also want to briefly touch on the difference between memory and disk.
 -->
 <p>The data frames we’ve created so far don’t currently live in our global environment from one programming session to the next because we haven’t yet learned how to efficiently store our data long-term. This limitation makes it difficult to share our data with others or even to come back later to modify or analyze our data ourselves. In this chapter, you will learn to <strong>export</strong> data from R’s memory to a file on your hard drive so that you may efficiently store it or share it with others. In the examples that follow, I’m going to use this simulated data.</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="exporting-data.html#cb187-1"></a>demo &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb187-2"><a href="exporting-data.html#cb187-2"></a>  <span class="dt">id  =</span> <span class="kw">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>),</span>
-<span id="cb187-3"><a href="exporting-data.html#cb187-3"></a>  <span class="dt">age =</span> <span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">67</span>, <span class="dv">52</span>, <span class="dv">56</span>),</span>
-<span id="cb187-4"><a href="exporting-data.html#cb187-4"></a>  <span class="dt">edu =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>)</span>
-<span id="cb187-5"><a href="exporting-data.html#cb187-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="exporting-data.html#cb187-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb187-2"><a href="exporting-data.html#cb187-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id  =</span> <span class="fu">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>),</span>
+<span id="cb187-3"><a href="exporting-data.html#cb187-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">67</span>, <span class="dv">52</span>, <span class="dv">56</span>),</span>
+<span id="cb187-4"><a href="exporting-data.html#cb187-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">edu =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>)</span>
+<span id="cb187-5"><a href="exporting-data.html#cb187-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We created a data frame that is meant to simulate some demographic information about 4 hypothetical study participants.</p></li>
@@ -654,7 +653,7 @@ We may also want to briefly touch on the difference between memory and disk.
 <p>So, with all these options what format should you choose? My answer to this sort of depends on the answers to two questions. First, will this data be shared with anyone else? Second, will I need any of the metadata that would be lost if I export this data to a plain text file?</p>
 <p>Unless you have a compelling reason to do otherwise, I’m going to suggest that you always export your R data frames as csv files if you plan to share your data with others. The reason is simple. They just work. I can think of many times when someone sent me a SAS or Stata data set and I wasn’t able to import it for some reason or the data didn’t import in the way that I expected it to. I don’t recall ever having that experience with a csv file. Further, every operating system and statistical analysis software application that I’m aware of is able to accept csv files. Perhaps for that reason, they have become the closest thing to a standard for data sharing that exists – at least that I’m aware of.</p>
 <p>Exporting an R data frame to a csv file is really easy. The example below shows how to export our simulated demographic data to a csv file on my computer’s desktop:</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="exporting-data.html#cb188-1"></a>readr<span class="op">::</span><span class="kw">write_csv</span>(demo, <span class="st">&quot;/Users/bradcannell/Desktop/demo.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="exporting-data.html#cb188-1" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv</span>(demo, <span class="st">&quot;/Users/bradcannell/Desktop/demo.csv&quot;</span>)</span></code></pre></div>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>readr</code>’s <code>write_csv()</code> function to export a data frame called <code>demo</code> in our global environment to a csv file on our desktop called <code>demo.csv</code>.</p></li>
@@ -673,7 +672,7 @@ We may also want to briefly touch on the difference between memory and disk.
 <h2><span class="header-section-number">16.2</span> Factor vectors</h2>
 <p>Before moving on, I want to introduce a new vector type and use it to illustrate some of the differences between plain text files and binary files that we’ve discussed so far. Specifically, I want to introduce the <strong>factor</strong> vector type.</p>
 <p>In R, factors can be useful for representing categorical data. Let’s use the data we simulated above as an example. Each participant in our data frame has a value for <code>edu</code> – 1, 2, 3, or 4. The value they have for that variable corresponds to the highest level of formal education they have completed, which is split up into categories that we defined. We can see which category each person is in by viewing the data.</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="exporting-data.html#cb189-1"></a>demo</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="exporting-data.html#cb189-1" aria-hidden="true" tabindex="-1"></a>demo</span></code></pre></div>
 <pre><code>##    id age edu
 ## 1 001  30   3
 ## 2 002  67   1
@@ -681,15 +680,15 @@ We may also want to briefly touch on the difference between memory and disk.
 ## 4 004  56   2</code></pre>
 <p>We can see that person <code>001</code> is in category <code>3</code>, person <code>002</code> is in category <code>1</code>, and so on. This compact representation of the categories is convenient for data entry and data manipulation, but it also has an obvious limitation – what do these numbers mean? I defined what these values mean for you above, but if you didn’t have that information, or some kind of prior knowledge about the process that was used to gather this data, then you would likely have no idea what these numbers mean.</p>
 <p>Now, we could have solved that problem by making education a character variable from the beginning. For example:</p>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="exporting-data.html#cb191-1"></a>demo &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb191-2"><a href="exporting-data.html#cb191-2"></a>  <span class="dt">id       =</span> <span class="kw">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>),</span>
-<span id="cb191-3"><a href="exporting-data.html#cb191-3"></a>  <span class="dt">age      =</span> <span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">67</span>, <span class="dv">52</span>, <span class="dv">56</span>),</span>
-<span id="cb191-4"><a href="exporting-data.html#cb191-4"></a>  <span class="dt">edu      =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>),</span>
-<span id="cb191-5"><a href="exporting-data.html#cb191-5"></a>  <span class="dt">edu_char =</span> <span class="kw">c</span>(<span class="st">&quot;Some college&quot;</span>, <span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;College graduate&quot;</span>, </span>
-<span id="cb191-6"><a href="exporting-data.html#cb191-6"></a>                     <span class="st">&quot;High school graduate&quot;</span>)</span>
-<span id="cb191-7"><a href="exporting-data.html#cb191-7"></a>)</span>
-<span id="cb191-8"><a href="exporting-data.html#cb191-8"></a></span>
-<span id="cb191-9"><a href="exporting-data.html#cb191-9"></a>demo</span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="exporting-data.html#cb191-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb191-2"><a href="exporting-data.html#cb191-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id       =</span> <span class="fu">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>),</span>
+<span id="cb191-3"><a href="exporting-data.html#cb191-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">age      =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">67</span>, <span class="dv">52</span>, <span class="dv">56</span>),</span>
+<span id="cb191-4"><a href="exporting-data.html#cb191-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">edu      =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>),</span>
+<span id="cb191-5"><a href="exporting-data.html#cb191-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edu_char =</span> <span class="fu">c</span>(<span class="st">&quot;Some college&quot;</span>, <span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;College graduate&quot;</span>, </span>
+<span id="cb191-6"><a href="exporting-data.html#cb191-6" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;High school graduate&quot;</span>)</span>
+<span id="cb191-7"><a href="exporting-data.html#cb191-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb191-8"><a href="exporting-data.html#cb191-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb191-9"><a href="exporting-data.html#cb191-9" aria-hidden="true" tabindex="-1"></a>demo</span></code></pre></div>
 <pre><code>##    id age edu              edu_char
 ## 1 001  30   3          Some college
 ## 2 002  67   1 Less than high school
@@ -703,17 +702,17 @@ We may also want to briefly touch on the difference between memory and disk.
 <div id="coerce-a-numeric-variable" class="section level3" number="16.2.1">
 <h3><span class="header-section-number">16.2.1</span> Coerce a numeric variable</h3>
 <p>The code below shows one method for coercing a numeric vector into a factor.</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="exporting-data.html#cb193-1"></a><span class="co"># Load dplyr for pipes and mutate()</span></span>
-<span id="cb193-2"><a href="exporting-data.html#cb193-2"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="exporting-data.html#cb194-1"></a>demo &lt;-<span class="st"> </span>demo <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb194-2"><a href="exporting-data.html#cb194-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">edu_f =</span> <span class="kw">factor</span>(</span>
-<span id="cb194-3"><a href="exporting-data.html#cb194-3"></a>    <span class="dt">x      =</span> edu,</span>
-<span id="cb194-4"><a href="exporting-data.html#cb194-4"></a>    <span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,</span>
-<span id="cb194-5"><a href="exporting-data.html#cb194-5"></a>    <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school graduate&quot;</span>, <span class="st">&quot;Some college&quot;</span>, </span>
-<span id="cb194-6"><a href="exporting-data.html#cb194-6"></a>               <span class="st">&quot;College graduate&quot;</span>)</span>
-<span id="cb194-7"><a href="exporting-data.html#cb194-7"></a>  ))</span>
-<span id="cb194-8"><a href="exporting-data.html#cb194-8"></a></span>
-<span id="cb194-9"><a href="exporting-data.html#cb194-9"></a>demo</span></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="exporting-data.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dplyr for pipes and mutate()</span></span>
+<span id="cb193-2"><a href="exporting-data.html#cb193-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="exporting-data.html#cb194-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> demo <span class="sc">%&gt;%</span> </span>
+<span id="cb194-2"><a href="exporting-data.html#cb194-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">edu_f =</span> <span class="fu">factor</span>(</span>
+<span id="cb194-3"><a href="exporting-data.html#cb194-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x      =</span> edu,</span>
+<span id="cb194-4"><a href="exporting-data.html#cb194-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
+<span id="cb194-5"><a href="exporting-data.html#cb194-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school graduate&quot;</span>, <span class="st">&quot;Some college&quot;</span>, </span>
+<span id="cb194-6"><a href="exporting-data.html#cb194-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;College graduate&quot;</span>)</span>
+<span id="cb194-7"><a href="exporting-data.html#cb194-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb194-8"><a href="exporting-data.html#cb194-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb194-9"><a href="exporting-data.html#cb194-9" aria-hidden="true" tabindex="-1"></a>demo</span></code></pre></div>
 <pre><code>##    id age edu              edu_char                 edu_f
 ## 1 001  30   3          Some college          Some college
 ## 2 002  67   1 Less than high school Less than high school
@@ -742,24 +741,24 @@ We may also want to briefly touch on the difference between memory and disk.
 <li><p>You can type <code>?factor</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
 <li><p>The first argument to the <code>factor()</code> function is the <code>x</code> argument. The value passed to the <code>x</code> argument should be a vector of data. We passed the <code>edu</code> vector to the <code>x</code> argument.</p></li>
 <li><p>The second argument to the <code>factor()</code> function is the <code>levels</code> argument. This argument tells R the unique values that the new factor variable can take. We used the shorthand <code>1:4</code> to tell R that <code>edu_f</code> can take the unique values 1, 2, 3, or 4.</p></li>
-<li><p>The third argument to the <code>factor()</code> function is the <code>labels</code> argument. The value passed to the <code>labels</code> argument should be a character vector of labels (i.e., descriptive text) for each value in the <code>levels</code> argument. The order of the labels in the character vector we pass to the <code>labels</code> argument should match the order of the values passed to the <code>levels</code> argument. For example, the ordering of <code>levels</code> and <code>labels</code> above tells R that <code>1</code> should be labeled with “Less than high school”, <code>2</code> should be labeled with “High school graduate”, etc.</p></li>
+<li><p>The third argument to the <code>factor()</code> function is the <code>labels</code> argument. The value passed to the <code>labels</code> argument should be a character vector of labels (i.e., descriptive text) for each value in the <code>levels</code> argument. The order of the labels in the character vector we pass to the <code>labels</code> argument should match the order of the values passed to the <code>levels</code> argument. For example, the ordering of <code>levels</code> and <code>labels</code> above tells R that <code>1</code> should be labeled with “Less than high school,” <code>2</code> should be labeled with “High school graduate,” etc.</p></li>
 </ul></li>
 </ul>
 <p>When we printed the data frame above, the values in <code>edu_f</code> <em>looked</em> the same as the character strings displayed in <code>edu_char</code>. Notice, however, that the variable type displayed to the right of <code>edu_char</code> in the environment pane is <code>chr</code> for character. Alternatively, the variable type displayed to the right of <code>edu_f</code> is <code>Factor</code>. Although, labels are used to make factors <em>look</em> like character vectors, they are still integer vectors under the hood. For example:</p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="exporting-data.html#cb196-1"></a><span class="kw">as.numeric</span>(demo<span class="op">$</span>edu_char)</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="exporting-data.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(demo<span class="sc">$</span>edu_char)</span></code></pre></div>
 <pre><code>## Warning: NAs introduced by coercion</code></pre>
 <pre><code>## [1] NA NA NA NA</code></pre>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="exporting-data.html#cb199-1"></a><span class="kw">as.numeric</span>(demo<span class="op">$</span>edu_f)</span></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="exporting-data.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(demo<span class="sc">$</span>edu_f)</span></code></pre></div>
 <pre><code>## [1] 3 1 4 2</code></pre>
 <p>There are two main reasons that you may want to use factors instead of character vectors at times:</p>
 <p>👍 First, R summarizes character vectors alphabetically by default, which may not be the ideal way to order some categorical variables. However, we can explicitly set the order of factor levels. This will be useful to us later when we analyze categorical variables. Here is a glimpse of things to come:</p>
-<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="exporting-data.html#cb201-1"></a><span class="kw">table</span>(demo<span class="op">$</span>edu_char)</span></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="exporting-data.html#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_char)</span></code></pre></div>
 <pre><code>## 
 ##      College graduate  High school graduate Less than high school 
 ##                     1                     1                     1 
 ##          Some college 
 ##                     1</code></pre>
-<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="exporting-data.html#cb203-1"></a><span class="kw">table</span>(demo<span class="op">$</span>edu_f)</span></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="exporting-data.html#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_f)</span></code></pre></div>
 <pre><code>## 
 ## Less than high school  High school graduate          Some college 
 ##                     1                     1                     1 
@@ -772,28 +771,28 @@ We may also want to briefly touch on the difference between memory and disk.
 <li><p>We used the <code>table()</code> function to get a count of the number of times each unique value of <code>edu_f</code> appears in our data frame. Again, each value appears one time. Notice, however, that this time the results are returned to us in the order that we passed to the <code>levels</code> argument of the <code>factor()</code> function above.</p></li>
 </ul>
 <p>👍 Second, creating categorical variables in our data frame as character vectors limits us to inputting only <em>observed</em> values for that variable. However, there are cases when other categories are possible and just didn’t apply to anyone in our data. That information may be useful to know. Factors allow us to tell R that other values are possible, even when they are <em>unobserved</em> in our data. For example, let’s add a fifth possible category to our education variable – graduate school.</p>
-<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="exporting-data.html#cb205-1"></a>demo &lt;-<span class="st"> </span>demo <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb205-2"><a href="exporting-data.html#cb205-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">edu_5cat =</span> <span class="kw">factor</span>(</span>
-<span id="cb205-3"><a href="exporting-data.html#cb205-3"></a>    <span class="dt">x      =</span> edu,</span>
-<span id="cb205-4"><a href="exporting-data.html#cb205-4"></a>    <span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,</span>
-<span id="cb205-5"><a href="exporting-data.html#cb205-5"></a>    <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school graduate&quot;</span>, <span class="st">&quot;Some college&quot;</span>, </span>
-<span id="cb205-6"><a href="exporting-data.html#cb205-6"></a>               <span class="st">&quot;College graduate&quot;</span>, <span class="st">&quot;Graduate school&quot;</span>)</span>
-<span id="cb205-7"><a href="exporting-data.html#cb205-7"></a>  ))</span>
-<span id="cb205-8"><a href="exporting-data.html#cb205-8"></a></span>
-<span id="cb205-9"><a href="exporting-data.html#cb205-9"></a>demo</span></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="exporting-data.html#cb205-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> demo <span class="sc">%&gt;%</span> </span>
+<span id="cb205-2"><a href="exporting-data.html#cb205-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">edu_5cat =</span> <span class="fu">factor</span>(</span>
+<span id="cb205-3"><a href="exporting-data.html#cb205-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x      =</span> edu,</span>
+<span id="cb205-4"><a href="exporting-data.html#cb205-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
+<span id="cb205-5"><a href="exporting-data.html#cb205-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school graduate&quot;</span>, <span class="st">&quot;Some college&quot;</span>, </span>
+<span id="cb205-6"><a href="exporting-data.html#cb205-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;College graduate&quot;</span>, <span class="st">&quot;Graduate school&quot;</span>)</span>
+<span id="cb205-7"><a href="exporting-data.html#cb205-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb205-8"><a href="exporting-data.html#cb205-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb205-9"><a href="exporting-data.html#cb205-9" aria-hidden="true" tabindex="-1"></a>demo</span></code></pre></div>
 <pre><code>##    id age edu              edu_char                 edu_f              edu_5cat
 ## 1 001  30   3          Some college          Some college          Some college
 ## 2 002  67   1 Less than high school Less than high school Less than high school
 ## 3 003  52   4      College graduate      College graduate      College graduate
 ## 4 004  56   2  High school graduate  High school graduate  High school graduate</code></pre>
 <p>Now, let’s use the <code>table()</code> function once again to count the number of times each unique level of <code>edu_char</code> appears in the data frame and the number of times each unique level of <code>edu_5cat</code> appears in the data frame:</p>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="exporting-data.html#cb207-1"></a><span class="kw">table</span>(demo<span class="op">$</span>edu_char)</span></code></pre></div>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="exporting-data.html#cb207-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_char)</span></code></pre></div>
 <pre><code>## 
 ##      College graduate  High school graduate Less than high school 
 ##                     1                     1                     1 
 ##          Some college 
 ##                     1</code></pre>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="exporting-data.html#cb209-1"></a><span class="kw">table</span>(demo<span class="op">$</span>edu_5cat)</span></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="exporting-data.html#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_5cat)</span></code></pre></div>
 <pre><code>## 
 ## Less than high school  High school graduate          Some college 
 ##                     1                     1                     1 
@@ -804,14 +803,14 @@ We may also want to briefly touch on the difference between memory and disk.
 <div id="coerce-a-character-variable" class="section level3" number="16.2.2">
 <h3><span class="header-section-number">16.2.2</span> Coerce a character variable</h3>
 <p>It is also possible to coerce character vectors to factors. For example, we can coerce <code>edu_char</code> to a factor like so:</p>
-<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="exporting-data.html#cb211-1"></a>demo &lt;-<span class="st"> </span>demo <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb211-2"><a href="exporting-data.html#cb211-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">edu_f_from_char =</span> <span class="kw">factor</span>(</span>
-<span id="cb211-3"><a href="exporting-data.html#cb211-3"></a>    <span class="dt">x      =</span> edu_char,</span>
-<span id="cb211-4"><a href="exporting-data.html#cb211-4"></a>    <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school graduate&quot;</span>, <span class="st">&quot;Some college&quot;</span>, </span>
-<span id="cb211-5"><a href="exporting-data.html#cb211-5"></a>               <span class="st">&quot;College graduate&quot;</span>, <span class="st">&quot;Graduate school&quot;</span>)</span>
-<span id="cb211-6"><a href="exporting-data.html#cb211-6"></a>  ))</span>
-<span id="cb211-7"><a href="exporting-data.html#cb211-7"></a></span>
-<span id="cb211-8"><a href="exporting-data.html#cb211-8"></a>demo</span></code></pre></div>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="exporting-data.html#cb211-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> demo <span class="sc">%&gt;%</span> </span>
+<span id="cb211-2"><a href="exporting-data.html#cb211-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">edu_f_from_char =</span> <span class="fu">factor</span>(</span>
+<span id="cb211-3"><a href="exporting-data.html#cb211-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x      =</span> edu_char,</span>
+<span id="cb211-4"><a href="exporting-data.html#cb211-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school graduate&quot;</span>, <span class="st">&quot;Some college&quot;</span>, </span>
+<span id="cb211-5"><a href="exporting-data.html#cb211-5" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;College graduate&quot;</span>, <span class="st">&quot;Graduate school&quot;</span>)</span>
+<span id="cb211-6"><a href="exporting-data.html#cb211-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb211-7"><a href="exporting-data.html#cb211-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb211-8"><a href="exporting-data.html#cb211-8" aria-hidden="true" tabindex="-1"></a>demo</span></code></pre></div>
 <pre><code>##    id age edu              edu_char                 edu_f              edu_5cat
 ## 1 001  30   3          Some college          Some college          Some college
 ## 2 002  67   1 Less than high school Less than high school Less than high school
@@ -822,7 +821,7 @@ We may also want to briefly touch on the difference between memory and disk.
 ## 2 Less than high school
 ## 3      College graduate
 ## 4  High school graduate</code></pre>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="exporting-data.html#cb213-1"></a><span class="kw">table</span>(demo<span class="op">$</span>edu_f_from_char)</span></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="exporting-data.html#cb213-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_f_from_char)</span></code></pre></div>
 <pre><code>## 
 ## Less than high school  High school graduate          Some college 
 ##                     1                     1                     1 
@@ -840,7 +839,7 @@ We may also want to briefly touch on the difference between memory and disk.
 <p>In the chapter on <a href="importing-binary-files.html#importing-binary-files">importing binary files</a> I mentioned that most statistical analysis software allows you to save your data in a binary file format. The primary advantage to doing so is that potentially useful metadata is stored alongside your analysis data. In the section above, we just saw how coercing some of your variables to factors can be useful. However, doing so requires R to store metadata along with the analysis data. That metadata would be lost if you were to export your data frame to a plain text file. This is an example of a time when we may want to consider exporting our data to a binary file format.</p>
 <p>R actually allows you to save your data in multiple different binary file formats. The two most popular are the .Rdata format and the .Rds format. I’m going to suggest that you use the .Rds format to save your R data frames. Exporting to this format is really easy with the <code>readr</code> package.</p>
 <p>The example below shows how to export our simulated demographic data to an .Rds file on my computer’s desktop:</p>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="exporting-data.html#cb215-1"></a>readr<span class="op">::</span><span class="kw">write_rds</span>(demo, <span class="st">&quot;/Users/bradcannell/Desktop/demo.rds&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="exporting-data.html#cb215-1" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_rds</span>(demo, <span class="st">&quot;/Users/bradcannell/Desktop/demo.rds&quot;</span>)</span></code></pre></div>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>readr</code>’s <code>write_rds()</code> function to export a data frame called <code>demo</code> in our globabl environment to an .Rds file on our desktop called <code>demo.rds</code>.</p></li>
@@ -853,7 +852,7 @@ We may also want to briefly touch on the difference between memory and disk.
 </ul></li>
 </ul>
 <p>To load the .Rds data back into your global environment, simply pass the path to the .Rds file to <code>readr</code>s <code>read_rds()</code> function:</p>
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="exporting-data.html#cb216-1"></a>demo &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_rds</span>(<span class="st">&quot;/Users/bradcannell/Desktop/demo.rds&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="exporting-data.html#cb216-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(<span class="st">&quot;/Users/bradcannell/Desktop/demo.rds&quot;</span>)</span></code></pre></div>
 <p>There is a final thought I want to share on exporting data frames. When I got to the end of this chapter, it occurred to me that the way I wrote it may give the impression that that you must choose to export data frames as plain text files <em>or</em> binary files, but not <em>both</em>. That isn’t the case. I frequently export my data as a csv file that I can easily open and view and/or share with others, but <em>also</em> export it to an .Rds file that retains useful metadata I might need the next time I return to my analysis. I suppose there could be times that your files are so large that this is not an efficient strategy, but that is generally not the case in my projects.</p>
 
 </div>

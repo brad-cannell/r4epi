@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2020-08-16" />
+<meta name="date" content="2021-01-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="r-projects.html"/>
 <link rel="next" href="using-pipes.html"/>
-<script src="libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,11 +51,10 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.13/datatables.js"></script>
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
@@ -659,27 +658,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="what-this-code-is-trying-to-accomplish" class="section level3" number="9.2.2">
 <h3><span class="header-section-number">9.2.2</span> What this code is trying to accomplish</h3>
 <p>Sometimes, it is obvious what a section of code literally <em>does</em>. but not so obvious why you’re doing it. I often try to write some comments around my code about what it’s trying to ultimately accomplish and why. For example:</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="coding-best-practices.html#cb93-1"></a><span class="co">## Standardize character strings</span></span>
-<span id="cb93-2"><a href="coding-best-practices.html#cb93-2"></a></span>
-<span id="cb93-3"><a href="coding-best-practices.html#cb93-3"></a><span class="co"># Because we will merge this data with other data sets in the future based on </span></span>
-<span id="cb93-4"><a href="coding-best-practices.html#cb93-4"></a><span class="co"># character strings (e.g., name), we need to go ahead and standardize their </span></span>
-<span id="cb93-5"><a href="coding-best-practices.html#cb93-5"></a><span class="co"># formats here. This will prevent mismatches during the merges. Specifically, </span></span>
-<span id="cb93-6"><a href="coding-best-practices.html#cb93-6"></a><span class="co"># we:</span></span>
-<span id="cb93-7"><a href="coding-best-practices.html#cb93-7"></a></span>
-<span id="cb93-8"><a href="coding-best-practices.html#cb93-8"></a><span class="co"># 1. Transform all characters to lower case   </span></span>
-<span id="cb93-9"><a href="coding-best-practices.html#cb93-9"></a><span class="co"># 2. Remove any special characters (e.g., hyphens, periods)   </span></span>
-<span id="cb93-10"><a href="coding-best-practices.html#cb93-10"></a><span class="co"># 3. Remove trailing spaces (e.g., &quot;John Smith &quot;)   </span></span>
-<span id="cb93-11"><a href="coding-best-practices.html#cb93-11"></a><span class="co"># 4. Remove double spaces (e.g., &quot;John  Smith&quot;)  </span></span>
-<span id="cb93-12"><a href="coding-best-practices.html#cb93-12"></a></span>
-<span id="cb93-13"><a href="coding-best-practices.html#cb93-13"></a>vars &lt;-<span class="st"> </span><span class="kw">quos</span>(full_name, first_name, middle_name, last_name, county, address, city)</span>
-<span id="cb93-14"><a href="coding-best-practices.html#cb93-14"></a></span>
-<span id="cb93-15"><a href="coding-best-practices.html#cb93-15"></a>client_data &lt;-<span class="st"> </span>client_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb93-16"><a href="coding-best-practices.html#cb93-16"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">!!!</span><span class="st"> </span>vars), tolower) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb93-17"><a href="coding-best-practices.html#cb93-17"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">!!!</span><span class="st"> </span>vars), stringr<span class="op">::</span>str_replace_all, <span class="st">&quot;[^a-zA-Z</span><span class="ch">\\</span><span class="st">d</span><span class="ch">\\</span><span class="st">s]&quot;</span>, <span class="st">&quot; &quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb93-18"><a href="coding-best-practices.html#cb93-18"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">!!!</span><span class="st"> </span>vars), stringr<span class="op">::</span>str_replace, <span class="st">&quot;[[:blank:]]$&quot;</span>, <span class="st">&quot;&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb93-19"><a href="coding-best-practices.html#cb93-19"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">!!!</span><span class="st"> </span>vars), stringr<span class="op">::</span>str_replace_all, <span class="st">&quot;[[:blank:]]{2,}&quot;</span>, <span class="st">&quot; &quot;</span>)</span>
-<span id="cb93-20"><a href="coding-best-practices.html#cb93-20"></a></span>
-<span id="cb93-21"><a href="coding-best-practices.html#cb93-21"></a><span class="kw">rm</span>(vars)</span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="coding-best-practices.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Standardize character strings</span></span>
+<span id="cb93-2"><a href="coding-best-practices.html#cb93-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-3"><a href="coding-best-practices.html#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Because we will merge this data with other data sets in the future based on </span></span>
+<span id="cb93-4"><a href="coding-best-practices.html#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="co"># character strings (e.g., name), we need to go ahead and standardize their </span></span>
+<span id="cb93-5"><a href="coding-best-practices.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="co"># formats here. This will prevent mismatches during the merges. Specifically, </span></span>
+<span id="cb93-6"><a href="coding-best-practices.html#cb93-6" aria-hidden="true" tabindex="-1"></a><span class="co"># we:</span></span>
+<span id="cb93-7"><a href="coding-best-practices.html#cb93-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-8"><a href="coding-best-practices.html#cb93-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Transform all characters to lower case   </span></span>
+<span id="cb93-9"><a href="coding-best-practices.html#cb93-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Remove any special characters (e.g., hyphens, periods)   </span></span>
+<span id="cb93-10"><a href="coding-best-practices.html#cb93-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Remove trailing spaces (e.g., &quot;John Smith &quot;)   </span></span>
+<span id="cb93-11"><a href="coding-best-practices.html#cb93-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Remove double spaces (e.g., &quot;John  Smith&quot;)  </span></span>
+<span id="cb93-12"><a href="coding-best-practices.html#cb93-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-13"><a href="coding-best-practices.html#cb93-13" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">quos</span>(full_name, first_name, middle_name, last_name, county, address, city)</span>
+<span id="cb93-14"><a href="coding-best-practices.html#cb93-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-15"><a href="coding-best-practices.html#cb93-15" aria-hidden="true" tabindex="-1"></a>client_data <span class="ot">&lt;-</span> client_data <span class="sc">%&gt;%</span> </span>
+<span id="cb93-16"><a href="coding-best-practices.html#cb93-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(<span class="sc">!!!</span> vars), tolower) <span class="sc">%&gt;%</span> </span>
+<span id="cb93-17"><a href="coding-best-practices.html#cb93-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(<span class="sc">!!!</span> vars), stringr<span class="sc">::</span>str_replace_all, <span class="st">&quot;[^a-zA-Z</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">s]&quot;</span>, <span class="st">&quot; &quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb93-18"><a href="coding-best-practices.html#cb93-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(<span class="sc">!!!</span> vars), stringr<span class="sc">::</span>str_replace, <span class="st">&quot;[[:blank:]]$&quot;</span>, <span class="st">&quot;&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb93-19"><a href="coding-best-practices.html#cb93-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(<span class="sc">!!!</span> vars), stringr<span class="sc">::</span>str_replace_all, <span class="st">&quot;[[:blank:]]{2,}&quot;</span>, <span class="st">&quot; &quot;</span>)</span>
+<span id="cb93-20"><a href="coding-best-practices.html#cb93-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-21"><a href="coding-best-practices.html#cb93-21" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(vars)</span></code></pre></div>
 </div>
 <div id="why-i-chose-this-particular-strategy" class="section level3" number="9.2.3">
 <h3><span class="header-section-number">9.2.3</span> Why I chose this particular strategy</h3>
@@ -693,7 +692,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">9.3</span> Style guidelines</h2>
 <p>UsInG c_o_n_s_i_s_t_e_n_t STYLE i.s. import-ant!</p>
 <blockquote>
-<p>Good coding style is like using correct punctuation. You can manage without it, but it sure makes things easier to read. As with styles of punctuation, there are many possible variations… Good style is important because while your code only has one author, it’ll usually have multiple readers. This is especially true when you’re writing code with others. In that case, it’s a good idea to agree on a common style up-front. Since no style is strictly better than another, working with others may mean that you’ll need to sacrifice some preferred aspects of your style. <span class="citation"><a href="#ref-Wickham2019-yt" role="doc-biblioref">3</a></span></p>
+<p>Good coding style is like using correct punctuation. You can manage without it, but it sure makes things easier to read. As with styles of punctuation, there are many possible variations… Good style is important because while your code only has one author, it’ll usually have multiple readers. This is especially true when you’re writing code with others. In that case, it’s a good idea to agree on a common style up-front. Since no style is strictly better than another, working with others may mean that you’ll need to sacrifice some preferred aspects of your style.<span class="citation"><sup><a href="references.html#ref-Wickham2019-yt" role="doc-biblioref">3</a></sup></span></p>
 </blockquote>
 <p>Below, I outline the style that I and my collaborators typically use when writing R code for a research project. It generally follows <a href="https://style.tidyverse.org/">the Tidyverse style guide</a>, <em>which I strongly suggest you read</em>. Outside of my class, you don’t have to use my style, but you really should find or create a style that works for you and your collaborators and use it consistently.</p>
 <div id="object-variable-names" class="section level3" number="9.3.1">
@@ -703,75 +702,75 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="use-names-that-are-informative" class="section level3" number="9.3.2">
 <h3><span class="header-section-number">9.3.2</span> Use names that are informative</h3>
 <p>Using names that are informative and easy to remember will make life easier for everyone who uses your data – including you!</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="coding-best-practices.html#cb95-1"></a><span class="co"># Uninformative names - Don&#39;t do this</span></span>
-<span id="cb95-2"><a href="coding-best-practices.html#cb95-2"></a>x1</span>
-<span id="cb95-3"><a href="coding-best-practices.html#cb95-3"></a>var1</span>
-<span id="cb95-4"><a href="coding-best-practices.html#cb95-4"></a></span>
-<span id="cb95-5"><a href="coding-best-practices.html#cb95-5"></a><span class="co"># Informative names</span></span>
-<span id="cb95-6"><a href="coding-best-practices.html#cb95-6"></a>employed</span>
-<span id="cb95-7"><a href="coding-best-practices.html#cb95-7"></a>married</span>
-<span id="cb95-8"><a href="coding-best-practices.html#cb95-8"></a>education</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="coding-best-practices.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uninformative names - Don&#39;t do this</span></span>
+<span id="cb95-2"><a href="coding-best-practices.html#cb95-2" aria-hidden="true" tabindex="-1"></a>x1</span>
+<span id="cb95-3"><a href="coding-best-practices.html#cb95-3" aria-hidden="true" tabindex="-1"></a>var1</span>
+<span id="cb95-4"><a href="coding-best-practices.html#cb95-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-5"><a href="coding-best-practices.html#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Informative names</span></span>
+<span id="cb95-6"><a href="coding-best-practices.html#cb95-6" aria-hidden="true" tabindex="-1"></a>employed</span>
+<span id="cb95-7"><a href="coding-best-practices.html#cb95-7" aria-hidden="true" tabindex="-1"></a>married</span>
+<span id="cb95-8"><a href="coding-best-practices.html#cb95-8" aria-hidden="true" tabindex="-1"></a>education</span></code></pre></div>
 <div id="use-names-that-are-concise" class="section level4" number="9.3.2.1">
 <h4><span class="header-section-number">9.3.2.1</span> Use names that are concise</h4>
 <p>You want names to be informative, but you don’t want them to be overly verbose. Really long names create more work for you and more opportunities for typos. In fact, I recommend using a single word when you can.</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="coding-best-practices.html#cb96-1"></a><span class="co"># Write out entire name of the study the data comes from - Don&#39;t do this</span></span>
-<span id="cb96-2"><a href="coding-best-practices.html#cb96-2"></a>womens_health_initiative</span>
-<span id="cb96-3"><a href="coding-best-practices.html#cb96-3"></a></span>
-<span id="cb96-4"><a href="coding-best-practices.html#cb96-4"></a><span class="co"># Write out an acronym for the study the data comes from - assuming everyone </span></span>
-<span id="cb96-5"><a href="coding-best-practices.html#cb96-5"></a><span class="co"># will be familiar with this acronym - Do this</span></span>
-<span id="cb96-6"><a href="coding-best-practices.html#cb96-6"></a>whi</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="coding-best-practices.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write out entire name of the study the data comes from - Don&#39;t do this</span></span>
+<span id="cb96-2"><a href="coding-best-practices.html#cb96-2" aria-hidden="true" tabindex="-1"></a>womens_health_initiative</span>
+<span id="cb96-3"><a href="coding-best-practices.html#cb96-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-4"><a href="coding-best-practices.html#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Write out an acronym for the study the data comes from - assuming everyone </span></span>
+<span id="cb96-5"><a href="coding-best-practices.html#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="co"># will be familiar with this acronym - Do this</span></span>
+<span id="cb96-6"><a href="coding-best-practices.html#cb96-6" aria-hidden="true" tabindex="-1"></a>whi</span></code></pre></div>
 </div>
 <div id="use-all-lowercase-letters" class="section level4" number="9.3.2.2">
 <h4><span class="header-section-number">9.3.2.2</span> Use all lowercase letters</h4>
 <p>Remember, R is case-sensitive, which means that myStudyData and mystudydata are different things to R. Capitalizing letters in your file name just creates additional details to remember and potentially mess up. Just keep it simple and stick with lowercase letters.</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="coding-best-practices.html#cb97-1"></a><span class="co"># All upper case - so aggressive - Don&#39;t use</span></span>
-<span id="cb97-2"><a href="coding-best-practices.html#cb97-2"></a>MYSTUDYDATA</span>
-<span id="cb97-3"><a href="coding-best-practices.html#cb97-3"></a></span>
-<span id="cb97-4"><a href="coding-best-practices.html#cb97-4"></a><span class="co"># Camel case - Don&#39;t use</span></span>
-<span id="cb97-5"><a href="coding-best-practices.html#cb97-5"></a>myStudyData</span>
-<span id="cb97-6"><a href="coding-best-practices.html#cb97-6"></a></span>
-<span id="cb97-7"><a href="coding-best-practices.html#cb97-7"></a><span class="co"># All lowercase - Use</span></span>
-<span id="cb97-8"><a href="coding-best-practices.html#cb97-8"></a>my_study_data</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="coding-best-practices.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co"># All upper case - so aggressive - Don&#39;t use</span></span>
+<span id="cb97-2"><a href="coding-best-practices.html#cb97-2" aria-hidden="true" tabindex="-1"></a>MYSTUDYDATA</span>
+<span id="cb97-3"><a href="coding-best-practices.html#cb97-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-4"><a href="coding-best-practices.html#cb97-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Camel case - Don&#39;t use</span></span>
+<span id="cb97-5"><a href="coding-best-practices.html#cb97-5" aria-hidden="true" tabindex="-1"></a>myStudyData</span>
+<span id="cb97-6"><a href="coding-best-practices.html#cb97-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-7"><a href="coding-best-practices.html#cb97-7" aria-hidden="true" tabindex="-1"></a><span class="co"># All lowercase - Use</span></span>
+<span id="cb97-8"><a href="coding-best-practices.html#cb97-8" aria-hidden="true" tabindex="-1"></a>my_study_data</span></code></pre></div>
 </div>
 <div id="separate-multiple-words-with-underscores." class="section level4" number="9.3.2.3">
 <h4><span class="header-section-number">9.3.2.3</span> Separate multiple words with underscores.</h4>
 <p>Sometimes you really just need to use multiple words to name your object. In those cases, I suggested separating words with an underscore.</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="coding-best-practices.html#cb98-1"></a><span class="co"># Multiple words running together - Hard to read - Don&#39;t use</span></span>
-<span id="cb98-2"><a href="coding-best-practices.html#cb98-2"></a>mycancerdata</span>
-<span id="cb98-3"><a href="coding-best-practices.html#cb98-3"></a></span>
-<span id="cb98-4"><a href="coding-best-practices.html#cb98-4"></a><span class="co"># Camel case - easier to read, but more to remember and mess up - Don&#39;t use</span></span>
-<span id="cb98-5"><a href="coding-best-practices.html#cb98-5"></a>myCancerData</span>
-<span id="cb98-6"><a href="coding-best-practices.html#cb98-6"></a></span>
-<span id="cb98-7"><a href="coding-best-practices.html#cb98-7"></a><span class="co"># Separate with periods - easier to read, but doesn&#39;t translate well to many </span></span>
-<span id="cb98-8"><a href="coding-best-practices.html#cb98-8"></a><span class="co"># other languages. For example, SAS won&#39;t accept variable names with </span></span>
-<span id="cb98-9"><a href="coding-best-practices.html#cb98-9"></a><span class="co"># periods - Don&#39;t use</span></span>
-<span id="cb98-10"><a href="coding-best-practices.html#cb98-10"></a>my.cancer.data</span>
-<span id="cb98-11"><a href="coding-best-practices.html#cb98-11"></a></span>
-<span id="cb98-12"><a href="coding-best-practices.html#cb98-12"></a><span class="co"># Separate with underscores - Use</span></span>
-<span id="cb98-13"><a href="coding-best-practices.html#cb98-13"></a>my_cancer_data</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="coding-best-practices.html#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiple words running together - Hard to read - Don&#39;t use</span></span>
+<span id="cb98-2"><a href="coding-best-practices.html#cb98-2" aria-hidden="true" tabindex="-1"></a>mycancerdata</span>
+<span id="cb98-3"><a href="coding-best-practices.html#cb98-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-4"><a href="coding-best-practices.html#cb98-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Camel case - easier to read, but more to remember and mess up - Don&#39;t use</span></span>
+<span id="cb98-5"><a href="coding-best-practices.html#cb98-5" aria-hidden="true" tabindex="-1"></a>myCancerData</span>
+<span id="cb98-6"><a href="coding-best-practices.html#cb98-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-7"><a href="coding-best-practices.html#cb98-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Separate with periods - easier to read, but doesn&#39;t translate well to many </span></span>
+<span id="cb98-8"><a href="coding-best-practices.html#cb98-8" aria-hidden="true" tabindex="-1"></a><span class="co"># other languages. For example, SAS won&#39;t accept variable names with </span></span>
+<span id="cb98-9"><a href="coding-best-practices.html#cb98-9" aria-hidden="true" tabindex="-1"></a><span class="co"># periods - Don&#39;t use</span></span>
+<span id="cb98-10"><a href="coding-best-practices.html#cb98-10" aria-hidden="true" tabindex="-1"></a>my.cancer.data</span>
+<span id="cb98-11"><a href="coding-best-practices.html#cb98-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-12"><a href="coding-best-practices.html#cb98-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Separate with underscores - Use</span></span>
+<span id="cb98-13"><a href="coding-best-practices.html#cb98-13" aria-hidden="true" tabindex="-1"></a>my_cancer_data</span></code></pre></div>
 </div>
 <div id="prefix-the-names-of-similar-variables" class="section level4" number="9.3.2.4">
 <h4><span class="header-section-number">9.3.2.4</span> Prefix the names of similar variables</h4>
 <p>When you have multiple related variables, it’s good practice to start their variable names with the same word. It makes these related variables easier to find and work with in the future if we need to do something with all of them at once. We can sort our variable names alphabetically to easily find find them. Additionally, we can use variable selectors like <code>starts_with("name")</code> to perform some operation on all of them at once.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="coding-best-practices.html#cb99-1"></a><span class="co"># Don&#39;t use</span></span>
-<span id="cb99-2"><a href="coding-best-practices.html#cb99-2"></a>first_name</span>
-<span id="cb99-3"><a href="coding-best-practices.html#cb99-3"></a>last_name</span>
-<span id="cb99-4"><a href="coding-best-practices.html#cb99-4"></a>middle_name</span>
-<span id="cb99-5"><a href="coding-best-practices.html#cb99-5"></a></span>
-<span id="cb99-6"><a href="coding-best-practices.html#cb99-6"></a><span class="co"># Use</span></span>
-<span id="cb99-7"><a href="coding-best-practices.html#cb99-7"></a>name_first</span>
-<span id="cb99-8"><a href="coding-best-practices.html#cb99-8"></a>name_last</span>
-<span id="cb99-9"><a href="coding-best-practices.html#cb99-9"></a>name_middle</span>
-<span id="cb99-10"><a href="coding-best-practices.html#cb99-10"></a></span>
-<span id="cb99-11"><a href="coding-best-practices.html#cb99-11"></a><span class="co"># Don&#39;t use</span></span>
-<span id="cb99-12"><a href="coding-best-practices.html#cb99-12"></a>street</span>
-<span id="cb99-13"><a href="coding-best-practices.html#cb99-13"></a>city</span>
-<span id="cb99-14"><a href="coding-best-practices.html#cb99-14"></a>state</span>
-<span id="cb99-15"><a href="coding-best-practices.html#cb99-15"></a></span>
-<span id="cb99-16"><a href="coding-best-practices.html#cb99-16"></a><span class="co"># Use</span></span>
-<span id="cb99-17"><a href="coding-best-practices.html#cb99-17"></a>address_street</span>
-<span id="cb99-18"><a href="coding-best-practices.html#cb99-18"></a>address_city</span>
-<span id="cb99-19"><a href="coding-best-practices.html#cb99-19"></a>address_state</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="coding-best-practices.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Don&#39;t use</span></span>
+<span id="cb99-2"><a href="coding-best-practices.html#cb99-2" aria-hidden="true" tabindex="-1"></a>first_name</span>
+<span id="cb99-3"><a href="coding-best-practices.html#cb99-3" aria-hidden="true" tabindex="-1"></a>last_name</span>
+<span id="cb99-4"><a href="coding-best-practices.html#cb99-4" aria-hidden="true" tabindex="-1"></a>middle_name</span>
+<span id="cb99-5"><a href="coding-best-practices.html#cb99-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-6"><a href="coding-best-practices.html#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Use</span></span>
+<span id="cb99-7"><a href="coding-best-practices.html#cb99-7" aria-hidden="true" tabindex="-1"></a>name_first</span>
+<span id="cb99-8"><a href="coding-best-practices.html#cb99-8" aria-hidden="true" tabindex="-1"></a>name_last</span>
+<span id="cb99-9"><a href="coding-best-practices.html#cb99-9" aria-hidden="true" tabindex="-1"></a>name_middle</span>
+<span id="cb99-10"><a href="coding-best-practices.html#cb99-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-11"><a href="coding-best-practices.html#cb99-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Don&#39;t use</span></span>
+<span id="cb99-12"><a href="coding-best-practices.html#cb99-12" aria-hidden="true" tabindex="-1"></a>street</span>
+<span id="cb99-13"><a href="coding-best-practices.html#cb99-13" aria-hidden="true" tabindex="-1"></a>city</span>
+<span id="cb99-14"><a href="coding-best-practices.html#cb99-14" aria-hidden="true" tabindex="-1"></a>state</span>
+<span id="cb99-15"><a href="coding-best-practices.html#cb99-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-16"><a href="coding-best-practices.html#cb99-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Use</span></span>
+<span id="cb99-17"><a href="coding-best-practices.html#cb99-17" aria-hidden="true" tabindex="-1"></a>address_street</span>
+<span id="cb99-18"><a href="coding-best-practices.html#cb99-18" aria-hidden="true" tabindex="-1"></a>address_city</span>
+<span id="cb99-19"><a href="coding-best-practices.html#cb99-19" aria-hidden="true" tabindex="-1"></a>address_state</span></code></pre></div>
 </div>
 </div>
 <div id="file-names" class="section level3" number="9.3.3">
@@ -789,10 +788,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="coding-best-practices.html#cb100-1"></a><span class="co"># Examples</span></span>
-<span id="cb100-2"><a href="coding-best-practices.html#cb100-2"></a>data_<span class="dv">01</span>_import.Rmd</span>
-<span id="cb100-3"><a href="coding-best-practices.html#cb100-3"></a>data_<span class="dv">02</span>_clean.Rmd</span>
-<span id="cb100-4"><a href="coding-best-practices.html#cb100-4"></a>data_<span class="dv">03</span>_process_for_regression.Rmd</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="coding-best-practices.html#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examples</span></span>
+<span id="cb100-2"><a href="coding-best-practices.html#cb100-2" aria-hidden="true" tabindex="-1"></a>data_01_import.Rmd</span>
+<span id="cb100-3"><a href="coding-best-practices.html#cb100-3" aria-hidden="true" tabindex="-1"></a>data_02_clean.Rmd</span>
+<span id="cb100-4"><a href="coding-best-practices.html#cb100-4" aria-hidden="true" tabindex="-1"></a>data_03_process_for_regression.Rmd</span></code></pre></div>
 <ul>
 <li>Analysis files that do not directly create a table or figure should be
 prefixed with the word “analysis” and named as follows
@@ -800,9 +799,9 @@ prefixed with the word “analysis” and named as follows
 <li>analysis_[order number]_[brief summary of content]</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="coding-best-practices.html#cb101-1"></a><span class="co"># Examples</span></span>
-<span id="cb101-2"><a href="coding-best-practices.html#cb101-2"></a>analysis_<span class="dv">01</span>_exploratory.Rmd</span>
-<span id="cb101-3"><a href="coding-best-practices.html#cb101-3"></a>analysis_<span class="dv">02</span>_regression.Rmd</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="coding-best-practices.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examples</span></span>
+<span id="cb101-2"><a href="coding-best-practices.html#cb101-2" aria-hidden="true" tabindex="-1"></a>analysis_01_exploratory.Rmd</span>
+<span id="cb101-3"><a href="coding-best-practices.html#cb101-3" aria-hidden="true" tabindex="-1"></a>analysis_02_regression.Rmd</span></code></pre></div>
 <ul>
 <li>Analysis files that <em>DO</em> directly create a table or figure should be prefixed with the word “table” or “fig” respectively and named as follows
 <ul>
@@ -811,9 +810,9 @@ prefixed with the word “analysis” and named as follows
 <li>fig_[brief summary of content]</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="coding-best-practices.html#cb102-1"></a><span class="co"># Examples</span></span>
-<span id="cb102-2"><a href="coding-best-practices.html#cb102-2"></a>table_network_characteristics.Rmd</span>
-<span id="cb102-3"><a href="coding-best-practices.html#cb102-3"></a>fig_reporting_patterns.Rmd</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="coding-best-practices.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examples</span></span>
+<span id="cb102-2"><a href="coding-best-practices.html#cb102-2" aria-hidden="true" tabindex="-1"></a>table_network_characteristics.Rmd</span>
+<span id="cb102-3"><a href="coding-best-practices.html#cb102-3" aria-hidden="true" tabindex="-1"></a>fig_reporting_patterns.Rmd</span></code></pre></div>
 <p class="note">
 🗒<strong>Side Note:</strong> I sometimes do data manipulation (create variables, subset data, reshape data) in an analysis file if that analysis (or table or chart) is the only analysis that uses the modified data. Otherwise, I do the modifications in a separate data cleaning file.
 </p>
@@ -853,12 +852,6 @@ prefixed with the word “analysis” and named as follows
 
 </div>
 </div>
-</div>
-</div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-Wickham2019-yt">
-<p>3. Wickham H. Style guide. In: <em>Advanced R</em>.; 2019.</p>
 </div>
 </div>
             </section>

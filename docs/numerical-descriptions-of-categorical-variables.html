@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2020-08-16" />
+<meta name="date" content="2021-01-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="introduction-to-descriptive-analysis.html"/>
 <link rel="next" href="measures-of-central-tendency.html"/>
-<script src="libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,11 +51,10 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.13/datatables.js"></script>
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
@@ -625,37 +624,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We’ll begin our discussion of descriptive statistics in the categorical half of our flow chart. Specifically, we’ll start by numerically describing categorical variables. As a reminder, categorical variables are variables whose values fit into categories.</p>
 <p><img src="img/04_part_descriptive_analysis/flowchart_cat_numerical.png" width="900" /></p>
 <p>Some examples of categorical variables commonly seen in public health data are: sex, race or ethnicity, and level of educational attainment.</p>
-<p><img src="img/04_part_descriptive_analysis/categorical_variables_01.jpeg" /><!-- --></p>
+<p><img src="img/04_part_descriptive_analysis/categorical_variables_01.jpeg" width="960" /></p>
 <p>Notice that there is no inherent numeric value to any of these categories. Having said that, we can, and often will, assign a numeric value to each category using R.</p>
-<p><img src="img/04_part_descriptive_analysis/categorical_variables_02.jpeg" /><!-- --></p>
+<p><img src="img/04_part_descriptive_analysis/categorical_variables_02.jpeg" width="960" /></p>
 <p>The two most common numerical descriptions of categorical variables are probably the <strong>frequency count</strong> (you will often hear this referred to as simply the <strong>frequency</strong>, the <strong>count</strong>, or the <strong>n</strong>) and the <strong>proportion</strong> or <strong>percentage</strong> (the percentage is just the proportion multiplied by 100).</p>
-<p><img src="img/04_part_descriptive_analysis/categorical_variables_03.jpeg" /><!-- --></p>
+<p><img src="img/04_part_descriptive_analysis/categorical_variables_03.jpeg" width="960" /></p>
 <p>The count is simply the number of observations, in this case people, which fall into each possible category.</p>
 <p>The proportion is just the count divided by the total number of observations. In this example, 2 people out of 5 people (.40 or 40%) are in the Asian race category.</p>
 <p>Now let’s go over <em>how</em> to calculate frequency counts and percentages using R.</p>
 <div id="height-and-weight-data" class="section level2" number="18.1">
 <h2><span class="header-section-number">18.1</span> Height and Weight Data</h2>
 <p>Below, we’re going to learn to do descriptive analysis in R by experimenting with some simulated data that contains several people’s sex, height, and weight. You can follow along with this lesson by copying and pasting the code chunks below in your R session.</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="numerical-descriptions-of-categorical-variables.html#cb217-1"></a><span class="co"># Load the dplyr package. We will need several of dpylr&#39;s functions in the </span></span>
-<span id="cb217-2"><a href="numerical-descriptions-of-categorical-variables.html#cb217-2"></a><span class="co"># code below.</span></span>
-<span id="cb217-3"><a href="numerical-descriptions-of-categorical-variables.html#cb217-3"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
-<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="numerical-descriptions-of-categorical-variables.html#cb218-1"></a><span class="co"># Simulate some data</span></span>
-<span id="cb218-2"><a href="numerical-descriptions-of-categorical-variables.html#cb218-2"></a>height_and_weight_<span class="dv">20</span> &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb218-3"><a href="numerical-descriptions-of-categorical-variables.html#cb218-3"></a>  <span class="dt">id     =</span> <span class="kw">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>, <span class="st">&quot;005&quot;</span>, <span class="st">&quot;006&quot;</span>, <span class="st">&quot;007&quot;</span>, <span class="st">&quot;008&quot;</span>, <span class="st">&quot;009&quot;</span>, </span>
-<span id="cb218-4"><a href="numerical-descriptions-of-categorical-variables.html#cb218-4"></a>             <span class="st">&quot;010&quot;</span>, <span class="st">&quot;011&quot;</span>, <span class="st">&quot;012&quot;</span>, <span class="st">&quot;013&quot;</span>, <span class="st">&quot;014&quot;</span>, <span class="st">&quot;015&quot;</span>, <span class="st">&quot;016&quot;</span>, <span class="st">&quot;017&quot;</span>, <span class="st">&quot;018&quot;</span>, </span>
-<span id="cb218-5"><a href="numerical-descriptions-of-categorical-variables.html#cb218-5"></a>             <span class="st">&quot;019&quot;</span>, <span class="st">&quot;020&quot;</span>),</span>
-<span id="cb218-6"><a href="numerical-descriptions-of-categorical-variables.html#cb218-6"></a>  <span class="dt">sex    =</span> <span class="kw">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>, </span>
-<span id="cb218-7"><a href="numerical-descriptions-of-categorical-variables.html#cb218-7"></a>             <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>, </span>
-<span id="cb218-8"><a href="numerical-descriptions-of-categorical-variables.html#cb218-8"></a>             <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&#39;Female&#39;</span>),</span>
-<span id="cb218-9"><a href="numerical-descriptions-of-categorical-variables.html#cb218-9"></a>  <span class="dt">ht_in  =</span> <span class="kw">c</span>(<span class="dv">71</span>, <span class="dv">69</span>, <span class="dv">64</span>, <span class="dv">65</span>, <span class="dv">73</span>, <span class="dv">69</span>, <span class="dv">68</span>, <span class="dv">73</span>, <span class="dv">71</span>, <span class="dv">66</span>, <span class="dv">71</span>, <span class="dv">69</span>, <span class="dv">66</span>, <span class="dv">68</span>, <span class="dv">75</span>, <span class="dv">69</span>, </span>
-<span id="cb218-10"><a href="numerical-descriptions-of-categorical-variables.html#cb218-10"></a>             <span class="dv">66</span>, <span class="dv">65</span>, <span class="dv">65</span>, <span class="dv">65</span>),</span>
-<span id="cb218-11"><a href="numerical-descriptions-of-categorical-variables.html#cb218-11"></a>  <span class="dt">wt_lbs =</span> <span class="kw">c</span>(<span class="dv">190</span>, <span class="dv">176</span>, <span class="dv">130</span>, <span class="dv">154</span>, <span class="dv">173</span>, <span class="dv">182</span>, <span class="dv">140</span>, <span class="dv">185</span>, <span class="dv">157</span>, <span class="dv">155</span>, <span class="dv">213</span>, <span class="dv">151</span>, <span class="dv">147</span>, </span>
-<span id="cb218-12"><a href="numerical-descriptions-of-categorical-variables.html#cb218-12"></a>             <span class="dv">196</span>, <span class="dv">212</span>, <span class="dv">190</span>, <span class="dv">194</span>, <span class="dv">176</span>, <span class="dv">176</span>, <span class="dv">102</span>)</span>
-<span id="cb218-13"><a href="numerical-descriptions-of-categorical-variables.html#cb218-13"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="numerical-descriptions-of-categorical-variables.html#cb217-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dplyr package. We will need several of dpylr&#39;s functions in the </span></span>
+<span id="cb217-2"><a href="numerical-descriptions-of-categorical-variables.html#cb217-2" aria-hidden="true" tabindex="-1"></a><span class="co"># code below.</span></span>
+<span id="cb217-3"><a href="numerical-descriptions-of-categorical-variables.html#cb217-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="numerical-descriptions-of-categorical-variables.html#cb218-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate some data</span></span>
+<span id="cb218-2"><a href="numerical-descriptions-of-categorical-variables.html#cb218-2" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb218-3"><a href="numerical-descriptions-of-categorical-variables.html#cb218-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>, <span class="st">&quot;005&quot;</span>, <span class="st">&quot;006&quot;</span>, <span class="st">&quot;007&quot;</span>, <span class="st">&quot;008&quot;</span>, <span class="st">&quot;009&quot;</span>, </span>
+<span id="cb218-4"><a href="numerical-descriptions-of-categorical-variables.html#cb218-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;010&quot;</span>, <span class="st">&quot;011&quot;</span>, <span class="st">&quot;012&quot;</span>, <span class="st">&quot;013&quot;</span>, <span class="st">&quot;014&quot;</span>, <span class="st">&quot;015&quot;</span>, <span class="st">&quot;016&quot;</span>, <span class="st">&quot;017&quot;</span>, <span class="st">&quot;018&quot;</span>, </span>
+<span id="cb218-5"><a href="numerical-descriptions-of-categorical-variables.html#cb218-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;019&quot;</span>, <span class="st">&quot;020&quot;</span>),</span>
+<span id="cb218-6"><a href="numerical-descriptions-of-categorical-variables.html#cb218-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sex    =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>, </span>
+<span id="cb218-7"><a href="numerical-descriptions-of-categorical-variables.html#cb218-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>, </span>
+<span id="cb218-8"><a href="numerical-descriptions-of-categorical-variables.html#cb218-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&#39;Female&#39;</span>),</span>
+<span id="cb218-9"><a href="numerical-descriptions-of-categorical-variables.html#cb218-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">ht_in  =</span> <span class="fu">c</span>(<span class="dv">71</span>, <span class="dv">69</span>, <span class="dv">64</span>, <span class="dv">65</span>, <span class="dv">73</span>, <span class="dv">69</span>, <span class="dv">68</span>, <span class="dv">73</span>, <span class="dv">71</span>, <span class="dv">66</span>, <span class="dv">71</span>, <span class="dv">69</span>, <span class="dv">66</span>, <span class="dv">68</span>, <span class="dv">75</span>, <span class="dv">69</span>, </span>
+<span id="cb218-10"><a href="numerical-descriptions-of-categorical-variables.html#cb218-10" aria-hidden="true" tabindex="-1"></a>             <span class="dv">66</span>, <span class="dv">65</span>, <span class="dv">65</span>, <span class="dv">65</span>),</span>
+<span id="cb218-11"><a href="numerical-descriptions-of-categorical-variables.html#cb218-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">wt_lbs =</span> <span class="fu">c</span>(<span class="dv">190</span>, <span class="dv">176</span>, <span class="dv">130</span>, <span class="dv">154</span>, <span class="dv">173</span>, <span class="dv">182</span>, <span class="dv">140</span>, <span class="dv">185</span>, <span class="dv">157</span>, <span class="dv">155</span>, <span class="dv">213</span>, <span class="dv">151</span>, <span class="dv">147</span>, </span>
+<span id="cb218-12"><a href="numerical-descriptions-of-categorical-variables.html#cb218-12" aria-hidden="true" tabindex="-1"></a>             <span class="dv">196</span>, <span class="dv">212</span>, <span class="dv">190</span>, <span class="dv">194</span>, <span class="dv">176</span>, <span class="dv">176</span>, <span class="dv">102</span>)</span>
+<span id="cb218-13"><a href="numerical-descriptions-of-categorical-variables.html#cb218-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div id="view-the-data" class="section level3" number="18.1.1">
 <h3><span class="header-section-number">18.1.1</span> View the data</h3>
 <p>Let’s start our analysis by taking a quick look at our data…</p>
-<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="numerical-descriptions-of-categorical-variables.html#cb219-1"></a>height_and_weight_<span class="dv">20</span></span></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="numerical-descriptions-of-categorical-variables.html#cb219-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20</span></code></pre></div>
 <pre><code>##     id    sex ht_in wt_lbs
 ## 1  001   Male    71    190
 ## 2  002   Male    69    176
@@ -691,7 +690,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>As is always the case with R, there are multiple ways we can calculate the statistics that we’re interested in. For example, we can use the base R <code>table</code> function like this:</p>
 <div id="the-base-r-table-function" class="section level3" number="18.2.1">
 <h3><span class="header-section-number">18.2.1</span> The base R table function</h3>
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="numerical-descriptions-of-categorical-variables.html#cb221-1"></a><span class="kw">table</span>(height_and_weight_<span class="dv">20</span><span class="op">$</span>sex)</span></code></pre></div>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="numerical-descriptions-of-categorical-variables.html#cb221-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(height_and_weight_20<span class="sc">$</span>sex)</span></code></pre></div>
 <pre><code>## 
 ## Female   Male 
 ##     12      8</code></pre>
@@ -699,9 +698,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="the-gmodels-crosstable-function" class="section level3" number="18.2.2">
 <h3><span class="header-section-number">18.2.2</span> The gmodels CrossTable function</h3>
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="numerical-descriptions-of-categorical-variables.html#cb223-1"></a><span class="co"># Like all packages, you will have to install gmodels before you can use the</span></span>
-<span id="cb223-2"><a href="numerical-descriptions-of-categorical-variables.html#cb223-2"></a><span class="co"># CrossTable function. </span></span>
-<span id="cb223-3"><a href="numerical-descriptions-of-categorical-variables.html#cb223-3"></a>gmodels<span class="op">::</span><span class="kw">CrossTable</span>(height_and_weight_<span class="dv">20</span><span class="op">$</span>sex)</span></code></pre></div>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="numerical-descriptions-of-categorical-variables.html#cb223-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Like all packages, you will have to install gmodels before you can use the</span></span>
+<span id="cb223-2"><a href="numerical-descriptions-of-categorical-variables.html#cb223-2" aria-hidden="true" tabindex="-1"></a><span class="co"># CrossTable function. </span></span>
+<span id="cb223-3"><a href="numerical-descriptions-of-categorical-variables.html#cb223-3" aria-hidden="true" tabindex="-1"></a>gmodels<span class="sc">::</span><span class="fu">CrossTable</span>(height_and_weight_20<span class="sc">$</span>sex)</span></code></pre></div>
 <pre><code>## 
 ##  
 ##    Cell Contents
@@ -731,12 +730,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 🗒<strong>Side Note:</strong> You should already be familiar with the pipe operator (<code>%&gt;%</code>), but if it doesn’t look familiar to you, you can learn more about it in <a href="using-pipes.html#using-pipes">Using pipes</a>. Don’t forget, if you are using RStudio, you can use the keyboard shortcut <code>shift + command + m</code> (Mac) or <code>shift + control + m</code> (Windows) to insert the pipe operator.
 </p>
 <p>First, we don’t want to view the individual values in our data frame. Instead, we want to condense those values into summary statistics. This is a job for the <a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a> function.</p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="numerical-descriptions-of-categorical-variables.html#cb225-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb225-2"><a href="numerical-descriptions-of-categorical-variables.html#cb225-2"></a><span class="st">  </span><span class="kw">summarise</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="numerical-descriptions-of-categorical-variables.html#cb225-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb225-2"><a href="numerical-descriptions-of-categorical-variables.html#cb225-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>()</span></code></pre></div>
 <pre><code>## data frame with 0 columns and 1 row</code></pre>
 <p>As you can see, <code>summarise()</code> doesn’t do anything interesting on its own. We need to tell it what kind of summary information we want. We can use the <a href="https://dplyr.tidyverse.org/reference/n.html">n()</a> function to count rows. By, default, it will count all the rows in the data frame. For example:</p>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="numerical-descriptions-of-categorical-variables.html#cb227-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb227-2"><a href="numerical-descriptions-of-categorical-variables.html#cb227-2"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">n</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="numerical-descriptions-of-categorical-variables.html#cb227-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb227-2"><a href="numerical-descriptions-of-categorical-variables.html#cb227-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">n</span>())</span></code></pre></div>
 <pre><code>##   n()
 ## 1  20</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
@@ -745,9 +744,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>The result we get is a new data frame with 1 column (named <code>n()</code>) and one row with the value 20 (the number of rows in the original data frame).</p></li>
 </ul>
 <p>This is a great start. However, we really want to count the number of rows that have the value “female” for sex, and then separately count the number of rows that have the value “male” for sex. Said another way, we want to break our data frame up into smaller data frames – one for each value of <code>sex</code> – and then count the rows. This is exactly what <code>dplyr</code>’s <a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a> function does.</p>
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="numerical-descriptions-of-categorical-variables.html#cb229-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span></span>
-<span id="cb229-2"><a href="numerical-descriptions-of-categorical-variables.html#cb229-2"></a><span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb229-3"><a href="numerical-descriptions-of-categorical-variables.html#cb229-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">n</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="numerical-descriptions-of-categorical-variables.html#cb229-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span></span>
+<span id="cb229-2"><a href="numerical-descriptions-of-categorical-variables.html#cb229-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb229-3"><a href="numerical-descriptions-of-categorical-variables.html#cb229-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">n</span>())</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 2
 ##   sex    `n()`
 ##   &lt;chr&gt;  &lt;int&gt;
@@ -758,9 +757,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 🗒<strong>Side Note:</strong> <code>dplyr</code>’s <code>group_by()</code> function operationalizes the <strong>Split - Apply - Combine</strong> strategy for data analysis. That sounds sort of fancy, but all it really means is that we split our data frame up into smaller data frames, apply our calculation separately to each smaller data frame, and then combine those individual results back together as a single result. So, in the example above, the <code>height_and_weight_20</code> data frame was split into two separate little data frames (i.e., one for females and one for males), then the <code>summarise()</code> and <code>n()</code> functions counted the number of rows in each of the two smaller data frames (i.e., 12 and 8 respectively), and finally combined those individual results into a single data frame, which was printed to the screen for us to view.
 </p>
 <p>However, it will be awkward to work with a variable named <code>n()</code> in the future. Let’s go ahead and assign it a different name. We can assign it any valid name we want. Some names that might make sense are n, frequency, or count. I’m going to go ahead an just name it <code>n</code> without the parentheses.</p>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="numerical-descriptions-of-categorical-variables.html#cb231-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span></span>
-<span id="cb231-2"><a href="numerical-descriptions-of-categorical-variables.html#cb231-2"></a><span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb231-3"><a href="numerical-descriptions-of-categorical-variables.html#cb231-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="numerical-descriptions-of-categorical-variables.html#cb231-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span></span>
+<span id="cb231-2"><a href="numerical-descriptions-of-categorical-variables.html#cb231-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb231-3"><a href="numerical-descriptions-of-categorical-variables.html#cb231-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 2 x 2
 ##   sex        n
@@ -772,8 +771,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>We added <code>n =</code> to our summarise function (<code>summarise(n = n())</code>) so that our count column in the resulting data frame would be named <code>n</code> instead of <code>n()</code>.</li>
 </ul>
 <p>Finally, estimating categorical frequencies like this is such a common operation that <code>dplyr</code> has a shortcut for it. We can use the <a href="https://dplyr.tidyverse.org/reference/tally.html">count</a> function to get the same result that we got above.</p>
-<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="numerical-descriptions-of-categorical-variables.html#cb234-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb234-2"><a href="numerical-descriptions-of-categorical-variables.html#cb234-2"></a><span class="st">  </span><span class="kw">count</span>(sex)</span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="numerical-descriptions-of-categorical-variables.html#cb234-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb234-2"><a href="numerical-descriptions-of-categorical-variables.html#cb234-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sex)</span></code></pre></div>
 <pre><code>##      sex  n
 ## 1 Female 12
 ## 2   Male  8</code></pre>
@@ -783,9 +782,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">18.3</span> Calculating percentages</h2>
 <p>In addition to frequencies, we will often be interested in calculating percentages for categorical variables. As always, there are many was to accomplish this in R. From here on out, I’m going to primarily use <code>tidyverse</code> functions.</p>
 <p>In this case, the proportion of people in our data who are female can be calculated as the number who are female (12) divided by the total number of people in the data. We already know that there are 20 people in the data, so we could calculate proportions like so:</p>
-<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="numerical-descriptions-of-categorical-variables.html#cb236-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb236-2"><a href="numerical-descriptions-of-categorical-variables.html#cb236-2"></a><span class="st">  </span><span class="kw">count</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb236-3"><a href="numerical-descriptions-of-categorical-variables.html#cb236-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="dv">20</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="numerical-descriptions-of-categorical-variables.html#cb236-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb236-2"><a href="numerical-descriptions-of-categorical-variables.html#cb236-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb236-3"><a href="numerical-descriptions-of-categorical-variables.html#cb236-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="dv">20</span>)</span></code></pre></div>
 <pre><code>##      sex  n prop
 ## 1 Female 12  0.6
 ## 2   Male  8  0.4</code></pre>
@@ -796,9 +795,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Then we set the value of <code>prop</code> to be equal to the value of <code>n</code> divided by 20.</p></li>
 </ul>
 <p>This works, but it would be better to have R calculate the total number of observations for the denominator (20) than for us to manually type it in. In this case, we can do that with the <code>sum()</code> function.</p>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="numerical-descriptions-of-categorical-variables.html#cb238-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb238-2"><a href="numerical-descriptions-of-categorical-variables.html#cb238-2"></a><span class="st">  </span><span class="kw">count</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb238-3"><a href="numerical-descriptions-of-categorical-variables.html#cb238-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</span></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="numerical-descriptions-of-categorical-variables.html#cb238-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb238-2"><a href="numerical-descriptions-of-categorical-variables.html#cb238-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb238-3"><a href="numerical-descriptions-of-categorical-variables.html#cb238-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span></code></pre></div>
 <pre><code>##      sex  n prop
 ## 1 Female 12  0.6
 ## 2   Male  8  0.4</code></pre>
@@ -807,9 +806,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Instead of manually typing in the total count for our denominator (20), we had R calculate it for us using the <code>sum()</code> function. The <code>sum()</code> function added together all the values of the variable <code>n</code> (i.e., 12 + 8 = 20).</li>
 </ul>
 <p>Finally, we just need to multiply our proportion by 100 to convert it to a percentage.</p>
-<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="numerical-descriptions-of-categorical-variables.html#cb240-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb240-2"><a href="numerical-descriptions-of-categorical-variables.html#cb240-2"></a><span class="st">  </span><span class="kw">count</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb240-3"><a href="numerical-descriptions-of-categorical-variables.html#cb240-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="numerical-descriptions-of-categorical-variables.html#cb240-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb240-2"><a href="numerical-descriptions-of-categorical-variables.html#cb240-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb240-3"><a href="numerical-descriptions-of-categorical-variables.html#cb240-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>)</span></code></pre></div>
 <pre><code>##      sex  n percent
 ## 1 Female 12      60
 ## 2   Male  8      40</code></pre>
@@ -822,9 +821,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="missing-data-1" class="section level2" number="18.4">
 <h2><span class="header-section-number">18.4</span> Missing data</h2>
 <p>In the real world, you will frequently encounter data that has missing values. Let’s quickly take a look at an example by adding some missing values to our data frame.</p>
-<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="numerical-descriptions-of-categorical-variables.html#cb242-1"></a>height_and_weight_<span class="dv">20</span> &lt;-<span class="st"> </span>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb242-2"><a href="numerical-descriptions-of-categorical-variables.html#cb242-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sex =</span> <span class="kw">replace</span>(sex, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">9</span>), <span class="ot">NA</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb242-3"><a href="numerical-descriptions-of-categorical-variables.html#cb242-3"></a><span class="st">  </span><span class="kw">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="numerical-descriptions-of-categorical-variables.html#cb242-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb242-2"><a href="numerical-descriptions-of-categorical-variables.html#cb242-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sex =</span> <span class="fu">replace</span>(sex, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">9</span>), <span class="cn">NA</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb242-3"><a href="numerical-descriptions-of-categorical-variables.html#cb242-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>##     id    sex ht_in wt_lbs
 ## 1  001   Male    71    190
 ## 2  002   &lt;NA&gt;    69    176
@@ -851,18 +850,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Replaced the 2nd and 9th value of sex with <code>NA</code> (missing) using the <code>replace()</code> function.</li>
 </ul>
 <p>Now let’s see how our code from above handles this</p>
-<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="numerical-descriptions-of-categorical-variables.html#cb244-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb244-2"><a href="numerical-descriptions-of-categorical-variables.html#cb244-2"></a><span class="st">  </span><span class="kw">count</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb244-3"><a href="numerical-descriptions-of-categorical-variables.html#cb244-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="numerical-descriptions-of-categorical-variables.html#cb244-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb244-2"><a href="numerical-descriptions-of-categorical-variables.html#cb244-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb244-3"><a href="numerical-descriptions-of-categorical-variables.html#cb244-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>)</span></code></pre></div>
 <pre><code>##      sex  n percent
 ## 1 Female 11      55
 ## 2   Male  7      35
 ## 3   &lt;NA&gt;  2      10</code></pre>
 <p>As you can see, we are now treating missing as if it were a category of sex. Sometimes this will be the result you want. However, often you will want the n and percent of <em>non-missing</em> values for your categorical variable. This is sometimes referred to as a <em>complete case analysis</em>. There’s a couple of different ways we can handle this. I will simply filter out rows with a missing value for sex with <code>dplyr</code>’s <a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a> function.</p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="numerical-descriptions-of-categorical-variables.html#cb246-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb246-2"><a href="numerical-descriptions-of-categorical-variables.html#cb246-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(sex)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb246-3"><a href="numerical-descriptions-of-categorical-variables.html#cb246-3"></a><span class="st">  </span><span class="kw">count</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb246-4"><a href="numerical-descriptions-of-categorical-variables.html#cb246-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="numerical-descriptions-of-categorical-variables.html#cb246-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb246-2"><a href="numerical-descriptions-of-categorical-variables.html#cb246-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sex)) <span class="sc">%&gt;%</span> </span>
+<span id="cb246-3"><a href="numerical-descriptions-of-categorical-variables.html#cb246-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb246-4"><a href="numerical-descriptions-of-categorical-variables.html#cb246-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>)</span></code></pre></div>
 <pre><code>##      sex  n  percent
 ## 1 Female 11 61.11111
 ## 2   Male  7 38.88889</code></pre>
@@ -880,10 +879,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="formatting-results" class="section level2" number="18.5">
 <h2><span class="header-section-number">18.5</span> Formatting results</h2>
 <p>Notice that now our percentages are being displayed with 5 digits to the right of the decimal. If we wanted to present our findings somewhere (e.g., a journal article or a report for our employer) we would almost never want to display this many digits. Let’s get R to round these numbers for us.</p>
-<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="numerical-descriptions-of-categorical-variables.html#cb248-1"></a>height_and_weight_<span class="dv">20</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb248-2"><a href="numerical-descriptions-of-categorical-variables.html#cb248-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(sex)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb248-3"><a href="numerical-descriptions-of-categorical-variables.html#cb248-3"></a><span class="st">  </span><span class="kw">count</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb248-4"><a href="numerical-descriptions-of-categorical-variables.html#cb248-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> (n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="numerical-descriptions-of-categorical-variables.html#cb248-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb248-2"><a href="numerical-descriptions-of-categorical-variables.html#cb248-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sex)) <span class="sc">%&gt;%</span> </span>
+<span id="cb248-3"><a href="numerical-descriptions-of-categorical-variables.html#cb248-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb248-4"><a href="numerical-descriptions-of-categorical-variables.html#cb248-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> (n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##      sex  n percent
 ## 1 Female 11   61.11
 ## 2   Male  7   38.89</code></pre>
