@@ -8,7 +8,7 @@ Data simulation can be really complicated, but it doesn't have to be. It is simp
 
 1. Simulating data is really useful for getting help with a problem you are trying to solve. Often, it isn't feasible for you to send other people the actual data set you are working on when you encounter a problem you need help with. Sometimes, it may not even be legally allowed (i.e., for privacy reasons). Instead of sending them your entire data set, you can simulate a little data set that recreates the challenge you are trying to address without all the other complexity of the full data set. As a bonus, I have often found that I end up figuring out the solution to the problem I'm trying to solve as I recreate the problem in a simulated data set that I intended to share with others.
 
-2. Simulated data can also be useful for learning about and testing statistical assumptions. In epidemiology, we use statistics to draw conclusions about populations of people we are interested in based on samples of people drawn from the population. Because we don't actually have data from _all_ the people in the population, we have to make some assumptions about the population based on what we find in our sample. When we simulate data, we know the truth about our population because we _created_ our population to have that truth. We can then use this simulated populations to play "what if" games with our analysis. _What if we only sampled half as many people?_ _What if their heights aren't actually normally distributed?_ _What if we used a probit model instead of a logit model?_ Going through this process and answering these questions can help us understand how much, and under what circumstances, we can trust the answers we found in the real world. 
+2. Simulated data can also be useful for learning about and testing statistical assumptions. In epidemiology, we use statistics to draw conclusions about populations of people we are interested in based on samples of people drawn from the population. Because we don't actually have data from _all_ the people in the population, we have to make some assumptions about the population based on what we find in our sample. When we simulate data, we know the truth about our population because we _created_ our population to have that truth. We can then use this simulated population to play "what if" games with our analysis. _What if we only sampled half as many people?_ _What if their heights aren't actually normally distributed?_ _What if we used a probit model instead of a logit model?_ Going through this process and answering these questions can help us understand how much, and under what circumstances, we can trust the answers we found in the real world. 
 
 So, let's go ahead and write a complete R program to simulate and analyze some data. As I said, it doesn't have to be complicated. In fact, in just a few lines of R code below we simulate and analyze some data about a hypothetical class.
 
@@ -187,9 +187,193 @@ You may have also noticed that when we created the `names` and `heights` vectors
 
 <p class="warning"> ⚠️**Warning:** By definition, all columns in a data frame must have the same length (i.e., number of rows). That means that each vector you create when building your data frame must have the same number of values in it. For example, the class data frame above has four names and four heights. If we had only entered three heights, we would have gotten the following error: `Error in data.frame(names = c("John", "Sally", "Brad", "Anne"), heights = c(68,  : arguments imply differing number of rows: 4, 3`</p>
 
+## Tibbles
+
+[Tibbles](https://tibble.tidyverse.org/) are a data structure that come from another [tidyverse](https://www.tidyverse.org/) package -- the `tibble` package. Tibbles _are_ data frames and serve the same purpose in R that data frames serve; however, they are enhanced in several ways. 💪 You are welcome to look over the [tibble documentation](https://tibble.tidyverse.org/) or the [tibbles chapter in R for Data Science](https://r4ds.had.co.nz/tibbles.html) if you are interested in learning about all the differences between tibbles and data frames. For our purposes, there are really only a couple things I want you to know about tibbles right now.
+
+First, tibbles are a part of the `tibble` package -- NOT base R. Therefore, we have install and load either the `tibble` package or the `dplyr` package (which loads the tibble package for us behind the scenes) before we can create tibbles. I typically just load the `dplyr` package. 
+
+```{r eval=FALSE}
+# Install the dplyr package. YOU ONLY NEED TO DO THIS ONE TIME.
+install.packages("dplyr")
+```
+
+```{r message=FALSE}
+# Load the dplyr package. YOU NEED TO DO THIS EVERY TIME YOU START A NEW R SESSION.
+library(dplyr)
+```
+
+Second, we can create tibbles using one of three functions: `as_tibble()`, `tibble()`, or `tribble()`. I'll show you some examples shortly.
+
+Third, try not to be confused by the terminology. Remember, tibbles _are_ data frames. They are just enhanced data frames. 
+
+### The as_tibble function
+
+We use the `as_tibble()` function to turn an already existing basic data frame into a tibble. For example:
+
+```{r}
+# Create a data frame
+my_df <- data.frame(
+  name = c("john", "alexis", "Steph", "Quiera"),
+  age  = c(24, 44, 26, 25)
+)
+
+# Print my_df to the screen
+my_df
+```
+
+```{r}
+# View the class of my_df
+class(my_df)
+```
+
+👆**Here's what we did above:**
+
+* We used the `data.frame()` function to create a new data frame called `my_df`.   
+
+* We used the `class()` function to view `my_df`'s class (i.e., what kind of object it is).
+
+  * The result returned by the `class()` function tells us that `my_df` is a data frame.
+
+
+```{r}
+# Use as_tibble() to turn my_df into a tibble
+my_df <- as_tibble(my_df)
+
+# Print my_df to the screen
+my_df
+```
+
+```{r}
+# View the class of my_df
+class(my_df)
+```
+
+👆**Here's what we did above:**
+
+* We used the `as_tibble()` function to turn `my_df` into a tibble.   
+
+* We used the `class()` function to view `my_df`'s class (i.e., what kind of object it is).
+
+  * The result returned by the `class()` function tells us that `my_df` is still a data frame, but it is also a tibble. That's what "tbl_df" and "tbl" mean.
+  
+### The tibble function
+  
+We can use the `tibble()` function in place of the `data.frame()` function when we want to create a tibble from scratch. For example: 
+
+```{r}
+# Create a data frame
+my_df <- tibble(
+  name = c("john", "alexis", "Steph", "Quiera"),
+  age  = c(24, 44, 26, 25)
+)
+
+# Print my_df to the screen
+my_df
+```
+
+```{r}
+# View the class of my_df
+class(my_df)
+```
+
+👆**Here's what we did above:**
+
+* We used the `tibble()` function to create a new tibble called `my_df`.   
+
+* We used the `class()` function to view `my_df`'s class (i.e., what kind of object it is).
+
+  * The result returned by the `class()` function tells us that `my_df` is still a data frame, but it is also a tibble. That's what "tbl_df" and "tbl" mean.
+  
+### The tribble function
+  
+Alternatively, we can use the `tribble()` function in place of the `data.frame()` function when we want to create a tibble from scratch. For example: 
+
+```{r}
+# Create a data frame
+my_df <- tribble(
+  ~name,    ~age,
+  "john",   24, 
+  "alexis", 44, 
+  "Steph",  26,
+  "Quiera", 25
+)
+
+# Print my_df to the screen
+my_df
+```
+
+```{r}
+# View the class of my_df
+class(my_df)
+```
+
+👆**Here's what we did above:**
+
+* We used the `tribble()` function to create a new tibble called `my_df`. 
+
+* We used the `class()` function to view `my_df`'s class (i.e., what kind of object it is).
+
+  * The result returned by the `class()` function tells us that `my_df` is still a data frame, but it is also a tibble. That's what "tbl_df" and "tbl" mean.
+  
+* There is absolutely no difference between the tibble we created above with the `tibble()` function and the tibble we created above with the `tribble()` function. The only difference between the two functions is the syntax we used to pass the column names and data values to each function. 
+
+  * When we use the `tibble()` function, we pass the data values to the function horizontally as vectors. This is the same syntax that the `data.frame()` function expects us to use.
+  
+  * When we use the `tribble()` function, we pass the data values to the function vertically instead. The only reason this function exists is because it can sometimes be more convenient to type in our data values this way. That's it. 
+  
+  * Remember to type a tilde ("~") in front of your column names when using the `tribble()` function. For example, type `~name` instead of `name`. That's how R knows you're giving it a column name instead of a data value. 
+
+### Why use tibbles
+
+At this point, some students wonder, "If tibbles are just data frames, why use them? Why not just use the `data.frame()` function?" That's a fair question. As I have said multiple times already, tibbles are enhanced. However, I don't believe that going into detail about those enhancements is going to be useful to most of you at this point -- and may even be confusing. But, I will show you one quick example that's pretty self explanatory. 
+
+Let's say that we are given some data that contains four people's age in years. We want to create a data frame from that data. However, let's say that we also want a column in our new data frame that contains those same ages in months. Well, we could do the math ourselves. We could just multiply each age in years by 12 (for the sake of simplicity, assume that everyone's age in years is gathered on their birthday). But, we'd rather have R do the math for us. We can do so by asking R to multiple each value of the the column called `age_years` by 12. Take a look:
+
+```{r error=TRUE}
+# Create a data frame using the data.frame() function
+my_df <- data.frame(
+  name       = c("john", "alexis", "Steph", "Quiera"),
+  age_years  = c(24, 44, 26, 25),
+  age_months = age_years * 12
+)
+```
+
+Uh, oh! We got an error! This error says that the column `age_years` can't be found. How can that be? We are clearly passing the column name `age_years` to the `data.frame()` function in the code chunk above. Unfortunately, the `data.frame()` function doesn't allow us to _create_ and _refer to_ a column name in the same function call. So, we would need to break this task up into two steps if we wanted to use the `data.frame()` function. Here's one way we could do this:
+
+```{r}
+# Create a data frame using the data.frame() function
+my_df <- data.frame(
+  name       = c("john", "alexis", "Steph", "Quiera"),
+  age_years  = c(24, 44, 26, 25)
+)
+
+# Add the age in months column to my_df
+my_df <- my_df %>% mutate(age_months = age_years * 12)
+
+# Print my_df to the screen
+my_df
+```
+
+Alternatively, we can use the `tibble()` function to get the result we want in just one step like so:
+
+```{r}
+# Create a data frame using the tibble() function
+my_df <- tibble(
+  name       = c("john", "alexis", "Steph", "Quiera"),
+  age_years  = c(24, 44, 26, 25),
+  age_months = age_years * 12
+)
+
+# Print my_df to the screen
+my_df
+```
+
+In summary, tibbles _are_ data frames. For the most part, we will use the terms "tibble" and "data frame" interchangeably for the rest of the book. However, remember that tibbles are _enhanced_ data frames. Therefore, there are some things that we will do with tibbles that we can't do with basic data frames. 
+
 ## Missing data
 
-As indicated in the warning above, all columns in our data frames have to have the same length. So what do we do when we are truly missing information in some of our observations? For example, how do we create the `class` data frame if we are missing Anne's height for some reason?
+As indicated in the warning box at the end of the data frames section of this chapter, all columns in our data frames have to have the same length. So what do we do when we are truly missing information in some of our observations? For example, how do we create the `class` data frame if we are missing Anne's height for some reason?
 
 In R, we represent missing data with an `NA`. For example:
 

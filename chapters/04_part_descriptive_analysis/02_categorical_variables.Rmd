@@ -28,7 +28,224 @@ The count is simply the number of observations, in this case people, which fall 
 
 The proportion is just the count divided by the total number of observations. In this example, 2 people out of 5 people (.40 or 40%) are in the Asian race category.
 
-Now let’s go over _how_ to calculate frequency counts and percentages using R.
+The remainder of this chapter is devoted to learning how to calculate frequency counts and percentages using R.
+
+## Factor vectors
+
+Before moving on to calculating frequency counts and percentages, I want to introduce a new vector type -- the **factor** vector type. In R, factors can be useful for representing categorical data. To demonstrate, let's simulate a simple little data frame. 
+
+```{r message=FALSE}
+# Load dplyr for tibble()
+library(dplyr)
+```
+
+```{r}
+demo <- tibble(
+  id  = c("001", "002", "003", "004"),
+  age = c(30, 67, 52, 56),
+  edu = c(3, 1, 4, 2)
+)
+```
+
+👆 **Here's what we did above:**
+
+* We created a data frame that is meant to simulate some demographic information about 4 hypothetical study participants.
+
+* The first variable (`id`) is the participant's study id.
+
+* The second variable (`age`) is the participant's age at enrollment in the study.
+
+* The third variable (`edu`) is the highest level of formal education the participant completed. Where:
+
+  - 1 = Less than high school
+  
+  - 2 = High school graduate
+  
+  - 3 = Some college
+  
+  - 4 = College graduate
+
+Each participant in our data frame has a value for `edu` -- 1, 2, 3, or 4. The value they have for that variable corresponds to the highest level of formal education they have completed, which is split up into categories that we defined. We can see which category each person is in by viewing the data.
+
+```{r}
+demo
+```
+
+We can see that person `001` is in category `3`, person `002` is in category `1`, and so on. This compact representation of the categories is convenient for data entry and data manipulation, but it also has an obvious limitation -- what do these numbers mean? I defined what these values mean for you above, but if you didn't have that information, or some kind of prior knowledge about the process that was used to gather this data, then you would likely have no idea what these numbers mean. 
+
+Now, we could have solved that problem by making education a character vector from the beginning. For example: 
+
+```{r}
+demo <- tibble(
+  id       = c("001", "002", "003", "004"),
+  age      = c(30, 67, 52, 56),
+  edu      = c(3, 1, 4, 2),
+  edu_char = c(
+    "Some college", "Less than high school", "College graduate", 
+    "High school graduate"
+  )
+)
+
+demo
+```
+
+But, this strategy also has a few limitations. 
+
+👎 First, entering data this way requires more typing. Not such a big deal in this case because we only have 4 participants. But, imagine typing out the categories as character strings 10, 20, or 100 times. 😫
+
+👎 Second, R summarizes character vectors alphabetically by default, which may not be the ideal way to order some categorical variables. 
+
+👎 Third, creating categorical variables in our data frame as character vectors limits us to inputting only _observed_ values for that variable. However, there are cases when other categories are possible and just didn't apply to anyone in our data. That information may be useful to know.
+
+At this point, I'm going to show you how to coerce a variable to a factor in your data frame. Then, I will return to showing you how using factors can overcome some of the limitations outlined above.
+
+### Coerce a numeric variable
+
+The code below shows one method for coercing a numeric vector into a factor.
+
+```{r message=FALSE}
+# Load dplyr for pipes and mutate()
+library(dplyr)
+```
+
+```{r}
+demo <- demo %>% 
+  mutate(
+    edu_f = factor(
+      x      = edu,
+      levels = 1:4,
+      labels = c(
+        "Less than high school", "High school graduate", "Some college", 
+        "College graduate"
+      )
+    )
+  )
+
+demo
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `mutate()` function to create a new variable (`edu_f`) in the data frame called `demo`. The purpose of the `mutate()` function is to add new variables to data frames. We will discuss `mutate()` in greater detail in the [later in the book][creating and modifying columns].
+
+  - You can type `?mutate` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+  - We assigned this new data frame the name `demo` using the assignment operator (`<-`). 
+
+  - Because we assigned it the name `demo`, our previous data frame named `demo` (i.e., the one that didn't include `edu_f`) no longer exists in our global environment. If we had wanted to keep that data frame in our global environment, we would have needed to assign our new data frame a different name (e.g., `demo_w_factor`). 
+
+* The first argument to the `mutate()` function is the `.data` argument. The value passed to the `.data` argument should be a data frame that is currently in our global environment. We passed the data frame `demo` to the `.data` argument using the pipe operator (`%>%`), which is why `demo` isn't written inside `mutate`'s parentheses. 
+
+* The second argument to the `mutate()` function is the `...` argument. The value passed to the `...` argument should be a name value pair. That means, a variable name, followed by an equal sign, followed by the values to be assigned to that variable name (`name = value`).
+
+  - The name we passed to the `...` argument was `edu_f`. This value tells R what to name the new variable we are creating.
+  
+    + If we had used the name `edu` instead, then the previous values in the `edu` variable would have been replaced with the new values. That is sometimes what you want to happen. However, when it comes to creating factors, I typically keep the numeric version of the variable in my data frame (e.g., `edu`) and _add a new_ factor variable. I just often find that it can be useful to have both versions of the variable hanging around during the analysis process.
+    
+    + I also use the `_f` naming convention in my code. That means that when I create a new factor variable I name it the same thing the original variable was named with the addition of `_f` (for factor) at the end.
+    
+  - In this case, the value that will be assigned to the name `edu_f` will be the values returned by the `factor()` function. This is an example of nesting functions. 
+  
+* We used the `factor()` function to create a factor vector. 
+
+  - You can type `?factor` into your R console to view the help documentation for this function and follow along with the explanation below.
+  
+  - The first argument to the `factor()` function is the `x` argument. The value pass to the `x` argument should be a vector of data. We passed the `edu` vector to the `x` argument.
+  
+  - The second argument to the `factor()` function is the `levels` argument. This argument tells R the unique values that the new factor variable can take. We used the shorthand `1:4` to tell R that `edu_f` can take the unique values 1, 2, 3, or 4.
+  
+  - The third argument to the `factor()` function is the `labels` argument. The value passed to the `labels` argument should be a character vector of labels (i.e., descriptive text) for each value in the `levels` argument. The order of the labels in the character vector we pass to the `labels` argument should match the order of the values passed to the `levels` argument. For example, the ordering of `levels` and `labels` above tells R that `1` should be labeled with "Less than high school", `2` should be labeled with "High school graduate", etc.
+  
+When we printed the data frame above, the values in `edu_f` _looked_ the same as the character strings displayed in `edu_char`. Notice, however, that the variable type displayed below `edu_char` in the data frame above is `<chr>` for character. Alternatively, the variable type displayed below `edu_f` is `<fctr>`. Although, labels are used to make factors _look_ like character vectors, they are still integer vectors under the hood. For example:
+
+```{r}
+as.numeric(demo$edu_char)
+```
+
+```{r}
+as.numeric(demo$edu_f)
+```
+
+There are two main reasons that you may want to use factors instead of character vectors at times:
+
+👍 First, R summarizes character vectors alphabetically by default, which may not be the ideal way to order some categorical variables. However, we can explicitly set the order of factor levels. This will be useful to us later when we analyze categorical variables. Here is a glimpse of things to come:
+
+```{r}
+table(demo$edu_char)
+```
+
+```{r}
+table(demo$edu_f)
+```
+
+👆**Here's what we did above:**
+
+* You can type `?base::table` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* We used the `table()` function to get a count of the number of times each unique value of `edu_char` appears in our data frame. In this case, each value appears one time. Notice that the results are returned to us in alphabetical order.
+
+* Next, we used the `table()` function to get a count of the number of times each unique value of `edu_f` appears in our data frame. Again, each value appears one time. Notice, however, that this time the results are returned to us in the order that we passed to the `levels` argument of the `factor()` function above.
+
+👍 Second, creating categorical variables in our data frame as character vectors limits us to inputting only _observed_ values for that variable. However, there are cases when other categories are possible and just didn't apply to anyone in our data. That information may be useful to know. Factors allow us to tell R that other values are possible, even when they are _unobserved_ in our data. For example, let's add a fifth possible category to our education variable -- graduate school.
+
+```{r}
+demo <- demo %>% 
+  mutate(
+    edu_5cat_f = factor(
+      x      = edu,
+      levels = 1:5,
+      labels = c(
+        "Less than high school", "High school graduate", "Some college", 
+        "College graduate", "Graduate school"
+      )
+    )
+  )
+
+demo
+```
+
+Now, let's use the `table()` function once again to count the number of times each unique level of `edu_char` appears in the data frame and the number of times each unique level of `edu_5cat_f` appears in the data frame:
+
+```{r}
+table(demo$edu_char)
+```
+
+```{r}
+table(demo$edu_5cat_f)
+```
+
+Notice that R now tells us that the value `Graduate school` was possible but was observed zero times in the data.
+
+### Coerce a character variable
+
+It is also possible to coerce character vectors to factors. For example, we can coerce `edu_char` to a factor like so:
+
+```{r}
+demo <- demo %>% 
+  mutate(
+    edu_f_from_char = factor(
+      x      = edu_char,
+      levels = c(
+        "Less than high school", "High school graduate", "Some college", 
+        "College graduate", "Graduate school"
+      )
+    )
+  )
+
+demo
+```
+
+```{r}
+table(demo$edu_f_from_char)
+```
+
+👆**Here's what we did above:**
+
+* We coerced a character vector (`edu_char`) to a factor using the `factor()` function. 
+
+* Because the levels _are_ character strings, there was no need to pass any values to the `labels` argument this time. Keep in mind, though, that the order of the values passed to the `levels` argument matters. It will be the order that the factor levels will be displayed in your analyses.
+
+Now that we know how to use factors, let's return to our discussion of describing categorical variables. 
 
 ## Height and Weight Data
 
@@ -40,19 +257,23 @@ Below, we're going to learn to do descriptive analysis in R by experimenting wit
 library(dplyr)
 ```
 
-```{r}
+```{r error=TRUE}
 # Simulate some data
-height_and_weight_20 <- data.frame(
-  id     = c("001", "002", "003", "004", "005", "006", "007", "008", "009", 
-             "010", "011", "012", "013", "014", "015", "016", "017", "018", 
-             "019", "020"),
-  sex    = c("Male", "Male", "Female", "Female", "Male", "Male", "Female", "Male", 
-             "Female", "Male", "Male", "Female", "Female", "Female", "Male", 
-             "Female", "Female", "Female", "Female", 'Female'),
-  ht_in  = c(71, 69, 64, 65, 73, 69, 68, 73, 71, 66, 71, 69, 66, 68, 75, 69, 
-             66, 65, 65, 65),
-  wt_lbs = c(190, 176, 130, 154, 173, 182, 140, 185, 157, 155, 213, 151, 147, 
-             196, 212, 190, 194, 176, 176, 102)
+height_and_weight_20 <- tibble(
+  id = c(
+    "001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "011", 
+    "012", "013", "014", "015", "016", "017", "018", "019", "020"
+  ),
+  sex = c(1, 1, 2, 2, 1, 1, 2, 1, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2),
+  sex_f = factor(sex, 1:2, c("Male", "Female")),
+  ht_in = c(
+    71, 69, 64, 65, 73, 69, 68, 73, 71, 66, 71, 69, 66, 68, 75, 69, 66, 65, 65, 
+    65
+  ),
+  wt_lbs = c(
+    190, 176, 130, 154, 173, 182, 140, 185, 157, 155, 213, 151, 147, 196, 212, 
+    190, 194, 176, 176, 102
+  )
 )
 ```
 
@@ -70,27 +291,30 @@ height_and_weight_20
 
 * We viewed the data and found that it has 4 variables (columns) and 20 observations (rows).    
 
-* Also notice that you can use the "Next" button at the bottom right corner of the printed data frame to view rows 11 through 20 if you are viewing this data in RStudio.   
+* Also notice that you can use the "Next" button at the bottom right corner of the printed data frame to view rows 11 through 20 if you are viewing this data in RStudio.  
+
+```{r echo=FALSE}
+knitr::include_graphics("img/04_part_descriptive_analysis/next_button.png")
+```
 
 ## Calculating frequencies
 
-Now that we’re able to easily view our data, let’s return to the original purpose of this demonstration – calculating frequencies and proportions. At this point, I suspect that few of you would have any trouble telling me that the frequency of females in this data is 12 and the frequency of males in this data is 8. It's pretty easy to just count the number of females and males in this small data set with only 20 rows. Further, if I asked you what proportion of this sample is female, most of you would still be able to easily tell me `12/20 = 0.6`, or 60%. But, what if we had 100 observations or 1,000,000 observations? You’d get sick of counting pretty quickly. Fortunately, you don’t have to! Let R do it for you!
-
-As is always the case with R, there are multiple ways we can calculate the statistics that we're interested in. For example, we can use the base R `table` function like this:
+Now that we’re able to easily view our data, let’s return to the original purpose of this demonstration – calculating frequencies and proportions. At this point, I suspect that few of you would have any trouble telling me that the frequency of females in this data is 12 and the frequency of males in this data is 8. It's pretty easy to just count the number of females and males in this small data set with only 20 rows. Further, if I asked you what proportion of this sample is female, most of you would still be able to easily tell me `12/20 = 0.6`, or 60%. But, what if we had 100 observations or 1,000,000 observations? You’d get sick of counting pretty quickly. Fortunately, you don’t have to! Let R do it for you! As is almost always the case with R, there are multiple ways we can calculate the statistics that we're interested in. 
 
 ### The base R table function
+
+As we already saw above, we can use the base R `table()` function like this:
 
 ```{r}
 table(height_and_weight_20$sex)
 ```
 
-Additionally, we can use the `CrossTable` function from the `gmodels` package, which gives us a little more information by default.
+Additionally, we can use the `CrossTable()` function from the `gmodels` package, which gives us a little more information by default.
 
 ### The gmodels CrossTable function
 
 ```{r}
-# Like all packages, you will have to install gmodels before you can use the
-# CrossTable function. 
+# Like all packages, you will have to install gmodels (install.packages("gmodels")) before you can use the CrossTable() function. 
 gmodels::CrossTable(height_and_weight_20$sex)
 ```
 
@@ -107,7 +331,7 @@ height_and_weight_20 %>%
   summarise()
 ```
 
-As you can see, `summarise()` doesn't do anything interesting on its own. We need to tell it what kind of summary information we want. We can use the [n()](https://dplyr.tidyverse.org/reference/n.html) function to count rows. By, default, it will count all the rows in the data frame. For example:
+As you can see, `summarise()` doesn't do anything interesting on its own. We need to tell it what kind of summary information we want. We can use the [n()](https://dplyr.tidyverse.org/reference/n.html) function to count rows. By default, it will count all the rows in the data frame. For example:
 
 ```{r}
 height_and_weight_20 %>% 
@@ -120,11 +344,11 @@ height_and_weight_20 %>%
 
 * The result we get is a new data frame with 1 column (named `n()`) and one row with the value 20 (the number of rows in the original data frame).
 
-This is a great start. However, we really want to count the number of rows that have the value "female" for sex, and then separately count the number of rows that have the value "male" for sex. Said another way, we want to break our data frame up into smaller data frames -- one for each value of `sex` -- and then count the rows. This is exactly what `dplyr`'s [group_by()](https://dplyr.tidyverse.org/reference/group_by.html) function does.
+This is a great start. However, we really want to count the number of rows that have the value "Female" for sex_f, and then separately count the number of rows that have the value "Male" for sex_f. Said another way, we want to break our data frame up into smaller data frames -- one for each value of `sex_f` -- and then count the rows. This is exactly what `dplyr`'s [group_by()](https://dplyr.tidyverse.org/reference/group_by.html) function does.
 
 ```{r message=FALSE}
 height_and_weight_20 %>%
-  group_by(sex) %>% 
+  group_by(sex_f) %>% 
   summarise(n())
 ```
 
@@ -132,11 +356,11 @@ And, that's what we want.
 
 <p class="note"> 🗒**Side Note:** `dplyr`'s `group_by()` function operationalizes the **Split - Apply - Combine** strategy for data analysis. That sounds sort of fancy, but all it really means is that we split our data frame up into smaller data frames, apply our calculation separately to each smaller data frame, and then combine those individual results back together as a single result. So, in the example above, the `height_and_weight_20` data frame was split into two separate little data frames (i.e., one for females and one for males), then the `summarise()` and `n()` functions counted the number of rows in each of the two smaller data frames (i.e., 12 and 8 respectively), and finally combined those individual results into a single data frame, which was printed to the screen for us to view.</p>
 
-However, it will be awkward to work with a variable named `n()` in the future. Let's go ahead and assign it a different name. We can assign it any valid name we want. Some names that might make sense are n, frequency, or count. I'm going to go ahead an just name it `n` without the parentheses.
+However, it will be awkward to work with a variable named `n()` (i.e., with parentheses) in the future. Let's go ahead and assign it a different name. We can assign it any valid name we want. Some names that might make sense are `n`, `frequency`, or `count`. I'm going to go ahead an just name it `n` without the parentheses.
 
 ```{r}
 height_and_weight_20 %>%
-  group_by(sex) %>% 
+  group_by(sex_f) %>% 
   summarise(n = n())
 ```
 
@@ -144,22 +368,22 @@ height_and_weight_20 %>%
 
 * We added `n = ` to our summarise function (`summarise(n = n())`) so that our count column in the resulting data frame would be named `n` instead of `n()`.
 
-Finally, estimating categorical frequencies like this is such a common operation that `dplyr` has a shortcut for it. We can use the [count](https://dplyr.tidyverse.org/reference/tally.html) function to get the same result that we got above.
+Finally, estimating categorical frequencies like this is such a common operation that `dplyr` has a shortcut for it -- `count()`. We can use the [count()](https://dplyr.tidyverse.org/reference/tally.html) function to get the same result that we got above.
 
 ```{r}
 height_and_weight_20 %>% 
-  count(sex)
+  count(sex_f)
 ```
 
 ## Calculating percentages
 
-In addition to frequencies, we will often be interested in calculating percentages for categorical variables. As always, there are many was to accomplish this in R. From here on out, I'm going to primarily use `tidyverse` functions.
+In addition to frequencies, we will often be interested in calculating percentages for categorical variables. As always, there are many ways to accomplish this task in R. From here on out, I'm going to primarily use `tidyverse` functions.
 
-In this case, the proportion of people in our data who are female can be calculated as the number who are female (12) divided by the total number of people in the data. We already know that there are 20 people in the data, so we could calculate proportions like so:
+In this case, the proportion of people in our data who are female can be calculated as the number who are female (12) divided by the total number of people in the data (20). Because we already know that there are 20 people in the data, we could calculate proportions like this:
 
 ```{r}
 height_and_weight_20 %>% 
-  count(sex) %>% 
+  count(sex_f) %>% 
   mutate(prop = n / 20)
 ```
 
@@ -167,7 +391,7 @@ height_and_weight_20 %>%
 
 * Because the `count()` function returns a data frame just like any other data frame, we can manipulate it in the same ways we can manipulate any other data frame.    
 
-* So, we used `dplyr`'s [mutate()](https://dplyr.tidyverse.org/reference/mutate.html) function to create a new variable in the data frame named `prop`. Again, we could have given it any valid name.   
+* So, we used `dplyr`'s `mutate()` function to create a new variable in the data frame named `prop`. Again, we could have given it any valid name.   
 
 * Then we set the value of `prop` to be equal to the value of `n` divided by 20.    
 
@@ -175,7 +399,7 @@ This works, but it would be better to have R calculate the total number of obser
 
 ```{r}
 height_and_weight_20 %>% 
-  count(sex) %>% 
+  count(sex_f) %>% 
   mutate(prop = n / sum(n))
 ```
 
@@ -187,7 +411,7 @@ Finally, we just need to multiply our proportion by 100 to convert it to a perce
 
 ```{r}
 height_and_weight_20 %>% 
-  count(sex) %>% 
+  count(sex_f) %>% 
   mutate(percent = n / sum(n) * 100)
 ```
 
@@ -204,42 +428,42 @@ In the real world, you will frequently encounter data that has missing values. L
 
 ```{r}
 height_and_weight_20 <- height_and_weight_20 %>% 
-  mutate(sex = replace(sex, c(2, 9), NA)) %>% 
+  mutate(sex_f = replace(sex, c(2, 9), NA)) %>% 
   print()
 ```
 
 👆**Here's what we did above:**
 
-* Replaced the 2nd and 9th value of sex with `NA` (missing) using the `replace()` function.   
+* Replaced the 2nd and 9th value of sex_f with `NA` (missing) using the `replace()` function.   
 
 Now let's see how our code from above handles this
 
 ```{r}
 height_and_weight_20 %>% 
-  count(sex) %>% 
+  count(sex_f) %>% 
   mutate(percent = n / sum(n) * 100)
 ```
 
-As you can see, we are now treating missing as if it were a category of sex. Sometimes this will be the result you want. However, often you will want the n and percent of _non-missing_ values for your categorical variable. This is sometimes referred to as a _complete case analysis_. There's a couple of different ways we can handle this. I will simply filter out rows with a missing value for sex with `dplyr`'s [filter()](https://dplyr.tidyverse.org/reference/filter.html) function.
+As you can see, we are now treating missing as if it were a category of sex_f. Sometimes this will be the result you want. However, often you will want the n and percent of _non-missing_ values for your categorical variable. This is sometimes referred to as a **complete case analysis**. There's a couple of different ways we can handle this. I will simply filter out rows with a missing value for sex_f with `dplyr`'s [filter()](https://dplyr.tidyverse.org/reference/filter.html) function.
 
 ```{r}
 height_and_weight_20 %>% 
-  filter(!is.na(sex)) %>% 
-  count(sex) %>% 
+  filter(!is.na(sex_f)) %>% 
+  count(sex_f) %>% 
   mutate(percent = n / sum(n) * 100)
 ```
 
 👆**Here's what we did above:**
 
-* We used `filter()` to keep only the rows that have a _non-missing_ value for sex.    
+* We used `filter()` to keep only the rows that have a _non-missing_ value for sex_f.    
   
-  - In the R language, we use the `is.na()` function to tell the R interpreter to identify NA (missing) values in a vector. We cannot use something like `sex == NA` to identify NA values, which is sometimes confusing for people who are coming to R from other statistical languages.    
+  - In the R language, we use the `is.na()` function to tell the R interpreter to identify NA (missing) values in a vector. We _cannot_ use something like `sex_f == NA` to identify NA values, which is sometimes confusing for people who are coming to R from other statistical languages.    
   
   - In the R language, `!` is the NOT operator. It sort of means "do the opposite."   
   
-  - So, `filter()` tells R which rows of a data frame to _keep_ and `is.na(sex)` tells R to find rows with an NA value for the variable `sex`. Together, `filter(is.na(sex))` would tell R to _keep_ rows with an NA value for the variable `sex`. Adding the NOT operator `!` tells R to do the opposite -- _keep_ rows that do _NOT_ have an NA value for the variable `sex`.    
+  - So, `filter()` tells R which rows of a data frame to _keep_, and `is.na(sex_f)` tells R to find rows with an NA value for the variable `sex_f`. Together, `filter(is.na(sex_f))` would tell R to _keep_ rows with an NA value for the variable `sex_f`. Adding the NOT operator `!` tells R to do the opposite -- _keep_ rows that do _NOT_ have an NA value for the variable `sex_f`.    
 
-* We used our code from above to calculate the n and percent of non-missing values of sex.   
+* We used our code from above to calculate the n and percent of non-missing values of sex_f.   
 
 ## Formatting results {#formatting-results}
 
@@ -247,8 +471,8 @@ Notice that now our percentages are being displayed with 5 digits to the right o
 
 ```{r}
 height_and_weight_20 %>% 
-  filter(!is.na(sex)) %>% 
-  count(sex) %>% 
+  filter(!is.na(sex_f)) %>% 
+  count(sex_f) %>% 
   mutate(percent = (n / sum(n) * 100) %>% round(2))
 ```
 
