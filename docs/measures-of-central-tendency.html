@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-05-29" />
+<meta name="date" content="2021-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -317,7 +317,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.3.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-tidyverse-way"><i class="fa fa-check"></i><b>18.3.3</b> The tidyverse way</a></li>
 </ul></li>
 <li class="chapter" data-level="18.4" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-percentages"><i class="fa fa-check"></i><b>18.4</b> Calculating percentages</a></li>
-<li class="chapter" data-level="18.5" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#missing-data-1"><i class="fa fa-check"></i><b>18.5</b> Missing data</a></li>
+<li class="chapter" data-level="18.5" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#cat-missing-data"><i class="fa fa-check"></i><b>18.5</b> Missing data</a></li>
 <li class="chapter" data-level="18.6" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#formatting-results"><i class="fa fa-check"></i><b>18.6</b> Formatting results</a></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html"><i class="fa fa-check"></i><b>19</b> Measures of central tendency</a>
@@ -328,6 +328,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="19.4" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#compare-mean-median-and-mode"><i class="fa fa-check"></i><b>19.4</b> Compare mean, median, and mode</a></li>
 <li class="chapter" data-level="19.5" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#data-checking"><i class="fa fa-check"></i><b>19.5</b> Data checking</a></li>
 <li class="chapter" data-level="19.6" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#properties-of-mean-median-and-mode"><i class="fa fa-check"></i><b>19.6</b> Properties of mean, median, and mode</a></li>
+<li class="chapter" data-level="19.7" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#na-rm"><i class="fa fa-check"></i><b>19.7</b> Missing data</a></li>
 </ul></li>
 <li class="chapter" data-level="20" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html"><i class="fa fa-check"></i><b>20</b> Measures of dispersion</a>
 <ul>
@@ -666,11 +667,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="calculate-the-mean" class="section level2" number="19.1">
 <h2><span class="header-section-number">19.1</span> Calculate the mean</h2>
 <p>Calculating the mean is really straightforward. We can just use base R’s built-in <code>mean()</code> function.</p>
-<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="measures-of-central-tendency.html#cb275-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the tibble package for the tribble function</span></span>
-<span id="cb275-2"><a href="measures-of-central-tendency.html#cb275-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb275-3"><a href="measures-of-central-tendency.html#cb275-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dplyr package. We will need several of dpylr&#39;s functions in the </span></span>
-<span id="cb275-4"><a href="measures-of-central-tendency.html#cb275-4" aria-hidden="true" tabindex="-1"></a><span class="co"># code below.</span></span>
-<span id="cb275-5"><a href="measures-of-central-tendency.html#cb275-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="measures-of-central-tendency.html#cb275-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dplyr package. We will need several of dpylr&#39;s functions in the </span></span>
+<span id="cb275-2"><a href="measures-of-central-tendency.html#cb275-2" aria-hidden="true" tabindex="-1"></a><span class="co"># code below.</span></span>
+<span id="cb275-3"><a href="measures-of-central-tendency.html#cb275-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 <div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="measures-of-central-tendency.html#cb276-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate some data</span></span>
 <span id="cb276-2"><a href="measures-of-central-tendency.html#cb276-2" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb276-3"><a href="measures-of-central-tendency.html#cb276-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>id,   <span class="sc">~</span>sex,     <span class="sc">~</span>ht_in, <span class="sc">~</span>wt_lbs,</span>
@@ -806,6 +805,94 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Despite the fact that this impossibly extreme value is in our data, the median and mode estimates are reasonable estimates of the typical person’s weight in this sample. This is what I meant when I said that the median and mode were more “resistant to extreme values” than the mean.</p>
 <p>You may also notice that no person in our sample had an actual weight of 1,112.75 (the mean) or even 176.5 (the median). This is what I meant above when I said that the mean and median values are “not necessarily observed in the data.”</p>
 <p>In this case, the mode value (176) is also a more reasonable estimate of the average person’s weight than the mean. And unlike the mean and the median, participants 18 and 19 actually weigh 176 pounds. I’m <strong>not</strong> saying that the mode is always the best measure of central tendency to use. However, I <strong>am</strong> saying that you can often learn useful information from your data by calculating and comparing these relatively simple descriptive statistics on each of your numeric variables.</p>
+</div>
+<div id="na-rm" class="section level2" number="19.7">
+<h2><span class="header-section-number">19.7</span> Missing data</h2>
+<p>In <a href="numerical-descriptions-of-categorical-variables.html#cat-missing-data">numerical descriptions of categorical variables</a> we saw that we could use the <code>dplyr::filter()</code> function to remove all the rows from our data frame that contained a missing value for any of our variables of interest. We learned that this is called a <strong>complete case analysis</strong>. This method should pretty much always work, but in this section I’m going to show you an alternative method for dropping missing values from your analysis that you are likely to come across often when reading R documentation – the <code>na.rm</code> argument.</p>
+<p>Many R functions that perform calculations on numerical variables include an <code>na.rm</code> – short for “Remove NA” – argument. By default, this argument is typically set to <code>FALSE</code>. By passing the value <code>TRUE</code> to this argument, we can perform a complete case analysis. Let’s quickly take a look at how it works.</p>
+<p>We already saw that we can calculate the mean value of a numeric vector using the <code>mean()</code> function:</p>
+<div class="sourceCode" id="cb288"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb288-1"><a href="measures-of-central-tendency.html#cb288-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<p>But, what happens when our vector has a missing value?</p>
+<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb290-1"><a href="measures-of-central-tendency.html#cb290-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="cn">NA</span>, <span class="dv">3</span>))</span></code></pre></div>
+<pre><code>## [1] NA</code></pre>
+<p>As you can see, the <code>mean()</code> function returns <code>NA</code> by default when we pass it a numeric vector that contains a missing value. It took me a little while to wrap my head around why this is the case when I was a student. Perhaps some of you are confused as well. The logic goes something like this. In R, an <code>NA</code> doesn’t represent the <em>absence</em> of a value – a value that doesn’t exist at all; rather, it represents a value that does exist, but is <em>unknown</em> to us. So, if I ask you to tell me the mean of a set of numbers that contains 1, some unknown number, and 3 what would your answer be? Well, you can’t just give me the mean of 1 and 2. That would imply that the unknown number doesn’t exist. Further, you can’t really give me <em>any</em> numeric answer because that answer will depend on the value of the missing number. So, the only logical answer to give me is something like “I don’t know” or “it depends.” 🤷 That is essentially what R is telling us when it returns an <code>NA</code>.</p>
+<p>While this answer is technically correct, it usually isn’t very satisfying to us. Instead, we often want R to calculate the mean of the numbers that remain after all missing values are removed from the original set. The implicit assumption is that the mean of that reduced set of numbers will be “close enough” to the mean of the original set of numbers for our purposes. We can ask R to do this by changing the value of the <code>na.rm</code> argument from <code>FALSE</code> – the default – to <code>TRUE</code>.</p>
+<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="measures-of-central-tendency.html#cb292-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="cn">NA</span>, <span class="dv">3</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<p>In this case, the mean of the original set of numbers (2) and the mean of our complete case analysis (2) are identical. That won’t always be the case.</p>
+<p>Finally, let’s compare using <code>filter()</code> and <code>na.rm = TRUE</code> in a <code>dplyr</code> pipeline. We will first use the <code>replace()</code> function to add some missing values to our <code>height_and_weight_20</code> data.</p>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="measures-of-central-tendency.html#cb294-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb294-2"><a href="measures-of-central-tendency.html#cb294-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ht_in =</span> <span class="fu">replace</span>(ht_in, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="cn">NA</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb294-3"><a href="measures-of-central-tendency.html#cb294-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 20 x 4
+##    id    sex    ht_in wt_lbs
+##    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 001   Male      NA    190
+##  2 002   Male      NA    177
+##  3 003   Female    64    130
+##  4 004   Female    65    153
+##  5 005   &lt;NA&gt;      73    173
+##  6 006   Male      69    182
+##  7 007   Female    68    186
+##  8 008   &lt;NA&gt;      73    185
+##  9 009   Female    71    157
+## 10 010   Male      66    155
+## 11 011   Male      71    213
+## 12 012   Female    69    151
+## 13 013   Female    66    147
+## 14 014   Female    68    196
+## 15 015   Male      75    212
+## 16 016   Female    69  19000
+## 17 017   Female    66    194
+## 18 018   Female    65    176
+## 19 019   Female    65    176
+## 20 020   Female    65    102</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>Replaced the 1st and 2nd value of <code>ht_in</code> with <code>NA</code> (missing) using the <code>replace()</code> function.</li>
+</ul>
+<p>Here’s what our results look like when we don’t perform a complete case analysis.</p>
+<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="measures-of-central-tendency.html#cb296-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb296-2"><a href="measures-of-central-tendency.html#cb296-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb296-3"><a href="measures-of-central-tendency.html#cb296-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in),</span>
+<span id="cb296-4"><a href="measures-of-central-tendency.html#cb296-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in),</span>
+<span id="cb296-5"><a href="measures-of-central-tendency.html#cb296-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in),</span>
+<span id="cb296-6"><a href="measures-of-central-tendency.html#cb296-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in),</span>
+<span id="cb296-7"><a href="measures-of-central-tendency.html#cb296-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in)</span>
+<span id="cb296-8"><a href="measures-of-central-tendency.html#cb296-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 5
+##   min_height mean_height median_height mode_height max_height
+##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
+## 1         NA          NA            NA 65                  NA</code></pre>
+<p>Here’s what our results look like when we use the <code>filter()</code> function.</p>
+<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb298-1"><a href="measures-of-central-tendency.html#cb298-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb298-2"><a href="measures-of-central-tendency.html#cb298-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ht_in)) <span class="sc">%&gt;%</span> </span>
+<span id="cb298-3"><a href="measures-of-central-tendency.html#cb298-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb298-4"><a href="measures-of-central-tendency.html#cb298-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in),</span>
+<span id="cb298-5"><a href="measures-of-central-tendency.html#cb298-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in),</span>
+<span id="cb298-6"><a href="measures-of-central-tendency.html#cb298-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in),</span>
+<span id="cb298-7"><a href="measures-of-central-tendency.html#cb298-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in),</span>
+<span id="cb298-8"><a href="measures-of-central-tendency.html#cb298-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in)</span>
+<span id="cb298-9"><a href="measures-of-central-tendency.html#cb298-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 5
+##   min_height mean_height median_height mode_height max_height
+##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
+## 1         64        68.2            68 65                  75</code></pre>
+<p>And, here’s what our results look like when we change the <code>na.rm</code> argument to <code>TRUE</code>.</p>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="measures-of-central-tendency.html#cb300-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb300-2"><a href="measures-of-central-tendency.html#cb300-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb300-3"><a href="measures-of-central-tendency.html#cb300-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb300-4"><a href="measures-of-central-tendency.html#cb300-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb300-5"><a href="measures-of-central-tendency.html#cb300-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb300-6"><a href="measures-of-central-tendency.html#cb300-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in),</span>
+<span id="cb300-7"><a href="measures-of-central-tendency.html#cb300-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb300-8"><a href="measures-of-central-tendency.html#cb300-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 5
+##   min_height mean_height median_height mode_height max_height
+##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
+## 1         64        68.2            68 65                  75</code></pre>
+<p>As you can see, both methods give us the same result. The method you choose to use will typically just come down to personal preference.</p>
 
 </div>
 </div>

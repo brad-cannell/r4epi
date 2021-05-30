@@ -67,8 +67,6 @@ Now that we are all on the same page with respect to the fundamentals of central
 Calculating the mean is really straightforward. We can just use base R's built-in `mean()` function.
 
 ```{r message=FALSE}
-# Load the tibble package for the tribble function
-library(tibble)
 # Load the dplyr package. We will need several of dpylr's functions in the 
 # code below.
 library(dplyr)
@@ -233,3 +231,90 @@ Despite the fact that this impossibly extreme value is in our data, the median a
 You may also notice that no person in our sample had an actual weight of 1,112.75 (the mean) or even 176.5 (the median). This is what I meant above when I said that the mean and median values are “not necessarily observed in the data.”
 
 In this case, the mode value (176) is also a more reasonable estimate of the average person's weight than the mean. And unlike the mean and the median, participants 18 and 19 actually weigh 176 pounds. I'm __not__ saying that the mode is always the best measure of central tendency to use. However, I __am__ saying that you can often learn useful information from your data by calculating and comparing these relatively simple descriptive statistics on each of your numeric variables.
+
+## Missing data {#na-rm}
+
+In [numerical descriptions of categorical variables](#cat-missing-data) we saw that we could use the `dplyr::filter()` function to remove all the rows from our data frame that contained a missing value for any of our variables of interest. We learned that this is called a **complete case analysis**. This method should pretty much always work, but in this section I'm going to show you an alternative method for dropping missing values from your analysis that you are likely to come across often when reading R documentation -- the `na.rm` argument. 
+
+Many R functions that perform calculations on numerical variables include an `na.rm` -- short for "Remove NA" -- argument. By default, this argument is typically set to `FALSE`. By passing the value `TRUE` to this argument, we can perform a complete case analysis. Let's quickly take a look at how it works. 
+
+We already saw that we can calculate the mean value of a numeric vector using the `mean()` function:
+
+```{r}
+mean(c(1, 2, 3))
+```
+
+But, what happens when our vector has a missing value?
+
+```{r}
+mean(c(1, NA, 3))
+```
+
+As you can see, the `mean()` function returns `NA` by default when we pass it a numeric vector that contains a missing value. It took me a little while to wrap my head around why this is the case when I was a student. Perhaps some of you are confused as well. The logic goes something like this. In R, an `NA` doesn't represent the _absence_ of a value -- a value that doesn't exist at all; rather, it represents a value that does exist, but is _unknown_ to us. So, if I ask you to tell me the mean of a set of numbers that contains 1, some unknown number, and 3 what would your answer be? Well, you can't just give me the mean of 1 and 2. That would imply that the unknown number doesn't exist. Further, you can't really give me _any_ numeric answer because that answer will depend on the value of the missing number. So, the only logical answer to give me is something like "I don't know" or "it depends." 🤷 That is essentially what R is telling us when it returns an `NA`.
+
+While this answer is technically correct, it usually isn't very satisfying to us. Instead, we often want R to calculate the mean of the numbers that remain after all missing values are removed from the original set. The implicit assumption is that the mean of that reduced set of numbers will be "close enough" to the mean of the original set of numbers for our purposes. We can ask R to do this by changing the value of the `na.rm` argument from `FALSE` -- the default -- to `TRUE`. 
+
+```{r}
+mean(c(1, NA, 3), na.rm = TRUE)
+```
+
+In this case, the mean of the original set of numbers (2) and the mean of our complete case analysis (2) are identical. That won't always be the case. 
+
+Finally, let's compare using `filter()` and `na.rm = TRUE` in a `dplyr` pipeline. We will first use the `replace()` function to add some missing values to our `height_and_weight_20` data. 
+
+```{r}
+height_and_weight_20 <- height_and_weight_20 %>% 
+  mutate(ht_in = replace(ht_in, c(1, 2), NA)) %>% 
+  print()
+```
+
+👆**Here's what we did above:**
+
+* Replaced the 1st and 2nd value of `ht_in` with `NA` (missing) using the `replace()` function.  
+
+Here's what our results look like when we don't perform a complete case analysis.
+
+```{r}
+height_and_weight_20 %>% 
+  summarise(
+    min_height    = min(ht_in),
+    mean_height   = mean(ht_in),
+    median_height = median(ht_in),
+    mode_height   = mode_val(ht_in),
+    max_height    = max(ht_in)
+  )
+```
+
+Here's what our results look like when we use the `filter()` function.
+
+```{r}
+height_and_weight_20 %>% 
+  filter(!is.na(ht_in)) %>% 
+  summarise(
+    min_height    = min(ht_in),
+    mean_height   = mean(ht_in),
+    median_height = median(ht_in),
+    mode_height   = mode_val(ht_in),
+    max_height    = max(ht_in)
+  )
+```
+
+And, here's what our results look like when we change the `na.rm` argument to `TRUE`.
+
+```{r}
+height_and_weight_20 %>% 
+  summarise(
+    min_height    = min(ht_in, na.rm = TRUE),
+    mean_height   = mean(ht_in, na.rm = TRUE),
+    median_height = median(ht_in, na.rm = TRUE),
+    mode_height   = mode_val(ht_in),
+    max_height    = max(ht_in, na.rm = TRUE)
+  )
+```
+
+As you can see, both methods give us the same result. The method you choose to use will typically just come down to personal preference. 
+
+```{r echo=FALSE}
+rm(list = ls())
+```
+
