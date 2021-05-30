@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-05-28" />
+<meta name="date" content="2021-05-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -648,17 +648,19 @@ mutate already in the book.
 </ol>
 <div id="creating-data-frames" class="section level2" number="25.1">
 <h2><span class="header-section-number">25.1</span> Creating data frames</h2>
-<p>Very early on, in the <a href="lets-get-programming.html#lets-get-programming">Let’s get programming</a> chapter, we learned how to create data frame columns using name-value pairs passed directly into the <code>data.frame()</code> function.</p>
-<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="creating-and-modifying-columns.html#cb350-1" aria-hidden="true" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<p>Very early on, in the <a href="lets-get-programming.html#lets-get-programming">Let’s get programming</a> chapter, we learned how to create data frame columns using name-value pairs passed directly into the <code>tibble()</code> function.</p>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="creating-and-modifying-columns.html#cb350-1" aria-hidden="true" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb350-2"><a href="creating-and-modifying-columns.html#cb350-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">names   =</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>),</span>
 <span id="cb350-3"><a href="creating-and-modifying-columns.html#cb350-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
 <span id="cb350-4"><a href="creating-and-modifying-columns.html#cb350-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb350-5"><a href="creating-and-modifying-columns.html#cb350-5" aria-hidden="true" tabindex="-1"></a>class</span></code></pre></div>
-<pre><code>##   names heights
-## 1  John      68
+<pre><code>## # A tibble: 4 x 2
+##   names heights
+##   &lt;chr&gt;   &lt;dbl&gt;
+## 1 John       68
 ## 2 Sally      63
-## 3  Brad      71
-## 4  Anne      72</code></pre>
+## 3 Brad       71
+## 4 Anne       72</code></pre>
 <p>This is an absolutely fundamental R programming skill, and one that you will likely use often. However, most people would not consider this to be a “data management” task, which is the focus of this part of the book. Further, we’ve really already covered all we need to cover about creating columns this way. So, I’m not going to write anything further about this method.</p>
 </div>
 <div id="dollar-sign-notation-1" class="section level2" number="25.2">
@@ -669,11 +671,13 @@ mutate already in the book.
 <p>However, we can also use dollar sign notation to create and/or modify columns in our data frame. For example:</p>
 <div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="creating-and-modifying-columns.html#cb354-1" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>heights <span class="ot">&lt;-</span> class<span class="sc">$</span>heights <span class="sc">/</span> <span class="dv">12</span></span>
 <span id="cb354-2"><a href="creating-and-modifying-columns.html#cb354-2" aria-hidden="true" tabindex="-1"></a>class</span></code></pre></div>
-<pre><code>##   names  heights
-## 1  John 5.666667
-## 2 Sally 5.250000
-## 3  Brad 5.916667
-## 4  Anne 6.000000</code></pre>
+<pre><code>## # A tibble: 4 x 2
+##   names heights
+##   &lt;chr&gt;   &lt;dbl&gt;
+## 1 John     5.67
+## 2 Sally    5.25
+## 3 Brad     5.92
+## 4 Anne     6</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li>We modified the values in the <code>heights</code> column of our <code>class</code> data frame using dollar sign notation. More specifically, we converted the values in the <code>heights</code> column from inches to feet. We did this by telling R to “get” the values for the <code>heights</code> column and divide them by 12 (<code>class$heights / 12</code>) and then assign those new values back to the <code>heights</code> column (<code>class$heights &lt;-</code>). In this case, that has the effect of modifying the values of a column that already exists.</li>
@@ -684,11 +688,13 @@ mutate already in the book.
 <p>We can also create a <em>new</em> variable in our data frame in a similar way. All we have to do is use a valid column name (that doesn’t already exist in the data frame) on the left side of our assignment arrow. For example:</p>
 <div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb356-1"><a href="creating-and-modifying-columns.html#cb356-1" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>grades <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">89</span>, <span class="dv">92</span>, <span class="dv">86</span>, <span class="dv">98</span>)</span>
 <span id="cb356-2"><a href="creating-and-modifying-columns.html#cb356-2" aria-hidden="true" tabindex="-1"></a>class</span></code></pre></div>
-<pre><code>##   names  heights grades
-## 1  John 5.666667     89
-## 2 Sally 5.250000     92
-## 3  Brad 5.916667     86
-## 4  Anne 6.000000     98</code></pre>
+<pre><code>## # A tibble: 4 x 3
+##   names heights grades
+##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 John     5.67     89
+## 2 Sally    5.25     92
+## 3 Brad     5.92     86
+## 4 Anne     6        98</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li>We created a new column in our <code>class</code> data frame using dollar sign notation. We assigned the values 89, 92, 86, and 98 to that column with the assignment arrow.</li>
@@ -710,22 +716,28 @@ mutate already in the book.
 <p>Similar to dollar sign notation, we can also create and/or modify columns in our data frame using bracket notation. For example, let’s convert those heights back to inches using bracket notation:</p>
 <div class="sourceCode" id="cb362"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb362-1"><a href="creating-and-modifying-columns.html#cb362-1" aria-hidden="true" tabindex="-1"></a>class[[<span class="st">&quot;heights&quot;</span>]] <span class="ot">&lt;-</span> class[[<span class="st">&quot;heights&quot;</span>]] <span class="sc">*</span> <span class="dv">12</span></span>
 <span id="cb362-2"><a href="creating-and-modifying-columns.html#cb362-2" aria-hidden="true" tabindex="-1"></a>class</span></code></pre></div>
-<pre><code>##   names heights grades
-## 1  John      68     89
+<pre><code>## # A tibble: 4 x 3
+##   names heights grades
+##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 John       68     89
 ## 2 Sally      63     92
-## 3  Brad      71     86
-## 4  Anne      72     98</code></pre>
+## 3 Brad       71     86
+## 4 Anne       72     98</code></pre>
 <p>And, let’s go ahead and add one more variable to our data frame using bracket notation.</p>
 <div class="sourceCode" id="cb364"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb364-1"><a href="creating-and-modifying-columns.html#cb364-1" aria-hidden="true" tabindex="-1"></a>class[[<span class="st">&quot;rank&quot;</span>]] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>)</span>
 <span id="cb364-2"><a href="creating-and-modifying-columns.html#cb364-2" aria-hidden="true" tabindex="-1"></a>class</span></code></pre></div>
-<pre><code>##   names heights grades rank
-## 1  John      68     89    3
-## 2 Sally      63     92    2
-## 3  Brad      71     86    4
-## 4  Anne      72     98    1</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   names heights grades  rank
+##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 John       68     89     3
+## 2 Sally      63     92     2
+## 3 Brad       71     86     4
+## 4 Anne       72     98     1</code></pre>
 <p>Somewhat confusingly, we can also access, create, and modify data frame columns using single brackets. For example:</p>
 <div class="sourceCode" id="cb366"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb366-1"><a href="creating-and-modifying-columns.html#cb366-1" aria-hidden="true" tabindex="-1"></a>class[<span class="st">&quot;heights&quot;</span>]</span></code></pre></div>
-<pre><code>##   heights
+<pre><code>## # A tibble: 4 x 1
+##   heights
+##     &lt;dbl&gt;
 ## 1      68
 ## 2      63
 ## 3      71
@@ -910,7 +922,7 @@ mutate already in the book.
 <pre><code>## Error: Problem with `mutate()` column `complete`.
 ## ℹ `complete = c(0, 1)`.
 ## ℹ `complete` must be size 60 or 1, not 2.</code></pre>
-<p>This doesn’t work, but it actually isn’t for the reason you may be thinking. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). However, <code>tidyverse</code> functions throw errors when you try to recycle anything other than a single number. They are designed this way to protect you from accidently getting unexpected results. So, I’m going to switch back over to using base R to round out our discussion of the recycling rules. Let’s try our example above again using base R:</p>
+<p>This doesn’t work, but it actually isn’t for the reason you may be thinking. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). However, <code>tidyverse</code> functions throw errors when you try to recycle anything other than a single number. They are designed this way to protect you from accidentally getting unexpected results. So, I’m going to switch back over to using base R to round out our discussion of the recycling rules. Let’s try our example above again using base R:</p>
 <div class="sourceCode" id="cb393"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb393-1"><a href="creating-and-modifying-columns.html#cb393-1" aria-hidden="true" tabindex="-1"></a>drug_trial<span class="sc">$</span>complete <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## Error: Assigned data `c(0, 1)` must be compatible with existing data.
 ## x Existing data has 60 rows.
@@ -934,7 +946,7 @@ mutate already in the book.
 <p>Wait, why are we still getting an error? Well, take a look at the output below and see if you can figure it out.</p>
 <div class="sourceCode" id="cb397"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb397-1"><a href="creating-and-modifying-columns.html#cb397-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(drug_trial)</span></code></pre></div>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
-<p>It may not be totally obvious, but this is telling us that <code>drug_trial</code> is a tibble – an enhanced data frame. Remember, we created <code>drug_trial</code> using the <code>tibble()</code> function instead of the <code>data.frame()</code> function. Because tibbles are part of the <code>tidyverse</code> they throw the same recycling errors that the <code>mutate()</code> function did above. So, we’ll need to create a non-tibble version of <code>drug_trial</code> to finish our discussion of recycling rules.</p>
+<p>It may not be totally obvious, but this is telling us that <code>drug_trial</code> is a tibble – an enhanced data frame. Remember, we created <code>drug_trial</code> using the <code>tibble()</code> function instead of the <code>tibble()</code> function. Because tibbles are part of the <code>tidyverse</code> they throw the same recycling errors that the <code>mutate()</code> function did above. So, we’ll need to create a non-tibble version of <code>drug_trial</code> to finish our discussion of recycling rules.</p>
 <div class="sourceCode" id="cb399"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb399-1"><a href="creating-and-modifying-columns.html#cb399-1" aria-hidden="true" tabindex="-1"></a>drug_trial_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(drug_trial)</span>
 <span id="cb399-2"><a href="creating-and-modifying-columns.html#cb399-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(drug_trial_df)</span></code></pre></div>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>

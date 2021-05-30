@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-05-28" />
+<meta name="date" content="2021-05-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -652,16 +652,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">24.2.2</span> The .data argument</h3>
 <p>I first introduced you to data frames in the <a href="lets-get-programming.html#data-frames">Let’s get programming</a> chapter and we’ve been using them as our primary structure for storing and analyzing data in ever since. The R language allows for other data structures (e.g., vectors, lists, and matrices), but data frames are the most commonly used data structure for most of the kinds of things we do in epidemiology. Thankfully, the <code>dplyr</code> package is designed specifically to help people like you and I manage data stored in <em>data frames</em>. Therefore, <code>dplyr</code> verbs always receive a data frame as an input and return a data frame as an output. Specically, the value passed to the <code>.data</code> argument must always be a data frame, and you will get an error if you attempt to pass any other data structure to the <code>.data</code> argument. For example:</p>
 <div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="introduction-to-data-management.html#cb340-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No problem</span></span>
-<span id="cb340-2"><a href="introduction-to-data-management.html#cb340-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb340-2"><a href="introduction-to-data-management.html#cb340-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb340-3"><a href="introduction-to-data-management.html#cb340-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
 <span id="cb340-4"><a href="introduction-to-data-management.html#cb340-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
 <span id="cb340-5"><a href="introduction-to-data-management.html#cb340-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb340-6"><a href="introduction-to-data-management.html#cb340-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb340-7"><a href="introduction-to-data-management.html#cb340-7" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
 <span id="cb340-8"><a href="introduction-to-data-management.html#cb340-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>##   id x
-## 1  1 0
-## 2  3 0</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##      id     x
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     0
+## 2     3     0</code></pre>
 <div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="introduction-to-data-management.html#cb342-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Problem</span></span>
 <span id="cb342-2"><a href="introduction-to-data-management.html#cb342-2" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb342-3"><a href="introduction-to-data-management.html#cb342-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
@@ -677,9 +679,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The second value passed to all of the <code>dplyr</code> verbs is the <code>...</code> argument. If you are new to R, this probably seems like a really weird argument. And, it kind is. But, it’s also really useful. The <code>...</code> argument (pronounced “dot dot dot”) has special meaning in the R language. This is true for all functions that use the <code>...</code> argument – not just <code>dplyr</code> verbs. The <code>...</code> argument can be used to pass multiple arguments to a function without knowing exactly what those arguments will look like ahead of time – including entire expressions. For example:</p>
 <div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="introduction-to-data-management.html#cb344-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
 <span id="cb344-2"><a href="introduction-to-data-management.html#cb344-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>##   id x
-## 1  1 0
-## 2  3 0</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##      id     x
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     0
+## 2     3     0</code></pre>
 <p>Above we passed a data frame to the <code>.data</code> argument of the <code>filter()</code> function. The second value we passed to the <code>filter()</code> function was <code>x == 1</code>. Think about it, <code>x</code> is an object (i.e. a column in the data frame), <code>==</code> is a function (remember that operators are functions in R), and <code>0</code> is a value. Together, they form an expression (<code>x == 0</code>) that tells R to perform a relatively complex operation – compare every value of <code>x</code> to the value <code>0</code> and tell me if they are the same. If you are new to programming, this may not seem like any big deal, but it’s really handy to be able to pass that much information to a single argument of a single function.</p>
 <p>If this is all really confusing to you, don’t get too hung up on it right now. The <code>...</code> argument is an important component of the R language, but it isn’t important that you fully understand it in order to use R. If nothing else, just know that that the <code>...</code> is the second argument to all the <code>dplyr</code> verbs, and it is generally where you will tell R what you want to <em>do</em> to the columns of your data frame (i.e., keep them, drop them, create them, sort them, etc.).</p>
 </div>
@@ -688,15 +692,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>A final little peculiarity about the <code>tidyverse</code> packages – <code>dplyr</code> being one of them – that I want to discuss in this chapter is something called <strong>non-standard evaluation</strong>. <em>How</em> non-standard evaluation works really isn’t that important for us. If I’m honest, I don’t even fully understand how it works “under the hood.” But, it is one of the big advantages of using <code>dplyr</code>, and therefore worth mentioning. Do you remember the <a href="lets-get-programming.html#some-common-errors">section in the Let’s get programming chapter on common errors</a>? In that section I wrote about how a vector that lives in the global environment is a different thing to R than a vector that lives as a column in a data frame in the global environment. So, <code>weight</code> and <code>class$weight</code> are different things, and if you want to access the weight values in <code>class$weight</code> then you have to make sure and write the whole thing out. But, have you noticed that we don’t have to do that in <code>dplyr</code> verbs? For example:</p>
 <div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="introduction-to-data-management.html#cb346-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
 <span id="cb346-2"><a href="introduction-to-data-management.html#cb346-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(df<span class="sc">$</span>x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>##   id x
-## 1  1 0
-## 2  3 0</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##      id     x
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     0
+## 2     3     0</code></pre>
 <p>In the example above we wrote out the column name using dollar sign notation. But, we don’t <em>have</em> to:</p>
 <div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="introduction-to-data-management.html#cb348-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
 <span id="cb348-2"><a href="introduction-to-data-management.html#cb348-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>##   id x
-## 1  1 0
-## 2  3 0</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##      id     x
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     0
+## 2     3     0</code></pre>
 <p>When we don’t tell a <code>dplyr</code> verb exactly which data frame a column lives in, then the <code>dplyr</code> verb will assume it lives in the data frame that is passed to the <code>.data</code> argument. This is really handy for at least two reasons:</p>
 <ul>
 <li><p>It reduces the amount of typing we have to do when we write our code. 👏</p></li>

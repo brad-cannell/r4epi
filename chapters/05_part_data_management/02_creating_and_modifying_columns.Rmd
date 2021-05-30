@@ -23,10 +23,10 @@ In this book, we are actually going to learn 4 different methods for creating an
 
 ## Creating data frames
 
-Very early on, in the [Let's get programming](#lets-get-programming) chapter, we learned how to create data frame columns using name-value pairs passed directly into the `data.frame()` function.
+Very early on, in the [Let's get programming](#lets-get-programming) chapter, we learned how to create data frame columns using name-value pairs passed directly into the `tibble()` function.
 
 ```{r}
-class <- data.frame(
+class <- tibble(
   names   = c("John", "Sally", "Brad", "Anne"),
   heights = c(68, 63, 71, 72)
 )
@@ -305,7 +305,7 @@ drug_trial %>%
   mutate(complete = c(0, 1))
 ```
 
-This doesn't work, but it actually isn't for the reason you may be thinking. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). However, `tidyverse` functions throw errors when you try to recycle anything other than a single number. They are designed this way to protect you from accidently getting unexpected results. So, I'm going to switch back over to using base R to round out our discussion of the recycling rules. Let's try our example above again using base R:
+This doesn't work, but it actually isn't for the reason you may be thinking. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). However, `tidyverse` functions throw errors when you try to recycle anything other than a single number. They are designed this way to protect you from accidentally getting unexpected results. So, I'm going to switch back over to using base R to round out our discussion of the recycling rules. Let's try our example above again using base R:
 
 ```{r error=TRUE}
 drug_trial$complete <- c(0,1)
@@ -318,7 +318,7 @@ Wait, why are we still getting an error? Well, take a look at the output below a
 class(drug_trial)
 ```
 
-It may not be totally obvious, but this is telling us that `drug_trial` is a tibble -- an enhanced data frame. Remember, we created `drug_trial` using the `tibble()` function instead of the `data.frame()` function. Because tibbles are part of the `tidyverse` they throw the same recycling errors that the `mutate()` function did above. So, we'll need to create a non-tibble version of `drug_trial` to finish our discussion of recycling rules.
+It may not be totally obvious, but this is telling us that `drug_trial` is a tibble -- an enhanced data frame. Remember, we created `drug_trial` using the `tibble()` function instead of the `tibble()` function. Because tibbles are part of the `tidyverse` they throw the same recycling errors that the `mutate()` function did above. So, we'll need to create a non-tibble version of `drug_trial` to finish our discussion of recycling rules.
 
 ```{r}
 drug_trial_df <- as.data.frame(drug_trial)

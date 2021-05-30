@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-05-28" />
+<meta name="date" content="2021-05-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -739,7 +739,7 @@ Figure 10.4: Pipe the left side to the first argument of the function on the rig
 <p>So, the R interpreter took the thing on the left side of the pipe operator, stuck it into the first argument of the function on the right side of the pipe operator, and then executed the function. In this case, the <code>mean()</code> function doesn’t require any other arguments, so we don’t have to write anything else inside of the <code>mean()</code> function’s parentheses. When we see <code>c(2, 4, 6, 8) %&gt;% mean()</code>, R sees <code>mean(c(2, 4, 6, 8))</code></p>
 <p>Here’s one more example. Pretty soon we will learn how to use the <code>filter()</code> function from the <code>dplyr</code> package to keep only a subset of rows from our data frame. Let’s start by simulating some data:</p>
 <div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="using-pipes.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate some data</span></span>
-<span id="cb138-2"><a href="using-pipes.html#cb138-2" aria-hidden="true" tabindex="-1"></a>height_and_weight <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb138-2"><a href="using-pipes.html#cb138-2" aria-hidden="true" tabindex="-1"></a>height_and_weight <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb138-3"><a href="using-pipes.html#cb138-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>, <span class="st">&quot;005&quot;</span>),</span>
 <span id="cb138-4"><a href="using-pipes.html#cb138-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sex    =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>),</span>
 <span id="cb138-5"><a href="using-pipes.html#cb138-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ht_in  =</span> <span class="fu">c</span>(<span class="dv">71</span>, <span class="dv">69</span>, <span class="dv">64</span>, <span class="dv">65</span>, <span class="dv">73</span>),</span>
@@ -747,19 +747,23 @@ Figure 10.4: Pipe the left side to the first argument of the function on the rig
 <span id="cb138-7"><a href="using-pipes.html#cb138-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb138-8"><a href="using-pipes.html#cb138-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb138-9"><a href="using-pipes.html#cb138-9" aria-hidden="true" tabindex="-1"></a>height_and_weight</span></code></pre></div>
-<pre><code>##    id    sex ht_in wt_lbs
-## 1 001   Male    71    190
-## 2 002   Male    69    176
-## 3 003 Female    64    130
-## 4 004 Female    65    154
-## 5 005   Male    73    173</code></pre>
+<pre><code>## # A tibble: 5 x 4
+##   id    sex    ht_in wt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 001   Male      71    190
+## 2 002   Male      69    176
+## 3 003   Female    64    130
+## 4 004   Female    65    154
+## 5 005   Male      73    173</code></pre>
 <p>In order to work, the <code>filter()</code> function requires us to pass two values to it. The first value is the name of the data frame object with the rows we want to subset. The second is the condition used to subset the rows. Let’s say that we want to do a subgroup analysis using only the females in our data frame. We could use the <code>filter()</code> function like so:</p>
 <div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="using-pipes.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First value = data frame name (height_and_weight)</span></span>
 <span id="cb140-2"><a href="using-pipes.html#cb140-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Second value = condition for keeping rows (when the value of sex is Female)</span></span>
 <span id="cb140-3"><a href="using-pipes.html#cb140-3" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(height_and_weight, sex <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>)</span></code></pre></div>
-<pre><code>##    id    sex ht_in wt_lbs
-## 1 003 Female    64    130
-## 2 004 Female    65    154</code></pre>
+<pre><code>## # A tibble: 2 x 4
+##   id    sex    ht_in wt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 003   Female    64    130
+## 2 004   Female    65    154</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li>We kept only the rows from the data frame called <code>height_and_weight</code> that had a value of <code>Female</code> for the variable called <code>sex</code> using <code>dplyr</code>’s <code>filter()</code> function.</li>
@@ -768,9 +772,11 @@ Figure 10.4: Pipe the left side to the first argument of the function on the rig
 <div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="using-pipes.html#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First value = data frame name (height_and_weight)</span></span>
 <span id="cb142-2"><a href="using-pipes.html#cb142-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Second value = condition for keeping rows (when the value of sex is Female)</span></span>
 <span id="cb142-3"><a href="using-pipes.html#cb142-3" aria-hidden="true" tabindex="-1"></a>height_and_weight <span class="sc">%&gt;%</span> <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>)</span></code></pre></div>
-<pre><code>##    id    sex ht_in wt_lbs
-## 1 003 Female    64    130
-## 2 004 Female    65    154</code></pre>
+<pre><code>## # A tibble: 2 x 4
+##   id    sex    ht_in wt_lbs
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 003   Female    64    130
+## 2 004   Female    65    154</code></pre>
 <p>As you can see, we get the exact same result. So, the R interpreter took the thing on the left side of the pipe operator, stuck it into the first argument of the function on the right side of the pipe operator, and then executed the function. In this case, the <code>filter()</code> function needs a value supplied to two arguments in order work. So, we wrote <code>sex == "Female"</code> inside of the <code>filter()</code> function’s parentheses. When we see <code>height_and_weight %&gt;% filter(sex == "Female")</code>, R sees <code>filter(height_and_weight, sex == "Female")</code>.</p>
 <p class="note">
 🗒<strong>Side Note:</strong> This pattern – a data frame piped into a function, which is usually then piped into one or more additional functions is something that you will see over and over in this book.
