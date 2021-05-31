@@ -319,6 +319,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.4" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-percentages"><i class="fa fa-check"></i><b>18.4</b> Calculating percentages</a></li>
 <li class="chapter" data-level="18.5" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#cat-missing-data"><i class="fa fa-check"></i><b>18.5</b> Missing data</a></li>
 <li class="chapter" data-level="18.6" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#formatting-results"><i class="fa fa-check"></i><b>18.6</b> Formatting results</a></li>
+<li class="chapter" data-level="18.7" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#using-freqtables"><i class="fa fa-check"></i><b>18.7</b> Using freqtables</a></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html"><i class="fa fa-check"></i><b>19</b> Measures of central tendency</a>
 <ul>
@@ -1133,6 +1134,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>We could have alternatively written our R code this way: <code>mutate(percent = round(n / sum(n) * 100, 2))</code>.</p></li>
 </ul></li>
 </ul>
+</div>
+<div id="using-freqtables" class="section level2" number="18.7">
+<h2><span class="header-section-number">18.7</span> Using freqtables</h2>
+<p>In the sections above, we learned how to use <code>dplyr</code> functions to calculate the frequency and percentage of observations that take on each value of a categorical variable. However, there can be a fair amount of code writing involved when using those methods. The more we have to repeatedly type code, the more tedious and error-prone it becomes. This is an idea we will return to many times in this book. Luckily, the R programming language allows us to write our own functions, which solves both of those problems.</p>
+<p>Later in this book, I will show you <a href="writing-functions.html#writing-functions">how to write your own functions</a>. For the time being, I’m going to suggest that you install and use a package I created called <a href="https://github.com/brad-cannell/freqtables">freqtables</a>. The <code>freqtables</code> package is basically an enhanced version of the code we wrote in the sections above. I designed it to help us quickly make tables of descriptive statistics (i.e., counts, percentages, confidence intervals) for categorical variables, and it’s specifically designed to work in a <code>dplyr</code> pipeline.</p>
+<p>Like all packages, you need to first install it…</p>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="numerical-descriptions-of-categorical-variables.html#cb275-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You may be asked if you want to update other packages on your computer that</span></span>
+<span id="cb275-2"><a href="numerical-descriptions-of-categorical-variables.html#cb275-2" aria-hidden="true" tabindex="-1"></a><span class="co"># freqtables uses. Go ahead and do so.</span></span>
+<span id="cb275-3"><a href="numerical-descriptions-of-categorical-variables.html#cb275-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;freqtables&quot;</span>)</span></code></pre></div>
+<p>And then load it…</p>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="numerical-descriptions-of-categorical-variables.html#cb276-1" aria-hidden="true" tabindex="-1"></a><span class="co"># After installing freqtables on your computer, you can load it just like you</span></span>
+<span id="cb276-2"><a href="numerical-descriptions-of-categorical-variables.html#cb276-2" aria-hidden="true" tabindex="-1"></a><span class="co"># would any other package.</span></span>
+<span id="cb276-3"><a href="numerical-descriptions-of-categorical-variables.html#cb276-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(freqtables)</span></code></pre></div>
+<p>Now, let’s use the <code>freq_table()</code> function from <code>freqtables</code> package to rerun our analysis from above.</p>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="numerical-descriptions-of-categorical-variables.html#cb277-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span></span>
+<span id="cb277-2"><a href="numerical-descriptions-of-categorical-variables.html#cb277-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sex_f)) <span class="sc">%&gt;%</span></span>
+<span id="cb277-3"><a href="numerical-descriptions-of-categorical-variables.html#cb277-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">freq_table</span>(sex_f)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 9
+##   var   cat       n n_total percent    se t_crit   lcl   ucl
+##   &lt;chr&gt; &lt;chr&gt; &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 sex_f 1         7      18    38.9  11.8   2.11  18.2  64.5
+## 2 sex_f 2        11      18    61.1  11.8   2.11  35.5  81.8</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>filter()</code> to keep only the rows that have a <em>non-missing</em> value for sex and passed the data frame on to the <code>freq_table()</code> function using a pipe.</p></li>
+<li><p>We told the <code>freq_table()</code> function to create a univariate frequency table for the variable <code>sex_f</code>. A “univariate frequency table” just means a table (data frame) of useful statistics about a single categorical variable. What constitutes “useful” is sort of up to the person who creates the frequency table – in this case, me.</p></li>
+<li><p>The univariate frequency table above includes:</p>
+<ul>
+<li><p><code>var</code>: The name of the categorical variable (column) we are analyzing.</p></li>
+<li><p><code>cat</code>: Each of the different categories the variable <code>var</code> contains – in this case “Male” and “Female.”</p></li>
+<li><p><code>n</code>: The number of rows where <code>var</code> equals the value in <code>cat</code>. In this case, there are 7 rows where the value of <code>sex_f</code> is Male, and 11 rows where the value of <code>sex_f</code> is Female.</p></li>
+<li><p><code>n_total</code>: The sum of all the <code>n</code> values. This is also to total number of rows in the data frame currently being analyzed.</p></li>
+<li><p><code>percent</code>: The percent of rows where <code>var</code> equals the value in <code>cat</code>.</p></li>
+<li><p><code>se</code>: The standard error of the percent. This value is not terribly useful on its own; however, it’s necessary for calculating the 95% confidence intervals.</p></li>
+<li><p><code>t_crit</code>: The critical value from the t distribution. This value is not terribly useful on its own; however, it’s necessary for calculating the 95% confidence intervals.</p></li>
+<li><p><code>lcl</code>: The lower (95%, by default) confidence limit for the percentage <code>percent</code>.</p></li>
+<li><p><code>ucl</code>: The upper (95%, by default) confidence limit for the percentage <code>percent</code>.</p></li>
+</ul></li>
+</ul>
+<p>We will continue using the <code>freqtables</code> package at various points throughout the book. I will also show you some other cool things we can do with <code>freqtables</code>. For now, all you need to know how to do is use the <code>freq_table()</code> function to calculate frequencies and percentages for single categorical variables.</p>
 <p>🏆 Congratulations! You now know how to use R to do some basic descriptive analysis of individual categorical variables.</p>
 
 </div>

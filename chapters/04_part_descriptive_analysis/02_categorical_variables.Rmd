@@ -483,5 +483,63 @@ height_and_weight_20 %>%
   - Notice that we had to wrap `n / sum(n) * 100` in parentheses in order to pass it to the `round()` function with a pipe.    
   
   - We could have alternatively written our R code this way: `mutate(percent = round(n / sum(n) * 100, 2))`.   
+  
+## Using freqtables
+
+In the sections above, we learned how to use `dplyr` functions to calculate the frequency and percentage of observations that take on each value of a categorical variable. However, there can be a fair amount of code writing involved when using those methods. The more we have to repeatedly type code, the more tedious and error-prone it becomes. This is an idea we will return to many times in this book. Luckily, the R programming language allows us to write our own functions, which solves both of those problems.
+
+Later in this book, I will show you [how to write your own functions][writing functions]. For the time being, I'm going to suggest that you install and use a package I created called [freqtables](https://github.com/brad-cannell/freqtables). The `freqtables` package is basically an enhanced version of the code we wrote in the sections above. I designed it to help us quickly make tables of descriptive statistics (i.e., counts, percentages, confidence intervals) for categorical variables, and it's specifically designed to work in a `dplyr` pipeline.
+
+Like all packages, you need to first install it...
+
+```{r eval=FALSE}
+# You may be asked if you want to update other packages on your computer that
+# freqtables uses. Go ahead and do so.
+install.packages("freqtables")
+```
+
+And then load it...
+
+```{r}
+# After installing freqtables on your computer, you can load it just like you
+# would any other package.
+library(freqtables)
+```
+
+Now, let's use the `freq_table()` function from `freqtables` package to rerun our analysis from above.
+
+```{r}
+height_and_weight_20 %>%
+  filter(!is.na(sex_f)) %>%
+  freq_table(sex_f)
+```
+
+👆**Here's what we did above:**
+
+* We used `filter()` to keep only the rows that have a _non-missing_ value for sex and passed the data frame on to the `freq_table()` function using a pipe.
+
+* We told the `freq_table()` function to create a univariate frequency table for the variable `sex_f`. A "univariate frequency table" just means a table (data frame) of useful statistics about a single categorical variable. What constitutes "useful" is sort of up to the person who creates the frequency table -- in this case, me.
+
+* The univariate frequency table above includes:
+    
+    - `var`: The name of the categorical variable (column) we are analyzing.
+    
+    - `cat`: Each of the different categories the variable `var` contains -- in this case "Male" and "Female".
+
+    - `n`: The number of rows where `var` equals the value in `cat`. In this case, there are 7 rows where the value of `sex_f` is Male, and 11 rows where the value of `sex_f` is Female.
+
+  - `n_total`: The sum of all the `n` values. This is also to total number of rows in the data frame currently being analyzed.
+  
+  - `percent`: The percent of rows where `var` equals the value in `cat`.
+  
+  - `se`: The standard error of the percent. This value is not terribly useful on its own; however, it's necessary for calculating the 95% confidence intervals.
+  
+  - `t_crit`: The critical value from the t distribution. This value is not terribly useful on its own; however, it's necessary for calculating the 95% confidence intervals.
+  
+  - `lcl`: The lower (95%, by default) confidence limit for the percentage `percent`.
+  
+  - `ucl`: The upper (95%, by default) confidence limit for the percentage `percent`.
+  
+We will continue using the `freqtables` package at various points throughout the book. I will also show you some other cool things we can do with `freqtables`. For now, all you need to know how to do is use the `freq_table()` function to calculate frequencies and percentages for single categorical variables.
 
 🏆 Congratulations! You now know how to use R to do some basic descriptive analysis of individual categorical variables. 

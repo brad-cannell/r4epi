@@ -319,6 +319,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.4" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-percentages"><i class="fa fa-check"></i><b>18.4</b> Calculating percentages</a></li>
 <li class="chapter" data-level="18.5" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#cat-missing-data"><i class="fa fa-check"></i><b>18.5</b> Missing data</a></li>
 <li class="chapter" data-level="18.6" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#formatting-results"><i class="fa fa-check"></i><b>18.6</b> Formatting results</a></li>
+<li class="chapter" data-level="18.7" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#using-freqtables"><i class="fa fa-check"></i><b>18.7</b> Using freqtables</a></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html"><i class="fa fa-check"></i><b>19</b> Measures of central tendency</a>
 <ul>
@@ -647,12 +648,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="img/05_part_data_management/06_conditional_processing/rain.png" width="900" /></p>
 <p>In this hypothetical scenario, she then says, “yes, dad,” and goes to the window to see if it’s raining. She either puts on, or does not put on, her raincoat depending on whether or not the condition (raining) is met.</p>
 <p>Just like I have to ask my daughter to put on a raincoat using conditional logic, I sometimes have to ask R to execute commands using conditional logic, and I have to do so in a way that R understands. One such form is <code>dplyr</code>’s <code>if_else()</code> function. Let’s go ahead and take a look at an example now:</p>
-<div class="sourceCode" id="cb731"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb731-1"><a href="conditional-operations.html#cb731-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<div class="sourceCode" id="cb732"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb732-1"><a href="conditional-operations.html#cb732-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb732-2"><a href="conditional-operations.html#cb732-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">day     =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
-<span id="cb732-3"><a href="conditional-operations.html#cb732-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">weather =</span> <span class="fu">c</span>(<span class="st">&quot;rain&quot;</span>, <span class="st">&quot;rain&quot;</span>, <span class="st">&quot;no rain&quot;</span>, <span class="st">&quot;rain&quot;</span>, <span class="st">&quot;no rain&quot;</span>)</span>
-<span id="cb732-4"><a href="conditional-operations.html#cb732-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb732-5"><a href="conditional-operations.html#cb732-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb735"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb735-1"><a href="conditional-operations.html#cb735-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb736"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb736-1"><a href="conditional-operations.html#cb736-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb736-2"><a href="conditional-operations.html#cb736-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">day     =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
+<span id="cb736-3"><a href="conditional-operations.html#cb736-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">weather =</span> <span class="fu">c</span>(<span class="st">&quot;rain&quot;</span>, <span class="st">&quot;rain&quot;</span>, <span class="st">&quot;no rain&quot;</span>, <span class="st">&quot;rain&quot;</span>, <span class="st">&quot;no rain&quot;</span>)</span>
+<span id="cb736-4"><a href="conditional-operations.html#cb736-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb736-5"><a href="conditional-operations.html#cb736-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 2
 ##     day weather
 ##   &lt;int&gt; &lt;chr&gt;  
@@ -666,14 +667,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>We simulated some data that contains information about whether or not it rained on each of 5 days.</li>
 </ul>
 <p>Now, let’s say that we want to create a new column in our data frame called <code>raincoat</code>. We want the value of <code>raincoat</code> to be <code>wear</code> on rainy days and <code>no wear</code> on days when it isn’t raining. Here’s how we can do that with the if_else() function:</p>
-<div class="sourceCode" id="cb734"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb734-1"><a href="conditional-operations.html#cb734-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
-<span id="cb734-2"><a href="conditional-operations.html#cb734-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb734-3"><a href="conditional-operations.html#cb734-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(</span>
-<span id="cb734-4"><a href="conditional-operations.html#cb734-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">condition =</span> weather <span class="sc">==</span> <span class="st">&quot;rain&quot;</span>, </span>
-<span id="cb734-5"><a href="conditional-operations.html#cb734-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">true      =</span> <span class="st">&quot;wear&quot;</span>, </span>
-<span id="cb734-6"><a href="conditional-operations.html#cb734-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">false     =</span> <span class="st">&quot;no wear&quot;</span></span>
-<span id="cb734-7"><a href="conditional-operations.html#cb734-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb734-8"><a href="conditional-operations.html#cb734-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb738"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb738-1"><a href="conditional-operations.html#cb738-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
+<span id="cb738-2"><a href="conditional-operations.html#cb738-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb738-3"><a href="conditional-operations.html#cb738-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(</span>
+<span id="cb738-4"><a href="conditional-operations.html#cb738-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">condition =</span> weather <span class="sc">==</span> <span class="st">&quot;rain&quot;</span>, </span>
+<span id="cb738-5"><a href="conditional-operations.html#cb738-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">true      =</span> <span class="st">&quot;wear&quot;</span>, </span>
+<span id="cb738-6"><a href="conditional-operations.html#cb738-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">false     =</span> <span class="st">&quot;no wear&quot;</span></span>
+<span id="cb738-7"><a href="conditional-operations.html#cb738-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb738-8"><a href="conditional-operations.html#cb738-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 3
 ##     day weather raincoat
 ##   &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   
@@ -695,13 +696,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 🗒<strong>Side Note:</strong> For the rest of the book, I will pass values to the <code>if_else()</code> function by position instead of name. In other words, I won’t write <code>condition =</code>, <code>true =</code>, or <code>false =</code> anymore. However, the first value passed to the <code>if_else()</code> function will always be passed to the <code>condition</code> argument, the second value will always be passed to the <code>true</code> argument, and the third value will always be passed to the <code>false</code> argument.
 </p>
 <p>Before moving on, let’s dive into this a little further. R must always be able to reduce whatever value we pass to the <code>condition</code> argument of <code>if_else()</code> to TRUE or FALSE. That’s how R views any expression we pass to the <code>condition</code> argument. We can literally even pass the value <code>TRUE</code> or the value <code>FALSE</code> (not that doing so has much practical application):</p>
-<div class="sourceCode" id="cb736"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb736-1"><a href="conditional-operations.html#cb736-1" aria-hidden="true" tabindex="-1"></a><span class="fu">if_else</span>(<span class="cn">TRUE</span>, <span class="st">&quot;wear&quot;</span>, <span class="st">&quot;no wear&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb740"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb740-1"><a href="conditional-operations.html#cb740-1" aria-hidden="true" tabindex="-1"></a><span class="fu">if_else</span>(<span class="cn">TRUE</span>, <span class="st">&quot;wear&quot;</span>, <span class="st">&quot;no wear&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;wear&quot;</code></pre>
 <p>Because the value passed to the <code>condition</code> argument is <code>TRUE</code> (in this case, literally), the <code>if_else()</code> function returns the value <code>wear</code>. What happens if we use this code to assign values to the <code>raincoat</code> column?</p>
-<div class="sourceCode" id="cb738"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb738-1"><a href="conditional-operations.html#cb738-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
-<span id="cb738-2"><a href="conditional-operations.html#cb738-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb738-3"><a href="conditional-operations.html#cb738-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(<span class="cn">TRUE</span>, <span class="st">&quot;wear&quot;</span>, <span class="st">&quot;no wear&quot;</span>)</span>
-<span id="cb738-4"><a href="conditional-operations.html#cb738-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb742"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb742-1"><a href="conditional-operations.html#cb742-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
+<span id="cb742-2"><a href="conditional-operations.html#cb742-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb742-3"><a href="conditional-operations.html#cb742-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(<span class="cn">TRUE</span>, <span class="st">&quot;wear&quot;</span>, <span class="st">&quot;no wear&quot;</span>)</span>
+<span id="cb742-4"><a href="conditional-operations.html#cb742-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 3
 ##     day weather raincoat
 ##   &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   
@@ -711,10 +712,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4     4 rain    wear    
 ## 5     5 no rain wear</code></pre>
 <p>Again, the <code>if_else()</code> function returns the value <code>wear</code> because the value passed to the <code>condition</code> argument is <code>TRUE</code>. Then, R uses its recycling rules to copy the value <code>wear</code> to every row of the <code>raincoat</code> column. What would do you think will happen if we pass the value <code>FALSE</code> to the <code>condition</code> argument instead?</p>
-<div class="sourceCode" id="cb740"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb740-1"><a href="conditional-operations.html#cb740-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
-<span id="cb740-2"><a href="conditional-operations.html#cb740-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb740-3"><a href="conditional-operations.html#cb740-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(<span class="cn">FALSE</span>, <span class="st">&quot;wear&quot;</span>, <span class="st">&quot;no wear&quot;</span>)</span>
-<span id="cb740-4"><a href="conditional-operations.html#cb740-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb744"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb744-1"><a href="conditional-operations.html#cb744-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
+<span id="cb744-2"><a href="conditional-operations.html#cb744-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb744-3"><a href="conditional-operations.html#cb744-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(<span class="cn">FALSE</span>, <span class="st">&quot;wear&quot;</span>, <span class="st">&quot;no wear&quot;</span>)</span>
+<span id="cb744-4"><a href="conditional-operations.html#cb744-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 3
 ##     day weather raincoat
 ##   &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   
@@ -725,10 +726,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 5     5 no rain no wear</code></pre>
 <p>Hopefully, that was the result you expected. The <code>if_else()</code> function returns the value <code>no wear</code> because the value passed to the <code>condition</code> argument is <code>FALSE</code>. Then, R uses its recycling rules to copy the value <code>no wear</code> to every row of the <code>raincoat</code> column.</p>
 <p>We can take this a step further and actually pass a vector of logical (<code>TRUE</code>/<code>FALSE</code>) values to the <code>condition</code> argument. For example:</p>
-<div class="sourceCode" id="cb742"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb742-1"><a href="conditional-operations.html#cb742-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
-<span id="cb742-2"><a href="conditional-operations.html#cb742-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb742-3"><a href="conditional-operations.html#cb742-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="st">&quot;wear&quot;</span>, <span class="st">&quot;no wear&quot;</span>)</span>
-<span id="cb742-4"><a href="conditional-operations.html#cb742-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb746"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb746-1"><a href="conditional-operations.html#cb746-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
+<span id="cb746-2"><a href="conditional-operations.html#cb746-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb746-3"><a href="conditional-operations.html#cb746-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="st">&quot;wear&quot;</span>, <span class="st">&quot;no wear&quot;</span>)</span>
+<span id="cb746-4"><a href="conditional-operations.html#cb746-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 3
 ##     day weather raincoat
 ##   &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   
@@ -738,7 +739,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4     4 rain    wear    
 ## 5     5 no rain no wear</code></pre>
 <p>In reality, that’s sort of what we did in the very first <code>if_else()</code> example above. But, instead of typing the values manually, we used an expression that returned a vector of logical values. Specifically, we used the equality operator (<code>==</code>) to check whether or not each value in the <code>weather</code> column was equal to the value “rain” or not.</p>
-<div class="sourceCode" id="cb744"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb744-1"><a href="conditional-operations.html#cb744-1" aria-hidden="true" tabindex="-1"></a>rainy_days<span class="sc">$</span>weather <span class="sc">==</span> <span class="st">&quot;rain&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb748"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb748-1"><a href="conditional-operations.html#cb748-1" aria-hidden="true" tabindex="-1"></a>rainy_days<span class="sc">$</span>weather <span class="sc">==</span> <span class="st">&quot;rain&quot;</span></span></code></pre></div>
 <pre><code>## [1]  TRUE  TRUE FALSE  TRUE FALSE</code></pre>
 <p>That pretty much covers the basics of how the <code>if_else()</code> function works. Next, let’s take a look at some of the different combinations of operands and operators that we can combine and pass to the <code>condition</code> argument of the <code>if_else()</code> function.</p>
 <div id="operands-and-operators" class="section level2" number="29.1">
@@ -756,11 +757,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Some of you may have been a little surprised by the results we get from using less than (<code>&lt;</code>) and greater than (<code>&gt;</code>) with characters. It’s basically just testing alphabetical order. A comes before B in the alphabet, so A is less than B. Additionally, when two letters are the same, the upper-case letter is considered greater than the lowercase letter. However, alphabetical order takes precedence over case. So, b is still greater than A even though b is lowercase and A is upper case.</p></li>
 <li><p>Many of you may not have seen the modulus operator (<code>%%</code>) before. The modulus operator returns the remainder that is left after dividing two numbers. For example, 4 divided by 2 is 2 with a remainder of 0 because 2 goes into 4 <em>exactly</em> two times. Said another way, 2 * 2 = 4 and 4 - 4 = 0. So, <code>4 %% 2 = 0</code>. However, 3 divided by 2 is 1 with a remainder of 1 because 2 goes into 3 one time with 1 left over. Said another way, 2 * 1 = 2 and 3 - 2 = 1. So, <code>3 %% 2 = 1</code>. How is this useful? Well, the only times I can remember using the modulus operator have been when I needed to separate even and odd rows of a data frame. For example, let’s say that we have a data frame where each person has two rows. The first row always corresponds to treatment A and the second row always corresponds to treatment B. However, for some reason (maybe blinding?), there was no <code>treatment</code> column in the data when we received it. We could use the modulus operator to add a <code>treatment</code> column like this:</p></li>
 </ul>
-<div class="sourceCode" id="cb746"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb746-1"><a href="conditional-operations.html#cb746-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb746-2"><a href="conditional-operations.html#cb746-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id        =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
-<span id="cb746-3"><a href="conditional-operations.html#cb746-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb746-4"><a href="conditional-operations.html#cb746-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb746-5"><a href="conditional-operations.html#cb746-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb750"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb750-1"><a href="conditional-operations.html#cb750-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb750-2"><a href="conditional-operations.html#cb750-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id        =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb750-3"><a href="conditional-operations.html#cb750-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb750-4"><a href="conditional-operations.html#cb750-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb750-5"><a href="conditional-operations.html#cb750-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 2
 ##      id outcome
 ##   &lt;dbl&gt;   &lt;dbl&gt;
@@ -768,12 +769,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 2     1       1
 ## 3     2       1
 ## 4     2       1</code></pre>
-<div class="sourceCode" id="cb748"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb748-1"><a href="conditional-operations.html#cb748-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb748-2"><a href="conditional-operations.html#cb748-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb748-3"><a href="conditional-operations.html#cb748-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Odd rows are treatment A</span></span>
-<span id="cb748-4"><a href="conditional-operations.html#cb748-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Even rows are treatment B</span></span>
-<span id="cb748-5"><a href="conditional-operations.html#cb748-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">if_else</span>(<span class="fu">row_number</span>() <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>)</span>
-<span id="cb748-6"><a href="conditional-operations.html#cb748-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb752"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb752-1"><a href="conditional-operations.html#cb752-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb752-2"><a href="conditional-operations.html#cb752-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb752-3"><a href="conditional-operations.html#cb752-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Odd rows are treatment A</span></span>
+<span id="cb752-4"><a href="conditional-operations.html#cb752-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Even rows are treatment B</span></span>
+<span id="cb752-5"><a href="conditional-operations.html#cb752-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">if_else</span>(<span class="fu">row_number</span>() <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>)</span>
+<span id="cb752-6"><a href="conditional-operations.html#cb752-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 3
 ##      id outcome treatment
 ##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;    
@@ -784,14 +785,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>I also want to remind you that we should always use the <code>is.na()</code> function to check for missing values. Not the equality operator. Using the equality operator when there are missing values can give results that may be unexpected. For example:</li>
 </ul>
-<div class="sourceCode" id="cb750"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb750-1"><a href="conditional-operations.html#cb750-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb750-2"><a href="conditional-operations.html#cb750-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name1 =</span> <span class="fu">c</span>(<span class="st">&quot;Jon&quot;</span>, <span class="st">&quot;John&quot;</span>, <span class="cn">NA</span>),</span>
-<span id="cb750-3"><a href="conditional-operations.html#cb750-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name2 =</span> <span class="fu">c</span>(<span class="st">&quot;Jon&quot;</span>, <span class="st">&quot;Jon&quot;</span>, <span class="st">&quot;Jon&quot;</span>)</span>
-<span id="cb750-4"><a href="conditional-operations.html#cb750-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb751"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb751-1"><a href="conditional-operations.html#cb751-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb751-2"><a href="conditional-operations.html#cb751-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb751-3"><a href="conditional-operations.html#cb751-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_match =</span> name1 <span class="sc">==</span> name2</span>
-<span id="cb751-4"><a href="conditional-operations.html#cb751-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb754"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb754-1"><a href="conditional-operations.html#cb754-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb754-2"><a href="conditional-operations.html#cb754-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name1 =</span> <span class="fu">c</span>(<span class="st">&quot;Jon&quot;</span>, <span class="st">&quot;John&quot;</span>, <span class="cn">NA</span>),</span>
+<span id="cb754-3"><a href="conditional-operations.html#cb754-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name2 =</span> <span class="fu">c</span>(<span class="st">&quot;Jon&quot;</span>, <span class="st">&quot;Jon&quot;</span>, <span class="st">&quot;Jon&quot;</span>)</span>
+<span id="cb754-4"><a href="conditional-operations.html#cb754-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb755"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb755-1"><a href="conditional-operations.html#cb755-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb755-2"><a href="conditional-operations.html#cb755-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb755-3"><a href="conditional-operations.html#cb755-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_match =</span> name1 <span class="sc">==</span> name2</span>
+<span id="cb755-4"><a href="conditional-operations.html#cb755-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 3
 ##   name1 name2 name_match
 ##   &lt;chr&gt; &lt;chr&gt; &lt;lgl&gt;     
@@ -799,11 +800,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 2 John  Jon   FALSE     
 ## 3 &lt;NA&gt;  Jon   NA</code></pre>
 <p>Many of us would expect the third value of the <code>name_match</code> column to be <code>FALSE</code> instead of <code>NA</code>. There are a couple of different ways we can get <code>FALSE</code> in the third row instead of <code>NA</code>. One way, although not necessarily the best way, is to use the <code>if_else()</code> function:</p>
-<div class="sourceCode" id="cb753"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb753-1"><a href="conditional-operations.html#cb753-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb753-2"><a href="conditional-operations.html#cb753-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb753-3"><a href="conditional-operations.html#cb753-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_match =</span> name1 <span class="sc">==</span> name2,</span>
-<span id="cb753-4"><a href="conditional-operations.html#cb753-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_match =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(name_match), <span class="cn">FALSE</span>, name_match)</span>
-<span id="cb753-5"><a href="conditional-operations.html#cb753-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb757"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb757-1"><a href="conditional-operations.html#cb757-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb757-2"><a href="conditional-operations.html#cb757-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb757-3"><a href="conditional-operations.html#cb757-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_match =</span> name1 <span class="sc">==</span> name2,</span>
+<span id="cb757-4"><a href="conditional-operations.html#cb757-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_match =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(name_match), <span class="cn">FALSE</span>, name_match)</span>
+<span id="cb757-5"><a href="conditional-operations.html#cb757-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 3
 ##   name1 name2 name_match
 ##   &lt;chr&gt; &lt;chr&gt; &lt;lgl&gt;     
@@ -822,12 +823,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="testing-multiple-conditions-simultaneously" class="section level2" number="29.2">
 <h2><span class="header-section-number">29.2</span> Testing multiple conditions simultaneously</h2>
 <p>So far, we have only ever passed one condition to the <code>condition</code> argument of the <code>if_else()</code> function. However, we can pass as many conditions as we want. Having said that, more than 2, or maybe 3, gets very convoluted. Let’s go ahead and take a look at a couple of examples now. We’ll start by simulating some blood pressure data:</p>
-<div class="sourceCode" id="cb755"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb755-1"><a href="conditional-operations.html#cb755-1" aria-hidden="true" tabindex="-1"></a>blood_pressure <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb755-2"><a href="conditional-operations.html#cb755-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
-<span id="cb755-3"><a href="conditional-operations.html#cb755-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sysbp  =</span> <span class="fu">c</span>(<span class="dv">152</span>, <span class="dv">120</span>, <span class="dv">119</span>, <span class="dv">123</span>, <span class="dv">135</span>, <span class="dv">83</span>, <span class="dv">191</span>, <span class="dv">147</span>, <span class="dv">209</span>, <span class="dv">166</span>),</span>
-<span id="cb755-4"><a href="conditional-operations.html#cb755-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">diasbp =</span> <span class="fu">c</span>(<span class="dv">78</span>, <span class="dv">60</span>, <span class="dv">88</span>, <span class="dv">76</span>, <span class="dv">85</span>, <span class="dv">54</span>, <span class="dv">116</span>, <span class="dv">95</span>, <span class="dv">100</span>, <span class="dv">106</span>)</span>
-<span id="cb755-5"><a href="conditional-operations.html#cb755-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb755-6"><a href="conditional-operations.html#cb755-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb759"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb759-1"><a href="conditional-operations.html#cb759-1" aria-hidden="true" tabindex="-1"></a>blood_pressure <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb759-2"><a href="conditional-operations.html#cb759-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb759-3"><a href="conditional-operations.html#cb759-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sysbp  =</span> <span class="fu">c</span>(<span class="dv">152</span>, <span class="dv">120</span>, <span class="dv">119</span>, <span class="dv">123</span>, <span class="dv">135</span>, <span class="dv">83</span>, <span class="dv">191</span>, <span class="dv">147</span>, <span class="dv">209</span>, <span class="dv">166</span>),</span>
+<span id="cb759-4"><a href="conditional-operations.html#cb759-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">diasbp =</span> <span class="fu">c</span>(<span class="dv">78</span>, <span class="dv">60</span>, <span class="dv">88</span>, <span class="dv">76</span>, <span class="dv">85</span>, <span class="dv">54</span>, <span class="dv">116</span>, <span class="dv">95</span>, <span class="dv">100</span>, <span class="dv">106</span>)</span>
+<span id="cb759-5"><a href="conditional-operations.html#cb759-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb759-6"><a href="conditional-operations.html#cb759-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 3
 ##       id sysbp diasbp
 ##    &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
@@ -842,8 +843,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  9     9   209    100
 ## 10    10   166    106</code></pre>
 <p>A person may be categorized as having normal blood pressure when their systolic blood pressure is less than 120 mmHG <em>AND</em> their diastolic blood pressure is less than 80 mmHG. We can use this information and the <code>if_else()</code> function to create a new column in our data frame that contains information about whether each person in our simulated data frame has normal blood pressure or not:</p>
-<div class="sourceCode" id="cb757"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb757-1"><a href="conditional-operations.html#cb757-1" aria-hidden="true" tabindex="-1"></a>blood_pressure <span class="sc">%&gt;%</span> </span>
-<span id="cb757-2"><a href="conditional-operations.html#cb757-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bp =</span> <span class="fu">if_else</span>(sysbp <span class="sc">&lt;</span> <span class="dv">120</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">80</span>, <span class="st">&quot;Normal&quot;</span>, <span class="st">&quot;Not Normal&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb761"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb761-1"><a href="conditional-operations.html#cb761-1" aria-hidden="true" tabindex="-1"></a>blood_pressure <span class="sc">%&gt;%</span> </span>
+<span id="cb761-2"><a href="conditional-operations.html#cb761-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bp =</span> <span class="fu">if_else</span>(sysbp <span class="sc">&lt;</span> <span class="dv">120</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">80</span>, <span class="st">&quot;Normal&quot;</span>, <span class="st">&quot;Not Normal&quot;</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 4
 ##       id sysbp diasbp bp        
 ##    &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     
@@ -873,15 +874,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Let’s say that we wanted to create a new column in our <code>blood_pressure</code> data frame that contains each person’s blood pressure category according to the following scale:</p>
 <p><img src="img/05_part_data_management/06_conditional_processing/bp.png" width="900" /></p>
 <p>This is the perfect opportunity to use <code>dplyr</code>’s <code>case_when()</code> function. Take a look:</p>
-<div class="sourceCode" id="cb759"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb759-1"><a href="conditional-operations.html#cb759-1" aria-hidden="true" tabindex="-1"></a>blood_pressure <span class="sc">%&gt;%</span> </span>
-<span id="cb759-2"><a href="conditional-operations.html#cb759-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb759-3"><a href="conditional-operations.html#cb759-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">bp =</span> <span class="fu">case_when</span>(</span>
-<span id="cb759-4"><a href="conditional-operations.html#cb759-4" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&lt;</span> <span class="dv">120</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">80</span>                               <span class="sc">~</span> <span class="st">&quot;Normal&quot;</span>,</span>
-<span id="cb759-5"><a href="conditional-operations.html#cb759-5" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&gt;=</span> <span class="dv">120</span> <span class="sc">&amp;</span> sysbp <span class="sc">&lt;</span> <span class="dv">130</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">80</span>                <span class="sc">~</span> <span class="st">&quot;Elevated&quot;</span>,</span>
-<span id="cb759-6"><a href="conditional-operations.html#cb759-6" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&gt;=</span> <span class="dv">130</span> <span class="sc">&amp;</span> sysbp <span class="sc">&lt;</span> <span class="dv">140</span> <span class="sc">|</span> diasbp <span class="sc">&gt;=</span> <span class="dv">80</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">90</span> <span class="sc">~</span> <span class="st">&quot;Hypertension Stage 1&quot;</span>,</span>
-<span id="cb759-7"><a href="conditional-operations.html#cb759-7" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> diasbp <span class="sc">&gt;=</span> <span class="dv">90</span>                             <span class="sc">~</span> <span class="st">&quot;Hypertension Stage 2&quot;</span></span>
-<span id="cb759-8"><a href="conditional-operations.html#cb759-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb759-9"><a href="conditional-operations.html#cb759-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb763"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb763-1"><a href="conditional-operations.html#cb763-1" aria-hidden="true" tabindex="-1"></a>blood_pressure <span class="sc">%&gt;%</span> </span>
+<span id="cb763-2"><a href="conditional-operations.html#cb763-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb763-3"><a href="conditional-operations.html#cb763-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">bp =</span> <span class="fu">case_when</span>(</span>
+<span id="cb763-4"><a href="conditional-operations.html#cb763-4" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&lt;</span> <span class="dv">120</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">80</span>                               <span class="sc">~</span> <span class="st">&quot;Normal&quot;</span>,</span>
+<span id="cb763-5"><a href="conditional-operations.html#cb763-5" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&gt;=</span> <span class="dv">120</span> <span class="sc">&amp;</span> sysbp <span class="sc">&lt;</span> <span class="dv">130</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">80</span>                <span class="sc">~</span> <span class="st">&quot;Elevated&quot;</span>,</span>
+<span id="cb763-6"><a href="conditional-operations.html#cb763-6" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&gt;=</span> <span class="dv">130</span> <span class="sc">&amp;</span> sysbp <span class="sc">&lt;</span> <span class="dv">140</span> <span class="sc">|</span> diasbp <span class="sc">&gt;=</span> <span class="dv">80</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">90</span> <span class="sc">~</span> <span class="st">&quot;Hypertension Stage 1&quot;</span>,</span>
+<span id="cb763-7"><a href="conditional-operations.html#cb763-7" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> diasbp <span class="sc">&gt;=</span> <span class="dv">90</span>                             <span class="sc">~</span> <span class="st">&quot;Hypertension Stage 2&quot;</span></span>
+<span id="cb763-8"><a href="conditional-operations.html#cb763-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb763-9"><a href="conditional-operations.html#cb763-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 4
 ##       id sysbp diasbp bp                  
 ##    &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;               
@@ -924,13 +925,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 🗒<strong>Side Note:</strong> You may not have ever heard of <strong>collapsing</strong> variables before. It simply means combing two or more values of your variable. We can collapse continuous variables into categories, as we discussed in the example above, or we can collapse categories into broader categories (as you will see with the race category example below). After we collapse a variable, it always contains fewer (and broader) possible values than it contained before we collapsed it.
 </p>
 <p>I’m going to show you how to do this below using the <code>case_when()</code> function. However, I’m going to do it piecemeal so that I can highlight a few important concepts. First, let’s simulate some data that includes 10 participant’s ages.</p>
-<div class="sourceCode" id="cb761"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb761-1"><a href="conditional-operations.html#cb761-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate some age data</span></span>
-<span id="cb761-2"><a href="conditional-operations.html#cb761-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb761-3"><a href="conditional-operations.html#cb761-3" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb761-4"><a href="conditional-operations.html#cb761-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">id  =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
-<span id="cb761-5"><a href="conditional-operations.html#cb761-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">c</span>(<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="dv">9</span>, <span class="cn">TRUE</span>), <span class="cn">NA</span>)</span>
-<span id="cb761-6"><a href="conditional-operations.html#cb761-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb761-7"><a href="conditional-operations.html#cb761-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb765"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb765-1"><a href="conditional-operations.html#cb765-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate some age data</span></span>
+<span id="cb765-2"><a href="conditional-operations.html#cb765-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb765-3"><a href="conditional-operations.html#cb765-3" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb765-4"><a href="conditional-operations.html#cb765-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">id  =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb765-5"><a href="conditional-operations.html#cb765-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">c</span>(<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="dv">9</span>, <span class="cn">TRUE</span>), <span class="cn">NA</span>)</span>
+<span id="cb765-6"><a href="conditional-operations.html#cb765-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb765-7"><a href="conditional-operations.html#cb765-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 2
 ##       id   age
 ##    &lt;int&gt; &lt;int&gt;
@@ -945,12 +946,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  9     9     5
 ## 10    10    NA</code></pre>
 <p>Then, let’s start the process of collapsing the <code>age</code> column into a new column called <code>age_3cat</code> that contains the 3 age categories we discussed above:</p>
-<div class="sourceCode" id="cb763"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb763-1"><a href="conditional-operations.html#cb763-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
-<span id="cb763-2"><a href="conditional-operations.html#cb763-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb763-3"><a href="conditional-operations.html#cb763-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
-<span id="cb763-4"><a href="conditional-operations.html#cb763-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span> <span class="sc">~</span> <span class="dv">1</span></span>
-<span id="cb763-5"><a href="conditional-operations.html#cb763-5" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb763-6"><a href="conditional-operations.html#cb763-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb767"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb767-1"><a href="conditional-operations.html#cb767-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb767-2"><a href="conditional-operations.html#cb767-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb767-3"><a href="conditional-operations.html#cb767-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb767-4"><a href="conditional-operations.html#cb767-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span> <span class="sc">~</span> <span class="dv">1</span></span>
+<span id="cb767-5"><a href="conditional-operations.html#cb767-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb767-6"><a href="conditional-operations.html#cb767-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 3
 ##       id   age age_3cat
 ##    &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
@@ -983,13 +984,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Notice that I used a number (<code>1</code>) on the right-hand side of the two-sided formula above. We could have used a character value instead (i.e., <code>child</code>); however, for reasons I discussed in the section on factor variables, I prefer to recode my variables using numeric categories and then later creating a factor version of the variable using the <code>_f</code> naming convention.</p></li>
 </ul>
 <p>Now, let’s add a second two-sided formula to our <code>case_when()</code> function.</p>
-<div class="sourceCode" id="cb765"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb765-1"><a href="conditional-operations.html#cb765-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
-<span id="cb765-2"><a href="conditional-operations.html#cb765-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb765-3"><a href="conditional-operations.html#cb765-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
-<span id="cb765-4"><a href="conditional-operations.html#cb765-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>             <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb765-5"><a href="conditional-operations.html#cb765-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> age <span class="sc">&lt;</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">2</span></span>
-<span id="cb765-6"><a href="conditional-operations.html#cb765-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb765-7"><a href="conditional-operations.html#cb765-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb769"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb769-1"><a href="conditional-operations.html#cb769-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb769-2"><a href="conditional-operations.html#cb769-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb769-3"><a href="conditional-operations.html#cb769-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb769-4"><a href="conditional-operations.html#cb769-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>             <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb769-5"><a href="conditional-operations.html#cb769-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> age <span class="sc">&lt;</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">2</span></span>
+<span id="cb769-6"><a href="conditional-operations.html#cb769-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb769-7"><a href="conditional-operations.html#cb769-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 3
 ##       id   age age_3cat
 ##    &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
@@ -1022,26 +1023,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Second, when we are testing for a “between” condition like this one, I often see students write code like this: <code>age &gt;= 12 &amp; &lt; 18</code>. R won’t understand that. You have to use the column name in each condition to be tested (i.e., <code>age &gt;= 12 &amp; age &lt; 18</code>), even though it doesn’t change. Otherwise, you get an error that looks something like this:</p></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb767"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb767-1"><a href="conditional-operations.html#cb767-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
-<span id="cb767-2"><a href="conditional-operations.html#cb767-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb767-3"><a href="conditional-operations.html#cb767-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
-<span id="cb767-4"><a href="conditional-operations.html#cb767-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>             <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb767-5"><a href="conditional-operations.html#cb767-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> <span class="er">&lt;</span> <span class="dv">18</span>     <span class="sc">~</span> <span class="dv">2</span></span>
-<span id="cb767-6"><a href="conditional-operations.html#cb767-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb767-7"><a href="conditional-operations.html#cb767-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb771-1"><a href="conditional-operations.html#cb771-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb771-2"><a href="conditional-operations.html#cb771-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb771-3"><a href="conditional-operations.html#cb771-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb771-4"><a href="conditional-operations.html#cb771-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>             <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb771-5"><a href="conditional-operations.html#cb771-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> <span class="er">&lt;</span> <span class="dv">18</span>     <span class="sc">~</span> <span class="dv">2</span></span>
+<span id="cb771-6"><a href="conditional-operations.html#cb771-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb771-7"><a href="conditional-operations.html#cb771-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Error: &lt;text&gt;:5:19: unexpected &#39;&lt;&#39;
 ## 4:       age &lt; 12             ~ 1,
 ## 5:       age &gt;= 12 &amp; &lt;
 ##                      ^</code></pre>
 <p>Ok, let’s go ahead and wrap up this age category variable:</p>
-<div class="sourceCode" id="cb769"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb769-1"><a href="conditional-operations.html#cb769-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
-<span id="cb769-2"><a href="conditional-operations.html#cb769-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb769-3"><a href="conditional-operations.html#cb769-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
-<span id="cb769-4"><a href="conditional-operations.html#cb769-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>             <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb769-5"><a href="conditional-operations.html#cb769-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> age <span class="sc">&lt;</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
-<span id="cb769-6"><a href="conditional-operations.html#cb769-6" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">18</span>            <span class="sc">~</span> <span class="dv">3</span></span>
-<span id="cb769-7"><a href="conditional-operations.html#cb769-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb769-8"><a href="conditional-operations.html#cb769-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb773"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb773-1"><a href="conditional-operations.html#cb773-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb773-2"><a href="conditional-operations.html#cb773-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb773-3"><a href="conditional-operations.html#cb773-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb773-4"><a href="conditional-operations.html#cb773-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>             <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb773-5"><a href="conditional-operations.html#cb773-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> age <span class="sc">&lt;</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb773-6"><a href="conditional-operations.html#cb773-6" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">18</span>            <span class="sc">~</span> <span class="dv">3</span></span>
+<span id="cb773-7"><a href="conditional-operations.html#cb773-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb773-8"><a href="conditional-operations.html#cb773-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 3
 ##       id   age age_3cat
 ##    &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
@@ -1063,24 +1064,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="case_when-is-lazy" class="section level2" number="29.5">
 <h2><span class="header-section-number">29.5</span> case_when() is lazy</h2>
 <p>What do I mean when I say that <code>case_when()</code> is lazy? Well, it may not have registered when I mentioned it above, but <code>case_when()</code> stops evaluating two-sided functions for a value as soon as it finds one that is <code>TRUE</code>. For example:</p>
-<div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb771-1"><a href="conditional-operations.html#cb771-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb771-2"><a href="conditional-operations.html#cb771-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
-<span id="cb771-3"><a href="conditional-operations.html#cb771-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb771-4"><a href="conditional-operations.html#cb771-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb775"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb775-1"><a href="conditional-operations.html#cb775-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb775-2"><a href="conditional-operations.html#cb775-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb775-3"><a href="conditional-operations.html#cb775-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb775-4"><a href="conditional-operations.html#cb775-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 1
 ##   number
 ##    &lt;dbl&gt;
 ## 1      1
 ## 2      2
 ## 3      3</code></pre>
-<div class="sourceCode" id="cb773"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb773-1"><a href="conditional-operations.html#cb773-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb773-2"><a href="conditional-operations.html#cb773-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb773-3"><a href="conditional-operations.html#cb773-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fu">case_when</span>(</span>
-<span id="cb773-4"><a href="conditional-operations.html#cb773-4" aria-hidden="true" tabindex="-1"></a>      number <span class="sc">&lt;</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;Small&quot;</span>,</span>
-<span id="cb773-5"><a href="conditional-operations.html#cb773-5" aria-hidden="true" tabindex="-1"></a>      number <span class="sc">&lt;</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">&quot;Medium&quot;</span>,</span>
-<span id="cb773-6"><a href="conditional-operations.html#cb773-6" aria-hidden="true" tabindex="-1"></a>      number <span class="sc">&lt;</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">&quot;Large&quot;</span></span>
-<span id="cb773-7"><a href="conditional-operations.html#cb773-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb773-8"><a href="conditional-operations.html#cb773-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb777"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb777-1"><a href="conditional-operations.html#cb777-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb777-2"><a href="conditional-operations.html#cb777-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb777-3"><a href="conditional-operations.html#cb777-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fu">case_when</span>(</span>
+<span id="cb777-4"><a href="conditional-operations.html#cb777-4" aria-hidden="true" tabindex="-1"></a>      number <span class="sc">&lt;</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;Small&quot;</span>,</span>
+<span id="cb777-5"><a href="conditional-operations.html#cb777-5" aria-hidden="true" tabindex="-1"></a>      number <span class="sc">&lt;</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">&quot;Medium&quot;</span>,</span>
+<span id="cb777-6"><a href="conditional-operations.html#cb777-6" aria-hidden="true" tabindex="-1"></a>      number <span class="sc">&lt;</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">&quot;Large&quot;</span></span>
+<span id="cb777-7"><a href="conditional-operations.html#cb777-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb777-8"><a href="conditional-operations.html#cb777-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 2
 ##   number size  
 ##    &lt;dbl&gt; &lt;chr&gt; 
@@ -1089,14 +1090,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 3      3 Large</code></pre>
 <p>Why wasn’t the value for the <code>size</code> column <code>Large</code> in every row of the data frame? After all, <code>1</code>, <code>2</code>, and <code>3</code> are all less than <code>4</code>, and <code>number &lt; 4</code> was the final possible two-sided formula that could have been evaluated for each value of <code>number</code>. The answer is that <code>case_when()</code> is lazy. The first value in <code>number</code> is <code>1</code>. <code>1</code> is less than <code>2</code>. So, the condition in the first two-sided formula evaluates to <code>TRUE</code>. So, <code>case_when()</code> immediately returns the value on the right-hand side (<code>Small</code>) and <strong>does not continue checking two-sided formulas. It moves on to the next value of <code>number</code>.</strong></p>
 <p>The fact that <code>case_when()</code> is lazy isn’t a bad thing. It’s just something to be aware of. In fact, we can often use it to our advantage. For example, we can use <code>case_when()</code>’s laziness to rewrite the <code>age_3cat</code> code from above a little more succinctly:</p>
-<div class="sourceCode" id="cb775"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb775-1"><a href="conditional-operations.html#cb775-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
-<span id="cb775-2"><a href="conditional-operations.html#cb775-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb775-3"><a href="conditional-operations.html#cb775-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
-<span id="cb775-4"><a href="conditional-operations.html#cb775-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>  <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb775-5"><a href="conditional-operations.html#cb775-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">18</span>  <span class="sc">~</span> <span class="dv">2</span>,</span>
-<span id="cb775-6"><a href="conditional-operations.html#cb775-6" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">3</span></span>
-<span id="cb775-7"><a href="conditional-operations.html#cb775-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb775-8"><a href="conditional-operations.html#cb775-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb779"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb779-1"><a href="conditional-operations.html#cb779-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb779-2"><a href="conditional-operations.html#cb779-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb779-3"><a href="conditional-operations.html#cb779-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb779-4"><a href="conditional-operations.html#cb779-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>  <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb779-5"><a href="conditional-operations.html#cb779-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">18</span>  <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb779-6"><a href="conditional-operations.html#cb779-6" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">3</span></span>
+<span id="cb779-7"><a href="conditional-operations.html#cb779-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb779-8"><a href="conditional-operations.html#cb779-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 3
 ##       id   age age_3cat
 ##    &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
@@ -1133,12 +1134,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 1 = Yes, Hispanic<br />
 7 = Don’t know<br />
 9 = Refused</p>
-<div class="sourceCode" id="cb777"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb777-1"><a href="conditional-operations.html#cb777-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="ot">&lt;-</span> ages <span class="sc">%&gt;%</span> </span>
-<span id="cb777-2"><a href="conditional-operations.html#cb777-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb777-3"><a href="conditional-operations.html#cb777-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">race     =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">9</span>, <span class="dv">1</span>, <span class="dv">3</span>),</span>
-<span id="cb777-4"><a href="conditional-operations.html#cb777-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">9</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb777-5"><a href="conditional-operations.html#cb777-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb777-6"><a href="conditional-operations.html#cb777-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb781"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb781-1"><a href="conditional-operations.html#cb781-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="ot">&lt;-</span> ages <span class="sc">%&gt;%</span> </span>
+<span id="cb781-2"><a href="conditional-operations.html#cb781-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb781-3"><a href="conditional-operations.html#cb781-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">race     =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">9</span>, <span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb781-4"><a href="conditional-operations.html#cb781-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">9</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb781-5"><a href="conditional-operations.html#cb781-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb781-6"><a href="conditional-operations.html#cb781-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 4
 ##       id   age  race hispanic
 ##    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;
@@ -1158,24 +1159,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 3 = Hispanic, any race<br />
 4 = Other race, non-Hispanic</p>
 <p>There are multiple ways that we can create this new column. We could start by using <code>if_else()</code> to recode <code>7</code> and <code>9</code> to missing:</p>
-<div class="sourceCode" id="cb779"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb779-1"><a href="conditional-operations.html#cb779-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb779-2"><a href="conditional-operations.html#cb779-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb779-3"><a href="conditional-operations.html#cb779-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recode 7 and 9 to missing</span></span>
-<span id="cb779-4"><a href="conditional-operations.html#cb779-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_recode =</span> <span class="fu">if_else</span>(race <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA</span>, race),</span>
-<span id="cb779-5"><a href="conditional-operations.html#cb779-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic_recode =</span> <span class="fu">if_else</span>(hispanic <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> hispanic <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA</span>, hispanic)</span>
-<span id="cb779-6"><a href="conditional-operations.html#cb779-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb783"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb783-1"><a href="conditional-operations.html#cb783-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb783-2"><a href="conditional-operations.html#cb783-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb783-3"><a href="conditional-operations.html#cb783-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recode 7 and 9 to missing</span></span>
+<span id="cb783-4"><a href="conditional-operations.html#cb783-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_recode =</span> <span class="fu">if_else</span>(race <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA</span>, race),</span>
+<span id="cb783-5"><a href="conditional-operations.html#cb783-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic_recode =</span> <span class="fu">if_else</span>(hispanic <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> hispanic <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA</span>, hispanic)</span>
+<span id="cb783-6"><a href="conditional-operations.html#cb783-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Error: Problem with `mutate()` column `race_recode`.
 ## ℹ `race_recode = if_else(race == 7 | race == 9, NA, race)`.
 ## x `false` must be a logical vector, not a double vector.</code></pre>
 <p>I intentionally made this error because it’s a really easy one to make, and you will probably make it too. If you look back to the <a href="lets-get-programming.html#missing-data">Let’s get programming chapter</a>, you will see that I briefly discussed the <code>NA</code> value being type logical by default. I also talked about “type coercion” and how most of the time you don’t have to worry about it. I said that R generally coerces <code>NA</code> to <code>NA_character</code> or <code>NA_double</code> or whatever for you under the hood, automatically. I also said that sometimes it doesn’t, especially when using the if_else() and case_when() functions, and it will cause R to give you an error. Finally, I said I would discuss it later. It’s later now. Long story short, the developers of the <code>if_else()</code> function do this on purpose to make the function’s returned result more predictable and slightly faster.</p>
 <p>For you, it just means that you have to remember to use <code>NA_character</code>, <code>NA_integer</code>, or <code>NA_real</code> as appropriate. For example, the error message above says, “<code>false</code> must be a logical vector, not a double vector.” This means that the value we passed to the <code>false</code> argument was type double, but <code>if_else()</code> was expecting it to be type logical. Why? Well, <code>if_else()</code> was expecting it to be type logical because the value we passed to the <code>true</code> argument (<code>NA</code>) is type logical, and vectors can only ever have one type. To fix this error, we simply need to change the value we are passing to the <code>true</code> argument from logical (<code>NA</code>) to double (<code>NA_real</code>) so that it matches the values we are passing to the <code>false</code> argument.</p>
 <p>Let’s try again using <code>NA_real</code> instead of <code>NA</code>.</p>
-<div class="sourceCode" id="cb781"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb781-1"><a href="conditional-operations.html#cb781-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb781-2"><a href="conditional-operations.html#cb781-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb781-3"><a href="conditional-operations.html#cb781-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recode 7 and 9 to missing</span></span>
-<span id="cb781-4"><a href="conditional-operations.html#cb781-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_recode =</span> <span class="fu">if_else</span>(race <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, race),</span>
-<span id="cb781-5"><a href="conditional-operations.html#cb781-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic_recode =</span> <span class="fu">if_else</span>(hispanic <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> hispanic <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, hispanic)</span>
-<span id="cb781-6"><a href="conditional-operations.html#cb781-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb785"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb785-1"><a href="conditional-operations.html#cb785-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb785-2"><a href="conditional-operations.html#cb785-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb785-3"><a href="conditional-operations.html#cb785-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recode 7 and 9 to missing</span></span>
+<span id="cb785-4"><a href="conditional-operations.html#cb785-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_recode =</span> <span class="fu">if_else</span>(race <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, race),</span>
+<span id="cb785-5"><a href="conditional-operations.html#cb785-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic_recode =</span> <span class="fu">if_else</span>(hispanic <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> hispanic <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, hispanic)</span>
+<span id="cb785-6"><a href="conditional-operations.html#cb785-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 6
 ##       id   age  race hispanic race_recode hispanic_recode
 ##    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
@@ -1190,26 +1191,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  9     9     5     1        0           1               0
 ## 10    10    NA     3        1           3               1</code></pre>
 <p>Great! We can move on with creating our new race and ethnicity column now that we’ve explicitly transformed <code>7</code>’s and <code>9</code>’s to <code>NA</code>. There’s nothing “new” in the code below, so I’m not going to explain it line-by-line. However, it’s a little bit dense, so I recommend that you take a few minutes to review it thoroughly and make sure you understand what each line is doing.</p>
-<div class="sourceCode" id="cb783"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb783-1"><a href="conditional-operations.html#cb783-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb783-2"><a href="conditional-operations.html#cb783-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb783-3"><a href="conditional-operations.html#cb783-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recode 7 and 9 to missing</span></span>
-<span id="cb783-4"><a href="conditional-operations.html#cb783-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_recode     =</span> <span class="fu">if_else</span>(race <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, race),</span>
-<span id="cb783-5"><a href="conditional-operations.html#cb783-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic_recode =</span> <span class="fu">if_else</span>(hispanic <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> hispanic <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, hispanic),</span>
-<span id="cb783-6"><a href="conditional-operations.html#cb783-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat   =</span> <span class="fu">case_when</span>(</span>
-<span id="cb783-7"><a href="conditional-operations.html#cb783-7" aria-hidden="true" tabindex="-1"></a>      <span class="co"># White, non-Hispanic</span></span>
-<span id="cb783-8"><a href="conditional-operations.html#cb783-8" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb783-9"><a href="conditional-operations.html#cb783-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Black, non-Hispanic</span></span>
-<span id="cb783-10"><a href="conditional-operations.html#cb783-10" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
-<span id="cb783-11"><a href="conditional-operations.html#cb783-11" aria-hidden="true" tabindex="-1"></a>      <span class="co"># American Indian or Alaskan Native to Other race, non-Hispanic</span></span>
-<span id="cb783-12"><a href="conditional-operations.html#cb783-12" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">3</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
-<span id="cb783-13"><a href="conditional-operations.html#cb783-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Asian to Other race, non-Hispanic</span></span>
-<span id="cb783-14"><a href="conditional-operations.html#cb783-14" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">4</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
-<span id="cb783-15"><a href="conditional-operations.html#cb783-15" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Pacific Islander to Other race, non-Hispanic</span></span>
-<span id="cb783-16"><a href="conditional-operations.html#cb783-16" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">4</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
-<span id="cb783-17"><a href="conditional-operations.html#cb783-17" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Hispanic, any race</span></span>
-<span id="cb783-18"><a href="conditional-operations.html#cb783-18" aria-hidden="true" tabindex="-1"></a>      hispanic_recode <span class="sc">==</span> <span class="dv">1</span>                    <span class="sc">~</span> <span class="dv">3</span></span>
-<span id="cb783-19"><a href="conditional-operations.html#cb783-19" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb783-20"><a href="conditional-operations.html#cb783-20" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb787"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb787-1"><a href="conditional-operations.html#cb787-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb787-2"><a href="conditional-operations.html#cb787-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb787-3"><a href="conditional-operations.html#cb787-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recode 7 and 9 to missing</span></span>
+<span id="cb787-4"><a href="conditional-operations.html#cb787-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_recode     =</span> <span class="fu">if_else</span>(race <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, race),</span>
+<span id="cb787-5"><a href="conditional-operations.html#cb787-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic_recode =</span> <span class="fu">if_else</span>(hispanic <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> hispanic <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, hispanic),</span>
+<span id="cb787-6"><a href="conditional-operations.html#cb787-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat   =</span> <span class="fu">case_when</span>(</span>
+<span id="cb787-7"><a href="conditional-operations.html#cb787-7" aria-hidden="true" tabindex="-1"></a>      <span class="co"># White, non-Hispanic</span></span>
+<span id="cb787-8"><a href="conditional-operations.html#cb787-8" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb787-9"><a href="conditional-operations.html#cb787-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Black, non-Hispanic</span></span>
+<span id="cb787-10"><a href="conditional-operations.html#cb787-10" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb787-11"><a href="conditional-operations.html#cb787-11" aria-hidden="true" tabindex="-1"></a>      <span class="co"># American Indian or Alaskan Native to Other race, non-Hispanic</span></span>
+<span id="cb787-12"><a href="conditional-operations.html#cb787-12" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">3</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb787-13"><a href="conditional-operations.html#cb787-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Asian to Other race, non-Hispanic</span></span>
+<span id="cb787-14"><a href="conditional-operations.html#cb787-14" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">4</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb787-15"><a href="conditional-operations.html#cb787-15" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Pacific Islander to Other race, non-Hispanic</span></span>
+<span id="cb787-16"><a href="conditional-operations.html#cb787-16" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">4</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb787-17"><a href="conditional-operations.html#cb787-17" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Hispanic, any race</span></span>
+<span id="cb787-18"><a href="conditional-operations.html#cb787-18" aria-hidden="true" tabindex="-1"></a>      hispanic_recode <span class="sc">==</span> <span class="dv">1</span>                    <span class="sc">~</span> <span class="dv">3</span></span>
+<span id="cb787-19"><a href="conditional-operations.html#cb787-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb787-20"><a href="conditional-operations.html#cb787-20" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 7
 ##       id   age  race hispanic race_recode hispanic_recode race_eth_4cat
 ##    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;
@@ -1224,17 +1225,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  9     9     5     1        0           1               0             1
 ## 10    10    NA     3        1           3               1             3</code></pre>
 <p>The code above works, and it is very explicit. However, we can definitely make it more succinct and easier to read. For example:</p>
-<div class="sourceCode" id="cb785"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb785-1"><a href="conditional-operations.html#cb785-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb785-2"><a href="conditional-operations.html#cb785-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb785-3"><a href="conditional-operations.html#cb785-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat =</span> <span class="fu">case_when</span>(</span>
-<span id="cb785-4"><a href="conditional-operations.html#cb785-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(hispanic) <span class="sc">|</span> hispanic <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>) <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># Unknown ethnicity</span></span>
-<span id="cb785-5"><a href="conditional-operations.html#cb785-5" aria-hidden="true" tabindex="-1"></a>      hispanic <span class="sc">==</span> <span class="dv">1</span>                           <span class="sc">~</span> <span class="dv">3</span>,        <span class="co"># Hispanic, any race</span></span>
-<span id="cb785-6"><a href="conditional-operations.html#cb785-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(race) <span class="sc">|</span> race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>)         <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># non-Hispanic, unknown race</span></span>
-<span id="cb785-7"><a href="conditional-operations.html#cb785-7" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">1</span>                               <span class="sc">~</span> <span class="dv">1</span>,        <span class="co"># White, non-Hispanic</span></span>
-<span id="cb785-8"><a href="conditional-operations.html#cb785-8" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">2</span>                               <span class="sc">~</span> <span class="dv">2</span>,        <span class="co"># Black, non-Hispanic</span></span>
-<span id="cb785-9"><a href="conditional-operations.html#cb785-9" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>                                    <span class="sc">~</span> <span class="dv">4</span>         <span class="co"># Other race, non-Hispanic</span></span>
-<span id="cb785-10"><a href="conditional-operations.html#cb785-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb785-11"><a href="conditional-operations.html#cb785-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb789"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb789-1"><a href="conditional-operations.html#cb789-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb789-2"><a href="conditional-operations.html#cb789-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb789-3"><a href="conditional-operations.html#cb789-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb789-4"><a href="conditional-operations.html#cb789-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(hispanic) <span class="sc">|</span> hispanic <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>) <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># Unknown ethnicity</span></span>
+<span id="cb789-5"><a href="conditional-operations.html#cb789-5" aria-hidden="true" tabindex="-1"></a>      hispanic <span class="sc">==</span> <span class="dv">1</span>                           <span class="sc">~</span> <span class="dv">3</span>,        <span class="co"># Hispanic, any race</span></span>
+<span id="cb789-6"><a href="conditional-operations.html#cb789-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(race) <span class="sc">|</span> race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>)         <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># non-Hispanic, unknown race</span></span>
+<span id="cb789-7"><a href="conditional-operations.html#cb789-7" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">1</span>                               <span class="sc">~</span> <span class="dv">1</span>,        <span class="co"># White, non-Hispanic</span></span>
+<span id="cb789-8"><a href="conditional-operations.html#cb789-8" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">2</span>                               <span class="sc">~</span> <span class="dv">2</span>,        <span class="co"># Black, non-Hispanic</span></span>
+<span id="cb789-9"><a href="conditional-operations.html#cb789-9" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>                                    <span class="sc">~</span> <span class="dv">4</span>         <span class="co"># Other race, non-Hispanic</span></span>
+<span id="cb789-10"><a href="conditional-operations.html#cb789-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb789-11"><a href="conditional-operations.html#cb789-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 5
 ##       id   age  race hispanic race_eth_4cat
 ##    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;         &lt;dbl&gt;
@@ -1274,36 +1275,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ⚠️<strong>Warning:</strong> Sometimes, adding an a final <code>TRUE</code> condition like the one above can be really useful. However, you have to be really careful. You can easily get unintended results if you aren’t absolutely sure that you’ve already accounted for every possible combination of relevant conditions in the two-sided formulas that come before.
 </p>
 <p>Let’s go ahead and wrap up this chapter with one consolidated code chunk that cleans our demographics data:</p>
-<div class="sourceCode" id="cb787"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb787-1"><a href="conditional-operations.html#cb787-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb787-2"><a href="conditional-operations.html#cb787-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Recode variables</span></span>
-<span id="cb787-3"><a href="conditional-operations.html#cb787-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb787-4"><a href="conditional-operations.html#cb787-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Collapse continuous age into 3 categories</span></span>
-<span id="cb787-5"><a href="conditional-operations.html#cb787-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
-<span id="cb787-6"><a href="conditional-operations.html#cb787-6" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>  <span class="sc">~</span> <span class="dv">1</span>, <span class="co"># child</span></span>
-<span id="cb787-7"><a href="conditional-operations.html#cb787-7" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">18</span>  <span class="sc">~</span> <span class="dv">2</span>, <span class="co"># adolescent</span></span>
-<span id="cb787-8"><a href="conditional-operations.html#cb787-8" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">3</span>  <span class="co"># adult</span></span>
-<span id="cb787-9"><a href="conditional-operations.html#cb787-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb787-10"><a href="conditional-operations.html#cb787-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat_f =</span> <span class="fu">factor</span>(</span>
-<span id="cb787-11"><a href="conditional-operations.html#cb787-11" aria-hidden="true" tabindex="-1"></a>      age_3cat, </span>
-<span id="cb787-12"><a href="conditional-operations.html#cb787-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;child&quot;</span>, <span class="st">&quot;adolescent&quot;</span>, <span class="st">&quot;adult&quot;</span>)</span>
-<span id="cb787-13"><a href="conditional-operations.html#cb787-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb787-14"><a href="conditional-operations.html#cb787-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine race and ethnicity</span></span>
-<span id="cb787-15"><a href="conditional-operations.html#cb787-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat =</span> <span class="fu">case_when</span>(</span>
-<span id="cb787-16"><a href="conditional-operations.html#cb787-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(hispanic) <span class="sc">|</span> hispanic <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>) <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># Unknown ethnicity</span></span>
-<span id="cb787-17"><a href="conditional-operations.html#cb787-17" aria-hidden="true" tabindex="-1"></a>      hispanic <span class="sc">==</span> <span class="dv">1</span>                           <span class="sc">~</span> <span class="dv">3</span>,        <span class="co"># Hispanic, any race</span></span>
-<span id="cb787-18"><a href="conditional-operations.html#cb787-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(race) <span class="sc">|</span> race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>)         <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># non-Hispanic, unknown race</span></span>
-<span id="cb787-19"><a href="conditional-operations.html#cb787-19" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">1</span>                               <span class="sc">~</span> <span class="dv">1</span>,        <span class="co"># White, non-Hispanic</span></span>
-<span id="cb787-20"><a href="conditional-operations.html#cb787-20" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">2</span>                               <span class="sc">~</span> <span class="dv">2</span>,        <span class="co"># Black, non-Hispanic</span></span>
-<span id="cb787-21"><a href="conditional-operations.html#cb787-21" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>                                    <span class="sc">~</span> <span class="dv">4</span>         <span class="co"># Other race, non-Hispanic</span></span>
-<span id="cb787-22"><a href="conditional-operations.html#cb787-22" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb787-23"><a href="conditional-operations.html#cb787-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat_f =</span> <span class="fu">factor</span>(</span>
-<span id="cb787-24"><a href="conditional-operations.html#cb787-24" aria-hidden="true" tabindex="-1"></a>      race_eth_4cat,</span>
-<span id="cb787-25"><a href="conditional-operations.html#cb787-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(</span>
-<span id="cb787-26"><a href="conditional-operations.html#cb787-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;White, non-Hispanic&quot;</span>, <span class="st">&quot;Black, non-Hispanic&quot;</span>, <span class="st">&quot;Hispanic, any race&quot;</span>,</span>
-<span id="cb787-27"><a href="conditional-operations.html#cb787-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Other race, non-Hispanic&quot;</span></span>
-<span id="cb787-28"><a href="conditional-operations.html#cb787-28" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb787-29"><a href="conditional-operations.html#cb787-29" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb787-30"><a href="conditional-operations.html#cb787-30" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb791"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb791-1"><a href="conditional-operations.html#cb791-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb791-2"><a href="conditional-operations.html#cb791-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Recode variables</span></span>
+<span id="cb791-3"><a href="conditional-operations.html#cb791-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb791-4"><a href="conditional-operations.html#cb791-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Collapse continuous age into 3 categories</span></span>
+<span id="cb791-5"><a href="conditional-operations.html#cb791-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb791-6"><a href="conditional-operations.html#cb791-6" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>  <span class="sc">~</span> <span class="dv">1</span>, <span class="co"># child</span></span>
+<span id="cb791-7"><a href="conditional-operations.html#cb791-7" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">18</span>  <span class="sc">~</span> <span class="dv">2</span>, <span class="co"># adolescent</span></span>
+<span id="cb791-8"><a href="conditional-operations.html#cb791-8" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">3</span>  <span class="co"># adult</span></span>
+<span id="cb791-9"><a href="conditional-operations.html#cb791-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb791-10"><a href="conditional-operations.html#cb791-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat_f =</span> <span class="fu">factor</span>(</span>
+<span id="cb791-11"><a href="conditional-operations.html#cb791-11" aria-hidden="true" tabindex="-1"></a>      age_3cat, </span>
+<span id="cb791-12"><a href="conditional-operations.html#cb791-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;child&quot;</span>, <span class="st">&quot;adolescent&quot;</span>, <span class="st">&quot;adult&quot;</span>)</span>
+<span id="cb791-13"><a href="conditional-operations.html#cb791-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb791-14"><a href="conditional-operations.html#cb791-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine race and ethnicity</span></span>
+<span id="cb791-15"><a href="conditional-operations.html#cb791-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb791-16"><a href="conditional-operations.html#cb791-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(hispanic) <span class="sc">|</span> hispanic <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>) <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># Unknown ethnicity</span></span>
+<span id="cb791-17"><a href="conditional-operations.html#cb791-17" aria-hidden="true" tabindex="-1"></a>      hispanic <span class="sc">==</span> <span class="dv">1</span>                           <span class="sc">~</span> <span class="dv">3</span>,        <span class="co"># Hispanic, any race</span></span>
+<span id="cb791-18"><a href="conditional-operations.html#cb791-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(race) <span class="sc">|</span> race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>)         <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># non-Hispanic, unknown race</span></span>
+<span id="cb791-19"><a href="conditional-operations.html#cb791-19" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">1</span>                               <span class="sc">~</span> <span class="dv">1</span>,        <span class="co"># White, non-Hispanic</span></span>
+<span id="cb791-20"><a href="conditional-operations.html#cb791-20" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">2</span>                               <span class="sc">~</span> <span class="dv">2</span>,        <span class="co"># Black, non-Hispanic</span></span>
+<span id="cb791-21"><a href="conditional-operations.html#cb791-21" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>                                    <span class="sc">~</span> <span class="dv">4</span>         <span class="co"># Other race, non-Hispanic</span></span>
+<span id="cb791-22"><a href="conditional-operations.html#cb791-22" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb791-23"><a href="conditional-operations.html#cb791-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat_f =</span> <span class="fu">factor</span>(</span>
+<span id="cb791-24"><a href="conditional-operations.html#cb791-24" aria-hidden="true" tabindex="-1"></a>      race_eth_4cat,</span>
+<span id="cb791-25"><a href="conditional-operations.html#cb791-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb791-26"><a href="conditional-operations.html#cb791-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;White, non-Hispanic&quot;</span>, <span class="st">&quot;Black, non-Hispanic&quot;</span>, <span class="st">&quot;Hispanic, any race&quot;</span>,</span>
+<span id="cb791-27"><a href="conditional-operations.html#cb791-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Other race, non-Hispanic&quot;</span></span>
+<span id="cb791-28"><a href="conditional-operations.html#cb791-28" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb791-29"><a href="conditional-operations.html#cb791-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb791-30"><a href="conditional-operations.html#cb791-30" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 8
 ##       id   age  race hispanic age_3cat age_3cat_f race_eth_4cat race_eth_4cat_f 
 ##    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;fct&gt;              &lt;dbl&gt; &lt;fct&gt;           
