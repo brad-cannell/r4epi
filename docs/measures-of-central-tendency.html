@@ -330,6 +330,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="19.5" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#data-checking"><i class="fa fa-check"></i><b>19.5</b> Data checking</a></li>
 <li class="chapter" data-level="19.6" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#properties-of-mean-median-and-mode"><i class="fa fa-check"></i><b>19.6</b> Properties of mean, median, and mode</a></li>
 <li class="chapter" data-level="19.7" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#na-rm"><i class="fa fa-check"></i><b>19.7</b> Missing data</a></li>
+<li class="chapter" data-level="19.8" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#using-meantables"><i class="fa fa-check"></i><b>19.8</b> Using meantables</a></li>
 </ul></li>
 <li class="chapter" data-level="20" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html"><i class="fa fa-check"></i><b>20</b> Measures of dispersion</a>
 <ul>
@@ -894,6 +895,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
 ## 1         64        68.2            68 65                  75</code></pre>
 <p>As you can see, both methods give us the same result. The method you choose to use will typically just come down to personal preference.</p>
+</div>
+<div id="using-meantables" class="section level2" number="19.8">
+<h2><span class="header-section-number">19.8</span> Using meantables</h2>
+<p>In the sections above, we learned how to use <code>dplyr</code> functions to calculate various measures of central tendency for continuous variables. However, there can be a fair amount of code writing involved when using those methods. The more we have to repeatedly type code, the more tedious and error-prone it becomes. This is an idea we will return to many times in this book. Luckily, the R programming language allows us to write our own functions, which solves both of those problems.</p>
+<p>Later in this book, I will show you <a href="writing-functions.html#writing-functions">how to write your own functions</a>. For the time being, I’m going to suggest that you install and use a package I created called <a href="https://github.com/brad-cannell/meantables">meantables</a>. The <code>meantables</code> package is basically an enhanced version of the code we wrote in the sections above. I designed it to help us quickly make tables of descriptive statistics for continuous variables, and it’s specifically designed to work in a <code>dplyr</code> pipeline.</p>
+<p>Like all packages, you need to first install it…</p>
+<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb306-1"><a href="measures-of-central-tendency.html#cb306-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You may be asked if you want to update other packages on your computer that</span></span>
+<span id="cb306-2"><a href="measures-of-central-tendency.html#cb306-2" aria-hidden="true" tabindex="-1"></a><span class="co"># meantables uses. Go ahead and do so.</span></span>
+<span id="cb306-3"><a href="measures-of-central-tendency.html#cb306-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;meantables&quot;</span>)</span></code></pre></div>
+<p>And then load it…</p>
+<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="measures-of-central-tendency.html#cb307-1" aria-hidden="true" tabindex="-1"></a><span class="co"># After installing meantables on your computer, you can load it just like you</span></span>
+<span id="cb307-2"><a href="measures-of-central-tendency.html#cb307-2" aria-hidden="true" tabindex="-1"></a><span class="co"># would any other package.</span></span>
+<span id="cb307-3"><a href="measures-of-central-tendency.html#cb307-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(meantables)</span></code></pre></div>
+<p>Now, let’s use the <code>mean_table()</code> function from <code>meantables</code> package to rerun our analysis from above.</p>
+<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="measures-of-central-tendency.html#cb308-1" aria-hidden="true" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span></span>
+<span id="cb308-2"><a href="measures-of-central-tendency.html#cb308-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ht_in)) <span class="sc">%&gt;%</span></span>
+<span id="cb308-3"><a href="measures-of-central-tendency.html#cb308-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean_table</span>(ht_in)</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 8
+##   response_var     n  mean   sem   lcl   ucl   min   max
+##   &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 ht_in           18  68.2 0.774  66.6  69.8    64    75</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>filter()</code> to keep only the rows that have a <em>non-missing</em> value for <code>ht_in</code> and passed the data frame on to the <code>mean_table()</code> function using a pipe.</p></li>
+<li><p>We told the <code>mean_table()</code> function to create a table of summary statistics for the variable <code>ht_in</code>. This is just an R data frame of useful statistics about a single continuous variable.</p></li>
+<li><p>The summary statistics in the table above include:</p>
+<ul>
+<li><p><code>response_var</code>: The name of the variable (column) we are analyzing.</p></li>
+<li><p><code>n</code>: The number of non-missing values of <code>response_var</code> being analyzed in the current analysis.</p></li>
+<li><p><code>mean</code>: The mean of all <code>n</code> values of <code>response_var</code>.</p></li>
+<li><p><code>sem</code>: The standard error of the mean of all <code>n</code> values of <code>response_var</code>.</p></li>
+<li><p><code>lcl</code>: The lower (95%, by default) confidence limit for the percentage <code>mean</code>.</p></li>
+<li><p><code>ucl</code>: The upper (95%, by default) confidence limit for the percentage <code>mean</code>.</p></li>
+<li><p><code>min</code>: The minimum value of <code>response_var</code>.</p></li>
+<li><p><code>max</code>: The maximum value of <code>response_var</code>.</p></li>
+</ul></li>
+</ul>
+<p>We will continue using the <code>meantables</code> package at various points throughout the book. I will also show you some other cool things we can do with <code>meantables</code>. For now, all you need to know how to do is use the <code>mean_table()</code> function to calculate basic descriptive statistics for single continuous variables.</p>
 
 </div>
 </div>

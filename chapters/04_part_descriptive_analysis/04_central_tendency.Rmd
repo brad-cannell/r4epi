@@ -314,6 +314,62 @@ height_and_weight_20 %>%
 
 As you can see, both methods give us the same result. The method you choose to use will typically just come down to personal preference. 
 
+## Using meantables
+
+In the sections above, we learned how to use `dplyr` functions to calculate various measures of central tendency for continuous variables. However, there can be a fair amount of code writing involved when using those methods. The more we have to repeatedly type code, the more tedious and error-prone it becomes. This is an idea we will return to many times in this book. Luckily, the R programming language allows us to write our own functions, which solves both of those problems.
+
+Later in this book, I will show you [how to write your own functions][writing functions]. For the time being, I'm going to suggest that you install and use a package I created called [meantables](https://github.com/brad-cannell/meantables). The `meantables` package is basically an enhanced version of the code we wrote in the sections above. I designed it to help us quickly make tables of descriptive statistics for continuous variables, and it's specifically designed to work in a `dplyr` pipeline.
+
+Like all packages, you need to first install it...
+
+```{r eval=FALSE}
+# You may be asked if you want to update other packages on your computer that
+# meantables uses. Go ahead and do so.
+install.packages("meantables")
+```
+
+And then load it...
+
+```{r}
+# After installing meantables on your computer, you can load it just like you
+# would any other package.
+library(meantables)
+```
+
+Now, let's use the `mean_table()` function from `meantables` package to rerun our analysis from above.
+
+```{r}
+height_and_weight_20 %>%
+  filter(!is.na(ht_in)) %>%
+  mean_table(ht_in)
+```
+
+👆**Here's what we did above:**
+
+* We used `filter()` to keep only the rows that have a _non-missing_ value for `ht_in` and passed the data frame on to the `mean_table()` function using a pipe.
+
+* We told the `mean_table()` function to create a table of summary statistics for the variable `ht_in`. This is just an R data frame of useful statistics about a single continuous variable.
+
+* The summary statistics in the table above include:
+    
+    - `response_var`: The name of the variable (column) we are analyzing.
+
+    - `n`: The number of non-missing values of `response_var` being analyzed in the current analysis.
+
+  - `mean`: The mean of all `n` values of `response_var`.
+  
+  - `sem`: The standard error of the mean of all `n` values of `response_var`.
+  
+  - `lcl`: The lower (95%, by default) confidence limit for the percentage `mean`.
+  
+  - `ucl`: The upper (95%, by default) confidence limit for the percentage `mean`.
+  
+  - `min`: The minimum value of `response_var`.
+  
+  - `max`: The maximum value of `response_var`.
+  
+We will continue using the `meantables` package at various points throughout the book. I will also show you some other cool things we can do with `meantables`. For now, all you need to know how to do is use the `mean_table()` function to calculate basic descriptive statistics for single continuous variables.
+
 ```{r echo=FALSE}
 rm(list = ls())
 ```
