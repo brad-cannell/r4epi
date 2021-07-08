@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>26 Subsetting data frames | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
   <meta property="og:title" content="26 Subsetting data frames | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-06-09" />
+<meta name="date" content="2021-07-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,8 @@
   
 <link rel="prev" href="creating-and-modifying-columns.html"/>
 <link rel="next" href="working-with-dates.html"/>
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,18 +51,15 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.18/datatables.js"></script>
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
@@ -128,29 +125,6 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
-
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -680,9 +654,9 @@ Maybe logical indexes
 -->
 <p>Subsetting data frames is another one of the most common data management tasks I carryout in my data analysis projects. Subsetting data frames just refers to the process of deciding which columns and rows to keep in your data frame and which to drop.</p>
 <p>For example, I may need to subset the rows of a data frame because I’m interested in understanding a subpopulation in my sample. Below, we only want to analyze the rows that correspond to participants from Texas.</p>
-<p><img src="img/05_part_data_management/03_subsetting_data_frame/rows.png" /><!-- --></p>
+<p><img src="img/05_part_data_management/03_subsetting_data_frame/rows.png" width="900" /></p>
 <p>Or, perhaps I’m only interested in a subset of the statistics returned to me in a data frame of analysis results. Below, I only want to view and present the variable name, variable category, count, and percent.</p>
-<p><img src="img/05_part_data_management/03_subsetting_data_frame/columns.png" /><!-- --></p>
+<p><img src="img/05_part_data_management/03_subsetting_data_frame/columns.png" width="900" /></p>
 <p>Fortunately, the <code>dplyr</code> package includes functions that make it really easy for us to subset our data frames – even in some fairly complicated ways. Let’s start by simulating the same drug trial data we simulated in the last chapter and use it to work through some examples.</p>
 <div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb494-1"><a href="subsetting-data-frames.html#cb494-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dplyr</span></span>
 <span id="cb494-2"><a href="subsetting-data-frames.html#cb494-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
@@ -797,7 +771,7 @@ Maybe logical indexes
 <li><p>The second argument to the <code>select()</code> function is <code>...</code>. The value passed to the <code>...</code> argument should column names or expressions that return column positions. We’ll dive deeper into this soon.</p></li>
 </ul>
 <p>More generally, the <code>select()</code> function tells R which variables in your data frame to keep (or drop) and in what order.</p>
-<p>The code above gave us the result we wanted. 👏 But, it can be tedious and error prone (Did you notice that I forgot the <code>drug</code> column “by accident?”) to manually type every variable name inside the <code>select()</code> function.</p>
+<p>The code above gave us the result we wanted. 👏 But, it can be tedious and error prone to manually type every variable name inside the <code>select()</code> function. Did you notice that I forgot the <code>drug</code> column “by accident?”</p>
 <p>Thankfully, the <code>select()</code> function is one of several <code>dplyr</code> functions that accept <a href="https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html">tidy-select</a> argument modifiers (i.e., functions and operators). In this chapter, I will show you some of the tidy-select argument modifiers I regularly use, but you can always type <code>?dplyr_tidy_select</code> into your console to see a complete list.</p>
 <p>In our little example above, we could have used the tidy-select <code>everything()</code> function to make our code easier to write and we wouldn’t have accidently missed the <code>drug</code> column. We can do so like this:</p>
 <div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb502-1"><a href="subsetting-data-frames.html#cb502-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
@@ -904,7 +878,7 @@ Maybe logical indexes
 ##  9     3     2           0           0            0
 ## 10     4     0           0           0            0
 ## # … with 50 more rows</code></pre>
-<p>While either method gets us the same result, I tend to prefer using <code>starts_with()</code> when possible. I think it makes your code easier to read (i.e., “Oh, he’s selecting all the side effect columns here.”), and you are less like to get a result you didn’t want.</p>
+<p>While either method gets us the same result, I tend to prefer using <code>starts_with()</code> when possible. I think it makes your code easier to read (i.e., “Oh, he’s selecting all the side effect columns here.”).</p>
 <p>In addition to <code>starts_with()</code>, there is also an <code>ends_with()</code> tidy-select function that can also be useful. For example, we’ve named factors with the <code>_f</code> naming convention throughout the book. We could use that, along with the <code>ends-with()</code> function to create a subset of our data that includes only the factor versions of our side effects columns.</p>
 <div class="sourceCode" id="cb512"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb512-1"><a href="subsetting-data-frames.html#cb512-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the side effect factor columns to our data frame again...</span></span>
 <span id="cb512-2"><a href="subsetting-data-frames.html#cb512-2" aria-hidden="true" tabindex="-1"></a>yn_levs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
@@ -1557,7 +1531,6 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

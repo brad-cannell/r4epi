@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>35 Writing for loops | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
   <meta property="og:title" content="35 Writing for loops | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-06-09" />
+<meta name="date" content="2021-07-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,8 @@
   
 <link rel="prev" href="column-wise-operations-in-dplyr.html"/>
 <link rel="next" href="using-the-purrr-package.html"/>
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,18 +51,15 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.18/datatables.js"></script>
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
@@ -128,29 +125,6 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
-
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -663,7 +637,7 @@ div.csl-indent {
 
 -->
 <p>In this third chapter on repeated operations, we are going to discuss writing <strong>for loops</strong>.</p>
-<p><img src="img/07_part_repeated_operations/01_intro/stickers.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/01_intro/stickers.png" width="900" /></p>
 <p>In other documents you read, you may see for loops referred to as iterative processing, iterative operations, iteration, or just loops. Regardless of what you call them, for loops are not unique to R. Basically every statistical software application I’m aware of allows users to write for loops; although, the exact words and symbols used to construct them may differ slightly from one program to another.</p>
 <p>Let’s take a look at an example. After seeing a working example, we will take the code apart iteratively (do you see what I did there? 😆) to figure out how it works.</p>
 <p>We’ll start by simulating some data. This is the same data we simulated at the beginning of the chapter on column-wise operations in <code>dplyr</code>. It’s a data frame that contains three columns of 10 random numbers:</p>
@@ -726,11 +700,11 @@ div.csl-indent {
 <div id="how-to-write-for-loops" class="section level2" number="35.1">
 <h2><span class="header-section-number">35.1</span> How to write for loops</h2>
 <p>For starters, <em>using</em> for loops in practice will generally require us to write code for two separate structures: An object to contain the results of our for loop and the for loop itself.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/two_structures.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/two_structures.png" width="900" /></p>
 <p>In practice, we will generally write the code for structure 1 before writing the code for structure 2. However, I think it will be easier to understand why we need structure 1 if we first learn about the components of the for loop, and how they work together. Further, I think it will be easiest to understand the components of the for loop if we start on the inside and work our way out. Therefore, the first component of for loops that we are going to discuss is the body.</p>
 <div id="the-for-loop-body" class="section level3" number="35.1.1">
 <h3><span class="header-section-number">35.1.1</span> The for loop body</h3>
-<p><img src="img/07_part_repeated_operations/04_for_loops/body.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/body.png" width="900" /></p>
 <p>Similar to when we learned to write our own functions, the body of the for loop is where all the “stuff” happens. This is where we write the code that we want to be executed over and over. In our example, we want the mean value of the <code>x</code> column, the mean value of the <code>y</code> column, and the mean value of the <code>z</code> column of our data frame called <code>df_xyz</code>. We can do that manually like this using dollar sign notation:</p>
 <div class="sourceCode" id="cb1274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1274-1"><a href="writing-for-loops.html#cb1274-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df_xyz<span class="sc">$</span>x)</span></code></pre></div>
 <pre><code>## [1] 0.07462564</code></pre>
@@ -758,9 +732,9 @@ div.csl-indent {
 <div id="the-for-function" class="section level3" number="35.1.2">
 <h3><span class="header-section-number">35.1.2</span> The for() function</h3>
 <p>All for loops start with the <code>for()</code> function. This is how you tell R that you are about to write a for loop.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/for.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/for.png" width="900" /></p>
 <p>In the examples in this book, the arguments to the <code>for()</code> function are generally going to follow this pattern:</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/for2.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/for2.png" width="900" /></p>
 <p>1️⃣An index variable, which is also sometimes called a “counter,” to the left of the keyword <code>in</code>.</p>
 <p>2️⃣The keyword <code>in</code>.</p>
 <p>3️⃣The name of the object we want to loop, or iterate, over passed to the <code>seq_along()</code> function.</p>
@@ -862,7 +836,7 @@ div.csl-indent {
 <div class="sourceCode" id="cb1315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1315-1"><a href="writing-for-loops.html#cb1315-1" aria-hidden="true" tabindex="-1"></a>xyz_means</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 <p>Unfortunately, this doesn’t work. Instead, we need to create an object that can store the results of our for loop. Then, we <em>update</em> (i.e., add to) that object at each iteration of the for loop. That brings us back to structure number 1.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/two_structures.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/two_structures.png" width="900" /></p>
 <p>Because the result of our for loop will be three numbers – the mean of <code>x</code>, the mean of <code>y</code>, and the mean of <code>z</code> – the most straightforward object to store them in is a numeric vector with a length of three (i.e., three “slots”). We can use the <code>vector()</code> function to create an empty vector:</p>
 <div class="sourceCode" id="cb1317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1317-1"><a href="writing-for-loops.html#cb1317-1" aria-hidden="true" tabindex="-1"></a>my_vec <span class="ot">&lt;-</span> <span class="fu">vector</span>()</span>
 <span id="cb1317-2"><a href="writing-for-loops.html#cb1317-2" aria-hidden="true" tabindex="-1"></a>my_vec</span></code></pre></div>
@@ -879,15 +853,15 @@ div.csl-indent {
 <pre><code>## [1] -0.4245589</code></pre>
 <p>Hmmm, we’re getting closer, but that obviously still isn’t the result we want. Below, I try to illustrate what’s going on inside our loop.</p>
 <p>R starts executing at the top of the for loop. In the first iteration, the value of i is set to a numeric vector with the same values as the <code>x</code> column in <code>df_xyz</code>. Then, the <code>i</code> in <code>mean(i)</code> inside the for loop body is replaced with those numeric values. Then, the mean of those numeric values is calculated and assigned to the object named <code>xyz_means</code>.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_1.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_1.png" width="900" /></p>
 <p>At this point, there is no more code left to execute inside of the for loop, so R returns to the top of the loop.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_2.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_2.png" width="900" /></p>
 <p><code>i</code> has not yet taken every value of the object to the right of the keyword <code>in</code>, so R starts another iteration of the for loop. In the second iteration, the value of <code>i</code> is set to a numeric vector with the same values as the <code>y</code> column in <code>df_xyz</code>. Then, the <code>i</code> in <code>mean(i)</code> inside the for loop body is replaced with those numeric values. Then, the mean of those numeric values is calculated and assigned to the object named <code>xyz_means</code>.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_3.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_3.png" width="900" /></p>
 <p>At this point, there is no more code left to execute inside of the for loop, so R returns to the top of the loop.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_4.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_4.png" width="900" /></p>
 <p><code>i</code> still has not yet taken every value of the object to the right of the keyword <code>in</code>, so R starts another iteration of the for loop. In the third iteration, the value of <code>i</code> is set to a numeric vector with the same values as the <code>z</code> column in <code>df_xyz</code>. Then, the <code>i</code> in <code>mean(i)</code> inside the for loop body is replaced with those numeric values. Then, the mean of those numeric values is calculated and assigned to the object named <code>xyz_means</code>.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_5.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_5.png" width="900" /></p>
 <p>At this point, there is no more code left to execute inside of the for loop, so R returns to the top of the loop. However, this time, <code>i</code> has taken every value of the object to the right of the keyword <code>in</code>, so R does not start another iteration. It leaves the looping process, and the value of <code>xyz_means</code> remains <code>-0.4245589</code> – The result we got above.</p>
 <p>You might be thinking, “wait, we made three slots in the <code>xyz_means</code> vector. Why does it only contain one number?” Well, remember that all we have to do to overwrite one object with another object is to assign the second object to the same name. For example, let’s create a vector with three values called <code>my_vec</code>:</p>
 <div class="sourceCode" id="cb1324"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1324-1"><a href="writing-for-loops.html#cb1324-1" aria-hidden="true" tabindex="-1"></a>my_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
@@ -967,15 +941,15 @@ div.csl-indent {
 <span id="cb1357-7"><a href="writing-for-loops.html#cb1357-7" aria-hidden="true" tabindex="-1"></a>xyz_means</span></code></pre></div>
 <pre><code>## [1]  0.07462564  0.20862196 -0.42455887</code></pre>
 <p>Just to make sure that we really understand what’s going on in the code above, let’s walk through the entire process one more time.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_2_1.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_2_1.png" width="900" /></p>
 <p>R starts executing at the top of the for loop. In the first iteration, the value of i is set to the first value in <code>seq_along(df_xyz)</code>, which is <code>1</code>. Then, the <code>i</code> in <code>df_xyz[[i]]</code> inside the for loop body is replaced with <code>1</code>. Then, R calculates the mean of <code>df_xyz[[1]]</code>, which is <code>x</code> column of the <code>df_xyz</code> data frame. Finally, the mean value is assigned to <code>xyz_means[[i]]</code>, which is <code>xyz_means[[1]]</code> in this iteration. So, the value of the first element in the <code>xyz_means</code> vector is <code>0.07462564</code>.</p>
 <p>At this point, there is no more code left to execute inside of the for loop, so R returns to the top of the loop. <code>i</code> has not yet taken every value of the object to the right of the keyword <code>in</code>, so R starts another iteration of the for loop.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_2_2.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_2_2.png" width="900" /></p>
 <p>In the second iteration, the value of i is set to the second value in <code>seq_along(df_xyz)</code>, which is <code>2</code>. Then, the <code>i</code> in <code>df_xyz[[i]]</code> inside the for loop body is replaced with <code>2</code>. Then, R calculates the mean of <code>df_xyz[[2]]</code>, which is <code>y</code> column of the <code>df_xyz</code> data frame. Finally, the mean value is assigned to <code>xyz_means[[i]]</code>, which is <code>xyz_means[[2]]</code> in this iteration. So, the value of the second element in the <code>xyz_means</code> vector is <code>0.20862196</code>.</p>
 <p>At this point, there is no more code left to execute inside of the for loop, so R returns to the top of the loop. <code>i</code> still has not yet taken every value of the object to the right of the keyword <code>in</code>, so R starts another iteration of the for loop.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_2_3.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_2_3.png" width="900" /></p>
 <p>In the third iteration, the value of i is set to the third value in <code>seq_along(df_xyz)</code>, which is <code>3</code>. Then, the <code>i</code> in <code>df_xyz[[i]]</code> inside the for loop body is replaced with <code>3</code>. Then, R calculates the mean of <code>df_xyz[[3]]</code>, which is <code>z</code> column of the <code>df_xyz</code> data frame. Finally, the mean value is assigned to <code>xyz_means[[i]]</code>, which is <code>xyz_means[[3]]</code> in this iteration. So, the value of the third element in the <code>xyz_means</code> vector is <code>-0.42455887</code>.</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_5.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/iteration_1_5.png" width="900" /></p>
 <p>At this point, there is no more code left to execute inside of the for loop, so R returns to the top of the loop. However, this time, <code>i</code> has taken every value of the object to the right of the keyword <code>in</code>, so R does not start another iteration. It leaves the looping process, and the value of <code>xyz_means</code> remains <code>0.07462564, 0.20862196, -0.4245589</code>.</p>
 <p>There’s one final adjustment we should probably make to the code above. Did you notice that when we create the empty vector to contain our results, we’re still hard coding its length to <code>3</code>? For the same reason we replaced <code>for(i in c(1, 2, 3))</code> with <code>for(i in seq_along(df_xyz))</code>, we want to replace <code>vector("numeric", 3)</code> with <code>vector("numeric", length(df_xyz))</code>.</p>
 <p>Now, let’s add a fourth column to our data frame:</p>
@@ -1569,12 +1543,12 @@ div.csl-indent {
 ##   &lt;dbl&gt; &lt;dbl&gt;
 ## 1  26.9  66.0</code></pre>
 <p>It’s easy for <code>dplyr</code> to arrange those results into a data frame. However, the results from <code>count()</code> are much less predictable. For example, <code>study %&gt;% count(age_group)</code> had three results, <code>study %&gt;% count(gender)</code> had three results, and <code>study %&gt;% count(bmi_3cat)</code> had four results. Also, remember that every column of a data frame has to have the same number of rows. So, if the code we used to try to pass <code>count</code> to the <code>.fns</code> argument above would actually run, it might look something like this:</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/summarise.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/summarise.png" width="900" /></p>
 <p>Because <code>summarise()</code> lays the results out side-by-side, it’s not clear what would go into the 4 cells in the bottom-left corner of the results data frame. Therefore, it isn’t necessarily straightforward for <code>dplyr</code> to figure out how it should return such results to us.</p>
 <p>However, when we use a for loop, <em>we can create our own structure</em> to hold the results. And, that structure can be pretty much any structure that meets our needs. In this case, one option would be to create a data frame to hold our categorical counts that looks like this:</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/our_structure_1.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/our_structure_1.png" width="900" /></p>
 <p>Then, we can use a for loop to fill in the empty data frame so that we end up with results that look like this:</p>
-<p><img src="img/07_part_repeated_operations/04_for_loops/our_structure_2.png" /><!-- --></p>
+<p><img src="img/07_part_repeated_operations/04_for_loops/our_structure_2.png" width="900" /></p>
 <p>The process for getting to our finished product is a little bit involved (and probably a little intimidating for some of you) and will require us to cover a couple new topics. So, I’m going to start by giving you the complete code for accomplishing this task. Then, we’ll pick the code apart, piece-by-piece, to make sure we understand <em>how</em> it works.</p>
 <p>Here is the complete solution:</p>
 <div class="sourceCode" id="cb1436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1436-1"><a href="writing-for-loops.html#cb1436-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Structure 1. An object to contain the results.</span></span>
@@ -1618,7 +1592,7 @@ div.csl-indent {
 <span id="cb1439-4"><a href="writing-for-loops.html#cb1439-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">n        =</span> <span class="fu">vector</span>(<span class="st">&quot;numeric&quot;</span>)</span>
 <span id="cb1439-5"><a href="writing-for-loops.html#cb1439-5" aria-hidden="true" tabindex="-1"></a>) </span></code></pre></div>
 <div class="sourceCode" id="cb1440"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1440-1"><a href="writing-for-loops.html#cb1440-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(cat_table)</span></code></pre></div>
-<pre><code>## tibble [0 × 3] (S3: tbl_df/tbl/data.frame)
+<pre><code>## tibble[,3] [0 × 3] (S3: tbl_df/tbl/data.frame)
 ##  $ variable: chr(0) 
 ##  $ category: chr(0) 
 ##  $ n       : num(0)</code></pre>
@@ -1915,7 +1889,7 @@ div.csl-indent {
 ## 1 Younger than 30    56
 ## 2 30 and Older       11
 ## 3 &lt;NA&gt;                1</code></pre>
-<p>The <code>.data</code> pronoun “is not a data frame; it’s a special construct, a pronoun, that allows you to access the current variables either directly, with .data$x or indirectly with .data[[var]].”<span class="citation"><sup><a href="#ref-Wickham2020-dx" role="doc-biblioref">6</a></sup></span></p>
+<p>The <code>.data</code> pronoun “is not a data frame; it’s a special construct, a pronoun, that allows you to access the current variables either directly, with .data$x or indirectly with .data[[var]].”<span class="citation"><sup><a href="references.html#ref-Wickham2020-dx" role="doc-biblioref">6</a></sup></span></p>
 <p>When we put it all together, our code looks like this:</p>
 <div class="sourceCode" id="cb1498"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1498-1"><a href="writing-for-loops.html#cb1498-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the data frame structure that will contain our results</span></span>
 <span id="cb1498-2"><a href="writing-for-loops.html#cb1498-2" aria-hidden="true" tabindex="-1"></a>cat_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
@@ -2010,12 +1984,6 @@ div.csl-indent {
 
 </div>
 </div>
-<h3>References</h3>
-<div id="refs" class="references csl-bib-body">
-<div id="ref-Wickham2020-dx" class="csl-entry">
-<div class="csl-left-margin">6. </div><div class="csl-right-inline">Wickham H, François R, Henry L, Müller K, RStudio. <em>Programming with Dplyr</em>.; 2020.</div>
-</div>
-</div>
             </section>
 
           </div>
@@ -2045,7 +2013,6 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
