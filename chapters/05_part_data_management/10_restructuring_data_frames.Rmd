@@ -18,7 +18,7 @@ knitr::include_graphics("img/05_part_data_management/10_restructuring/wide1.png"
 knitr::include_graphics("img/05_part_data_management/10_restructuring/long1.png")
 ```
 
-<p class="note"> 🗒**Side Note:** Often, people are our observational unit in epidemiology. However, our observational units could also be a schools, states, or air quality monitors. It’s the entity from which we are gathering data.</p>
+<p class="note"> 🗒**Side Note:** Often, people are our observational unit in epidemiology. However, our observational units could also be schools, states, or air quality monitors. It’s the entity from which we are gathering data.</p>
 
 In some cases, only the person-level data structure will practically make sense. For example, the table below contains the sex, weight, length, head circumference, and abdominal circumference for eight newborn babies measured cross-sectionally (i.e., at one point in time) at birth.
 
@@ -26,7 +26,7 @@ In some cases, only the person-level data structure will practically make sense.
 knitr::include_graphics("img/05_part_data_management/10_restructuring/wide2.png")
 ```
 
-In this table, each baby has one observation (row) and a separate column contains data for each measurement. Further, each measrement is only taken on _one_ occasion. There really is no other structure that makes sense for this data.
+In this table, each baby has one observation (row) and a separate column contains data for each measurement. Further, each measurement is only taken on _one_ occasion. There really is no other structure that makes sense for this data.
 
 For contrast, the next table below is also person-level data. It contains the weight in pounds for eight babies at ages 3 months, 6 months, 9 months, and 12 months. 
 
@@ -58,7 +58,7 @@ Well, in general, I'm going to suggest that you use the person-period structure 
 
 1. It contains an explicit time variable. The time information may be descriptively interesting on its own, or we may need to include it in our statistical models. In fact, many longitudinal analyses will require that our data have a person-period structure. For example, mixed models, gereralized estimating equations, and survival analysis.
 
-2. The person-period structure can be more efficient when we the intervals between repeated measures vary across observational units. For example, in the data above the baby weight columns were named `weight_3`, `weight_6`, `weight_9`, and `weight_12`, which indicated each babies weight at a 3-month, 6-month, 9-month, and 12-month checkup. However, what if the study needed a more precise measure of each baby's age. Let's say that we needed to record each baby's weight at their precise age in days at each checkup. That might look something like the following if structured in a person-level format:
+2. The person-period structure can be more efficient when we the intervals between repeated measures vary across observational units. For example, in the data above the baby weight columns were named `weight_3`, `weight_6`, `weight_9`, and `weight_12`, which indicated each baby's weight at a 3-month, 6-month, 9-month, and 12-month checkup. However, what if the study needed a more precise measure of each baby's age. Let's say that we needed to record each baby's weight at their precise age in days at each checkup. That might look something like the following if structured in a person-level format:
 
 ```{r echo=FALSE, fig.cap="Baby weights at age in days. Babies 1001 and 1002 only."}
 knitr::include_graphics("img/05_part_data_management/10_restructuring/days_wide.png")
@@ -70,15 +70,15 @@ Notice all the missing data in this format -- even with only two babies. For exa
 knitr::include_graphics("img/05_part_data_management/10_restructuring/days_long.png")
 ```
 
-3. For essentially the same reasons already discussed above, the person-period format is better suited for handling time-varying predictors. In the baby weight data, the only predictor variable (other than time) was sex, which is time invariant. Regardless of which structure we us, sex only requires one column in the data frame because it never changes. However, imagine scenario were we also collect height and information about diet at each visit. Using a person-level structure to store these variables would have the same limitations that we already discussed above (i.e., no explicit meassure of time, incompatibility with many analysis techniques, and potentially inefficient storage).
+3. For essentially the same reasons already discussed above, the person-period format is better suited for handling time-varying predictors. In the baby weight data, the only predictor variable (other than time) was sex, which is time invariant. Regardless of which structure we us, sex only requires one column in the data frame because it never changes. However, imagine scenario were we also collect height and information about diet at each visit. Using a person-level structure to store these variables would have the same limitations that we already discussed above (i.e., no explicit measure of time, incompatibility with many analysis techniques, and potentially inefficient storage).
 
 4. Many of the "tidyverse" packages we use in this book (e.g., `dplyr` and `ggplot2`) assume, or at least work best, with data organized in a person-period, or long, format. 
 
-So, does this mean that we should _never_ organize our data frames in a person-level format? Of course not! There are going to be some occations when there are advantages to organizing our data frames in a person-level format. For example:
+So, does this mean that we should _never_ organize our data frames in a person-level format? Of course not! There are going to be some occasions when there are advantages to organizing our data frames in a person-level format. For example:
 
-1. Many people prefer the person-level format during the data entry process becasue it can require less typing. Thinking about our baby weight data above, we would only need to type one new value at each checkup (i.e., weight) if the data is organized in a person-level format. However, if the data is organized in a person-period format, we have to type three new values (i.e., id, sex, and weight). This limitation grows with the number of time-invariant variables in the data.
+1. Many people prefer the person-level format during the data entry process because it can require less typing. Thinking about our baby weight data above, we would only need to type one new value at each checkup (i.e., weight) if the data is organized in a person-level format. However, if the data is organized in a person-period format, we have to type three new values (i.e., id, sex, and weight). This limitation grows with the number of time-invariant variables in the data.
 
-2. There are some analyses that will require that our data have a person-level structure. For example, the tradtional ANOVA and MANOVA techniques assume the wide format.
+2. There are some analyses that will require that our data have a person-level structure. For example, the traditional ANOVA and MANOVA techniques assume the wide format.
 
 3. There are times when our data is easier to manipulate when it is organized in a person-level format.
 
@@ -98,7 +98,7 @@ library(ggplot2)
 
 ## Pivoting longer
 
-In epidemiology, it's common for data that we analyze to be measured on multiple occations. It's also common for repeated measures data to be entered into a spreadsheet or database in such a way that each new measure is a new column. We saw an example of this above: 
+In epidemiology, it's common for data that we analyze to be measured on multiple occasions. It's also common for repeated measures data to be entered into a spreadsheet or database in such a way that each new measure is a new column. We saw an example of this above: 
 
 ```{r, echo=FALSE, fig.cap="Baby weights at 3, 6, 9 , and 12 months"}
 knitr::include_graphics("img/05_part_data_management/10_restructuring/wide1.png")
@@ -512,7 +512,7 @@ df %>% pivot_wider(
 
 ### Why person-level?
 
-Why might we want the `babies` data in this person-level format? Well, as we discussed above, there are a handful analytic techniques that require our data to be in this format. Unfortunately, those techniques are beyond the scope of this chapter. However, this person-level format is still useful for something a simple as calculating descriptive statistics about time-invariant variables. For example, the number of female and male babies in our data frame:
+Why might we want the `babies` data in this person-level format? Well, as we discussed above, there are a handful analytic techniques that require our data to be in this format. Unfortunately, those techniques are beyond the scope of this chapter. However, this person-level format is still useful for something as simple as calculating descriptive statistics about time-invariant variables. For example, the number of female and male babies in our data frame:
 
 ```{r}
 babies %>% 
@@ -738,7 +738,7 @@ births_decade %>%
 
 ### Each value must have its own cell
 
-In my personal experience, violations of this guideline are rarer than violations of the first two guidelines. However, let's imagine a study where we are monitoring the sleeping habits of newborn babies. Specifically, we are interested in the the range of lengths of time they sleep. That data could be recorded the following way:
+In my personal experience, violations of this guideline are rarer than violations of the first two guidelines. However, let's imagine a study where we are monitoring the sleeping habits of newborn babies. Specifically, we are interested in the range of lengths of time they sleep. That data could be recorded the following way:
 
 ```{r}
 baby_sleep <- tibble(
