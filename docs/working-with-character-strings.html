@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-07-08" />
+<meta name="date" content="2021-07-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -640,7 +640,7 @@ Converting to dummy variables
 Save reggex for advanced
 Link to complete reggex
 -->
-<p>In previous chapters, we learned how to create character vectors, which can be useful on their own. We also learned how to coerce character vectors to factor vectors that we can use for categorical data analysis. However, up to this point, we haven’t done a lot of manipulation of the values stored inside of the character stings themselves. Sometimes, however, we will need to manipulate the character string before we can complete other data management tasks or analysis. Some common examples from my projects include separating character strings into multiple parts and creating dummy variables from character strings that can take multiple values. In this chapter, we’ll see some specific example of both, and we’ll learn a few new tools for working with character strings along the way.</p>
+<p>In previous chapters, we learned how to create character vectors, which can be useful on their own. We also learned how to coerce character vectors to factor vectors that we can use for categorical data analysis. However, up to this point, we haven’t done a lot of manipulation of the values stored inside of the character strings themselves. Sometimes, however, we will need to manipulate the character string before we can complete other data management tasks or analysis. Some common examples from my projects include separating character strings into multiple parts and creating dummy variables from character strings that can take multiple values. In this chapter, we’ll see some specific example of both, and we’ll learn a few new tools for working with character strings along the way.</p>
 <p>To get started, feel free to <a href="https://www.dropbox.com/s/qy778lzafids0om/ehr.Rds?dl=1">download the simulated electronic health record that we will use in the following examples</a>. Additionally, we will use the <code>readr</code>, <code>dplyr</code>, and <code>stringr</code> packages in the code below. You will be able to recognize functions from the <code>stringr</code> package because they will all begin with <code>str_</code>.</p>
 <div class="sourceCode" id="cb667"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb667-1"><a href="working-with-character-strings.html#cb667-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
 <span id="cb667-2"><a href="working-with-character-strings.html#cb667-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -868,9 +868,9 @@ Link to complete reggex
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>stringr</code>’s <code>str_replace()</code> function remove the comma from the character string “weston fox,”</p></li>
-<li><p>The first argument to the <code>str_replace()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character stings, we want to manipulate.</p></li>
-<li><p>The second argument to the <code>str_replace()</code> function is <code>pattern</code>. The value passed the <code>pattern</code> argument should be regular expression. It should tell the <code>str_replace()</code> function what part of the character string we want to replace. In this case, it is a comma (<code>","</code>). We are telling the <code>str_replace()</code> function that we want it to replace the first comma it sees in the character sting “weston fox,” with the value we pass to the <code>replacement</code> argument.</p></li>
-<li><p>The third argument to the <code>str_replace()</code> function is <code>replacement</code>. The value passed the <code>replacement</code> argument should also be regular expression. It should tell the <code>str_replace()</code> function to what replace the value identified in the <code>pattern</code> argument with. In this case, it is nothing (<code>""</code>) – two double quotes with nothing in-between. We are telling the <code>str_replace()</code> function that we want it to replace the first comma it sees in the character sting “weston fox,” with nothing. This is sort of a long-winded way of saying, “delete the comma.”</p></li>
+<li><p>The first argument to the <code>str_replace()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character strings, we want to manipulate.</p></li>
+<li><p>The second argument to the <code>str_replace()</code> function is <code>pattern</code>. The value passed the <code>pattern</code> argument should be regular expression. It should tell the <code>str_replace()</code> function what part of the character string we want to replace. In this case, it is a comma (<code>","</code>). We are telling the <code>str_replace()</code> function that we want it to replace the first comma it sees in the character string “weston fox,” with the value we pass to the <code>replacement</code> argument.</p></li>
+<li><p>The third argument to the <code>str_replace()</code> function is <code>replacement</code>. The value passed the <code>replacement</code> argument should also be regular expression. It should tell the <code>str_replace()</code> function to what replace the value identified in the <code>pattern</code> argument with. In this case, it is nothing (<code>""</code>) – two double quotes with nothing in-between. We are telling the <code>str_replace()</code> function that we want it to replace the first comma it sees in the character string “weston fox,” with nothing. This is sort of a long-winded way of saying, “delete the comma.”</p></li>
 </ul>
 <p class="warning">
 ⚠️<strong>Warning:</strong> Notice that our regular expressions above are wrapped in quotes. Regular expressions should always be wrapped in quotes.
@@ -917,13 +917,13 @@ Link to complete reggex
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>stringr</code>’s <code>str_replace()</code> function remove the “s” from the character string “tatum s chavez.”</p></li>
-<li><p>The first argument to the <code>str_replace()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character stings, we want to manipulate.</p></li>
+<li><p>The first argument to the <code>str_replace()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character strings, we want to manipulate.</p></li>
 <li><p>The second argument to the <code>str_replace()</code> function is <code>pattern</code>. The value passed the <code>pattern</code> argument should be regular expression. It should tell the <code>str_replace()</code> function what part of the character string we want to replace. In this case, it is <code>" \\w "</code>. That is a space, two backslashes, and a space. This regular expression looks a little stranger than the last one we saw.</p>
 <ul>
 <li><p>The <code>\w</code> is called a <strong>token</strong> in regular expression lingo. The <code>\w</code> token means “Any word character.” Any word character includes all the letters of the alphabet upper and lowercase (i.e., <code>[a-zA-Z]</code>), all numbers (i.e., <code>[0-9</code>]), and the underscore character (<code>_</code>).</p></li>
 <li><p>When passing regular expression to R, we must always add an additional backslash in front of any other backslash in the regular expression. In this case, <code>\\w</code> instead of <code>\w</code>.</p></li>
-<li><p>If we had stopped here (<code>"\\w"</code>), this regular expression would have told the <code>str_replace()</code> function that we want it to replace the first word character it sees in the character sting “tatum s chavez” with the value we pass to the <code>replacement</code> argument. In this case, that would have been the “t” at the beginning of “tatum s chavez.”</p></li>
-<li><p>The final component of the regular expression we passed to the <code>pattern</code> argument is spaces on both sides of the <code>\\w</code> token. The complete regular expression, <code>" \\w "</code>, tells the <code>str_replace()</code> function that we want it to replace the first time it sees a space, followed by any word character, followed by another space in the character sting “tatum s chavez” with the value we pass to the <code>replacement</code> argument. The first section of the character string above that matches that pattern is the " s " in “tatum s chavez.”</p></li>
+<li><p>If we had stopped here (<code>"\\w"</code>), this regular expression would have told the <code>str_replace()</code> function that we want it to replace the first word character it sees in the character string “tatum s chavez” with the value we pass to the <code>replacement</code> argument. In this case, that would have been the “t” at the beginning of “tatum s chavez.”</p></li>
+<li><p>The final component of the regular expression we passed to the <code>pattern</code> argument is spaces on both sides of the <code>\\w</code> token. The complete regular expression, <code>" \\w "</code>, tells the <code>str_replace()</code> function that we want it to replace the first time it sees a space, followed by any word character, followed by another space in the character string “tatum s chavez” with the value we pass to the <code>replacement</code> argument. The first section of the character string above that matches that pattern is the " s " in “tatum s chavez.”</p></li>
 </ul></li>
 <li><p>The third argument to the <code>str_replace()</code> function is <code>replacement</code>. The value passed the <code>replacement</code> argument should also be regular expression. It should tell the <code>str_replace()</code> function what to replace the value identified in the <code>pattern</code> argument with. In this case, it is a single space (<code>" "</code>).</p></li>
 </ul>
@@ -969,7 +969,7 @@ Link to complete reggex
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>stringr</code>’s <code>str_replace()</code> function remove the double space from the character string “Ivy Mccann.”</p></li>
-<li><p>The first argument to the <code>str_replace()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character stings, we want to manipulate.</p></li>
+<li><p>The first argument to the <code>str_replace()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character strings, we want to manipulate.</p></li>
 <li><p>The second argument to the <code>str_replace()</code> function is <code>pattern</code>. The value passed the <code>pattern</code> argument should be regular expression. It should tell the <code>str_replace()</code> function what part of the character string we want to replace. In this case, it is <code>\\s{2,}</code>. This regular expression looks even more strange than the last one we saw.</p>
 <ul>
 <li><p>The <code>\s</code> is another token. The <code>\s</code> token means “Any whitespace character.”</p></li>
@@ -1096,20 +1096,20 @@ Link to complete reggex
 </div>
 <div id="separate-values-into-component-parts" class="section level2" number="28.4">
 <h2><span class="header-section-number">28.4</span> Separate values into component parts</h2>
-<p>Another common task that I perform on character stings is to separate the strings into multiple parts. For example, sometimes we may want to separate full names into two columns. One for fist name and one for last name. To complete this task, we will once again use regular expressions. We will also learn how to use the <code>str_extract()</code> function to pull values out of a character string when the match a pattern we create with a regular expression.</p>
+<p>Another common task that I perform on character strings is to separate the strings into multiple parts. For example, sometimes we may want to separate full names into two columns. One for fist name and one for last name. To complete this task, we will once again use regular expressions. We will also learn how to use the <code>str_extract()</code> function to pull values out of a character string when the match a pattern we create with a regular expression.</p>
 <div class="sourceCode" id="cb721"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb721-1"><a href="working-with-character-strings.html#cb721-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(<span class="st">&quot;zariah hernandez&quot;</span>, <span class="st">&quot;^</span><span class="sc">\\</span><span class="st">w+&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;zariah&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>stringr</code>’s <code>str_extract()</code> function pull the first name out of the full name “zariah hernandez.”</p></li>
-<li><p>The first argument to the <code>str_extract()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character stings, we want to manipulate.</p></li>
+<li><p>The first argument to the <code>str_extract()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character strings, we want to manipulate.</p></li>
 <li><p>The second argument to the <code>str_extract()</code> function is <code>pattern</code>. The value passed the <code>pattern</code> argument should be regular expression. It should tell the <code>str_extract()</code> function what part of the character string we want to pull out of the character string. In this case, it is <code>^\\w+</code>.</p>
 <ul>
 <li><p>We’ve already seen that the <code>\w</code> token means “Any word character.”</p></li>
 <li><p>When passing regular expression to R, we must always add an additional backslash in front of any other backslash in the regular expression. In this case, <code>\\w</code> instead of <code>\w</code>.</p></li>
 <li><p>The carrot (<code>^</code>) is a type of <strong>anchor</strong> in regular expression lingo. It tells the <code>str_extract()</code> function to look for the pattern at the start of the character sting only.</p></li>
 <li><p>The plus sign (<code>+</code>) is another quantifier. It means, “match the pattern one or more times.”</p></li>
-<li><p>Taken together, <code>^\\w+</code> tells the <code>str_extract()</code> function to look for one or more consecutive word characters beginning at the start of the character sting and extract them.</p></li>
+<li><p>Taken together, <code>^\\w+</code> tells the <code>str_extract()</code> function to look for one or more consecutive word characters beginning at the start of the character string and extract them.</p></li>
 <li><p>The first word character at the start of the string is “z,” then “a,” then “riah.” Finally, R gets to the space between “zariah” and “hernandez,” which isn’t a word character, and stops the extraction. The result is “zariah.”</p></li>
 </ul></li>
 </ul>
@@ -1119,7 +1119,7 @@ Link to complete reggex
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>stringr</code>’s <code>str_extract()</code> function pull the last name out of the full name “zariah hernandez.”</p></li>
-<li><p>The first argument to the <code>str_extract()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character stings, we want to manipulate.</p></li>
+<li><p>The first argument to the <code>str_extract()</code> function is <code>string</code>. The value passed the <code>string</code> argument should be the character string, or vector of character strings, we want to manipulate.</p></li>
 <li><p>The second argument to the <code>str_extract()</code> function is <code>pattern</code>. The value passed the <code>pattern</code> argument should be regular expression. It should tell the <code>str_extract()</code> function what part of the character string we want to pull out of the character string. In this case, it is <code>\\w+$</code>.</p>
 <ul>
 <li><p>We’ve already seen that the <code>\w</code> token means “Any word character.”</p></li>
@@ -1274,7 +1274,7 @@ Link to complete reggex
 ## 14 TRUE        1
 ## 15 NA         NA</code></pre>
 <p>However, this step is sort of unnecessary in most cases because R treats <code>TRUE</code> and <code>FALSE</code> as <code>1</code> and <code>0</code> respectively when logical (i.e., TRUE/FALSE) vectors are passed to functions or operators that perform a mathematical operation.</p>
-<p>That concludes the chapter on working with character stings. Don’t beat yourself up if you’re feeling confused about regular expressions. They are really tough to wrap your head around at first! But, at least now you know they exist and can be useful for manipulating character strings. If you come across more complicated situations in the future, I suggest starting by checking out the <a href="https://stringr.tidyverse.org/index.html">stringr cheat sheet</a> and practicing with the <a href="https://regex101.com/#python">regular expressions 101 online regex tester and debugger</a> before writing any R code.</p>
+<p>That concludes the chapter on working with character strings. Don’t beat yourself up if you’re feeling confused about regular expressions. They are really tough to wrap your head around at first! But, at least now you know they exist and can be useful for manipulating character strings. If you come across more complicated situations in the future, I suggest starting by checking out the <a href="https://stringr.tidyverse.org/index.html">stringr cheat sheet</a> and practicing with the <a href="https://regex101.com/#python">regular expressions 101 online regex tester and debugger</a> before writing any R code.</p>
 
 </div>
 </div>
