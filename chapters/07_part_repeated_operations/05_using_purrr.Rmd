@@ -91,7 +91,7 @@ Finally, when we use `map_dbl()` there isn't a leftover index variable (i.e., `i
 
 For those reasons, and possibly others, it's been my observation that the majority of R users prefer the functional approach to iteration -- either `purrr` or the `apply` functions -- over using for loops in most situations.
 
-However, my first experiences with programming were not with programming R. In fact, R was the third or fourth programming language I learned. And, all the others I had learned before R relied much more heavily on for loops. Perhaps for this reason, I tend to first think in terms of a for loop and then mentally convert the for loop to a `map` function before writing my code. Perhaps that is true for some of you reading this chapter as well. Therefore, the next section is going to compare and contrast some the _basic_ for loop and the `map` functions. You may find this section instructive or interesting even if you aren't someone who first learned iteration using for loops.
+However, my first experiences with programming were not with programming R. In fact, R was the third or fourth programming language I learned. And, all the others I had learned before R relied much more heavily on for loops. Perhaps for this reason, I tend to first think in terms of a for loop and then mentally convert the for loop to a `map` function before writing my code. Perhaps that is true for some of you reading this chapter as well. Therefore, the next section is going to compare and contrast the _basic_ for loop with the `map` functions. You may find this section instructive or interesting even if you aren't someone who first learned iteration using for loops.
 
 ```{r echo=FALSE}
 rm(df_xyz, i, xyz_means)
@@ -156,7 +156,7 @@ for(i in seq_along(names)) {
 n_letters
 ```
 
-Uh, oh! Those counts of letters! What happened? Well, apparently we thought that `stringr::str_extract(names[[i]], "\\w")` would return the count of letters in each name. In actuality, it returns the first letter in each name. 
+Uh, oh! Those "counts" are letters! What happened? Well, apparently we thought that `stringr::str_extract(names[[i]], "\\w")` would return the count of letters in each name. In actuality, it returns the first letter in each name. 
 
 As I said before, this is a silly example. In this case, it's easy to see and fix our mistake. However, it could be very difficult to debug this problem if the code were buried in a long script or inside of other functions.
 
@@ -210,7 +210,7 @@ Finally, the function passed to the `.f` argument can replace the rest of the "s
 That pretty much covers the basics of using the `purrr::map` functions. If you've been reading this book in sequence, there won't really be any conceptually new material in this chapter. We're basically going to do the same things we've been doing for the last couple of chapters. We'll just be using a slightly different (and perhaps preferable) syntax. If you haven't been reading the book in sequence, you might want to read the chapters on [writing functions](#writing-functions), [column-wise operations](#column-wise-operations-in-dplyr), and [writing for loops](#writing-for-loops) to get the most of the examples below.
 
 ```{r echo=FALSE}
-rm(first_letter, n_letters, names)
+rm(n_letters, names)
 ```
 
 ## Using purrr for data transfer
@@ -590,7 +590,7 @@ map2_dfc(
 
 Pretty nice, right?
 
-Before moving on, I want to point out that we did not have to create the `add_na_at()` function ahead of time the way did. If we didn't think we would need to use `add_na_at()` in any other part of our program, we might have decided to pass the code inside of `add_na_at()` to the `.f` argument as an anonymous function instead. 
+Before moving on, I want to point out that we did not have to create the `add_na_at()` function ahead of time the way we did. If we didn't think we would need to use `add_na_at()` in any other part of our program, we might have decided to pass the code inside of `add_na_at()` to the `.f` argument as an anonymous function instead. 
 
 As a reminder, here is what our _named_ function looks like:
 
@@ -715,7 +715,6 @@ people %>%
 ```
 
 ```{r echo=FALSE}
-rm(col_1, col_2, cols, i, new_col)
 people <- people %>% select(-ends_with("_match"))
 ```
 
@@ -738,7 +737,7 @@ map_dfc(
 In the code above, we used roughly the same amount of code to complete the task with a loop that we used to complete it without a loop. However, this code still has some advantages. We only typed "name_first", "name_last", and "street" once at the beginning of the code chunk. Therefore, we didn't have to worry about forgetting to change a column name after copying and pasting code. Additionally, if we later decide that we also want to compare other columns (e.g., middle name, birth date, city, state, zip code), we only have to update the code in one place -- where we create the `cols` vector. 
 
 ```{r echo=FALSE}
-rm(people, people_1, people_2, col_1, col_2, i, new_col, is_match)
+rm(people, people_1, people_2, col_1, col_2, cols, i, new_col, is_match)
 ```
 
 ## Using purrr for analysis
@@ -987,7 +986,7 @@ map_dfr(
 rm(list = ls())
 ```
 
-And that concludes the chapter! I don't blame you if you feel a little bit like your head is swimming at this point. I was a lot to take in! As I said at the end of the for loop chapter, I don't recommend trying to memorize everything we covered in this chapter. Instead, I recommend that you read it until you sort of get the general idea of the `purrr` package and when it might be useful. Then, refer back to this chapter, or other online references that discuss the `purrr` package (there are many good ones out there), if you find yourself in a situation where you believe that the `purrr` package might be the right tool to help you complete a given programming task.  
+And that concludes the chapter! I don't blame you if you feel a little bit like your head is swimming at this point. It was a lot to take in! As I said at the end of the for loop chapter, I don't recommend trying to memorize everything we covered in this chapter. Instead, I recommend that you read it until you sort of get the general idea of the `purrr` package and when it might be useful. Then, refer back to this chapter, or other online references that discuss the `purrr` package (there are many good ones out there), if you find yourself in a situation where you believe that the `purrr` package might be the right tool to help you complete a given programming task.  
 
 If you feel as though you want to take a deeper dive into the `purrr` package right away, then I suggest checking out the [iteration chapter of R for Data Science](https://r4ds.had.co.nz/iteration.html#for-loops-vs.functionals). For an even deeper dive, I recommend reading the [functionals chapter of Advanced R](https://adv-r.hadley.nz/functionals.html).
 
