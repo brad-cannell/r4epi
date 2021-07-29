@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>28 Working with character strings | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="28 Working with character strings | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-07-22" />
+<meta name="date" content="2021-07-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,8 @@
   
 <link rel="prev" href="working-with-dates.html"/>
 <link rel="next" href="conditional-operations.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-3.5.1/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,15 +51,18 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<script src="libs/datatables-binding-0.18/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
@@ -125,6 +128,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -642,12 +668,12 @@ Link to complete reggex
 -->
 <p>In previous chapters, we learned how to create character vectors, which can be useful on their own. We also learned how to coerce character vectors to factor vectors that we can use for categorical data analysis. However, up to this point, we haven’t done a lot of manipulation of the values stored inside of the character strings themselves. Sometimes, however, we will need to manipulate the character string before we can complete other data management tasks or analysis. Some common examples from my projects include separating character strings into multiple parts and creating dummy variables from character strings that can take multiple values. In this chapter, we’ll see some specific example of both, and we’ll learn a few new tools for working with character strings along the way.</p>
 <p>To get started, feel free to <a href="https://www.dropbox.com/s/qy778lzafids0om/ehr.Rds?dl=1">download the simulated electronic health record that we will use in the following examples</a>. Additionally, we will use the <code>readr</code>, <code>dplyr</code>, and <code>stringr</code> packages in the code below. You will be able to recognize functions from the <code>stringr</code> package because they will all begin with <code>str_</code>.</p>
-<div class="sourceCode" id="cb667"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb667-1"><a href="working-with-character-strings.html#cb667-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb667-2"><a href="working-with-character-strings.html#cb667-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb667-3"><a href="working-with-character-strings.html#cb667-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) <span class="co"># All stringr functions begin with &quot;str_&quot;</span></span></code></pre></div>
-<div class="sourceCode" id="cb668"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb668-1"><a href="working-with-character-strings.html#cb668-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/epcr/ehr.Rds&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb669"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb669-1"><a href="working-with-character-strings.html#cb669-1" aria-hidden="true" tabindex="-1"></a>ehr </span></code></pre></div>
-<pre><code>## # A tibble: 15 x 6
+<div class="sourceCode" id="cb688"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb688-1"><a href="working-with-character-strings.html#cb688-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb688-2"><a href="working-with-character-strings.html#cb688-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb688-3"><a href="working-with-character-strings.html#cb688-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) <span class="co"># All stringr functions begin with &quot;str_&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb689-1"><a href="working-with-character-strings.html#cb689-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/epcr/ehr.Rds&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb690"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb690-1"><a href="working-with-character-strings.html#cb690-1" aria-hidden="true" tabindex="-1"></a>ehr </span></code></pre></div>
+<pre><code>## # A tibble: 15 × 6
 ##    admit_date          name      dob        address     city     symptoms       
 ##    &lt;dttm&gt;              &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;          
 ##  1 2017-02-01 05:22:30 &quot;Zariah … 1944-09-27 3201 ORANG… FORT WO… &quot;\&quot;Pain\&quot;, \&quot;H…
@@ -672,12 +698,12 @@ Link to complete reggex
 <li><p>In this data, date of birth is recorded in the four most common formats that I typically come across.</p></li>
 </ul>
 <p>A common initial question we may need to ask of this kind of data is, <em>“how many unique people are represented in this data?”</em> Well, there are 15 rows, so a good first guess might be 15 unique people. However, let’s arrange the data by the <code>name</code> column and see if that guess still looks reasonable.</p>
-<div class="sourceCode" id="cb671"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb671-1"><a href="working-with-character-strings.html#cb671-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb671-2"><a href="working-with-character-strings.html#cb671-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb671-3"><a href="working-with-character-strings.html#cb671-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb671-4"><a href="working-with-character-strings.html#cb671-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb671-5"><a href="working-with-character-strings.html#cb671-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 5
+<div class="sourceCode" id="cb692"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb692-1"><a href="working-with-character-strings.html#cb692-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb692-2"><a href="working-with-character-strings.html#cb692-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb692-3"><a href="working-with-character-strings.html#cb692-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb692-4"><a href="working-with-character-strings.html#cb692-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb692-5"><a href="working-with-character-strings.html#cb692-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 5
 ## # Groups:   name [15]
 ##    name               dup   dob        address             city              
 ##    &lt;chr&gt;              &lt;lgl&gt; &lt;date&gt;     &lt;chr&gt;               &lt;chr&gt;             
@@ -697,9 +723,9 @@ Link to complete reggex
 ## 14 &quot;Weston Fox,&quot;      FALSE 2009-08-21 6433 HATCHER ST     City of Fort Worth
 ## 15 &quot;Zariah Hernandez&quot; FALSE 1944-09-27 3201 ORANGE AVE     FORT WORTH</code></pre>
 <p>Clearly, some of these people are the same. However, little data entry discrepancies in their name values would prevent us from calculating the number of unique people in a programmatic way. Let’s take a closer look at the values in the <code>name</code> column and see if we can figure out exactly what these data entry discrepancies are:</p>
-<div class="sourceCode" id="cb673"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb673-1"><a href="working-with-character-strings.html#cb673-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb673-2"><a href="working-with-character-strings.html#cb673-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb673-3"><a href="working-with-character-strings.html#cb673-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name)</span></code></pre></div>
+<div class="sourceCode" id="cb694"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb694-1"><a href="working-with-character-strings.html#cb694-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb694-2"><a href="working-with-character-strings.html#cb694-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb694-3"><a href="working-with-character-strings.html#cb694-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name)</span></code></pre></div>
 <pre><code>##  [1] &quot;Arabella George&quot;  &quot;ARABELLA GEORGE&quot;  &quot;Charlee Carroll&quot;  &quot;Emma Medrano&quot;    
 ##  [5] &quot;Ivy   Mccann&quot;     &quot;Ivy Mccann&quot;       &quot;Jasper Decker&quot;    &quot;Kane Martin&quot;     
 ##  [9] &quot;Ryan Edwards&quot;     &quot;Ryan Edwards  &quot;   &quot;Tatum Chavez&quot;     &quot;Tatum S Chavez&quot;  
@@ -718,10 +744,10 @@ Link to complete reggex
 <p>A good place to start cleaning these character strings is by coercing them all to lowercase. We’ve already used base R’s <code>tolower()</code> function a couple of times before. So, you may have already guessed how to complete this task. However, before moving on to coercing all the names in our ehr data to lowercase, I want to show you some of the other functions that the <code>stringr</code> package contains for changing the case of character strings. For example:</p>
 <div id="lowercase" class="section level3" number="28.1.1">
 <h3><span class="header-section-number">28.1.1</span> Lowercase</h3>
-<div class="sourceCode" id="cb675"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb675-1"><a href="working-with-character-strings.html#cb675-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb675-2"><a href="working-with-character-strings.html#cb675-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb675-3"><a href="working-with-character-strings.html#cb675-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb675-4"><a href="working-with-character-strings.html#cb675-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_to_lower</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb696"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb696-1"><a href="working-with-character-strings.html#cb696-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb696-2"><a href="working-with-character-strings.html#cb696-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb696-3"><a href="working-with-character-strings.html#cb696-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb696-4"><a href="working-with-character-strings.html#cb696-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_to_lower</span>()</span></code></pre></div>
 <pre><code>##  [1] &quot;arabella george&quot;  &quot;arabella george&quot;  &quot;charlee carroll&quot;  &quot;emma medrano&quot;    
 ##  [5] &quot;ivy   mccann&quot;     &quot;ivy mccann&quot;       &quot;jasper decker&quot;    &quot;kane martin&quot;     
 ##  [9] &quot;ryan edwards&quot;     &quot;ryan edwards  &quot;   &quot;tatum chavez&quot;     &quot;tatum s chavez&quot;  
@@ -729,10 +755,10 @@ Link to complete reggex
 </div>
 <div id="upper-case" class="section level3" number="28.1.2">
 <h3><span class="header-section-number">28.1.2</span> Upper case</h3>
-<div class="sourceCode" id="cb677"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb677-1"><a href="working-with-character-strings.html#cb677-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb677-2"><a href="working-with-character-strings.html#cb677-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb677-3"><a href="working-with-character-strings.html#cb677-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb677-4"><a href="working-with-character-strings.html#cb677-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_to_upper</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb698"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb698-1"><a href="working-with-character-strings.html#cb698-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb698-2"><a href="working-with-character-strings.html#cb698-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb698-3"><a href="working-with-character-strings.html#cb698-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb698-4"><a href="working-with-character-strings.html#cb698-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_to_upper</span>()</span></code></pre></div>
 <pre><code>##  [1] &quot;ARABELLA GEORGE&quot;  &quot;ARABELLA GEORGE&quot;  &quot;CHARLEE CARROLL&quot;  &quot;EMMA MEDRANO&quot;    
 ##  [5] &quot;IVY   MCCANN&quot;     &quot;IVY MCCANN&quot;       &quot;JASPER DECKER&quot;    &quot;KANE MARTIN&quot;     
 ##  [9] &quot;RYAN EDWARDS&quot;     &quot;RYAN EDWARDS  &quot;   &quot;TATUM CHAVEZ&quot;     &quot;TATUM S CHAVEZ&quot;  
@@ -740,10 +766,10 @@ Link to complete reggex
 </div>
 <div id="title-case" class="section level3" number="28.1.3">
 <h3><span class="header-section-number">28.1.3</span> Title case</h3>
-<div class="sourceCode" id="cb679"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb679-1"><a href="working-with-character-strings.html#cb679-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb679-2"><a href="working-with-character-strings.html#cb679-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb679-3"><a href="working-with-character-strings.html#cb679-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb679-4"><a href="working-with-character-strings.html#cb679-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_to_title</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb700"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb700-1"><a href="working-with-character-strings.html#cb700-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb700-2"><a href="working-with-character-strings.html#cb700-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb700-3"><a href="working-with-character-strings.html#cb700-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb700-4"><a href="working-with-character-strings.html#cb700-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_to_title</span>()</span></code></pre></div>
 <pre><code>##  [1] &quot;Arabella George&quot;  &quot;Arabella George&quot;  &quot;Charlee Carroll&quot;  &quot;Emma Medrano&quot;    
 ##  [5] &quot;Ivy   Mccann&quot;     &quot;Ivy Mccann&quot;       &quot;Jasper Decker&quot;    &quot;Kane Martin&quot;     
 ##  [9] &quot;Ryan Edwards&quot;     &quot;Ryan Edwards  &quot;   &quot;Tatum Chavez&quot;     &quot;Tatum S Chavez&quot;  
@@ -751,19 +777,19 @@ Link to complete reggex
 </div>
 <div id="sentence-case" class="section level3" number="28.1.4">
 <h3><span class="header-section-number">28.1.4</span> Sentence case</h3>
-<div class="sourceCode" id="cb681"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb681-1"><a href="working-with-character-strings.html#cb681-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb681-2"><a href="working-with-character-strings.html#cb681-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb681-3"><a href="working-with-character-strings.html#cb681-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb681-4"><a href="working-with-character-strings.html#cb681-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_to_sentence</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb702"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb702-1"><a href="working-with-character-strings.html#cb702-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb702-2"><a href="working-with-character-strings.html#cb702-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb702-3"><a href="working-with-character-strings.html#cb702-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb702-4"><a href="working-with-character-strings.html#cb702-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_to_sentence</span>()</span></code></pre></div>
 <pre><code>##  [1] &quot;Arabella george&quot;  &quot;Arabella george&quot;  &quot;Charlee carroll&quot;  &quot;Emma medrano&quot;    
 ##  [5] &quot;Ivy   mccann&quot;     &quot;Ivy mccann&quot;       &quot;Jasper decker&quot;    &quot;Kane martin&quot;     
 ##  [9] &quot;Ryan edwards&quot;     &quot;Ryan edwards  &quot;   &quot;Tatum chavez&quot;     &quot;Tatum s chavez&quot;  
 ## [13] &quot;Weston fox&quot;       &quot;Weston fox,&quot;      &quot;Zariah hernandez&quot;</code></pre>
 <p>Each of the function above can come in handy from time-to-time. So, you may just want to keep them in your back pocket. Let’s go ahead and use the <code>str_to_lower()</code> function now as the first step in cleaning our data:</p>
-<div class="sourceCode" id="cb683"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb683-1"><a href="working-with-character-strings.html#cb683-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb683-2"><a href="working-with-character-strings.html#cb683-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_to_lower</span>(name)) <span class="sc">%&gt;%</span> </span>
-<span id="cb683-3"><a href="working-with-character-strings.html#cb683-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 6
+<div class="sourceCode" id="cb704"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb704-1"><a href="working-with-character-strings.html#cb704-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb704-2"><a href="working-with-character-strings.html#cb704-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_to_lower</span>(name)) <span class="sc">%&gt;%</span> </span>
+<span id="cb704-3"><a href="working-with-character-strings.html#cb704-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 6
 ##    admit_date          name      dob        address     city     symptoms       
 ##    &lt;dttm&gt;              &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;          
 ##  1 2017-02-01 05:22:30 &quot;zariah … 1944-09-27 3201 ORANG… FORT WO… &quot;\&quot;Pain\&quot;, \&quot;H…
@@ -786,12 +812,12 @@ Link to complete reggex
 <li>We used <code>stringr</code>’s <code>str_to_lower()</code> function to coerce all the letters in the <code>name</code> column to lowercase.</li>
 </ul>
 <p>Now, let’s check and see how many unique people R finds in our data?</p>
-<div class="sourceCode" id="cb685"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb685-1"><a href="working-with-character-strings.html#cb685-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb685-2"><a href="working-with-character-strings.html#cb685-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb685-3"><a href="working-with-character-strings.html#cb685-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb685-4"><a href="working-with-character-strings.html#cb685-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb685-5"><a href="working-with-character-strings.html#cb685-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 5
+<div class="sourceCode" id="cb706"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb706-1"><a href="working-with-character-strings.html#cb706-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb706-2"><a href="working-with-character-strings.html#cb706-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb706-3"><a href="working-with-character-strings.html#cb706-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb706-4"><a href="working-with-character-strings.html#cb706-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb706-5"><a href="working-with-character-strings.html#cb706-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 5
 ## # Groups:   name [14]
 ##    name               dup   dob        address             city              
 ##    &lt;chr&gt;              &lt;lgl&gt; &lt;date&gt;     &lt;chr&gt;               &lt;chr&gt;             
@@ -816,18 +842,18 @@ Link to complete reggex
 <div id="trim-white-space" class="section level2" number="28.2">
 <h2><span class="header-section-number">28.2</span> Trim white space</h2>
 <p>We can use <code>stringr</code>’s <code>str_trim()</code> function to “trim” white space from the beginning and end of character strings. For example:</p>
-<div class="sourceCode" id="cb687"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb687-1"><a href="working-with-character-strings.html#cb687-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_trim</span>(<span class="st">&quot;Ryan Edwards  &quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb708"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb708-1"><a href="working-with-character-strings.html#cb708-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_trim</span>(<span class="st">&quot;Ryan Edwards  &quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Ryan Edwards&quot;</code></pre>
 <p>Let’s go ahead and use the <code>str_trim()</code> function now as the next step in cleaning our data:</p>
-<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb689-1"><a href="working-with-character-strings.html#cb689-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb689-2"><a href="working-with-character-strings.html#cb689-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_trim</span>(name))</span></code></pre></div>
+<div class="sourceCode" id="cb710"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb710-1"><a href="working-with-character-strings.html#cb710-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb710-2"><a href="working-with-character-strings.html#cb710-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_trim</span>(name))</span></code></pre></div>
 <p>Now, let’s check and see how many unique people R finds in our data?</p>
-<div class="sourceCode" id="cb690"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb690-1"><a href="working-with-character-strings.html#cb690-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb690-2"><a href="working-with-character-strings.html#cb690-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb690-3"><a href="working-with-character-strings.html#cb690-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb690-4"><a href="working-with-character-strings.html#cb690-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb690-5"><a href="working-with-character-strings.html#cb690-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 5
+<div class="sourceCode" id="cb711"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb711-1"><a href="working-with-character-strings.html#cb711-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb711-2"><a href="working-with-character-strings.html#cb711-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb711-3"><a href="working-with-character-strings.html#cb711-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb711-4"><a href="working-with-character-strings.html#cb711-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb711-5"><a href="working-with-character-strings.html#cb711-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 5
 ## # Groups:   name [13]
 ##    name             dup   dob        address             city              
 ##    &lt;chr&gt;            &lt;lgl&gt; &lt;date&gt;     &lt;chr&gt;               &lt;chr&gt;             
@@ -859,11 +885,11 @@ Link to complete reggex
 <div id="remove-the-comma" class="section level3" number="28.3.1">
 <h3><span class="header-section-number">28.3.1</span> Remove the comma</h3>
 <p>For our first example, let’s remove the comma from Weston Fox’s last name.</p>
-<div class="sourceCode" id="cb692"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb692-1"><a href="working-with-character-strings.html#cb692-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(</span>
-<span id="cb692-2"><a href="working-with-character-strings.html#cb692-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">string      =</span> <span class="st">&quot;weston fox,&quot;</span>, </span>
-<span id="cb692-3"><a href="working-with-character-strings.html#cb692-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern     =</span> <span class="st">&quot;,&quot;</span>,</span>
-<span id="cb692-4"><a href="working-with-character-strings.html#cb692-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb692-5"><a href="working-with-character-strings.html#cb692-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb713"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb713-1"><a href="working-with-character-strings.html#cb713-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(</span>
+<span id="cb713-2"><a href="working-with-character-strings.html#cb713-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">string      =</span> <span class="st">&quot;weston fox,&quot;</span>, </span>
+<span id="cb713-3"><a href="working-with-character-strings.html#cb713-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern     =</span> <span class="st">&quot;,&quot;</span>,</span>
+<span id="cb713-4"><a href="working-with-character-strings.html#cb713-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb713-5"><a href="working-with-character-strings.html#cb713-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## [1] &quot;weston fox&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -876,15 +902,15 @@ Link to complete reggex
 ⚠️<strong>Warning:</strong> Notice that our regular expressions above are wrapped in quotes. Regular expressions should always be wrapped in quotes.
 </p>
 <p>Let’s go ahead and use the <code>str_replace()</code> function now as the next step in cleaning our data:</p>
-<div class="sourceCode" id="cb694"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb694-1"><a href="working-with-character-strings.html#cb694-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb694-2"><a href="working-with-character-strings.html#cb694-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">&quot;,&quot;</span>, <span class="st">&quot;&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb715"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb715-1"><a href="working-with-character-strings.html#cb715-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb715-2"><a href="working-with-character-strings.html#cb715-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">&quot;,&quot;</span>, <span class="st">&quot;&quot;</span>))</span></code></pre></div>
 <p>Now, let’s check and see how many unique people R finds in our data?</p>
-<div class="sourceCode" id="cb695"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb695-1"><a href="working-with-character-strings.html#cb695-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb695-2"><a href="working-with-character-strings.html#cb695-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb695-3"><a href="working-with-character-strings.html#cb695-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb695-4"><a href="working-with-character-strings.html#cb695-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb695-5"><a href="working-with-character-strings.html#cb695-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 5
+<div class="sourceCode" id="cb716"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb716-1"><a href="working-with-character-strings.html#cb716-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb716-2"><a href="working-with-character-strings.html#cb716-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb716-3"><a href="working-with-character-strings.html#cb716-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb716-4"><a href="working-with-character-strings.html#cb716-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb716-5"><a href="working-with-character-strings.html#cb716-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 5
 ## # Groups:   name [12]
 ##    name             dup   dob        address             city              
 ##    &lt;chr&gt;            &lt;lgl&gt; &lt;date&gt;     &lt;chr&gt;               &lt;chr&gt;             
@@ -908,11 +934,11 @@ Link to complete reggex
 <div id="remove-middle-initial" class="section level3" number="28.3.2">
 <h3><span class="header-section-number">28.3.2</span> Remove middle initial</h3>
 <p>Next, let’s remove the middle initial from Tatum Chavez’s name.</p>
-<div class="sourceCode" id="cb697"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb697-1"><a href="working-with-character-strings.html#cb697-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(</span>
-<span id="cb697-2"><a href="working-with-character-strings.html#cb697-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">string      =</span> <span class="st">&quot;tatum s chavez&quot;</span>,</span>
-<span id="cb697-3"><a href="working-with-character-strings.html#cb697-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern     =</span> <span class="st">&quot; </span><span class="sc">\\</span><span class="st">w &quot;</span>,</span>
-<span id="cb697-4"><a href="working-with-character-strings.html#cb697-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">&quot; &quot;</span></span>
-<span id="cb697-5"><a href="working-with-character-strings.html#cb697-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb718"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb718-1"><a href="working-with-character-strings.html#cb718-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(</span>
+<span id="cb718-2"><a href="working-with-character-strings.html#cb718-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">string      =</span> <span class="st">&quot;tatum s chavez&quot;</span>,</span>
+<span id="cb718-3"><a href="working-with-character-strings.html#cb718-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern     =</span> <span class="st">&quot; </span><span class="sc">\\</span><span class="st">w &quot;</span>,</span>
+<span id="cb718-4"><a href="working-with-character-strings.html#cb718-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">&quot; &quot;</span></span>
+<span id="cb718-5"><a href="working-with-character-strings.html#cb718-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## [1] &quot;tatum chavez&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -928,15 +954,15 @@ Link to complete reggex
 <li><p>The third argument to the <code>str_replace()</code> function is <code>replacement</code>. The value passed the <code>replacement</code> argument should also be regular expression. It should tell the <code>str_replace()</code> function what to replace the value identified in the <code>pattern</code> argument with. In this case, it is a single space (<code>" "</code>).</p></li>
 </ul>
 <p>Let’s go ahead and use the <code>str_replace()</code> function now as the next step in cleaning our data:</p>
-<div class="sourceCode" id="cb699"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb699-1"><a href="working-with-character-strings.html#cb699-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb699-2"><a href="working-with-character-strings.html#cb699-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">&quot; </span><span class="sc">\\</span><span class="st">w &quot;</span>, <span class="st">&quot; &quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb720"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb720-1"><a href="working-with-character-strings.html#cb720-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb720-2"><a href="working-with-character-strings.html#cb720-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">&quot; </span><span class="sc">\\</span><span class="st">w &quot;</span>, <span class="st">&quot; &quot;</span>))</span></code></pre></div>
 <p>And, let’s once again check and see how many unique people R finds in our data?</p>
-<div class="sourceCode" id="cb700"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb700-1"><a href="working-with-character-strings.html#cb700-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb700-2"><a href="working-with-character-strings.html#cb700-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb700-3"><a href="working-with-character-strings.html#cb700-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb700-4"><a href="working-with-character-strings.html#cb700-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb700-5"><a href="working-with-character-strings.html#cb700-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 5
+<div class="sourceCode" id="cb721"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb721-1"><a href="working-with-character-strings.html#cb721-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb721-2"><a href="working-with-character-strings.html#cb721-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb721-3"><a href="working-with-character-strings.html#cb721-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb721-4"><a href="working-with-character-strings.html#cb721-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb721-5"><a href="working-with-character-strings.html#cb721-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 5
 ## # Groups:   name [11]
 ##    name             dup   dob        address             city              
 ##    &lt;chr&gt;            &lt;lgl&gt; &lt;date&gt;     &lt;chr&gt;               &lt;chr&gt;             
@@ -960,11 +986,11 @@ Link to complete reggex
 <div id="remove-double-spaces" class="section level3" number="28.3.3">
 <h3><span class="header-section-number">28.3.3</span> Remove double spaces</h3>
 <p>Finally, let’s remove the double space from Ivy Mccann’s name.</p>
-<div class="sourceCode" id="cb702"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb702-1"><a href="working-with-character-strings.html#cb702-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(</span>
-<span id="cb702-2"><a href="working-with-character-strings.html#cb702-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">string      =</span> <span class="st">&quot;Ivy   Mccann&quot;</span>,</span>
-<span id="cb702-3"><a href="working-with-character-strings.html#cb702-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern     =</span> <span class="st">&quot;</span><span class="sc">\\</span><span class="st">s{2,}&quot;</span>,</span>
-<span id="cb702-4"><a href="working-with-character-strings.html#cb702-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">&quot; &quot;</span></span>
-<span id="cb702-5"><a href="working-with-character-strings.html#cb702-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb723"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb723-1"><a href="working-with-character-strings.html#cb723-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(</span>
+<span id="cb723-2"><a href="working-with-character-strings.html#cb723-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">string      =</span> <span class="st">&quot;Ivy   Mccann&quot;</span>,</span>
+<span id="cb723-3"><a href="working-with-character-strings.html#cb723-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern     =</span> <span class="st">&quot;</span><span class="sc">\\</span><span class="st">s{2,}&quot;</span>,</span>
+<span id="cb723-4"><a href="working-with-character-strings.html#cb723-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">&quot; &quot;</span></span>
+<span id="cb723-5"><a href="working-with-character-strings.html#cb723-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## [1] &quot;Ivy Mccann&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -979,15 +1005,15 @@ Link to complete reggex
 <li><p>The third argument to the <code>str_replace()</code> function is <code>replacement</code>. The value passed the <code>replacement</code> argument should also be regular expression. It should tell the <code>str_replace()</code> function what to replace the value identified in the <code>pattern</code> argument with. In this case, it is a single space (<code>" "</code>).</p></li>
 </ul>
 <p>Let’s go ahead and use the <code>str_replace()</code> function now as the final step in cleaning our <code>name</code> column:</p>
-<div class="sourceCode" id="cb704"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb704-1"><a href="working-with-character-strings.html#cb704-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb704-2"><a href="working-with-character-strings.html#cb704-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">s{2,}&quot;</span>, <span class="st">&quot; &quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb725"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb725-1"><a href="working-with-character-strings.html#cb725-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb725-2"><a href="working-with-character-strings.html#cb725-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">s{2,}&quot;</span>, <span class="st">&quot; &quot;</span>))</span></code></pre></div>
 <p>Let’s check one final time to see how many unique people R finds in our data.</p>
-<div class="sourceCode" id="cb705"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb705-1"><a href="working-with-character-strings.html#cb705-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb705-2"><a href="working-with-character-strings.html#cb705-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb705-3"><a href="working-with-character-strings.html#cb705-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb705-4"><a href="working-with-character-strings.html#cb705-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb705-5"><a href="working-with-character-strings.html#cb705-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 5
+<div class="sourceCode" id="cb726"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb726-1"><a href="working-with-character-strings.html#cb726-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb726-2"><a href="working-with-character-strings.html#cb726-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb726-3"><a href="working-with-character-strings.html#cb726-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">row_number</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb726-4"><a href="working-with-character-strings.html#cb726-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb726-5"><a href="working-with-character-strings.html#cb726-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, dup, dob, address, city)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 5
 ## # Groups:   name [10]
 ##    name             dup   dob        address             city              
 ##    &lt;chr&gt;            &lt;lgl&gt; &lt;date&gt;     &lt;chr&gt;               &lt;chr&gt;             
@@ -1008,12 +1034,12 @@ Link to complete reggex
 ## 15 zariah hernandez FALSE 1944-09-27 3201 ORANGE AVE     FORT WORTH</code></pre>
 <p>In the output above, there are 15 rows. R has identified 5 rows with a duplicate name (dup == TRUE), which results in a count of 10 unique people. This is the answer we wanted! 👏</p>
 <p>If our data frame was too big to count unique people manually, we could have R calculate the number of unique people for us like this:</p>
-<div class="sourceCode" id="cb707"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb707-1"><a href="working-with-character-strings.html#cb707-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb707-2"><a href="working-with-character-strings.html#cb707-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb707-3"><a href="working-with-character-strings.html#cb707-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb707-4"><a href="working-with-character-strings.html#cb707-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb707-5"><a href="working-with-character-strings.html#cb707-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Unique People</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>())</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 1
+<div class="sourceCode" id="cb728"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb728-1"><a href="working-with-character-strings.html#cb728-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb728-2"><a href="working-with-character-strings.html#cb728-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb728-3"><a href="working-with-character-strings.html#cb728-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb728-4"><a href="working-with-character-strings.html#cb728-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb728-5"><a href="working-with-character-strings.html#cb728-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Unique People</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 1
 ##   `Unique People`
 ##             &lt;int&gt;
 ## 1              10</code></pre>
@@ -1024,12 +1050,12 @@ Link to complete reggex
 </ul>
 <p>Now that we know how many unique people are in our data, let’s say we want to know how many of them live in each city that our data contains.</p>
 <p>First, we will subset our data to include one row only for each person:</p>
-<div class="sourceCode" id="cb709"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb709-1"><a href="working-with-character-strings.html#cb709-1" aria-hidden="true" tabindex="-1"></a>ehr_unique <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb709-2"><a href="working-with-character-strings.html#cb709-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb709-3"><a href="working-with-character-strings.html#cb709-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb709-4"><a href="working-with-character-strings.html#cb709-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb709-5"><a href="working-with-character-strings.html#cb709-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 10 x 6
+<div class="sourceCode" id="cb730"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb730-1"><a href="working-with-character-strings.html#cb730-1" aria-hidden="true" tabindex="-1"></a>ehr_unique <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb730-2"><a href="working-with-character-strings.html#cb730-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb730-3"><a href="working-with-character-strings.html#cb730-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb730-4"><a href="working-with-character-strings.html#cb730-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb730-5"><a href="working-with-character-strings.html#cb730-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 10 × 6
 ##    admit_date          name      dob        address     city     symptoms       
 ##    &lt;dttm&gt;              &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;          
 ##  1 2017-02-01 05:22:30 zariah h… 1944-09-27 3201 ORANG… FORT WO… &quot;\&quot;Pain\&quot;, \&quot;H…
@@ -1043,10 +1069,10 @@ Link to complete reggex
 ##  9 2017-12-20 13:40:04 charlee … 1908-07-22 8190 DUCK … City of… &quot;Headache&quot;     
 ## 10 2018-01-28 08:49:38 kane mar… 1939-10-27 4929 asbury FORT WO…  &lt;NA&gt;</code></pre>
 <p>Let’s go ahead and get an initial count of how many people live in each city:</p>
-<div class="sourceCode" id="cb711"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb711-1"><a href="working-with-character-strings.html#cb711-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb711-2"><a href="working-with-character-strings.html#cb711-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city) <span class="sc">%&gt;%</span> </span>
-<span id="cb711-3"><a href="working-with-character-strings.html#cb711-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 2
+<div class="sourceCode" id="cb732"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb732-1"><a href="working-with-character-strings.html#cb732-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb732-2"><a href="working-with-character-strings.html#cb732-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city) <span class="sc">%&gt;%</span> </span>
+<span id="cb732-3"><a href="working-with-character-strings.html#cb732-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 2
 ##   city                   n
 ##   &lt;chr&gt;              &lt;int&gt;
 ## 1 City of Fort Worth     3
@@ -1056,16 +1082,16 @@ Link to complete reggex
 ## 5 KELLER                 1</code></pre>
 <p>I’m sure you saw this coming, but we have more data entry discrepancies that are preventing us from completing our analysis. Now that you’ve gotten your feet wet with character string manipulation and regular expressions, what do we need to do in order to complete our analysis?</p>
 <p>Hopefully, your first instinct by now is to coerce all the letters to lowercase. In fact, one of the first things I typically do is coerce all character columns to lowercase. Let’s do that now.</p>
-<div class="sourceCode" id="cb713"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb713-1"><a href="working-with-character-strings.html#cb713-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb713-2"><a href="working-with-character-strings.html#cb713-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb713-3"><a href="working-with-character-strings.html#cb713-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">address =</span> <span class="fu">tolower</span>(address),</span>
-<span id="cb713-4"><a href="working-with-character-strings.html#cb713-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">city    =</span> <span class="fu">tolower</span>(city)</span>
-<span id="cb713-5"><a href="working-with-character-strings.html#cb713-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb734"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb734-1"><a href="working-with-character-strings.html#cb734-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb734-2"><a href="working-with-character-strings.html#cb734-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb734-3"><a href="working-with-character-strings.html#cb734-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">address =</span> <span class="fu">tolower</span>(address),</span>
+<span id="cb734-4"><a href="working-with-character-strings.html#cb734-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">city    =</span> <span class="fu">tolower</span>(city)</span>
+<span id="cb734-5"><a href="working-with-character-strings.html#cb734-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Now how many people live in each city?</p>
-<div class="sourceCode" id="cb714"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb714-1"><a href="working-with-character-strings.html#cb714-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb714-2"><a href="working-with-character-strings.html#cb714-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city) <span class="sc">%&gt;%</span> </span>
-<span id="cb714-3"><a href="working-with-character-strings.html#cb714-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 2
+<div class="sourceCode" id="cb735"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb735-1"><a href="working-with-character-strings.html#cb735-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb735-2"><a href="working-with-character-strings.html#cb735-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city) <span class="sc">%&gt;%</span> </span>
+<span id="cb735-3"><a href="working-with-character-strings.html#cb735-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 2
 ##   city                   n
 ##   &lt;chr&gt;              &lt;int&gt;
 ## 1 city of fort worth     3
@@ -1073,20 +1099,20 @@ Link to complete reggex
 ## 3 fort worth             9
 ## 4 keller                 1</code></pre>
 <p>We’re getting closer to the right answer, but we still need to remove “city of” from some of the values. This sounds like another job for <code>str_replace()</code>.</p>
-<div class="sourceCode" id="cb716"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb716-1"><a href="working-with-character-strings.html#cb716-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(</span>
-<span id="cb716-2"><a href="working-with-character-strings.html#cb716-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">string      =</span> <span class="st">&quot;city of fort worth&quot;</span>,</span>
-<span id="cb716-3"><a href="working-with-character-strings.html#cb716-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern     =</span> <span class="st">&quot;city of &quot;</span>,</span>
-<span id="cb716-4"><a href="working-with-character-strings.html#cb716-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb716-5"><a href="working-with-character-strings.html#cb716-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb737"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb737-1"><a href="working-with-character-strings.html#cb737-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(</span>
+<span id="cb737-2"><a href="working-with-character-strings.html#cb737-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">string      =</span> <span class="st">&quot;city of fort worth&quot;</span>,</span>
+<span id="cb737-3"><a href="working-with-character-strings.html#cb737-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern     =</span> <span class="st">&quot;city of &quot;</span>,</span>
+<span id="cb737-4"><a href="working-with-character-strings.html#cb737-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb737-5"><a href="working-with-character-strings.html#cb737-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## [1] &quot;fort worth&quot;</code></pre>
 <p>That regular expression looks like it will work. Let’s go ahead and use it to remove “city of” from the values in the <code>address_city</code> column now.</p>
-<div class="sourceCode" id="cb718"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb718-1"><a href="working-with-character-strings.html#cb718-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb718-2"><a href="working-with-character-strings.html#cb718-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">city =</span> <span class="fu">str_replace</span>(city, <span class="st">&quot;city of &quot;</span>, <span class="st">&quot;&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb739"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb739-1"><a href="working-with-character-strings.html#cb739-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb739-2"><a href="working-with-character-strings.html#cb739-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">city =</span> <span class="fu">str_replace</span>(city, <span class="st">&quot;city of &quot;</span>, <span class="st">&quot;&quot;</span>))</span></code></pre></div>
 <p>One last time, how many people live in each city?</p>
-<div class="sourceCode" id="cb719"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb719-1"><a href="working-with-character-strings.html#cb719-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb719-2"><a href="working-with-character-strings.html#cb719-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city) <span class="sc">%&gt;%</span> </span>
-<span id="cb719-3"><a href="working-with-character-strings.html#cb719-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 2
+<div class="sourceCode" id="cb740"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb740-1"><a href="working-with-character-strings.html#cb740-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb740-2"><a href="working-with-character-strings.html#cb740-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city) <span class="sc">%&gt;%</span> </span>
+<span id="cb740-3"><a href="working-with-character-strings.html#cb740-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
 ##   city           n
 ##   &lt;chr&gt;      &lt;int&gt;
 ## 1 fort worth    12
@@ -1097,7 +1123,7 @@ Link to complete reggex
 <div id="separate-values-into-component-parts" class="section level2" number="28.4">
 <h2><span class="header-section-number">28.4</span> Separate values into component parts</h2>
 <p>Another common task that I perform on character strings is to separate the strings into multiple parts. For example, sometimes we may want to separate full names into two columns. One for fist name and one for last name. To complete this task, we will once again use regular expressions. We will also learn how to use the <code>str_extract()</code> function to pull values out of a character string when the match a pattern we create with a regular expression.</p>
-<div class="sourceCode" id="cb721"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb721-1"><a href="working-with-character-strings.html#cb721-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(<span class="st">&quot;zariah hernandez&quot;</span>, <span class="st">&quot;^</span><span class="sc">\\</span><span class="st">w+&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb742"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb742-1"><a href="working-with-character-strings.html#cb742-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(<span class="st">&quot;zariah hernandez&quot;</span>, <span class="st">&quot;^</span><span class="sc">\\</span><span class="st">w+&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;zariah&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1114,7 +1140,7 @@ Link to complete reggex
 </ul></li>
 </ul>
 <p>We can pull the last name from the character string in a similar way:</p>
-<div class="sourceCode" id="cb723"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb723-1"><a href="working-with-character-strings.html#cb723-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(<span class="st">&quot;zariah hernandez&quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">w+$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb744"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb744-1"><a href="working-with-character-strings.html#cb744-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(<span class="st">&quot;zariah hernandez&quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">w+$&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;hernandez&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1133,15 +1159,15 @@ Link to complete reggex
 </ul></li>
 </ul>
 <p>Now, let’s use <code>str_extract()</code> to separate full name into <code>name_first</code> and <code>name_last</code>.</p>
-<div class="sourceCode" id="cb725"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb725-1"><a href="working-with-character-strings.html#cb725-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb725-2"><a href="working-with-character-strings.html#cb725-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb725-3"><a href="working-with-character-strings.html#cb725-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Separate name into first name and last name</span></span>
-<span id="cb725-4"><a href="working-with-character-strings.html#cb725-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_first =</span> <span class="fu">str_extract</span>(name, <span class="st">&quot;^</span><span class="sc">\\</span><span class="st">w+&quot;</span>),</span>
-<span id="cb725-5"><a href="working-with-character-strings.html#cb725-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_last  =</span> <span class="fu">str_extract</span>(name, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">w+$&quot;</span>)</span>
-<span id="cb725-6"><a href="working-with-character-strings.html#cb725-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div>
-<div class="sourceCode" id="cb726"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb726-1"><a href="working-with-character-strings.html#cb726-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb726-2"><a href="working-with-character-strings.html#cb726-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, name_first, name_last)</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 3
+<div class="sourceCode" id="cb746"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb746-1"><a href="working-with-character-strings.html#cb746-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb746-2"><a href="working-with-character-strings.html#cb746-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb746-3"><a href="working-with-character-strings.html#cb746-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Separate name into first name and last name</span></span>
+<span id="cb746-4"><a href="working-with-character-strings.html#cb746-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_first =</span> <span class="fu">str_extract</span>(name, <span class="st">&quot;^</span><span class="sc">\\</span><span class="st">w+&quot;</span>),</span>
+<span id="cb746-5"><a href="working-with-character-strings.html#cb746-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_last  =</span> <span class="fu">str_extract</span>(name, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">w+$&quot;</span>)</span>
+<span id="cb746-6"><a href="working-with-character-strings.html#cb746-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div>
+<div class="sourceCode" id="cb747"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb747-1"><a href="working-with-character-strings.html#cb747-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb747-2"><a href="working-with-character-strings.html#cb747-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, name_first, name_last)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 3
 ##    name             name_first name_last
 ##    &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;    
 ##  1 zariah hernandez zariah     hernandez
@@ -1161,7 +1187,7 @@ Link to complete reggex
 ## 15 kane martin      kane       martin</code></pre>
 <p>The regular expressions we used in the examples above weren’t super complex. I hope that leaves you feeling like you can use regular expression to complete data cleaning tasks that are actually useful, even if you haven’t totally mastered them yet (I haven’t totally mastered them either).</p>
 <p>Before moving on, I want to introduce you to a free tool I use when I have to do more complex character string manipulations with regular expressions. It is the <a href="https://regex101.com/#python">regular expressions 101 online regex tester and debugger</a>.</p>
-<p><img src="img/05_part_data_management/05_working_with_character_vectors/regex101.png" width="900" /></p>
+<p><img src="img/05_part_data_management/05_working_with_character_vectors/regex101.png" /><!-- --></p>
 <p>In the screenshot above, I highlight some of the really cool features of the regex tester and debugger.</p>
 <ul>
 <li><p>First, you can use the regex tester without logging in. However, I typically do log in because that allows me to save regular expressions and use them again later.</p></li>
@@ -1177,9 +1203,9 @@ Link to complete reggex
 <p class="note">
 🗒<strong>Side Note:</strong> Any categorical variable can be transformed into dummy variables. Not just the variables that result from “check all that apply” survey questions. However, the “check all that apply” survey questions often require extra data cleaning steps relative to categorical variables that can only take a single value in each row.
 </p>
-<div class="sourceCode" id="cb728"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb728-1"><a href="working-with-character-strings.html#cb728-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb728-2"><a href="working-with-character-strings.html#cb728-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name_first, name_last, symptoms)</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 3
+<div class="sourceCode" id="cb749"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb749-1"><a href="working-with-character-strings.html#cb749-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb749-2"><a href="working-with-character-strings.html#cb749-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name_first, name_last, symptoms)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 3
 ##    name_first name_last symptoms                            
 ##    &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;                               
 ##  1 zariah     hernandez &quot;\&quot;Pain\&quot;, \&quot;Headache\&quot;, \&quot;Nausea\&quot;&quot;
@@ -1198,10 +1224,10 @@ Link to complete reggex
 ## 14 ivy        mccann    &quot;\&quot;Headache\&quot;, \&quot;Pain\&quot;, \&quot;Nausea\&quot;&quot;
 ## 15 kane       martin     &lt;NA&gt;</code></pre>
 <p>Notice that some people didn’t report their symptoms (<code>NA</code>), some people reported only one symptom, and some people reported multiple symptoms. The way the data is currently formatted is not ideal for analysis. For example, if I asked you to tell me how many people ever came in complaining of headache, how would you do that? Maybe like this:</p>
-<div class="sourceCode" id="cb730"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb730-1"><a href="working-with-character-strings.html#cb730-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb730-2"><a href="working-with-character-strings.html#cb730-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(symptoms) <span class="sc">%&gt;%</span> </span>
-<span id="cb730-3"><a href="working-with-character-strings.html#cb730-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
-<pre><code>## # A tibble: 7 x 2
+<div class="sourceCode" id="cb751"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb751-1"><a href="working-with-character-strings.html#cb751-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb751-2"><a href="working-with-character-strings.html#cb751-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(symptoms) <span class="sc">%&gt;%</span> </span>
+<span id="cb751-3"><a href="working-with-character-strings.html#cb751-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 7 × 2
 ##   symptoms                                 n
 ##   &lt;chr&gt;                                &lt;int&gt;
 ## 1 &quot;\&quot;Headache\&quot;, \&quot;Pain\&quot;, \&quot;Nausea\&quot;&quot;     2
@@ -1212,15 +1238,15 @@ Link to complete reggex
 ## 6 &quot;Pain&quot;                                   4
 ## 7  &lt;NA&gt;                                    3</code></pre>
 <p>In this case, you could probably count manually and get the right answer. But what if we had many more possible symptoms and many more rows. Counting would quickly become tedious and error prone. The solution is to create dummy variables. We can create dummy variables like this:</p>
-<div class="sourceCode" id="cb732"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb732-1"><a href="working-with-character-strings.html#cb732-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb732-2"><a href="working-with-character-strings.html#cb732-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb732-3"><a href="working-with-character-strings.html#cb732-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pain     =</span> <span class="fu">str_detect</span>(symptoms, <span class="st">&quot;Pain&quot;</span>),</span>
-<span id="cb732-4"><a href="working-with-character-strings.html#cb732-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">headache =</span> <span class="fu">str_detect</span>(symptoms, <span class="st">&quot;Headache&quot;</span>),</span>
-<span id="cb732-5"><a href="working-with-character-strings.html#cb732-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">nausea   =</span> <span class="fu">str_detect</span>(symptoms, <span class="st">&quot;Nausea&quot;</span>)</span>
-<span id="cb732-6"><a href="working-with-character-strings.html#cb732-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<div class="sourceCode" id="cb733"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb733-1"><a href="working-with-character-strings.html#cb733-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb733-2"><a href="working-with-character-strings.html#cb733-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(symptoms, pain, headache, nausea)</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 4
+<div class="sourceCode" id="cb753"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb753-1"><a href="working-with-character-strings.html#cb753-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="ot">&lt;-</span> ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb753-2"><a href="working-with-character-strings.html#cb753-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb753-3"><a href="working-with-character-strings.html#cb753-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pain     =</span> <span class="fu">str_detect</span>(symptoms, <span class="st">&quot;Pain&quot;</span>),</span>
+<span id="cb753-4"><a href="working-with-character-strings.html#cb753-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">headache =</span> <span class="fu">str_detect</span>(symptoms, <span class="st">&quot;Headache&quot;</span>),</span>
+<span id="cb753-5"><a href="working-with-character-strings.html#cb753-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">nausea   =</span> <span class="fu">str_detect</span>(symptoms, <span class="st">&quot;Nausea&quot;</span>)</span>
+<span id="cb753-6"><a href="working-with-character-strings.html#cb753-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb754"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb754-1"><a href="working-with-character-strings.html#cb754-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb754-2"><a href="working-with-character-strings.html#cb754-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(symptoms, pain, headache, nausea)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 4
 ##    symptoms                             pain  headache nausea
 ##    &lt;chr&gt;                                &lt;lgl&gt; &lt;lgl&gt;    &lt;lgl&gt; 
 ##  1 &quot;\&quot;Pain\&quot;, \&quot;Headache\&quot;, \&quot;Nausea\&quot;&quot; TRUE  TRUE     TRUE  
@@ -1247,15 +1273,15 @@ Link to complete reggex
 <li><p>Each dummy variable can take the value <code>TRUE</code>, <code>FALSE</code>, or <code>NA</code>. The value for each dummy variable is <code>TRUE</code> in rows were that symptom was reported and <code>FALSE</code> in rows where the symptom was not reported. For example, the value in the first row of the <code>pain</code> column is <code>TRUE</code> because the value in the first row of <code>symptoms</code> column (“Pain,” “Headache,” “Nausea”) includes “Pain.” However, the value in the fourth row of the <code>pain</code> column is <code>FALSE</code> because the value in the fourth row of <code>symptoms</code> column (“Nausea,” “Headache”) does not include “Pain.”</p></li>
 </ul>
 <p>Now, we can much more easily figure out how many people had each symptom.</p>
-<div class="sourceCode" id="cb735"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb735-1"><a href="working-with-character-strings.html#cb735-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ehr<span class="sc">$</span>headache)</span></code></pre></div>
+<div class="sourceCode" id="cb756"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb756-1"><a href="working-with-character-strings.html#cb756-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ehr<span class="sc">$</span>headache)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
 ##     4     8</code></pre>
 <p>I should acknowledge that dummy variables typically take the values 0 and 1 instead of FALSE and TRUE. We can easily coerce our dummy variable values to 0/1 using the <code>as.numeric()</code> function. For example:</p>
-<div class="sourceCode" id="cb737"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb737-1"><a href="working-with-character-strings.html#cb737-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
-<span id="cb737-2"><a href="working-with-character-strings.html#cb737-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(pain) <span class="sc">%&gt;%</span> </span>
-<span id="cb737-3"><a href="working-with-character-strings.html#cb737-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pain_01 =</span> <span class="fu">as.numeric</span>(pain))</span></code></pre></div>
-<pre><code>## # A tibble: 15 x 2
+<div class="sourceCode" id="cb758"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb758-1"><a href="working-with-character-strings.html#cb758-1" aria-hidden="true" tabindex="-1"></a>ehr <span class="sc">%&gt;%</span> </span>
+<span id="cb758-2"><a href="working-with-character-strings.html#cb758-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(pain) <span class="sc">%&gt;%</span> </span>
+<span id="cb758-3"><a href="working-with-character-strings.html#cb758-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pain_01 =</span> <span class="fu">as.numeric</span>(pain))</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 2
 ##    pain  pain_01
 ##    &lt;lgl&gt;   &lt;dbl&gt;
 ##  1 TRUE        1
@@ -1307,6 +1333,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

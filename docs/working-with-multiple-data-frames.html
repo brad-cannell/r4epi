@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>30 Working with multiple data frames | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="30 Working with multiple data frames | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-07-22" />
+<meta name="date" content="2021-07-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,8 @@
   
 <link rel="prev" href="conditional-operations.html"/>
 <link rel="next" href="restructuring-data-frames.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-3.5.1/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,15 +51,18 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<script src="libs/datatables-binding-0.18/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
@@ -125,6 +128,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -642,20 +668,20 @@ Joining data frames probabilistically
 Add link to cheat sheet
 -->
 <p>Up to this point, the data we’ve needed has always been stored in a single data frame. However, that won’t always be the case. At times you may need to combine data from multiple agencies in order to complete your analysis.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/agencies.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/agencies.png" /><!-- --></p>
 <p>Additionally, large studies often gather data at multiple sites.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/sites.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/sites.png" /><!-- --></p>
 <p>Or, data is sometimes gathered over long periods of time. When this happens, it is not uncommon for observations across the study sites or times to be stored as separate data sets.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/time.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/time.png" /><!-- --></p>
 <p>Another common scenario in which you end up with multiple data sets for the same study is when researchers use different data sets to record the results of different survey instruments or groups of similar instruments.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/instruments.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/instruments.png" /><!-- --></p>
 <p>In any of these cases, you may need to combine data from across data sets in order to complete your analysis.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/datasets.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/datasets.png" /><!-- --></p>
 <p>This combining of data comes in two basic forms: combining vertically and combining horizontally. First we’ll learn about combining vertically, or adding rows. Later, we’ll learn about combining horizontally, or adding columns.</p>
 <p>Below we have two separate data frames - data frame one and data frame two. In this case both data frames contain the exact same variables: Var1, Var2, and Var3. However, they aren’t identical because they contain different observations.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/two_data_sets1.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/two_data_sets1.png" /><!-- --></p>
 <p>Now, you want to combine these two data frames and end up with one data frame that includes the observations from data frame two listed directly below the observations from data frame one. This is a situation where we want to combine data frames vertically.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/two_data_sets2.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/two_data_sets2.png" /><!-- --></p>
 <p>When combining data frames vertically, one of the most important questions to ask is, “do the data frames have variables in common?” Just by examining data frame one and data frame two, you can see that the variables have the same names. How can you check to make sure that the variables also contain the same type of data? Well, you can use the <code>str()</code> or <code>glimpse()</code> functions to compare the details of the columns in the two data frames.</p>
 <p>Sometimes, you might find that columns that have different names across data frames contain the same data. For example, suppose that data frame one has a variable named ID and data frame two has a variable named subject ID. In this situation you might want R to combine these two variables when you combine data frames.</p>
 <p>On the other hand, you may find that variables that have the same name across data frames, actually contain different data. For example, both data frames may contain the variable <code>date</code>. But, one <code>date</code> variable might store birth date and the other might store date of admission. You would not want to combine these two variables.</p>
@@ -663,38 +689,38 @@ Add link to cheat sheet
 <div id="combining-data-frames-vertically-adding-rows" class="section level2" number="30.1">
 <h2><span class="header-section-number">30.1</span> Combining data frames vertically: Adding rows</h2>
 <p>Suppose you are working on a multisite clinical trial recruiting participants over multiple years. You have a data frame named Trial, that stores the number of participants recruited each year, as well as the number of participants who experienced the outcome of interest. Another data frame named Trial_2020 was just sent to you with the recruitment numbers for the year 2020.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/trial.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/trial.png" /><!-- --></p>
 <p>You want to add the observations about the participants recruited in 2020 to the master data frame so that it contains the information about all years. To do this, you bind the rows in the <code>trial_2020</code> data frame to the <code>trial</code> data frame.</p>
 <p>Let’s go ahead and load <code>dplyr</code>:</p>
-<div class="sourceCode" id="cb797"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb797-1"><a href="working-with-multiple-data-frames.html#cb797-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb818"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb818-1"><a href="working-with-multiple-data-frames.html#cb818-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 <p>And simulate our data frames:</p>
-<div class="sourceCode" id="cb798"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb798-1"><a href="working-with-multiple-data-frames.html#cb798-1" aria-hidden="true" tabindex="-1"></a>trial <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb798-2"><a href="working-with-multiple-data-frames.html#cb798-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year    =</span> <span class="fu">c</span>(<span class="dv">2016</span>, <span class="dv">2017</span>, <span class="dv">2018</span>, <span class="dv">2019</span>),</span>
-<span id="cb798-3"><a href="working-with-multiple-data-frames.html#cb798-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n       =</span> <span class="fu">c</span>(<span class="dv">501</span>, <span class="dv">499</span>, <span class="dv">498</span>, <span class="dv">502</span>),</span>
-<span id="cb798-4"><a href="working-with-multiple-data-frames.html#cb798-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="fu">c</span>(<span class="dv">51</span>, <span class="dv">52</span>, <span class="dv">49</span>, <span class="dv">50</span>) </span>
-<span id="cb798-5"><a href="working-with-multiple-data-frames.html#cb798-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb798-6"><a href="working-with-multiple-data-frames.html#cb798-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb819"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb819-1"><a href="working-with-multiple-data-frames.html#cb819-1" aria-hidden="true" tabindex="-1"></a>trial <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb819-2"><a href="working-with-multiple-data-frames.html#cb819-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year    =</span> <span class="fu">c</span>(<span class="dv">2016</span>, <span class="dv">2017</span>, <span class="dv">2018</span>, <span class="dv">2019</span>),</span>
+<span id="cb819-3"><a href="working-with-multiple-data-frames.html#cb819-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n       =</span> <span class="fu">c</span>(<span class="dv">501</span>, <span class="dv">499</span>, <span class="dv">498</span>, <span class="dv">502</span>),</span>
+<span id="cb819-4"><a href="working-with-multiple-data-frames.html#cb819-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="fu">c</span>(<span class="dv">51</span>, <span class="dv">52</span>, <span class="dv">49</span>, <span class="dv">50</span>) </span>
+<span id="cb819-5"><a href="working-with-multiple-data-frames.html#cb819-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb819-6"><a href="working-with-multiple-data-frames.html#cb819-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ##    year     n outcome
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ## 1  2016   501      51
 ## 2  2017   499      52
 ## 3  2018   498      49
 ## 4  2019   502      50</code></pre>
-<div class="sourceCode" id="cb800"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb800-1"><a href="working-with-multiple-data-frames.html#cb800-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb800-2"><a href="working-with-multiple-data-frames.html#cb800-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year    =</span> <span class="dv">2020</span>,</span>
-<span id="cb800-3"><a href="working-with-multiple-data-frames.html#cb800-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n       =</span> <span class="dv">500</span>,</span>
-<span id="cb800-4"><a href="working-with-multiple-data-frames.html#cb800-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="dv">48</span> </span>
-<span id="cb800-5"><a href="working-with-multiple-data-frames.html#cb800-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb800-6"><a href="working-with-multiple-data-frames.html#cb800-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 3
+<div class="sourceCode" id="cb821"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb821-1"><a href="working-with-multiple-data-frames.html#cb821-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb821-2"><a href="working-with-multiple-data-frames.html#cb821-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year    =</span> <span class="dv">2020</span>,</span>
+<span id="cb821-3"><a href="working-with-multiple-data-frames.html#cb821-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n       =</span> <span class="dv">500</span>,</span>
+<span id="cb821-4"><a href="working-with-multiple-data-frames.html#cb821-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="dv">48</span> </span>
+<span id="cb821-5"><a href="working-with-multiple-data-frames.html#cb821-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb821-6"><a href="working-with-multiple-data-frames.html#cb821-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 3
 ##    year     n outcome
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ## 1  2020   500      48</code></pre>
 <p>We can see above that column names and types in both data frames are identical. In this case, we can easily bind them together vertically with <code>dplyr</code>’s <code>bind_rows()</code> function:</p>
-<div class="sourceCode" id="cb802"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb802-1"><a href="working-with-multiple-data-frames.html#cb802-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
-<span id="cb802-2"><a href="working-with-multiple-data-frames.html#cb802-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 3
+<div class="sourceCode" id="cb823"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb823-1"><a href="working-with-multiple-data-frames.html#cb823-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb823-2"><a href="working-with-multiple-data-frames.html#cb823-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 3
 ##    year     n outcome
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ## 1  2016   501      51
@@ -711,19 +737,19 @@ Add link to cheat sheet
 <div id="combining-more-than-2-data-frames" class="section level3" number="30.1.1">
 <h3><span class="header-section-number">30.1.1</span> Combining more than 2 data frames</h3>
 <p>What if we want to vertically combine more than two data frames? This isn’t a problem. Thankfully, <code>bind_rows()</code> lets us pass as many data frames as we want to the <code>...</code> argument. For example:</p>
-<div class="sourceCode" id="cb804"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb804-1"><a href="working-with-multiple-data-frames.html#cb804-1" aria-hidden="true" tabindex="-1"></a>trial_2021 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb804-2"><a href="working-with-multiple-data-frames.html#cb804-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2021</span>,</span>
-<span id="cb804-3"><a href="working-with-multiple-data-frames.html#cb804-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n         =</span> <span class="dv">598</span>,</span>
-<span id="cb804-4"><a href="working-with-multiple-data-frames.html#cb804-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="dv">57</span></span>
-<span id="cb804-5"><a href="working-with-multiple-data-frames.html#cb804-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb804-6"><a href="working-with-multiple-data-frames.html#cb804-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 3
+<div class="sourceCode" id="cb825"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb825-1"><a href="working-with-multiple-data-frames.html#cb825-1" aria-hidden="true" tabindex="-1"></a>trial_2021 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb825-2"><a href="working-with-multiple-data-frames.html#cb825-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2021</span>,</span>
+<span id="cb825-3"><a href="working-with-multiple-data-frames.html#cb825-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n         =</span> <span class="dv">598</span>,</span>
+<span id="cb825-4"><a href="working-with-multiple-data-frames.html#cb825-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="dv">57</span></span>
+<span id="cb825-5"><a href="working-with-multiple-data-frames.html#cb825-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb825-6"><a href="working-with-multiple-data-frames.html#cb825-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 3
 ##    year     n outcome
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ## 1  2021   598      57</code></pre>
-<div class="sourceCode" id="cb806"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb806-1"><a href="working-with-multiple-data-frames.html#cb806-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
-<span id="cb806-2"><a href="working-with-multiple-data-frames.html#cb806-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020, trial_2021)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 3
+<div class="sourceCode" id="cb827"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb827-1"><a href="working-with-multiple-data-frames.html#cb827-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb827-2"><a href="working-with-multiple-data-frames.html#cb827-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020, trial_2021)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 3
 ##    year     n outcome
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ## 1  2016   501      51
@@ -736,20 +762,20 @@ Add link to cheat sheet
 <div id="adding-rows-with-differing-columns" class="section level3" number="30.1.2">
 <h3><span class="header-section-number">30.1.2</span> Adding rows with differing columns</h3>
 <p>What happens when the data frames we want to combine don’t have identical sets of columns? For example, let’s say that we started collecting data on adverse events for the first time in 2020. In this case, <code>trials_2020</code> would contain a column that <code>trials</code> doesn’t contain. Can we still row bind our two data frames? Let’s see:</p>
-<div class="sourceCode" id="cb808"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb808-1"><a href="working-with-multiple-data-frames.html#cb808-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb808-2"><a href="working-with-multiple-data-frames.html#cb808-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2020</span>,</span>
-<span id="cb808-3"><a href="working-with-multiple-data-frames.html#cb808-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n         =</span> <span class="dv">500</span>,</span>
-<span id="cb808-4"><a href="working-with-multiple-data-frames.html#cb808-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="dv">48</span>,</span>
-<span id="cb808-5"><a href="working-with-multiple-data-frames.html#cb808-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">adv_event =</span> <span class="dv">3</span> <span class="co"># Here is the new column</span></span>
-<span id="cb808-6"><a href="working-with-multiple-data-frames.html#cb808-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb808-7"><a href="working-with-multiple-data-frames.html#cb808-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 4
+<div class="sourceCode" id="cb829"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb829-1"><a href="working-with-multiple-data-frames.html#cb829-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb829-2"><a href="working-with-multiple-data-frames.html#cb829-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2020</span>,</span>
+<span id="cb829-3"><a href="working-with-multiple-data-frames.html#cb829-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n         =</span> <span class="dv">500</span>,</span>
+<span id="cb829-4"><a href="working-with-multiple-data-frames.html#cb829-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="dv">48</span>,</span>
+<span id="cb829-5"><a href="working-with-multiple-data-frames.html#cb829-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">adv_event =</span> <span class="dv">3</span> <span class="co"># Here is the new column</span></span>
+<span id="cb829-6"><a href="working-with-multiple-data-frames.html#cb829-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb829-7"><a href="working-with-multiple-data-frames.html#cb829-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 4
 ##    year     n outcome adv_event
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
 ## 1  2020   500      48         3</code></pre>
-<div class="sourceCode" id="cb810"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb810-1"><a href="working-with-multiple-data-frames.html#cb810-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
-<span id="cb810-2"><a href="working-with-multiple-data-frames.html#cb810-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 4
+<div class="sourceCode" id="cb831"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb831-1"><a href="working-with-multiple-data-frames.html#cb831-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb831-2"><a href="working-with-multiple-data-frames.html#cb831-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 4
 ##    year     n outcome adv_event
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
 ## 1  2016   501      51        NA
@@ -762,20 +788,20 @@ Add link to cheat sheet
 <div id="differing-column-positions" class="section level3" number="30.1.3">
 <h3><span class="header-section-number">30.1.3</span> Differing column positions</h3>
 <p>Next, let’s say that the person doing data entry accidently put the columns in a different order in 2020. Is <code>bind_rows()</code> able to figure out which columns go together?</p>
-<div class="sourceCode" id="cb812"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb812-1"><a href="working-with-multiple-data-frames.html#cb812-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb812-2"><a href="working-with-multiple-data-frames.html#cb812-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2020</span>,</span>
-<span id="cb812-3"><a href="working-with-multiple-data-frames.html#cb812-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n         =</span> <span class="dv">500</span>,</span>
-<span id="cb812-4"><a href="working-with-multiple-data-frames.html#cb812-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">adv_event =</span> <span class="dv">3</span>, <span class="co"># This was previously the fourth column</span></span>
-<span id="cb812-5"><a href="working-with-multiple-data-frames.html#cb812-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="dv">48</span> <span class="co"># This is the thrid column in trial</span></span>
-<span id="cb812-6"><a href="working-with-multiple-data-frames.html#cb812-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb812-7"><a href="working-with-multiple-data-frames.html#cb812-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 4
+<div class="sourceCode" id="cb833"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb833-1"><a href="working-with-multiple-data-frames.html#cb833-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb833-2"><a href="working-with-multiple-data-frames.html#cb833-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2020</span>,</span>
+<span id="cb833-3"><a href="working-with-multiple-data-frames.html#cb833-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n         =</span> <span class="dv">500</span>,</span>
+<span id="cb833-4"><a href="working-with-multiple-data-frames.html#cb833-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">adv_event =</span> <span class="dv">3</span>, <span class="co"># This was previously the fourth column</span></span>
+<span id="cb833-5"><a href="working-with-multiple-data-frames.html#cb833-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="dv">48</span> <span class="co"># This is the thrid column in trial</span></span>
+<span id="cb833-6"><a href="working-with-multiple-data-frames.html#cb833-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb833-7"><a href="working-with-multiple-data-frames.html#cb833-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 4
 ##    year     n adv_event outcome
 ##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
 ## 1  2020   500         3      48</code></pre>
-<div class="sourceCode" id="cb814"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb814-1"><a href="working-with-multiple-data-frames.html#cb814-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
-<span id="cb814-2"><a href="working-with-multiple-data-frames.html#cb814-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 4
+<div class="sourceCode" id="cb835"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb835-1"><a href="working-with-multiple-data-frames.html#cb835-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb835-2"><a href="working-with-multiple-data-frames.html#cb835-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 4
 ##    year     n outcome adv_event
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
 ## 1  2016   501      51        NA
@@ -788,20 +814,20 @@ Add link to cheat sheet
 <div id="differing-column-names" class="section level3" number="30.1.4">
 <h3><span class="header-section-number">30.1.4</span> Differing column names</h3>
 <p>As a final wrinkle, let’s say that the person doing data entry started using different column names in 2020 as well. For example, below, the <code>n</code> column is now named <code>count</code> and the <code>outcome</code> column is now named <code>outcomes</code>. Will <code>bind_rows()</code> still be able to vertically combine these data frames?</p>
-<div class="sourceCode" id="cb816"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb816-1"><a href="working-with-multiple-data-frames.html#cb816-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb816-2"><a href="working-with-multiple-data-frames.html#cb816-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2020</span>,</span>
-<span id="cb816-3"><a href="working-with-multiple-data-frames.html#cb816-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">count     =</span> <span class="dv">500</span>,</span>
-<span id="cb816-4"><a href="working-with-multiple-data-frames.html#cb816-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">adv_event =</span> <span class="dv">3</span>,</span>
-<span id="cb816-5"><a href="working-with-multiple-data-frames.html#cb816-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcomes  =</span> <span class="dv">48</span></span>
-<span id="cb816-6"><a href="working-with-multiple-data-frames.html#cb816-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb816-7"><a href="working-with-multiple-data-frames.html#cb816-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 4
+<div class="sourceCode" id="cb837"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb837-1"><a href="working-with-multiple-data-frames.html#cb837-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb837-2"><a href="working-with-multiple-data-frames.html#cb837-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2020</span>,</span>
+<span id="cb837-3"><a href="working-with-multiple-data-frames.html#cb837-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">count     =</span> <span class="dv">500</span>,</span>
+<span id="cb837-4"><a href="working-with-multiple-data-frames.html#cb837-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">adv_event =</span> <span class="dv">3</span>,</span>
+<span id="cb837-5"><a href="working-with-multiple-data-frames.html#cb837-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcomes  =</span> <span class="dv">48</span></span>
+<span id="cb837-6"><a href="working-with-multiple-data-frames.html#cb837-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb837-7"><a href="working-with-multiple-data-frames.html#cb837-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 4
 ##    year count adv_event outcomes
 ##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
 ## 1  2020   500         3       48</code></pre>
-<div class="sourceCode" id="cb818"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb818-1"><a href="working-with-multiple-data-frames.html#cb818-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
-<span id="cb818-2"><a href="working-with-multiple-data-frames.html#cb818-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 6
+<div class="sourceCode" id="cb839"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb839-1"><a href="working-with-multiple-data-frames.html#cb839-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb839-2"><a href="working-with-multiple-data-frames.html#cb839-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 6
 ##    year     n outcome count adv_event outcomes
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
 ## 1  2016   501      51    NA        NA       NA
@@ -810,15 +836,15 @@ Add link to cheat sheet
 ## 4  2019   502      50    NA        NA       NA
 ## 5  2020    NA      NA   500         3       48</code></pre>
 <p>In this case, <code>bind_rows()</code> plays it safe and doesn’t make any assumptions about whether columns with different names belong together or not. However, we only need to rename the columns in one data frame or the other to fix this problem. We could do this in separate steps like this:</p>
-<div class="sourceCode" id="cb820"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb820-1"><a href="working-with-multiple-data-frames.html#cb820-1" aria-hidden="true" tabindex="-1"></a>trial_2020_rename <span class="ot">&lt;-</span> trial_2020 <span class="sc">%&gt;%</span> </span>
-<span id="cb820-2"><a href="working-with-multiple-data-frames.html#cb820-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb820-3"><a href="working-with-multiple-data-frames.html#cb820-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> count,</span>
-<span id="cb820-4"><a href="working-with-multiple-data-frames.html#cb820-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> outcomes</span>
-<span id="cb820-5"><a href="working-with-multiple-data-frames.html#cb820-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb820-6"><a href="working-with-multiple-data-frames.html#cb820-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb820-7"><a href="working-with-multiple-data-frames.html#cb820-7" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
-<span id="cb820-8"><a href="working-with-multiple-data-frames.html#cb820-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020_rename)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 4
+<div class="sourceCode" id="cb841"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb841-1"><a href="working-with-multiple-data-frames.html#cb841-1" aria-hidden="true" tabindex="-1"></a>trial_2020_rename <span class="ot">&lt;-</span> trial_2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb841-2"><a href="working-with-multiple-data-frames.html#cb841-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb841-3"><a href="working-with-multiple-data-frames.html#cb841-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> count,</span>
+<span id="cb841-4"><a href="working-with-multiple-data-frames.html#cb841-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> outcomes</span>
+<span id="cb841-5"><a href="working-with-multiple-data-frames.html#cb841-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb841-6"><a href="working-with-multiple-data-frames.html#cb841-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb841-7"><a href="working-with-multiple-data-frames.html#cb841-7" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb841-8"><a href="working-with-multiple-data-frames.html#cb841-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020_rename)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 4
 ##    year     n outcome adv_event
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
 ## 1  2016   501      51        NA
@@ -827,15 +853,15 @@ Add link to cheat sheet
 ## 4  2019   502      50        NA
 ## 5  2020   500      48         3</code></pre>
 <p>Or, we could rename and bind in a single step by nesting functions like this:</p>
-<div class="sourceCode" id="cb822"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb822-1"><a href="working-with-multiple-data-frames.html#cb822-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
-<span id="cb822-2"><a href="working-with-multiple-data-frames.html#cb822-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
-<span id="cb822-3"><a href="working-with-multiple-data-frames.html#cb822-3" aria-hidden="true" tabindex="-1"></a>    trial_2020 <span class="sc">%&gt;%</span> </span>
-<span id="cb822-4"><a href="working-with-multiple-data-frames.html#cb822-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rename</span>(</span>
-<span id="cb822-5"><a href="working-with-multiple-data-frames.html#cb822-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> count,</span>
-<span id="cb822-6"><a href="working-with-multiple-data-frames.html#cb822-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">outcome =</span> outcomes</span>
-<span id="cb822-7"><a href="working-with-multiple-data-frames.html#cb822-7" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb822-8"><a href="working-with-multiple-data-frames.html#cb822-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 4
+<div class="sourceCode" id="cb843"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb843-1"><a href="working-with-multiple-data-frames.html#cb843-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb843-2"><a href="working-with-multiple-data-frames.html#cb843-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
+<span id="cb843-3"><a href="working-with-multiple-data-frames.html#cb843-3" aria-hidden="true" tabindex="-1"></a>    trial_2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb843-4"><a href="working-with-multiple-data-frames.html#cb843-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rename</span>(</span>
+<span id="cb843-5"><a href="working-with-multiple-data-frames.html#cb843-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> count,</span>
+<span id="cb843-6"><a href="working-with-multiple-data-frames.html#cb843-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">outcome =</span> outcomes</span>
+<span id="cb843-7"><a href="working-with-multiple-data-frames.html#cb843-7" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb843-8"><a href="working-with-multiple-data-frames.html#cb843-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 4
 ##    year     n outcome adv_event
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
 ## 1  2016   501      51        NA
@@ -854,41 +880,41 @@ Add link to cheat sheet
 <div id="combining-data-frames-horizontally-adding-columns" class="section level2" number="30.2">
 <h2><span class="header-section-number">30.2</span> Combining data frames horizontally: Adding columns</h2>
 <p>In this section we will once again begin with two separate data frames - data frame one and data frame two. But, unlike before, these data frames share only one variable in common. And, the data contained in both data frames pertains to the same observations.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/two_data_sets_horiz.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/two_data_sets_horiz.png" /><!-- --></p>
 <p>Our goal is once again to combine these data frames. But, this time we want to combine them horizontally. In other words, we want a combined data frame that combines all the <em>columns</em> from data frame one and data frame two.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/goal.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/goal.png" /><!-- --></p>
 <p>Combining data frames horizontally can be slightly more complicated than combining them vertically. As shown in the following flow chart, we can either match the rows of our two data frames up by position or by key values.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/flow_chart.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/flow_chart.png" /><!-- --></p>
 <div id="combining-data-frames-horizontally-by-position" class="section level3" number="30.2.1">
 <h3><span class="header-section-number">30.2.1</span> Combining data frames horizontally by position</h3>
 <p>In the simplest case, we match the rows in our data frames up by position. In other words, row 1 in data frame one is matched up with row 1 in data frame two, row 2 in data frame one is matched up with row 2 in data frame two, and so on. Row n (meaning, any number) in data frame one always gets matched to row n in data frame two, regardless of the values in any column of those rows.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/position.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/position.png" /><!-- --></p>
 <p>Combining data frames horizontally by position is very easy in R. We just use <code>dplyr</code>’s <code>bind_cols()</code> function similarly to the way used <code>bind_rows()</code> above. Just remember that when we horizontally combine data frames by position both data frames must have the same number of rows. For example:</p>
-<div class="sourceCode" id="cb824"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb824-1"><a href="working-with-multiple-data-frames.html#cb824-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb824-2"><a href="working-with-multiple-data-frames.html#cb824-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;green&quot;</span>, <span class="st">&quot;blue&quot;</span>),</span>
-<span id="cb824-3"><a href="working-with-multiple-data-frames.html#cb824-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">size  =</span> <span class="fu">c</span>(<span class="st">&quot;small&quot;</span>, <span class="st">&quot;medium&quot;</span>, <span class="st">&quot;large&quot;</span>)</span>
-<span id="cb824-4"><a href="working-with-multiple-data-frames.html#cb824-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb824-5"><a href="working-with-multiple-data-frames.html#cb824-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 2
+<div class="sourceCode" id="cb845"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb845-1"><a href="working-with-multiple-data-frames.html#cb845-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb845-2"><a href="working-with-multiple-data-frames.html#cb845-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;green&quot;</span>, <span class="st">&quot;blue&quot;</span>),</span>
+<span id="cb845-3"><a href="working-with-multiple-data-frames.html#cb845-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">size  =</span> <span class="fu">c</span>(<span class="st">&quot;small&quot;</span>, <span class="st">&quot;medium&quot;</span>, <span class="st">&quot;large&quot;</span>)</span>
+<span id="cb845-4"><a href="working-with-multiple-data-frames.html#cb845-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb845-5"><a href="working-with-multiple-data-frames.html#cb845-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
 ##   color size  
 ##   &lt;chr&gt; &lt;chr&gt; 
 ## 1 red   small 
 ## 2 green medium
 ## 3 blue  large</code></pre>
-<div class="sourceCode" id="cb826"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb826-1"><a href="working-with-multiple-data-frames.html#cb826-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb826-2"><a href="working-with-multiple-data-frames.html#cb826-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">amount =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>),</span>
-<span id="cb826-3"><a href="working-with-multiple-data-frames.html#cb826-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dose   =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>)</span>
-<span id="cb826-4"><a href="working-with-multiple-data-frames.html#cb826-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb826-5"><a href="working-with-multiple-data-frames.html#cb826-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 2
+<div class="sourceCode" id="cb847"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb847-1"><a href="working-with-multiple-data-frames.html#cb847-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb847-2"><a href="working-with-multiple-data-frames.html#cb847-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">amount =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>),</span>
+<span id="cb847-3"><a href="working-with-multiple-data-frames.html#cb847-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dose   =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>)</span>
+<span id="cb847-4"><a href="working-with-multiple-data-frames.html#cb847-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb847-5"><a href="working-with-multiple-data-frames.html#cb847-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
 ##   amount  dose
 ##    &lt;dbl&gt; &lt;dbl&gt;
 ## 1      1    10
 ## 2      4    20
 ## 3      3    30</code></pre>
-<div class="sourceCode" id="cb828"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb828-1"><a href="working-with-multiple-data-frames.html#cb828-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="sc">%&gt;%</span> </span>
-<span id="cb828-2"><a href="working-with-multiple-data-frames.html#cb828-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df2)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 4
+<div class="sourceCode" id="cb849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb849-1"><a href="working-with-multiple-data-frames.html#cb849-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="sc">%&gt;%</span> </span>
+<span id="cb849-2"><a href="working-with-multiple-data-frames.html#cb849-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df2)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 4
 ##   color size   amount  dose
 ##   &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;
 ## 1 red   small       1    10
@@ -905,19 +931,19 @@ Add link to cheat sheet
 <div id="combining-data-frames-horizontally-by-key-values" class="section level3" number="30.2.2">
 <h3><span class="header-section-number">30.2.2</span> Combining data frames horizontally by key values</h3>
 <p>In all the examples from here on out we will match the rows of our data frames by one or more key values.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/flow_chart_key_value.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/flow_chart_key_value.png" /><!-- --></p>
 <p>In epidemiology, the term I most often hear used for combining data frames in this way is <strong>merging</strong>. So, I will mostly use that term below. However, in other disciplines it is common to use the term <strong>joining</strong>, or performing a data <strong>join</strong>, to mean the same thing. The <code>dplyr</code> package, in specific, refers to these as “mutating joins.”</p>
 <div id="relationship-types" class="section level4" number="30.2.2.1">
 <h4><span class="header-section-number">30.2.2.1</span> Relationship types</h4>
 <p>When we merge data frames it’s important to ask ourselves, “what is the relationship between the observations in the original data frames?” The observations can be related in several different ways.</p>
 <p>In a one-to-one relationship, a single observation in one data frame is related to no more than one observation in the other data frame. We know how to align, or connect, the rows in the two data frames based on the values of one or more common variables.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_one.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_one.png" /><!-- --></p>
 <p>This common variable, or set of common variables, is also called a <strong>key</strong>. When we use the values in the key to match rows in our data frames, we can say that we are <em>matching on key values</em>.</p>
 <p>In the example above, There is one key column – <code>Var1</code>. Both data frames contain the column named <code>Var1</code>, and the values of that column tell R how to align the rows in both data frames so that all the values in that row contain data are about the same person, place, or thing. In the example above, we know that the first row of data frame one goes with the <em>second</em> row of data frame two because both rows have the same key value – <code>1</code>.</p>
 <p>In a one-to-many relationship, a single observation in one data frame is related to multiple observations in the other data frame.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_many.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_many.png" /><!-- --></p>
 <p>And finally, in a many-to-many relationship, multiple observations in one data frame are related to multiple observations in the other data frame.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/many_to_many.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/many_to_many.png" /><!-- --></p>
 <p>Many-to-many relationships are messy and are generally best avoided, if possible. In practice, I’m not sure that I’ve ever merged two data frames that had a <em>true</em> many-to-many relationship. I emphasize <em>true</em> because I have definitely merged data frames that had a many-to-many relationship when matching on a single key column. However, after matching on multiple key columns (e.g., study id and date instead of just study id), the relationship became one-to-one or one-to-many. We’ll see an example of matching on multiple key columns later.</p>
 </div>
 <div id="dplyr-join-types" class="section level4" number="30.2.2.2">
@@ -928,28 +954,28 @@ Add link to cheat sheet
 <ol style="list-style-type: decimal">
 <li><code>left_join()</code>. This is probably the join function that you will use the most. It’s important to remember that <code>left_join()</code> keeps all the rows from the <code>x</code> data frame in the resulting combined data frame. However, it only keeps the rows from the <code>y</code> data frame that have a key value match in the <code>x</code> data frame. The values for columns with no key value match in the opposite data frame are set to <code>NA</code>.</li>
 </ol>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/left_join.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/left_join.png" /><!-- --></p>
 <ol start="2" style="list-style-type: decimal">
 <li><code>right_join()</code>. This is just the mirror opposite of <code>left_join()</code>. Accordingly, <code>right_join()</code> keeps all the rows from the <code>y</code> data frame in the resulting combined data frame, and only keep the rows from the <code>x</code> data frame that have a key value match in the <code>y</code> data frame. The values for columns with no key value match in the opposite data frame are set to <code>NA</code>.</li>
 </ol>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/right_join.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/right_join.png" /><!-- --></p>
 <ol start="3" style="list-style-type: decimal">
 <li><code>full_join()</code>. Full join keeps all the rows from both data frames in the resulting combined data frame. The values for columns with no key value match in the opposite data frame are set to <code>NA</code>.</li>
 </ol>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/full_join.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/full_join.png" /><!-- --></p>
 <ol start="4" style="list-style-type: decimal">
 <li><code>inner_join()</code>. Inner join keeps only the rows from both data frames that have a key value match in the opposite data frame in the resulting combined data frame.</li>
 </ol>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/inner_join.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/inner_join.png" /><!-- --></p>
 <p>Now that we have a common vocabulary, let’s take a look at some more concrete examples.</p>
 <p>Suppose we are analyzing data from a study of aging and functional ability. At baseline, we assigned a study id to each of our participants. We then ask them their date of birth and their race and ethnicity. We saved that information in a data frame called <code>demographics</code>.</p>
-<div class="sourceCode" id="cb830"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb830-1"><a href="working-with-multiple-data-frames.html#cb830-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb830-2"><a href="working-with-multiple-data-frames.html#cb830-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id       =</span> <span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>),</span>
-<span id="cb830-3"><a href="working-with-multiple-data-frames.html#cb830-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dob      =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">&quot;1968-12-14&quot;</span>, <span class="st">&quot;1952-08-03&quot;</span>, <span class="st">&quot;1949-05-27&quot;</span>, <span class="st">&quot;1955-03-12&quot;</span>)),</span>
-<span id="cb830-4"><a href="working-with-multiple-data-frames.html#cb830-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">race_eth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span>
-<span id="cb830-5"><a href="working-with-multiple-data-frames.html#cb830-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb830-6"><a href="working-with-multiple-data-frames.html#cb830-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb851-1"><a href="working-with-multiple-data-frames.html#cb851-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb851-2"><a href="working-with-multiple-data-frames.html#cb851-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id       =</span> <span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>),</span>
+<span id="cb851-3"><a href="working-with-multiple-data-frames.html#cb851-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dob      =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">&quot;1968-12-14&quot;</span>, <span class="st">&quot;1952-08-03&quot;</span>, <span class="st">&quot;1949-05-27&quot;</span>, <span class="st">&quot;1955-03-12&quot;</span>)),</span>
+<span id="cb851-4"><a href="working-with-multiple-data-frames.html#cb851-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">race_eth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span>
+<span id="cb851-5"><a href="working-with-multiple-data-frames.html#cb851-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb851-6"><a href="working-with-multiple-data-frames.html#cb851-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ##   id    dob        race_eth
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;
 ## 1 1001  1968-12-14        1
@@ -957,13 +983,13 @@ Add link to cheat sheet
 ## 3 1003  1949-05-27        2
 ## 4 1004  1955-03-12        4</code></pre>
 <p>Then, we asked our participants to do a series of functional tests. The functional tests included measuring grip strength in their right hand (<code>grip_r</code>) and grip strength in their left hand (<code>grip_l</code>). We saved each measure, along with their study id, in a separate data frame called <code>grip_strength</code>.</p>
-<div class="sourceCode" id="cb832"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb832-1"><a href="working-with-multiple-data-frames.html#cb832-1" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb832-2"><a href="working-with-multiple-data-frames.html#cb832-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">c</span>(<span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>),</span>
-<span id="cb832-3"><a href="working-with-multiple-data-frames.html#cb832-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_r =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">28</span>, <span class="dv">32</span>, <span class="dv">22</span>),</span>
-<span id="cb832-4"><a href="working-with-multiple-data-frames.html#cb832-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_l =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">28</span>, <span class="dv">22</span>)</span>
-<span id="cb832-5"><a href="working-with-multiple-data-frames.html#cb832-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb832-6"><a href="working-with-multiple-data-frames.html#cb832-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb853-1"><a href="working-with-multiple-data-frames.html#cb853-1" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb853-2"><a href="working-with-multiple-data-frames.html#cb853-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">c</span>(<span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>),</span>
+<span id="cb853-3"><a href="working-with-multiple-data-frames.html#cb853-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_r =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">28</span>, <span class="dv">32</span>, <span class="dv">22</span>),</span>
+<span id="cb853-4"><a href="working-with-multiple-data-frames.html#cb853-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_l =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">28</span>, <span class="dv">22</span>)</span>
+<span id="cb853-5"><a href="working-with-multiple-data-frames.html#cb853-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb853-6"><a href="working-with-multiple-data-frames.html#cb853-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ##   id    grip_r grip_l
 ##   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1002      32     30
@@ -976,12 +1002,12 @@ Add link to cheat sheet
 <div id="one-to-one-relationship-merge" class="section level4" number="30.2.2.3">
 <h4><span class="header-section-number">30.2.2.3</span> One-to-one relationship merge</h4>
 <p>It’s a one-to-one relationship because each participant in <code>demographics</code> has no more than one corresponding row in <code>grip_strength</code>. Since both data frames have exactly four rows, we can go ahead hand combine them horizontally using <code>bind_cols()</code> like this:</p>
-<div class="sourceCode" id="cb834"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb834-1"><a href="working-with-multiple-data-frames.html#cb834-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb834-2"><a href="working-with-multiple-data-frames.html#cb834-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(grip_strength)</span></code></pre></div>
+<div class="sourceCode" id="cb855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb855-1"><a href="working-with-multiple-data-frames.html#cb855-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb855-2"><a href="working-with-multiple-data-frames.html#cb855-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(grip_strength)</span></code></pre></div>
 <pre><code>## New names:
 ## * id -&gt; id...1
 ## * id -&gt; id...4</code></pre>
-<pre><code>## # A tibble: 4 x 6
+<pre><code>## # A tibble: 4 × 6
 ##   id...1 dob        race_eth id...4 grip_r grip_l
 ##   &lt;chr&gt;  &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001   1968-12-14        1 1002       32     30
@@ -995,9 +1021,9 @@ Add link to cheat sheet
 <li><p><strong>More importantly</strong>, notice the demographic data for participant 1001 is now aligned with the grip strength data for participant 1002, and vice versa. The grip strength data was recorded in the order that participants came in to have their grip strength measured. In this case, participant 1002 came in before 1001. Remember that <code>bind_cols()</code> matches rows by position, which results in mismatched data in this case.</p></li>
 </ul>
 <p>Now, let’s learn a better way to merge these two data frames – <code>dplyr</code>’s <code>left_join()</code> function:</p>
-<div class="sourceCode" id="cb837"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb837-1"><a href="working-with-multiple-data-frames.html#cb837-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb837-2"><a href="working-with-multiple-data-frames.html#cb837-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
+<div class="sourceCode" id="cb858"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb858-1"><a href="working-with-multiple-data-frames.html#cb858-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb858-2"><a href="working-with-multiple-data-frames.html#cb858-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
 ##   id    dob        race_eth grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1     28     30
@@ -1015,30 +1041,30 @@ Add link to cheat sheet
 <li><p>Notice that the result above only includes a single <code>id</code> column. This is because we aren’t simply smooshing two data frames together, side-by-side. We are integrating information from across the two data frames based on the value of the key column – <code>id</code>.</p></li>
 </ul>
 <p>The merge we did above is about as simple as it gets. It was a one-to-one merge where every key value in the <code>x</code> data frame had one, and only one, matching key value in the <code>y</code> data frame. Therefore, in this simple case, all four join types give us the same result:</p>
-<div class="sourceCode" id="cb839"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb839-1"><a href="working-with-multiple-data-frames.html#cb839-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Right join</span></span>
-<span id="cb839-2"><a href="working-with-multiple-data-frames.html#cb839-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb839-3"><a href="working-with-multiple-data-frames.html#cb839-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
+<div class="sourceCode" id="cb860"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb860-1"><a href="working-with-multiple-data-frames.html#cb860-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Right join</span></span>
+<span id="cb860-2"><a href="working-with-multiple-data-frames.html#cb860-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb860-3"><a href="working-with-multiple-data-frames.html#cb860-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
 ##   id    dob        race_eth grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1     28     30
 ## 2 1002  1952-08-03        2     32     30
 ## 3 1003  1949-05-27        2     32     28
 ## 4 1004  1955-03-12        4     22     22</code></pre>
-<div class="sourceCode" id="cb841"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb841-1"><a href="working-with-multiple-data-frames.html#cb841-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Full join</span></span>
-<span id="cb841-2"><a href="working-with-multiple-data-frames.html#cb841-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb841-3"><a href="working-with-multiple-data-frames.html#cb841-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
+<div class="sourceCode" id="cb862"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb862-1"><a href="working-with-multiple-data-frames.html#cb862-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Full join</span></span>
+<span id="cb862-2"><a href="working-with-multiple-data-frames.html#cb862-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb862-3"><a href="working-with-multiple-data-frames.html#cb862-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
 ##   id    dob        race_eth grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1     28     30
 ## 2 1002  1952-08-03        2     32     30
 ## 3 1003  1949-05-27        2     32     28
 ## 4 1004  1955-03-12        4     22     22</code></pre>
-<div class="sourceCode" id="cb843"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb843-1"><a href="working-with-multiple-data-frames.html#cb843-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inner join</span></span>
-<span id="cb843-2"><a href="working-with-multiple-data-frames.html#cb843-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb843-3"><a href="working-with-multiple-data-frames.html#cb843-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
+<div class="sourceCode" id="cb864"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb864-1"><a href="working-with-multiple-data-frames.html#cb864-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inner join</span></span>
+<span id="cb864-2"><a href="working-with-multiple-data-frames.html#cb864-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb864-3"><a href="working-with-multiple-data-frames.html#cb864-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
 ##   id    dob        race_eth grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1     28     30
@@ -1046,10 +1072,10 @@ Add link to cheat sheet
 ## 3 1003  1949-05-27        2     32     28
 ## 4 1004  1955-03-12        4     22     22</code></pre>
 <p>Additionally, aside from the order of the rows and columns in the resulting combined data frame, it makes no difference which data frame you pass to the <code>x</code> and <code>y</code> arguments in this case:</p>
-<div class="sourceCode" id="cb845"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb845-1"><a href="working-with-multiple-data-frames.html#cb845-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switching order</span></span>
-<span id="cb845-2"><a href="working-with-multiple-data-frames.html#cb845-2" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="sc">%&gt;%</span> </span>
-<span id="cb845-3"><a href="working-with-multiple-data-frames.html#cb845-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(demographics, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
+<div class="sourceCode" id="cb866"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb866-1"><a href="working-with-multiple-data-frames.html#cb866-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switching order</span></span>
+<span id="cb866-2"><a href="working-with-multiple-data-frames.html#cb866-2" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="sc">%&gt;%</span> </span>
+<span id="cb866-3"><a href="working-with-multiple-data-frames.html#cb866-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(demographics, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
 ##   id    grip_r grip_l dob        race_eth
 ##   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;date&gt;        &lt;dbl&gt;
 ## 1 1002      32     30 1952-08-03        2
@@ -1061,15 +1087,15 @@ Add link to cheat sheet
 <div id="differing-rows" class="section level4" number="30.2.2.4">
 <h4><span class="header-section-number">30.2.2.4</span> Differing rows</h4>
 <p>In the real world, participants don’t always attend scheduled visits. Let’s suppose that there was actually a fifth participant that we collected baseline data from:</p>
-<div class="sourceCode" id="cb847"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb847-1"><a href="working-with-multiple-data-frames.html#cb847-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb847-2"><a href="working-with-multiple-data-frames.html#cb847-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id       =</span> <span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>, <span class="st">&quot;1005&quot;</span>),</span>
-<span id="cb847-3"><a href="working-with-multiple-data-frames.html#cb847-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dob      =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(</span>
-<span id="cb847-4"><a href="working-with-multiple-data-frames.html#cb847-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;1968-12-14&quot;</span>, <span class="st">&quot;1952-08-03&quot;</span>, <span class="st">&quot;1949-05-27&quot;</span>, <span class="st">&quot;1955-03-12&quot;</span>, <span class="st">&quot;1942-06-07&quot;</span></span>
-<span id="cb847-5"><a href="working-with-multiple-data-frames.html#cb847-5" aria-hidden="true" tabindex="-1"></a>  )),</span>
-<span id="cb847-6"><a href="working-with-multiple-data-frames.html#cb847-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">race_eth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">3</span>)</span>
-<span id="cb847-7"><a href="working-with-multiple-data-frames.html#cb847-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb847-8"><a href="working-with-multiple-data-frames.html#cb847-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 3
+<div class="sourceCode" id="cb868"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb868-1"><a href="working-with-multiple-data-frames.html#cb868-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb868-2"><a href="working-with-multiple-data-frames.html#cb868-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id       =</span> <span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>, <span class="st">&quot;1005&quot;</span>),</span>
+<span id="cb868-3"><a href="working-with-multiple-data-frames.html#cb868-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dob      =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(</span>
+<span id="cb868-4"><a href="working-with-multiple-data-frames.html#cb868-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;1968-12-14&quot;</span>, <span class="st">&quot;1952-08-03&quot;</span>, <span class="st">&quot;1949-05-27&quot;</span>, <span class="st">&quot;1955-03-12&quot;</span>, <span class="st">&quot;1942-06-07&quot;</span></span>
+<span id="cb868-5"><a href="working-with-multiple-data-frames.html#cb868-5" aria-hidden="true" tabindex="-1"></a>  )),</span>
+<span id="cb868-6"><a href="working-with-multiple-data-frames.html#cb868-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">race_eth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">3</span>)</span>
+<span id="cb868-7"><a href="working-with-multiple-data-frames.html#cb868-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb868-8"><a href="working-with-multiple-data-frames.html#cb868-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 3
 ##   id    dob        race_eth
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;
 ## 1 1001  1968-12-14        1
@@ -1078,9 +1104,9 @@ Add link to cheat sheet
 ## 4 1004  1955-03-12        4
 ## 5 1005  1942-06-07        3</code></pre>
 <p>However, participant 1005 never made it back in for a grip strength test. Now, what do you think will happen when we merge <code>demographics</code> and <code>grip_strength</code> using <code>left_join()</code>?</p>
-<div class="sourceCode" id="cb849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb849-1"><a href="working-with-multiple-data-frames.html#cb849-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb849-2"><a href="working-with-multiple-data-frames.html#cb849-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 5
+<div class="sourceCode" id="cb870"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb870-1"><a href="working-with-multiple-data-frames.html#cb870-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb870-2"><a href="working-with-multiple-data-frames.html#cb870-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 5
 ##   id    dob        race_eth grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1     28     30
@@ -1090,20 +1116,20 @@ Add link to cheat sheet
 ## 5 1005  1942-06-07        3     NA     NA</code></pre>
 <p>The resulting data frame includes <em>all</em> rows from the <code>demographics</code> data frame <em>and all</em> the rows from the <code>grip_strength</code> data frame. Because participant 1005 never had their grip strength measured, and therefore, had no rows in the <code>grip_strength</code> data frame, their values for <code>grip_r</code> and <code>grip_l</code> are set to missing.</p>
 <p>This scenario is a little a different than the one above. It’s still a one-to-one relationship because each participant in <code>demographics</code> has no more than one corresponding row in <code>grip_strength</code>. However, every key value in the <code>x</code> data frame no longer has one, and only one, matching key value in the <code>y</code> data frame. Therefore, we will now get different results depending on which join function we choose, and the order in which we pass our data frames to the <code>x</code> and <code>y</code> arguments. Before reading further, think about what you expect the results from each join function to look like. Think about what you expect the results of switching the data frame order to look like.</p>
-<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb851-1"><a href="working-with-multiple-data-frames.html#cb851-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Right join</span></span>
-<span id="cb851-2"><a href="working-with-multiple-data-frames.html#cb851-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb851-3"><a href="working-with-multiple-data-frames.html#cb851-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
+<div class="sourceCode" id="cb872"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb872-1"><a href="working-with-multiple-data-frames.html#cb872-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Right join</span></span>
+<span id="cb872-2"><a href="working-with-multiple-data-frames.html#cb872-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb872-3"><a href="working-with-multiple-data-frames.html#cb872-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
 ##   id    dob        race_eth grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1     28     30
 ## 2 1002  1952-08-03        2     32     30
 ## 3 1003  1949-05-27        2     32     28
 ## 4 1004  1955-03-12        4     22     22</code></pre>
-<div class="sourceCode" id="cb853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb853-1"><a href="working-with-multiple-data-frames.html#cb853-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Full join</span></span>
-<span id="cb853-2"><a href="working-with-multiple-data-frames.html#cb853-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb853-3"><a href="working-with-multiple-data-frames.html#cb853-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 5
+<div class="sourceCode" id="cb874"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb874-1"><a href="working-with-multiple-data-frames.html#cb874-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Full join</span></span>
+<span id="cb874-2"><a href="working-with-multiple-data-frames.html#cb874-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb874-3"><a href="working-with-multiple-data-frames.html#cb874-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 5
 ##   id    dob        race_eth grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1     28     30
@@ -1111,20 +1137,20 @@ Add link to cheat sheet
 ## 3 1003  1949-05-27        2     32     28
 ## 4 1004  1955-03-12        4     22     22
 ## 5 1005  1942-06-07        3     NA     NA</code></pre>
-<div class="sourceCode" id="cb855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb855-1"><a href="working-with-multiple-data-frames.html#cb855-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inner join</span></span>
-<span id="cb855-2"><a href="working-with-multiple-data-frames.html#cb855-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb855-3"><a href="working-with-multiple-data-frames.html#cb855-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
+<div class="sourceCode" id="cb876"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb876-1"><a href="working-with-multiple-data-frames.html#cb876-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inner join</span></span>
+<span id="cb876-2"><a href="working-with-multiple-data-frames.html#cb876-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb876-3"><a href="working-with-multiple-data-frames.html#cb876-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
 ##   id    dob        race_eth grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1     28     30
 ## 2 1002  1952-08-03        2     32     30
 ## 3 1003  1949-05-27        2     32     28
 ## 4 1004  1955-03-12        4     22     22</code></pre>
-<div class="sourceCode" id="cb857"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb857-1"><a href="working-with-multiple-data-frames.html#cb857-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switching order</span></span>
-<span id="cb857-2"><a href="working-with-multiple-data-frames.html#cb857-2" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="sc">%&gt;%</span> </span>
-<span id="cb857-3"><a href="working-with-multiple-data-frames.html#cb857-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(demographics, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
+<div class="sourceCode" id="cb878"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb878-1"><a href="working-with-multiple-data-frames.html#cb878-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switching order</span></span>
+<span id="cb878-2"><a href="working-with-multiple-data-frames.html#cb878-2" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="sc">%&gt;%</span> </span>
+<span id="cb878-3"><a href="working-with-multiple-data-frames.html#cb878-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(demographics, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
 ##   id    grip_r grip_l dob        race_eth
 ##   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;date&gt;        &lt;dbl&gt;
 ## 1 1002      32     30 1952-08-03        2
@@ -1136,13 +1162,13 @@ Add link to cheat sheet
 <div id="differing-key-column-names" class="section level4" number="30.2.2.5">
 <h4><span class="header-section-number">30.2.2.5</span> Differing key column names</h4>
 <p>Sometimes the key columns will have different names across data frames. For example, let’s imagine that the team collecting the grip strength data named the participant id column <code>pid</code> instead of <code>id</code>:</p>
-<div class="sourceCode" id="cb859"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb859-1"><a href="working-with-multiple-data-frames.html#cb859-1" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb859-2"><a href="working-with-multiple-data-frames.html#cb859-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">pid    =</span> <span class="fu">c</span>(<span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>),</span>
-<span id="cb859-3"><a href="working-with-multiple-data-frames.html#cb859-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_r =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">28</span>, <span class="dv">32</span>, <span class="dv">22</span>),</span>
-<span id="cb859-4"><a href="working-with-multiple-data-frames.html#cb859-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_l =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">28</span>, <span class="dv">22</span>)</span>
-<span id="cb859-5"><a href="working-with-multiple-data-frames.html#cb859-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb859-6"><a href="working-with-multiple-data-frames.html#cb859-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb880"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb880-1"><a href="working-with-multiple-data-frames.html#cb880-1" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb880-2"><a href="working-with-multiple-data-frames.html#cb880-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">pid    =</span> <span class="fu">c</span>(<span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>),</span>
+<span id="cb880-3"><a href="working-with-multiple-data-frames.html#cb880-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_r =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">28</span>, <span class="dv">32</span>, <span class="dv">22</span>),</span>
+<span id="cb880-4"><a href="working-with-multiple-data-frames.html#cb880-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_l =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">28</span>, <span class="dv">22</span>)</span>
+<span id="cb880-5"><a href="working-with-multiple-data-frames.html#cb880-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb880-6"><a href="working-with-multiple-data-frames.html#cb880-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ##   pid   grip_r grip_l
 ##   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1002      32     30
@@ -1150,14 +1176,14 @@ Add link to cheat sheet
 ## 3 1003      32     28
 ## 4 1004      22     22</code></pre>
 <p>If we try to merge <code>demographics</code> and <code>grip_strength</code> as we did before, we will get an error.</p>
-<div class="sourceCode" id="cb861"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb861-1"><a href="working-with-multiple-data-frames.html#cb861-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb861-2"><a href="working-with-multiple-data-frames.html#cb861-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb882"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb882-1"><a href="working-with-multiple-data-frames.html#cb882-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb882-2"><a href="working-with-multiple-data-frames.html#cb882-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
 <pre><code>## Error: Join columns must be present in data.
 ## x Problem with `id`.</code></pre>
 <p>This error is <code>left_join()</code> telling us that it couldn’t find a column named <code>id</code> in both data frames. To get around this error, we can simply tell <code>left_join()</code> which column is the matching key column in the opposite data frame using a named vector like this:</p>
-<div class="sourceCode" id="cb863"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb863-1"><a href="working-with-multiple-data-frames.html#cb863-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb863-2"><a href="working-with-multiple-data-frames.html#cb863-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span> <span class="ot">=</span> <span class="st">&quot;pid&quot;</span>))</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 5
+<div class="sourceCode" id="cb884"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb884-1"><a href="working-with-multiple-data-frames.html#cb884-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb884-2"><a href="working-with-multiple-data-frames.html#cb884-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span> <span class="ot">=</span> <span class="st">&quot;pid&quot;</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 5
 ##   id    dob        race_eth grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1     28     30
@@ -1170,8 +1196,8 @@ Add link to cheat sheet
 <div id="one-to-many-relationship-merge" class="section level4" number="30.2.2.6">
 <h4><span class="header-section-number">30.2.2.6</span> One-to-many relationship merge</h4>
 <p>Now suppose that our grip strength study has a longitudinal design. The demographics data was only collected at enrollment into the study. After all, race and dob don’t change. There’s no need to ask our participants about them at every follow-up interview.</p>
-<div class="sourceCode" id="cb865"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb865-1"><a href="working-with-multiple-data-frames.html#cb865-1" aria-hidden="true" tabindex="-1"></a>demographics</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 3
+<div class="sourceCode" id="cb886"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb886-1"><a href="working-with-multiple-data-frames.html#cb886-1" aria-hidden="true" tabindex="-1"></a>demographics</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 3
 ##   id    dob        race_eth
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;
 ## 1 1001  1968-12-14        1
@@ -1180,14 +1206,14 @@ Add link to cheat sheet
 ## 4 1004  1955-03-12        4
 ## 5 1005  1942-06-07        3</code></pre>
 <p>Grip strength, however, was measured pre and post some intervention.</p>
-<div class="sourceCode" id="cb867"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb867-1"><a href="working-with-multiple-data-frames.html#cb867-1" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb867-2"><a href="working-with-multiple-data-frames.html#cb867-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
-<span id="cb867-3"><a href="working-with-multiple-data-frames.html#cb867-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;pre&quot;</span>, <span class="st">&quot;post&quot;</span>), <span class="dv">4</span>),</span>
-<span id="cb867-4"><a href="working-with-multiple-data-frames.html#cb867-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_r =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">33</span>, <span class="dv">28</span>, <span class="dv">27</span>, <span class="dv">32</span>, <span class="dv">34</span>, <span class="dv">22</span>, <span class="dv">27</span>),</span>
-<span id="cb867-5"><a href="working-with-multiple-data-frames.html#cb867-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_l =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">32</span>, <span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">28</span>, <span class="dv">30</span>, <span class="dv">22</span>, <span class="dv">26</span>)</span>
-<span id="cb867-6"><a href="working-with-multiple-data-frames.html#cb867-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb867-7"><a href="working-with-multiple-data-frames.html#cb867-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 8 x 4
+<div class="sourceCode" id="cb888"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb888-1"><a href="working-with-multiple-data-frames.html#cb888-1" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb888-2"><a href="working-with-multiple-data-frames.html#cb888-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
+<span id="cb888-3"><a href="working-with-multiple-data-frames.html#cb888-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;pre&quot;</span>, <span class="st">&quot;post&quot;</span>), <span class="dv">4</span>),</span>
+<span id="cb888-4"><a href="working-with-multiple-data-frames.html#cb888-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_r =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">33</span>, <span class="dv">28</span>, <span class="dv">27</span>, <span class="dv">32</span>, <span class="dv">34</span>, <span class="dv">22</span>, <span class="dv">27</span>),</span>
+<span id="cb888-5"><a href="working-with-multiple-data-frames.html#cb888-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_l =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">32</span>, <span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">28</span>, <span class="dv">30</span>, <span class="dv">22</span>, <span class="dv">26</span>)</span>
+<span id="cb888-6"><a href="working-with-multiple-data-frames.html#cb888-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb888-7"><a href="working-with-multiple-data-frames.html#cb888-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 8 × 4
 ##   id    visit grip_r grip_l
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  pre       32     30
@@ -1201,9 +1227,9 @@ Add link to cheat sheet
 <p>Now what is the relationship of these two data frames?</p>
 <p>These data frames have a one-to-many relationship because at least one observation in one data frame is related to multiple observations in the other data frame. The <code>demographics</code> data frame has one observation for each value of <code>id</code>. The <code>grip_strength</code> data frame has two observations for each value of the <code>id</code>’s <code>1001</code> through <code>1004</code>.</p>
 <p>Now, to conduct our analysis, we need to combine the data in <code>demographics</code> with the data in the longitudinal <code>grip_strength</code> data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to-many merge, we use the exact same syntax that we used to perform a one-to-one merge. R will figure out the relationship between the data frames automatically. Take a look:</p>
-<div class="sourceCode" id="cb869"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb869-1"><a href="working-with-multiple-data-frames.html#cb869-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb869-2"><a href="working-with-multiple-data-frames.html#cb869-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 9 x 6
+<div class="sourceCode" id="cb890"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb890-1"><a href="working-with-multiple-data-frames.html#cb890-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb890-2"><a href="working-with-multiple-data-frames.html#cb890-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 9 × 6
 ##   id    dob        race_eth visit grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1 pre       32     30
@@ -1219,13 +1245,13 @@ Add link to cheat sheet
 <div id="multiple-key-columns" class="section level4" number="30.2.2.7">
 <h4><span class="header-section-number">30.2.2.7</span> Multiple key columns</h4>
 <p>Let’s throw one more little wrinkle into our analysis. Let’s say that each participant had a medical exam prior to being sent into the gym to do their functional assessments. The results of that medical exam, along with the participant’s study id, were recorded in the university hospital system’s electronic medical records. As part of that medical exam, each participant’s weight was recorded. Luckily, we were given access to the electronic medical records, which look like this:</p>
-<div class="sourceCode" id="cb871"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb871-1"><a href="working-with-multiple-data-frames.html#cb871-1" aria-hidden="true" tabindex="-1"></a>emr <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb871-2"><a href="working-with-multiple-data-frames.html#cb871-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
-<span id="cb871-3"><a href="working-with-multiple-data-frames.html#cb871-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;pre&quot;</span>, <span class="st">&quot;post&quot;</span>), <span class="dv">4</span>),</span>
-<span id="cb871-4"><a href="working-with-multiple-data-frames.html#cb871-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> <span class="fu">c</span>(<span class="dv">105</span>, <span class="dv">99</span>, <span class="dv">200</span>, <span class="dv">201</span>, <span class="dv">136</span>, <span class="dv">133</span>, <span class="dv">170</span>, <span class="dv">175</span>)</span>
-<span id="cb871-5"><a href="working-with-multiple-data-frames.html#cb871-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb871-6"><a href="working-with-multiple-data-frames.html#cb871-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 8 x 3
+<div class="sourceCode" id="cb892"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb892-1"><a href="working-with-multiple-data-frames.html#cb892-1" aria-hidden="true" tabindex="-1"></a>emr <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb892-2"><a href="working-with-multiple-data-frames.html#cb892-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
+<span id="cb892-3"><a href="working-with-multiple-data-frames.html#cb892-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;pre&quot;</span>, <span class="st">&quot;post&quot;</span>), <span class="dv">4</span>),</span>
+<span id="cb892-4"><a href="working-with-multiple-data-frames.html#cb892-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> <span class="fu">c</span>(<span class="dv">105</span>, <span class="dv">99</span>, <span class="dv">200</span>, <span class="dv">201</span>, <span class="dv">136</span>, <span class="dv">133</span>, <span class="dv">170</span>, <span class="dv">175</span>)</span>
+<span id="cb892-5"><a href="working-with-multiple-data-frames.html#cb892-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb892-6"><a href="working-with-multiple-data-frames.html#cb892-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 8 × 3
 ##   id    visit weight
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
 ## 1 1001  pre      105
@@ -1237,9 +1263,9 @@ Add link to cheat sheet
 ## 7 1004  pre      170
 ## 8 1004  post     175</code></pre>
 <p>Now, we would like to add participant weight to our analysis. Our first attempt might look something like this:</p>
-<div class="sourceCode" id="cb873"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb873-1"><a href="working-with-multiple-data-frames.html#cb873-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb873-2"><a href="working-with-multiple-data-frames.html#cb873-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, emr, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 9 x 6
+<div class="sourceCode" id="cb894"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb894-1"><a href="working-with-multiple-data-frames.html#cb894-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb894-2"><a href="working-with-multiple-data-frames.html#cb894-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, emr, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 9 × 6
 ##   id    dob        race_eth visit grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1 pre       32     30
@@ -1252,10 +1278,10 @@ Add link to cheat sheet
 ## 8 1004  1955-03-12        4 post      27     26
 ## 9 1005  1942-06-07        3 &lt;NA&gt;      NA     NA</code></pre>
 <p>Of course, that doesn’t work because <code>left_join()</code> can only merge two data frames at a time – <code>x</code> and <code>y</code>. The <code>emr</code> data frame was ignored. Then we think, “hmmm, maybe we should try merging them sequentially.” In other words, merge <code>demographics</code> and <code>grip_strength</code> first. Then merge the combined <code>demographics</code>/<code>grip_strength</code> data frame with <code>emr</code>. So, our next attempt might look like this:</p>
-<div class="sourceCode" id="cb875"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb875-1"><a href="working-with-multiple-data-frames.html#cb875-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb875-2"><a href="working-with-multiple-data-frames.html#cb875-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb875-3"><a href="working-with-multiple-data-frames.html#cb875-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 17 x 8
+<div class="sourceCode" id="cb896"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb896-1"><a href="working-with-multiple-data-frames.html#cb896-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb896-2"><a href="working-with-multiple-data-frames.html#cb896-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb896-3"><a href="working-with-multiple-data-frames.html#cb896-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 17 × 8
 ##    id    dob        race_eth visit.x grip_r grip_l visit.y weight
 ##    &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
 ##  1 1001  1968-12-14        1 pre         32     30 pre        105
@@ -1277,14 +1303,14 @@ Add link to cheat sheet
 ## 17 1005  1942-06-07        3 &lt;NA&gt;        NA     NA &lt;NA&gt;        NA</code></pre>
 <p>But, if you look closely, that isn’t what we want either. Each participant didn’t have four visits. They only had two. Here’s the problem. Each participant in the combined <code>demographics</code>/<code>grip_strength</code> data frame has two rows (i.e., one for pre and one for post). Each participant in the <code>emr</code> data frame also has two rows (i.e., one for pre and one for post). Above, we told <code>left_join()</code> to join by <code>id</code>. So, <code>left_join()</code> aligns all rows with matching key values – <code>id</code>’s.</p>
 <p>For example, row one in the combined <code>demographics</code>/<code>grip_strength</code> data frame has the key value <code>1001</code>. So, <code>left_join()</code> aligns row one in the combined <code>demographics</code>/<code>grip_strength</code> data frame with rows one <em>and</em> two in the <code>emr</code> data frame. Next, row <em>two</em> in the combined <code>demographics</code>/<code>grip_strength</code> data frame has the key value <code>1001</code>. So, <code>left_join()</code> aligns row <em>two</em> in the combined <code>demographics</code>/<code>grip_strength</code> data frame with rows one <em>and</em> two in the <code>emr</code> data frame. This results in 2 * 2 = 4 rows for each id - a <strong>many-to-many</strong> merge.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/many_to_many_emr.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/many_to_many_emr.png" /><!-- --></p>
 <p>But in reality, study id alone no longer uniquely identifies observations in our data. Now, observations are uniquely identified by study id and visit. For example, <code>1001</code> <em>and</em> <code>pre</code> are a unique observation, <code>1001</code> <em>and</em> <code>post</code> are a unique observation, <code>1002</code> <em>and</em> <code>pre</code> are a unique observation, and so on. We now have two key columns that identify unique observations. And once we give that information to <code>left_join</code>, the relationship between the data frames becomes a one-to-one relationship. In other words, each observation (defined by <code>id</code> <em>and</em> <code>visit</code>) in one data frame is related to no more than one observation (defined by <code>id</code> <em>and</em> <code>visit</code>) in the other data frame.</p>
-<p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_one_emr.png" width="900" /></p>
+<p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_one_emr.png" /><!-- --></p>
 <p>Here is how we tell <code>left_join()</code> to merge our data frames by <code>id</code> <em>and</em> <code>visit</code>:</p>
-<div class="sourceCode" id="cb877"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb877-1"><a href="working-with-multiple-data-frames.html#cb877-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb877-2"><a href="working-with-multiple-data-frames.html#cb877-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb877-3"><a href="working-with-multiple-data-frames.html#cb877-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;visit&quot;</span>))</span></code></pre></div>
-<pre><code>## # A tibble: 9 x 7
+<div class="sourceCode" id="cb898"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb898-1"><a href="working-with-multiple-data-frames.html#cb898-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb898-2"><a href="working-with-multiple-data-frames.html#cb898-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb898-3"><a href="working-with-multiple-data-frames.html#cb898-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;visit&quot;</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 9 × 7
 ##   id    dob        race_eth visit grip_r grip_l weight
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 1001  1968-12-14        1 pre       32     30    105
@@ -1336,6 +1362,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

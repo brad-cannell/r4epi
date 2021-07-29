@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>26 Subsetting data frames | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="26 Subsetting data frames | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-07-22" />
+<meta name="date" content="2021-07-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,8 @@
   
 <link rel="prev" href="creating-and-modifying-columns.html"/>
 <link rel="next" href="working-with-dates.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-3.5.1/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,15 +51,18 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<script src="libs/datatables-binding-0.18/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
@@ -125,6 +128,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -654,48 +680,48 @@ Maybe logical indexes
 -->
 <p>Subsetting data frames is another one of the most common data management tasks I carryout in my data analysis projects. Subsetting data frames just refers to the process of deciding which columns and rows to keep in your data frame and which to drop.</p>
 <p>For example, I may need to subset the rows of a data frame because I’m interested in understanding a subpopulation in my sample. Below, we only want to analyze the rows that correspond to participants from Texas.</p>
-<p><img src="img/05_part_data_management/03_subsetting_data_frame/rows.png" width="900" /></p>
+<p><img src="img/05_part_data_management/03_subsetting_data_frame/rows.png" /><!-- --></p>
 <p>Or, perhaps I’m only interested in a subset of the statistics returned to me in a data frame of analysis results. Below, I only want to view and present the variable name, variable category, count, and percent.</p>
-<p><img src="img/05_part_data_management/03_subsetting_data_frame/columns.png" width="900" /></p>
+<p><img src="img/05_part_data_management/03_subsetting_data_frame/columns.png" /><!-- --></p>
 <p>Fortunately, the <code>dplyr</code> package includes functions that make it really easy for us to subset our data frames – even in some fairly complicated ways. Let’s start by simulating the same drug trial data we simulated in the last chapter and use it to work through some examples.</p>
-<div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb494-1"><a href="subsetting-data-frames.html#cb494-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dplyr</span></span>
-<span id="cb494-2"><a href="subsetting-data-frames.html#cb494-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<div class="sourceCode" id="cb495"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb495-1"><a href="subsetting-data-frames.html#cb495-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb495-2"><a href="subsetting-data-frames.html#cb495-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb495-3"><a href="subsetting-data-frames.html#cb495-3" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb495-4"><a href="subsetting-data-frames.html#cb495-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Follow-up year, 0 = baseline, 1 = year one, 2 = year two.</span></span>
-<span id="cb495-5"><a href="subsetting-data-frames.html#cb495-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">times =</span> <span class="dv">20</span>),</span>
-<span id="cb495-6"><a href="subsetting-data-frames.html#cb495-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Participant age a baseline. Must be between the ages of 35 and 75 at </span></span>
-<span id="cb495-7"><a href="subsetting-data-frames.html#cb495-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># baseline to be eligible for the study</span></span>
-<span id="cb495-8"><a href="subsetting-data-frames.html#cb495-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">sample</span>(<span class="dv">35</span><span class="sc">:</span><span class="dv">75</span>, <span class="dv">20</span>, <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">rep</span>(<span class="at">each =</span> <span class="dv">3</span>),</span>
-<span id="cb495-9"><a href="subsetting-data-frames.html#cb495-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Drug the participant received, Placebo or active</span></span>
-<span id="cb495-10"><a href="subsetting-data-frames.html#cb495-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">drug =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Placebo&quot;</span>, <span class="st">&quot;Active&quot;</span>), <span class="dv">20</span>, <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb495-11"><a href="subsetting-data-frames.html#cb495-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="at">each =</span> <span class="dv">3</span>),</span>
-<span id="cb495-12"><a href="subsetting-data-frames.html#cb495-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Reported headaches side effect, Y/N</span></span>
-<span id="cb495-13"><a href="subsetting-data-frames.html#cb495-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_headache =</span> <span class="fu">if_else</span>(</span>
-<span id="cb495-14"><a href="subsetting-data-frames.html#cb495-14" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">&quot;Placebo&quot;</span>, </span>
-<span id="cb495-15"><a href="subsetting-data-frames.html#cb495-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">95</span>,.<span class="dv">05</span>)), </span>
-<span id="cb495-16"><a href="subsetting-data-frames.html#cb495-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">10</span>, .<span class="dv">90</span>))</span>
-<span id="cb495-17"><a href="subsetting-data-frames.html#cb495-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb495-18"><a href="subsetting-data-frames.html#cb495-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Report diarrhea side effect, Y/N</span></span>
-<span id="cb495-19"><a href="subsetting-data-frames.html#cb495-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_diarrhea =</span> <span class="fu">if_else</span>(</span>
-<span id="cb495-20"><a href="subsetting-data-frames.html#cb495-20" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">&quot;Placebo&quot;</span>, </span>
-<span id="cb495-21"><a href="subsetting-data-frames.html#cb495-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">98</span>,.<span class="dv">02</span>)), </span>
-<span id="cb495-22"><a href="subsetting-data-frames.html#cb495-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">20</span>, .<span class="dv">80</span>))</span>
-<span id="cb495-23"><a href="subsetting-data-frames.html#cb495-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb495-24"><a href="subsetting-data-frames.html#cb495-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Report dry mouth side effect, Y/N</span></span>
-<span id="cb495-25"><a href="subsetting-data-frames.html#cb495-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_dry_mouth =</span> <span class="fu">if_else</span>(</span>
-<span id="cb495-26"><a href="subsetting-data-frames.html#cb495-26" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">&quot;Placebo&quot;</span>, </span>
-<span id="cb495-27"><a href="subsetting-data-frames.html#cb495-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">97</span>,.<span class="dv">03</span>)), </span>
-<span id="cb495-28"><a href="subsetting-data-frames.html#cb495-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">30</span>, .<span class="dv">70</span>))</span>
-<span id="cb495-29"><a href="subsetting-data-frames.html#cb495-29" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb495-30"><a href="subsetting-data-frames.html#cb495-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Participant had myocardial infarction in study year, Y/N</span></span>
-<span id="cb495-31"><a href="subsetting-data-frames.html#cb495-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">mi =</span> <span class="fu">if_else</span>(</span>
-<span id="cb495-32"><a href="subsetting-data-frames.html#cb495-32" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">&quot;Placebo&quot;</span>, </span>
-<span id="cb495-33"><a href="subsetting-data-frames.html#cb495-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">85</span>, .<span class="dv">15</span>)), </span>
-<span id="cb495-34"><a href="subsetting-data-frames.html#cb495-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">80</span>, .<span class="dv">20</span>))</span>
-<span id="cb495-35"><a href="subsetting-data-frames.html#cb495-35" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb495-36"><a href="subsetting-data-frames.html#cb495-36" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb513"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb513-1"><a href="subsetting-data-frames.html#cb513-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dplyr</span></span>
+<span id="cb513-2"><a href="subsetting-data-frames.html#cb513-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb514"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb514-1"><a href="subsetting-data-frames.html#cb514-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb514-2"><a href="subsetting-data-frames.html#cb514-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb514-3"><a href="subsetting-data-frames.html#cb514-3" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb514-4"><a href="subsetting-data-frames.html#cb514-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Follow-up year, 0 = baseline, 1 = year one, 2 = year two.</span></span>
+<span id="cb514-5"><a href="subsetting-data-frames.html#cb514-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">times =</span> <span class="dv">20</span>),</span>
+<span id="cb514-6"><a href="subsetting-data-frames.html#cb514-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Participant age a baseline. Must be between the ages of 35 and 75 at </span></span>
+<span id="cb514-7"><a href="subsetting-data-frames.html#cb514-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># baseline to be eligible for the study</span></span>
+<span id="cb514-8"><a href="subsetting-data-frames.html#cb514-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">sample</span>(<span class="dv">35</span><span class="sc">:</span><span class="dv">75</span>, <span class="dv">20</span>, <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">rep</span>(<span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb514-9"><a href="subsetting-data-frames.html#cb514-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Drug the participant received, Placebo or active</span></span>
+<span id="cb514-10"><a href="subsetting-data-frames.html#cb514-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">drug =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Placebo&quot;</span>, <span class="st">&quot;Active&quot;</span>), <span class="dv">20</span>, <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb514-11"><a href="subsetting-data-frames.html#cb514-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb514-12"><a href="subsetting-data-frames.html#cb514-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Reported headaches side effect, Y/N</span></span>
+<span id="cb514-13"><a href="subsetting-data-frames.html#cb514-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_headache =</span> <span class="fu">if_else</span>(</span>
+<span id="cb514-14"><a href="subsetting-data-frames.html#cb514-14" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">&quot;Placebo&quot;</span>, </span>
+<span id="cb514-15"><a href="subsetting-data-frames.html#cb514-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">95</span>,.<span class="dv">05</span>)), </span>
+<span id="cb514-16"><a href="subsetting-data-frames.html#cb514-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">10</span>, .<span class="dv">90</span>))</span>
+<span id="cb514-17"><a href="subsetting-data-frames.html#cb514-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb514-18"><a href="subsetting-data-frames.html#cb514-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Report diarrhea side effect, Y/N</span></span>
+<span id="cb514-19"><a href="subsetting-data-frames.html#cb514-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_diarrhea =</span> <span class="fu">if_else</span>(</span>
+<span id="cb514-20"><a href="subsetting-data-frames.html#cb514-20" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">&quot;Placebo&quot;</span>, </span>
+<span id="cb514-21"><a href="subsetting-data-frames.html#cb514-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">98</span>,.<span class="dv">02</span>)), </span>
+<span id="cb514-22"><a href="subsetting-data-frames.html#cb514-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">20</span>, .<span class="dv">80</span>))</span>
+<span id="cb514-23"><a href="subsetting-data-frames.html#cb514-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb514-24"><a href="subsetting-data-frames.html#cb514-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Report dry mouth side effect, Y/N</span></span>
+<span id="cb514-25"><a href="subsetting-data-frames.html#cb514-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_dry_mouth =</span> <span class="fu">if_else</span>(</span>
+<span id="cb514-26"><a href="subsetting-data-frames.html#cb514-26" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">&quot;Placebo&quot;</span>, </span>
+<span id="cb514-27"><a href="subsetting-data-frames.html#cb514-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">97</span>,.<span class="dv">03</span>)), </span>
+<span id="cb514-28"><a href="subsetting-data-frames.html#cb514-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">30</span>, .<span class="dv">70</span>))</span>
+<span id="cb514-29"><a href="subsetting-data-frames.html#cb514-29" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb514-30"><a href="subsetting-data-frames.html#cb514-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Participant had myocardial infarction in study year, Y/N</span></span>
+<span id="cb514-31"><a href="subsetting-data-frames.html#cb514-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">mi =</span> <span class="fu">if_else</span>(</span>
+<span id="cb514-32"><a href="subsetting-data-frames.html#cb514-32" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">&quot;Placebo&quot;</span>, </span>
+<span id="cb514-33"><a href="subsetting-data-frames.html#cb514-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">85</span>, .<span class="dv">15</span>)), </span>
+<span id="cb514-34"><a href="subsetting-data-frames.html#cb514-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">80</span>, .<span class="dv">20</span>))</span>
+<span id="cb514-35"><a href="subsetting-data-frames.html#cb514-35" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb514-36"><a href="subsetting-data-frames.html#cb514-36" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>As a reminder, we are simulating some drug trial data that includes the following variables:</p>
 <ul>
 <li><p>id: Study id, there are 20 people enrolled in the trial.</p></li>
@@ -708,8 +734,8 @@ Maybe logical indexes
 <li><p>mi: Participant had myocardial infarction in study year, Y/N.</p></li>
 </ul>
 <p>Actually, this data is slightly different than the data we used in the last chapter. Did you catch the difference? Take another look:</p>
-<div class="sourceCode" id="cb496"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb496-1"><a href="subsetting-data-frames.html#cb496-1" aria-hidden="true" tabindex="-1"></a>drug_trial</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 7
+<div class="sourceCode" id="cb515"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb515-1"><a href="subsetting-data-frames.html#cb515-1" aria-hidden="true" tabindex="-1"></a>drug_trial</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 7
 ##     year   age drug    se_headache se_diarrhea se_dry_mouth    mi
 ##    &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
 ##  1     0    65 Active            0           1            1     0
@@ -724,13 +750,13 @@ Maybe logical indexes
 ## 10     0    37 Placebo           0           0            0     0
 ## # … with 50 more rows</code></pre>
 <p>We forgot to put a study id in our data. Because we simulated this data above, the best way to fix this oversite is to make the necessary change to the simulation code above. But, let’s pretend that someone sent us this data instead, and we have to add a new study id column to it. Well, we now know how to use the <code>mutate()</code> function to columns to our data frame. We can do so like this:</p>
-<div class="sourceCode" id="cb498"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb498-1"><a href="subsetting-data-frames.html#cb498-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb498-2"><a href="subsetting-data-frames.html#cb498-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb498-3"><a href="subsetting-data-frames.html#cb498-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Study id, there are 20 people enrolled in the trial.</span></span>
-<span id="cb498-4"><a href="subsetting-data-frames.html#cb498-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">each =</span> <span class="dv">3</span>)</span>
-<span id="cb498-5"><a href="subsetting-data-frames.html#cb498-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb498-6"><a href="subsetting-data-frames.html#cb498-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 8
+<div class="sourceCode" id="cb517"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb517-1"><a href="subsetting-data-frames.html#cb517-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb517-2"><a href="subsetting-data-frames.html#cb517-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb517-3"><a href="subsetting-data-frames.html#cb517-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Study id, there are 20 people enrolled in the trial.</span></span>
+<span id="cb517-4"><a href="subsetting-data-frames.html#cb517-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">each =</span> <span class="dv">3</span>)</span>
+<span id="cb517-5"><a href="subsetting-data-frames.html#cb517-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb517-6"><a href="subsetting-data-frames.html#cb517-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 8
 ##     year   age drug    se_headache se_diarrhea se_dry_mouth    mi    id
 ##    &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;
 ##  1     0    65 Active            0           1            1     0     1
@@ -747,9 +773,9 @@ Maybe logical indexes
 <p>And now we have the study id in our data. But, by default R adds new columns as the rightmost column of the data frame. In terms of analysis, it doesn’t really matter where this column is located in our data. R couldn’t care less. However, when humans look at this data, they typically expect the study id (or some other identifier) to be the first column in the data frame. That is a job for <code>select()</code>.</p>
 <div id="the-select-function" class="section level2" number="26.1">
 <h2><span class="header-section-number">26.1</span> The select() function</h2>
-<div class="sourceCode" id="cb500"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb500-1"><a href="subsetting-data-frames.html#cb500-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb500-2"><a href="subsetting-data-frames.html#cb500-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, age, se_headache, se_diarrhea, se_dry_mouth, mi)</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 7
+<div class="sourceCode" id="cb519"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb519-1"><a href="subsetting-data-frames.html#cb519-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb519-2"><a href="subsetting-data-frames.html#cb519-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, age, se_headache, se_diarrhea, se_dry_mouth, mi)</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 7
 ##       id  year   age se_headache se_diarrhea se_dry_mouth    mi
 ##    &lt;int&gt; &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
 ##  1     1     0    65           0           1            1     0
@@ -774,10 +800,10 @@ Maybe logical indexes
 <p>The code above gave us the result we wanted. 👏 But, it can be tedious and error prone to manually type every variable name inside the <code>select()</code> function. Did you notice that I forgot the <code>drug</code> column “by accident?”</p>
 <p>Thankfully, the <code>select()</code> function is one of several <code>dplyr</code> functions that accept <a href="https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html">tidy-select</a> argument modifiers (i.e., functions and operators). In this chapter, I will show you some of the tidy-select argument modifiers I regularly use, but you can always type <code>?dplyr_tidy_select</code> into your console to see a complete list.</p>
 <p>In our little example above, we could have used the tidy-select <code>everything()</code> function to make our code easier to write and we wouldn’t have accidently missed the <code>drug</code> column. We can do so like this:</p>
-<div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb502-1"><a href="subsetting-data-frames.html#cb502-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb502-2"><a href="subsetting-data-frames.html#cb502-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb502-3"><a href="subsetting-data-frames.html#cb502-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 8
+<div class="sourceCode" id="cb521"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb521-1"><a href="subsetting-data-frames.html#cb521-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb521-2"><a href="subsetting-data-frames.html#cb521-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb521-3"><a href="subsetting-data-frames.html#cb521-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 8
 ##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
 ##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
 ##  1     1     0    65 Active            0           1            1     0
@@ -797,10 +823,10 @@ Maybe logical indexes
 <li><p>Rather than explicitly typing the othe column names, we used the <code>everything()</code> tidy-select function. As you may have guessed, <code>everything()</code> tells R to do X (in this keep) to all the other variables not explicitly mentioned.</p></li>
 </ul>
 <p>For our next example, let’s go ahead and add our mean-centered age variable to our <code>drug_trial</code> data again. We did this for the first time in the last chapter, in case you missed.</p>
-<div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb504-1"><a href="subsetting-data-frames.html#cb504-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb504-2"><a href="subsetting-data-frames.html#cb504-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_center =</span> age <span class="sc">-</span> <span class="fu">mean</span>(age)) <span class="sc">%&gt;%</span> </span>
-<span id="cb504-3"><a href="subsetting-data-frames.html#cb504-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 9
+<div class="sourceCode" id="cb523"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb523-1"><a href="subsetting-data-frames.html#cb523-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb523-2"><a href="subsetting-data-frames.html#cb523-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_center =</span> age <span class="sc">-</span> <span class="fu">mean</span>(age)) <span class="sc">%&gt;%</span> </span>
+<span id="cb523-3"><a href="subsetting-data-frames.html#cb523-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 9
 ##       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
 ##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt;
 ##  1     1     0    65 Acti…           0           1            1     0       11.3
@@ -815,9 +841,9 @@ Maybe logical indexes
 ## 10     4     0    37 Plac…           0           0            0     0      -16.7
 ## # … with 50 more rows</code></pre>
 <p>One way I will often use <code>select()</code> is for performing quick little <strong>data checks</strong>. For example, let’s say that I wanted to make sure the code I wrote above actually <em>did</em> what I <em>intended</em> it to do. If I print the entire data frame to the screen, <code>age</code> and <code>age_center</code> aren’t directly side-by-side, and there’s a lot of other visual clutter from the other variables. In a case like this, I would use <code>select()</code> to get a clearer picture:</p>
-<div class="sourceCode" id="cb506"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb506-1"><a href="subsetting-data-frames.html#cb506-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb506-2"><a href="subsetting-data-frames.html#cb506-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(age, age_center)</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 2
+<div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb525-1"><a href="subsetting-data-frames.html#cb525-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb525-2"><a href="subsetting-data-frames.html#cb525-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(age, age_center)</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 2
 ##      age age_center
 ##    &lt;int&gt;      &lt;dbl&gt;
 ##  1    65       11.3
@@ -840,9 +866,9 @@ Maybe logical indexes
 ⚠️<strong>Warning:</strong> Notice that I didn’t assign our result above to anything (i.e., there’s no <code>drug_trial &lt;-</code>). If I had done so, the <code>drug_trial</code> data would have contained these two columns only. I didn’t want to drop the other columns. I could have assigned the result of the code to a different R object (e.g., <code>check_age &lt;-</code>, but it wasn’t really necessary. I just wanted to quickly view <code>age</code> and <code>age_center</code> side-by-side for data checking purposes. When I’m satisfied that I coded it correctly, I can move on. There’s no need to save those results to an R object.
 </p>
 <p>You may also recall that we wanted to subset the <code>drug_trial</code> data to include only the columns we needed for the rowwise demonstrations. Here is the code we used to do so:</p>
-<div class="sourceCode" id="cb508"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb508-1"><a href="subsetting-data-frames.html#cb508-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb508-2"><a href="subsetting-data-frames.html#cb508-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, <span class="fu">starts_with</span>(<span class="st">&quot;se&quot;</span>))</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 5
+<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb527-1"><a href="subsetting-data-frames.html#cb527-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb527-2"><a href="subsetting-data-frames.html#cb527-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, <span class="fu">starts_with</span>(<span class="st">&quot;se&quot;</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 5
 ##       id  year se_headache se_diarrhea se_dry_mouth
 ##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;
 ##  1     1     0           0           1            1
@@ -862,9 +888,9 @@ Maybe logical indexes
 <li><p>We used the tidy-select <code>starts_with()</code> function to select all the side effect variables.</p></li>
 </ul>
 <p>We already know that we can use <code>everything()</code> to select <em>all</em> of the other variables in a data frame, but what if we just want to grab a <em>range</em> or <em>group</em> of other variables in a data frame? tidy-select makes it easy for us. Above, we used the <code>starts_with()</code> function to select all the columns with names that literally start with the letters “se.” Because all of the side effect columns are directly next to each other (i.e., no columns in between them) we could have also used the colon operator <code>:</code> like this:</p>
-<div class="sourceCode" id="cb510"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb510-1"><a href="subsetting-data-frames.html#cb510-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb510-2"><a href="subsetting-data-frames.html#cb510-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, se_headache<span class="sc">:</span>se_dry_mouth)</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 5
+<div class="sourceCode" id="cb529"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb529-1"><a href="subsetting-data-frames.html#cb529-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb529-2"><a href="subsetting-data-frames.html#cb529-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, se_headache<span class="sc">:</span>se_dry_mouth)</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 5
 ##       id  year se_headache se_diarrhea se_dry_mouth
 ##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;
 ##  1     1     0           0           1            1
@@ -880,19 +906,19 @@ Maybe logical indexes
 ## # … with 50 more rows</code></pre>
 <p>While either method gets us the same result, I tend to prefer using <code>starts_with()</code> when possible. I think it makes your code easier to read (i.e., “Oh, he’s selecting all the side effect columns here.”).</p>
 <p>In addition to <code>starts_with()</code>, there is also an <code>ends_with()</code> tidy-select function that can also be useful. For example, we’ve named factors with the <code>_f</code> naming convention throughout the book. We could use that, along with the <code>ends-with()</code> function to create a subset of our data that includes only the factor versions of our side effects columns.</p>
-<div class="sourceCode" id="cb512"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb512-1"><a href="subsetting-data-frames.html#cb512-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the side effect factor columns to our data frame again...</span></span>
-<span id="cb512-2"><a href="subsetting-data-frames.html#cb512-2" aria-hidden="true" tabindex="-1"></a>yn_levs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb512-3"><a href="subsetting-data-frames.html#cb512-3" aria-hidden="true" tabindex="-1"></a>yn_labs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)</span>
-<span id="cb512-4"><a href="subsetting-data-frames.html#cb512-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb512-5"><a href="subsetting-data-frames.html#cb512-5" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb512-6"><a href="subsetting-data-frames.html#cb512-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb512-7"><a href="subsetting-data-frames.html#cb512-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_headache_f  =</span> <span class="fu">factor</span>(se_headache, yn_levs, yn_labs),</span>
-<span id="cb512-8"><a href="subsetting-data-frames.html#cb512-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_diarrhea_f  =</span> <span class="fu">factor</span>(se_diarrhea, yn_levs, yn_labs),</span>
-<span id="cb512-9"><a href="subsetting-data-frames.html#cb512-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, yn_levs, yn_labs)</span>
-<span id="cb512-10"><a href="subsetting-data-frames.html#cb512-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<div class="sourceCode" id="cb513"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb513-1"><a href="subsetting-data-frames.html#cb513-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb513-2"><a href="subsetting-data-frames.html#cb513-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, <span class="fu">ends_with</span>(<span class="st">&quot;_f&quot;</span>))</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 5
+<div class="sourceCode" id="cb531"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb531-1"><a href="subsetting-data-frames.html#cb531-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the side effect factor columns to our data frame again...</span></span>
+<span id="cb531-2"><a href="subsetting-data-frames.html#cb531-2" aria-hidden="true" tabindex="-1"></a>yn_levs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb531-3"><a href="subsetting-data-frames.html#cb531-3" aria-hidden="true" tabindex="-1"></a>yn_labs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)</span>
+<span id="cb531-4"><a href="subsetting-data-frames.html#cb531-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb531-5"><a href="subsetting-data-frames.html#cb531-5" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb531-6"><a href="subsetting-data-frames.html#cb531-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb531-7"><a href="subsetting-data-frames.html#cb531-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_headache_f  =</span> <span class="fu">factor</span>(se_headache, yn_levs, yn_labs),</span>
+<span id="cb531-8"><a href="subsetting-data-frames.html#cb531-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_diarrhea_f  =</span> <span class="fu">factor</span>(se_diarrhea, yn_levs, yn_labs),</span>
+<span id="cb531-9"><a href="subsetting-data-frames.html#cb531-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, yn_levs, yn_labs)</span>
+<span id="cb531-10"><a href="subsetting-data-frames.html#cb531-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb532"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb532-1"><a href="subsetting-data-frames.html#cb532-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb532-2"><a href="subsetting-data-frames.html#cb532-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, <span class="fu">ends_with</span>(<span class="st">&quot;_f&quot;</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 5
 ##       id  year se_headache_f se_diarrhea_f se_dry_mouth_f
 ##    &lt;int&gt; &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
 ##  1     1     0 No            Yes           Yes           
@@ -910,9 +936,9 @@ Maybe logical indexes
 🗒<strong>Side Note:</strong> Variable names are important! Throughout this book, I’ve tried to repeatedly emphasize the importance of coding style – including the way we name our R objects. Many people who are new to data management and analysis (and some who aren’t, <strong>MDL</strong>) don’t fully appreciate the importance of such things. I hope that the preceding two examples are helping you to see why the little details, like variable names, are important. Using consistent variable naming conventions, for example, allows us to write code that requires less typing, is easier for humans to skim and understand, and is less prone to typos and other related errors.
 </p>
 <p>We can also select columns we want to keep by position instead of name. I don’t do this often. I think it’s generally better to use column names or tidy-select argument modifiers when subsetting columns in your data frame. However, I do sometimes select columns by position when I’m writing my own functions. Therefore, I want to quickly show you what this looks like:</p>
-<div class="sourceCode" id="cb515"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb515-1"><a href="subsetting-data-frames.html#cb515-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb515-2"><a href="subsetting-data-frames.html#cb515-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">4</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 3
+<div class="sourceCode" id="cb534"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb534-1"><a href="subsetting-data-frames.html#cb534-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb534-2"><a href="subsetting-data-frames.html#cb534-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">4</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 3
 ##       id  year drug   
 ##    &lt;int&gt; &lt;int&gt; &lt;chr&gt;  
 ##  1     1     0 Active 
@@ -932,19 +958,19 @@ Maybe logical indexes
 </ul>
 <p>Finally, in addition to using <code>select()</code> to <em>keep</em> columns in our data frame, we can also use <code>select()</code> to explicitly <em>drop</em> columns from our data frame. To do so, we just need to use either the subtraction symbol (<code>-</code>) or the Not operator (<code>!</code>).</p>
 <p>Think back to our example from the previous chapter. There we created some new variables that captured information about participants reporting <em>any</em> and <em>all</em> side effects. During that process we created a column that contained a count of the side effects experienced in each year – <code>n_se_year</code>.</p>
-<div class="sourceCode" id="cb517"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb517-1"><a href="subsetting-data-frames.html#cb517-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb517-2"><a href="subsetting-data-frames.html#cb517-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb517-3"><a href="subsetting-data-frames.html#cb517-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb517-4"><a href="subsetting-data-frames.html#cb517-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_se_year   =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
-<span id="cb517-5"><a href="subsetting-data-frames.html#cb517-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">any_se_year =</span> n_se_year <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
-<span id="cb517-6"><a href="subsetting-data-frames.html#cb517-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">all_se_year =</span> n_se_year <span class="sc">==</span> <span class="dv">3</span></span>
-<span id="cb517-7"><a href="subsetting-data-frames.html#cb517-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb517-8"><a href="subsetting-data-frames.html#cb517-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> </span>
-<span id="cb517-9"><a href="subsetting-data-frames.html#cb517-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se =</span> <span class="fu">sum</span>(any_se_year) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb517-10"><a href="subsetting-data-frames.html#cb517-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb517-11"><a href="subsetting-data-frames.html#cb517-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id<span class="sc">:</span>year, n_se_year<span class="sc">:</span>any_se) <span class="sc">%&gt;%</span> </span>
-<span id="cb517-12"><a href="subsetting-data-frames.html#cb517-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 6
+<div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb536-1"><a href="subsetting-data-frames.html#cb536-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb536-2"><a href="subsetting-data-frames.html#cb536-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb536-3"><a href="subsetting-data-frames.html#cb536-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb536-4"><a href="subsetting-data-frames.html#cb536-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_se_year   =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb536-5"><a href="subsetting-data-frames.html#cb536-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">any_se_year =</span> n_se_year <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb536-6"><a href="subsetting-data-frames.html#cb536-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">all_se_year =</span> n_se_year <span class="sc">==</span> <span class="dv">3</span></span>
+<span id="cb536-7"><a href="subsetting-data-frames.html#cb536-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb536-8"><a href="subsetting-data-frames.html#cb536-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> </span>
+<span id="cb536-9"><a href="subsetting-data-frames.html#cb536-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se =</span> <span class="fu">sum</span>(any_se_year) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb536-10"><a href="subsetting-data-frames.html#cb536-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb536-11"><a href="subsetting-data-frames.html#cb536-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id<span class="sc">:</span>year, n_se_year<span class="sc">:</span>any_se) <span class="sc">%&gt;%</span> </span>
+<span id="cb536-12"><a href="subsetting-data-frames.html#cb536-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 6
 ##       id  year n_se_year any_se_year all_se_year any_se
 ##    &lt;int&gt; &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;       &lt;lgl&gt; 
 ##  1     1     0         2 TRUE        FALSE       TRUE  
@@ -959,9 +985,9 @@ Maybe logical indexes
 ## 10     4     0         0 FALSE       FALSE       FALSE 
 ## # … with 50 more rows</code></pre>
 <p>Let’s say we decided we don’t need <code>n_se_year</code> column now that we created <code>any_se_year</code>, <code>all_se_year</code>, and <code>any_se</code>. We can easily drop it from the data frame in a couple of ways:</p>
-<div class="sourceCode" id="cb519"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb519-1"><a href="subsetting-data-frames.html#cb519-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
-<span id="cb519-2"><a href="subsetting-data-frames.html#cb519-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n_se_year)</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 5
+<div class="sourceCode" id="cb538"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb538-1"><a href="subsetting-data-frames.html#cb538-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb538-2"><a href="subsetting-data-frames.html#cb538-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n_se_year)</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 5
 ##       id  year any_se_year all_se_year any_se
 ##    &lt;int&gt; &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;       &lt;lgl&gt; 
 ##  1     1     0 TRUE        FALSE       TRUE  
@@ -975,9 +1001,9 @@ Maybe logical indexes
 ##  9     3     2 FALSE       FALSE       FALSE 
 ## 10     4     0 FALSE       FALSE       FALSE 
 ## # … with 50 more rows</code></pre>
-<div class="sourceCode" id="cb521"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb521-1"><a href="subsetting-data-frames.html#cb521-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
-<span id="cb521-2"><a href="subsetting-data-frames.html#cb521-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span>n_se_year)</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 5
+<div class="sourceCode" id="cb540"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb540-1"><a href="subsetting-data-frames.html#cb540-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb540-2"><a href="subsetting-data-frames.html#cb540-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span>n_se_year)</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 5
 ##       id  year any_se_year all_se_year any_se
 ##    &lt;int&gt; &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;       &lt;lgl&gt; 
 ##  1     1     0 TRUE        FALSE       TRUE  
@@ -992,9 +1018,9 @@ Maybe logical indexes
 ## 10     4     0 FALSE       FALSE       FALSE 
 ## # … with 50 more rows</code></pre>
 <p>Note that we could have also dropped it indirectly by selecting everything else:</p>
-<div class="sourceCode" id="cb523"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb523-1"><a href="subsetting-data-frames.html#cb523-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
-<span id="cb523-2"><a href="subsetting-data-frames.html#cb523-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id<span class="sc">:</span>year, any_se_year<span class="sc">:</span>any_se)</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 5
+<div class="sourceCode" id="cb542"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb542-1"><a href="subsetting-data-frames.html#cb542-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb542-2"><a href="subsetting-data-frames.html#cb542-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id<span class="sc">:</span>year, any_se_year<span class="sc">:</span>any_se)</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 5
 ##       id  year any_se_year all_se_year any_se
 ##    &lt;int&gt; &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;       &lt;lgl&gt; 
 ##  1     1     0 TRUE        FALSE       TRUE  
@@ -1013,13 +1039,13 @@ Maybe logical indexes
 <div id="the-rename-function" class="section level2" number="26.2">
 <h2><span class="header-section-number">26.2</span> The rename() function</h2>
 <p>Sometimes, we want to change the names of some, or all, of the columns in our data frame. For me, this most commonly comes up with data I’ve imported from someone else. For example, let’s say I’m importing data that uses column names that aren’t super informative. We saw column names like that when we imported NHANES data. It looked something like this:</p>
-<div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb525-1"><a href="subsetting-data-frames.html#cb525-1" aria-hidden="true" tabindex="-1"></a>nhanes <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb525-2"><a href="subsetting-data-frames.html#cb525-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">SEQN =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>),</span>
-<span id="cb525-3"><a href="subsetting-data-frames.html#cb525-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ALQ101 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb525-4"><a href="subsetting-data-frames.html#cb525-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ALQ110 =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
-<span id="cb525-5"><a href="subsetting-data-frames.html#cb525-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb525-6"><a href="subsetting-data-frames.html#cb525-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb544-1"><a href="subsetting-data-frames.html#cb544-1" aria-hidden="true" tabindex="-1"></a>nhanes <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb544-2"><a href="subsetting-data-frames.html#cb544-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">SEQN =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>),</span>
+<span id="cb544-3"><a href="subsetting-data-frames.html#cb544-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ALQ101 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb544-4"><a href="subsetting-data-frames.html#cb544-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ALQ110 =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb544-5"><a href="subsetting-data-frames.html#cb544-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb544-6"><a href="subsetting-data-frames.html#cb544-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ##    SEQN ALQ101 ALQ110
 ##   &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1     1      1      2
@@ -1027,13 +1053,13 @@ Maybe logical indexes
 ## 3     3      1      2
 ## 4     4      2      1</code></pre>
 <p>We previously learned how to change these column names on import (i.e., <code>col_names</code>), but let’s say we didn’t do that for whatever reason. We can rename columns in our data frame using the <code>rename()</code> function like so:</p>
-<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb527-1"><a href="subsetting-data-frames.html#cb527-1" aria-hidden="true" tabindex="-1"></a>nhanes <span class="sc">%&gt;%</span> </span>
-<span id="cb527-2"><a href="subsetting-data-frames.html#cb527-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb527-3"><a href="subsetting-data-frames.html#cb527-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> SEQN,</span>
-<span id="cb527-4"><a href="subsetting-data-frames.html#cb527-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">drinks_12_year =</span> ALQ101,</span>
-<span id="cb527-5"><a href="subsetting-data-frames.html#cb527-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">drinks_12_life =</span> ALQ110</span>
-<span id="cb527-6"><a href="subsetting-data-frames.html#cb527-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb546"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb546-1"><a href="subsetting-data-frames.html#cb546-1" aria-hidden="true" tabindex="-1"></a>nhanes <span class="sc">%&gt;%</span> </span>
+<span id="cb546-2"><a href="subsetting-data-frames.html#cb546-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb546-3"><a href="subsetting-data-frames.html#cb546-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> SEQN,</span>
+<span id="cb546-4"><a href="subsetting-data-frames.html#cb546-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">drinks_12_year =</span> ALQ101,</span>
+<span id="cb546-5"><a href="subsetting-data-frames.html#cb546-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">drinks_12_life =</span> ALQ110</span>
+<span id="cb546-6"><a href="subsetting-data-frames.html#cb546-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ##      id drinks_12_year drinks_12_life
 ##   &lt;int&gt;          &lt;dbl&gt;          &lt;dbl&gt;
 ## 1     1              1              2
@@ -1048,9 +1074,9 @@ Maybe logical indexes
 <li><p>The second argument to the <code>rename()</code> function is <code>...</code>. The value passed to the <code>...</code> argument should be a name value pair, or series of name-value pairs separated by columns. The name-value pairs should be in the format <code>new name = original name</code>.</p></li>
 </ul>
 <p>I think these names are much better, but for the sake of argument let’s say that we wanted to keep the original names – just coerce them to lowercase. We can do that using the <code>rename_with()</code> variation of the <code>rename()</code> function in combination with the <code>tolower()</code> function:</p>
-<div class="sourceCode" id="cb529"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb529-1"><a href="subsetting-data-frames.html#cb529-1" aria-hidden="true" tabindex="-1"></a>nhanes <span class="sc">%&gt;%</span> </span>
-<span id="cb529-2"><a href="subsetting-data-frames.html#cb529-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(tolower)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb548"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb548-1"><a href="subsetting-data-frames.html#cb548-1" aria-hidden="true" tabindex="-1"></a>nhanes <span class="sc">%&gt;%</span> </span>
+<span id="cb548-2"><a href="subsetting-data-frames.html#cb548-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(tolower)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ##    seqn alq101 alq110
 ##   &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1     1      1      2
@@ -1070,9 +1096,9 @@ Maybe logical indexes
 <h2><span class="header-section-number">26.3</span> The filter() function</h2>
 <p>We just saw how to keep and drop <em>columns</em> in our data frame using the <code>select()</code> function. We can keep and drop <em>rows</em> in our data frame using the <em>filter()</em> function or the <em>slice()</em> function.</p>
 <p>Similar to selecting columns by position instead of name:</p>
-<div class="sourceCode" id="cb531"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb531-1"><a href="subsetting-data-frames.html#cb531-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb531-2"><a href="subsetting-data-frames.html#cb531-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">4</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 60 x 3
+<div class="sourceCode" id="cb550"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb550-1"><a href="subsetting-data-frames.html#cb550-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb550-2"><a href="subsetting-data-frames.html#cb550-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">4</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 60 × 3
 ##       id  year drug   
 ##    &lt;int&gt; &lt;int&gt; &lt;chr&gt;  
 ##  1     1     0 Active 
@@ -1087,9 +1113,9 @@ Maybe logical indexes
 ## 10     4     0 Placebo
 ## # … with 50 more rows</code></pre>
 <p>We can also select rows we want to keep by position. Again, I don’t do this often, but it is sometimes useful when I’m writing my own functions. Therefore, I want to quickly show you what this looks like:</p>
-<div class="sourceCode" id="cb533"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb533-1"><a href="subsetting-data-frames.html#cb533-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb533-2"><a href="subsetting-data-frames.html#cb533-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 12
+<div class="sourceCode" id="cb552"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb552-1"><a href="subsetting-data-frames.html#cb552-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb552-2"><a href="subsetting-data-frames.html#cb552-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 12
 ##      id  year   age drug   se_headache se_diarrhea se_dry_mouth    mi age_center
 ##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;        &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt;
 ## 1     1     0    65 Active           0           1            1     0       11.3
@@ -1114,9 +1140,9 @@ Maybe logical indexes
 <div id="subgroup-analysis" class="section level3" number="26.3.1">
 <h3><span class="header-section-number">26.3.1</span> Subgroup analysis</h3>
 <p>Let’s say that I want to count the number of people in the drug trial who reported having headaches in the baseline year by drug status (active vs. placebo). We would first use <code>filter()</code> to keep only the rows that contain data from the baseline year:</p>
-<div class="sourceCode" id="cb535"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb535-1"><a href="subsetting-data-frames.html#cb535-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb535-2"><a href="subsetting-data-frames.html#cb535-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 20 x 12
+<div class="sourceCode" id="cb554"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb554-1"><a href="subsetting-data-frames.html#cb554-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb554-2"><a href="subsetting-data-frames.html#cb554-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 20 × 12
 ##       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
 ##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt;
 ##  1     1     0    65 Acti…           0           1            1     0     11.3  
@@ -1152,11 +1178,11 @@ Maybe logical indexes
 ⚠️<strong>Warning:</strong> Remember, that in the R language <code>=</code> (i.e., one equal sign) and <code>==</code> (i.e., two equal signs) are different things. The <code>=</code> operator <em>tells</em> R to <em>make</em> the thing on the left equal to the thing on the right. In other words, it <em>assigns</em> values. The <code>==</code> <em>asks</em> R if the thing on the left is equal to the thing on the right. In other words, it <em>test the equality</em> of values.
 </p>
 <p>Now, we can use the descriptive analysis techniques we’ve already learned to answer our research question:</p>
-<div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb537-1"><a href="subsetting-data-frames.html#cb537-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb537-2"><a href="subsetting-data-frames.html#cb537-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb537-3"><a href="subsetting-data-frames.html#cb537-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f) <span class="sc">%&gt;%</span> </span>
-<span id="cb537-4"><a href="subsetting-data-frames.html#cb537-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb556"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb556-1"><a href="subsetting-data-frames.html#cb556-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb556-2"><a href="subsetting-data-frames.html#cb556-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb556-3"><a href="subsetting-data-frames.html#cb556-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb556-4"><a href="subsetting-data-frames.html#cb556-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ## # Groups:   drug [2]
 ##   drug    se_headache_f     n
 ##   &lt;chr&gt;   &lt;fct&gt;         &lt;int&gt;
@@ -1165,12 +1191,12 @@ Maybe logical indexes
 ## 3 Placebo No               12
 ## 4 Placebo Yes               1</code></pre>
 <p>So, 6 out of 7 (~ 86%) of the people in our active drug group reported headaches in the baseline year. Now, let’s say that we have reason to suspect that the drug affects people differently based on their age. Let’s go ahead and repeat this analysis, but only in a subgroup of people who are below age 65. Again, we can use the <code>filter()</code> function to do this:</p>
-<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb539-1"><a href="subsetting-data-frames.html#cb539-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb539-2"><a href="subsetting-data-frames.html#cb539-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb539-3"><a href="subsetting-data-frames.html#cb539-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;</span> <span class="dv">65</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb539-4"><a href="subsetting-data-frames.html#cb539-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f) <span class="sc">%&gt;%</span> </span>
-<span id="cb539-5"><a href="subsetting-data-frames.html#cb539-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 3
+<div class="sourceCode" id="cb558"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb558-1"><a href="subsetting-data-frames.html#cb558-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb558-2"><a href="subsetting-data-frames.html#cb558-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb558-3"><a href="subsetting-data-frames.html#cb558-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;</span> <span class="dv">65</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb558-4"><a href="subsetting-data-frames.html#cb558-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb558-5"><a href="subsetting-data-frames.html#cb558-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 3
 ## # Groups:   drug [2]
 ##   drug    se_headache_f     n
 ##   &lt;chr&gt;   &lt;fct&gt;         &lt;int&gt;
@@ -1179,12 +1205,12 @@ Maybe logical indexes
 ## 3 Placebo Yes               1</code></pre>
 <p>Wow! It looks like everyone under age 65 who received active drug also reported headaches!</p>
 <p>We can show this more explicitly by using passing the value <code>FALSE</code> to the <code>.drop</code> argument of <code>group_by()</code>. This tells R to keep all factor levels in the output, even if they were <em>observed</em> in the data zero times.</p>
-<div class="sourceCode" id="cb541"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb541-1"><a href="subsetting-data-frames.html#cb541-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb541-2"><a href="subsetting-data-frames.html#cb541-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb541-3"><a href="subsetting-data-frames.html#cb541-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;</span> <span class="dv">65</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb541-4"><a href="subsetting-data-frames.html#cb541-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f, <span class="at">.drop =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb541-5"><a href="subsetting-data-frames.html#cb541-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb560"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb560-1"><a href="subsetting-data-frames.html#cb560-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb560-2"><a href="subsetting-data-frames.html#cb560-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb560-3"><a href="subsetting-data-frames.html#cb560-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;</span> <span class="dv">65</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb560-4"><a href="subsetting-data-frames.html#cb560-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f, <span class="at">.drop =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb560-5"><a href="subsetting-data-frames.html#cb560-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ## # Groups:   drug [2]
 ##   drug    se_headache_f     n
 ##   &lt;chr&gt;   &lt;fct&gt;         &lt;int&gt;
@@ -1193,11 +1219,11 @@ Maybe logical indexes
 ## 3 Placebo No               11
 ## 4 Placebo Yes               1</code></pre>
 <p>Finally, we could make our code above more succinct by combining our two filter functions into one:</p>
-<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb543-1"><a href="subsetting-data-frames.html#cb543-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
-<span id="cb543-2"><a href="subsetting-data-frames.html#cb543-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> age <span class="sc">&lt;</span> <span class="dv">65</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb543-3"><a href="subsetting-data-frames.html#cb543-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f, <span class="at">.drop =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb543-4"><a href="subsetting-data-frames.html#cb543-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 3
+<div class="sourceCode" id="cb562"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb562-1"><a href="subsetting-data-frames.html#cb562-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb562-2"><a href="subsetting-data-frames.html#cb562-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> age <span class="sc">&lt;</span> <span class="dv">65</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb562-3"><a href="subsetting-data-frames.html#cb562-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f, <span class="at">.drop =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb562-4"><a href="subsetting-data-frames.html#cb562-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
 ## # Groups:   drug [2]
 ##   drug    se_headache_f     n
 ##   &lt;chr&gt;   &lt;fct&gt;         &lt;int&gt;
@@ -1217,15 +1243,15 @@ Maybe logical indexes
 <h3><span class="header-section-number">26.3.2</span> Complete case analysis</h3>
 <p>Now let’s say that we want to compare age at baseline by drug status (active vs. placebo). Additionally, let’s say that we have some missing values in our data.</p>
 <p>Let’s first simulate some new data with missing values:</p>
-<div class="sourceCode" id="cb545"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb545-1"><a href="subsetting-data-frames.html#cb545-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span></span>
-<span id="cb545-2"><a href="subsetting-data-frames.html#cb545-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb545-3"><a href="subsetting-data-frames.html#cb545-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb545-4"><a href="subsetting-data-frames.html#cb545-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb545-5"><a href="subsetting-data-frames.html#cb545-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age  =</span> <span class="fu">replace</span>(age, <span class="dv">1</span>, <span class="cn">NA</span>),</span>
-<span id="cb545-6"><a href="subsetting-data-frames.html#cb545-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">drug =</span> <span class="fu">replace</span>(drug, <span class="dv">4</span>, <span class="cn">NA</span>)</span>
-<span id="cb545-7"><a href="subsetting-data-frames.html#cb545-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb545-8"><a href="subsetting-data-frames.html#cb545-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 10 x 12
+<div class="sourceCode" id="cb564"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb564-1"><a href="subsetting-data-frames.html#cb564-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span></span>
+<span id="cb564-2"><a href="subsetting-data-frames.html#cb564-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb564-3"><a href="subsetting-data-frames.html#cb564-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb564-4"><a href="subsetting-data-frames.html#cb564-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb564-5"><a href="subsetting-data-frames.html#cb564-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age  =</span> <span class="fu">replace</span>(age, <span class="dv">1</span>, <span class="cn">NA</span>),</span>
+<span id="cb564-6"><a href="subsetting-data-frames.html#cb564-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">drug =</span> <span class="fu">replace</span>(drug, <span class="dv">4</span>, <span class="cn">NA</span>)</span>
+<span id="cb564-7"><a href="subsetting-data-frames.html#cb564-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb564-8"><a href="subsetting-data-frames.html#cb564-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 10 × 12
 ##       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
 ##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt;
 ##  1     1     0    NA Acti…           0           1            1     0       11.3
@@ -1247,42 +1273,42 @@ Maybe logical indexes
 <li><p>You can type <code>?replace</code> into your R console to view the help documentation for this function.</p></li>
 </ul>
 <p>If we try to answer our research question above without dealing with the missing data, we get the following undesirable results:</p>
-<div class="sourceCode" id="cb547"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb547-1"><a href="subsetting-data-frames.html#cb547-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
-<span id="cb547-2"><a href="subsetting-data-frames.html#cb547-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
-<span id="cb547-3"><a href="subsetting-data-frames.html#cb547-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 2
+<div class="sourceCode" id="cb566"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb566-1"><a href="subsetting-data-frames.html#cb566-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
+<span id="cb566-2"><a href="subsetting-data-frames.html#cb566-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
+<span id="cb566-3"><a href="subsetting-data-frames.html#cb566-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
 ##   drug    mean_age
 ##   &lt;chr&gt;      &lt;dbl&gt;
 ## 1 Active      NA  
 ## 2 Placebo     56.8
 ## 3 &lt;NA&gt;        37</code></pre>
 <p>One way we can improve our result is by adding the <code>na.rm</code> argument to the <code>mean()</code> function.</p>
-<div class="sourceCode" id="cb549"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb549-1"><a href="subsetting-data-frames.html#cb549-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
-<span id="cb549-2"><a href="subsetting-data-frames.html#cb549-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
-<span id="cb549-3"><a href="subsetting-data-frames.html#cb549-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 2
+<div class="sourceCode" id="cb568"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb568-1"><a href="subsetting-data-frames.html#cb568-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
+<span id="cb568-2"><a href="subsetting-data-frames.html#cb568-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
+<span id="cb568-3"><a href="subsetting-data-frames.html#cb568-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
 ##   drug    mean_age
 ##   &lt;chr&gt;      &lt;dbl&gt;
 ## 1 Active      52  
 ## 2 Placebo     56.8
 ## 3 &lt;NA&gt;        37</code></pre>
 <p>But, we previously saw how it can sometimes be more efficient to drop the row with missing data from the data frame explicitly. This is called a <strong>complete case analysis</strong> or <strong>list-wise deletion</strong>.</p>
-<div class="sourceCode" id="cb551"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb551-1"><a href="subsetting-data-frames.html#cb551-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
-<span id="cb551-2"><a href="subsetting-data-frames.html#cb551-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(age)) <span class="sc">%&gt;%</span> </span>
-<span id="cb551-3"><a href="subsetting-data-frames.html#cb551-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
-<span id="cb551-4"><a href="subsetting-data-frames.html#cb551-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 2
+<div class="sourceCode" id="cb570"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb570-1"><a href="subsetting-data-frames.html#cb570-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
+<span id="cb570-2"><a href="subsetting-data-frames.html#cb570-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(age)) <span class="sc">%&gt;%</span> </span>
+<span id="cb570-3"><a href="subsetting-data-frames.html#cb570-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
+<span id="cb570-4"><a href="subsetting-data-frames.html#cb570-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
 ##   drug    mean_age
 ##   &lt;chr&gt;      &lt;dbl&gt;
 ## 1 Active      52  
 ## 2 Placebo     56.8
 ## 3 &lt;NA&gt;        37</code></pre>
 <p>However, we still have that missing value for <code>drug</code>. We can easily drop the row with the missing value by adding and additional value to the <code>...</code> argument of our <code>filter()</code> function:</p>
-<div class="sourceCode" id="cb553"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb553-1"><a href="subsetting-data-frames.html#cb553-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
-<span id="cb553-2"><a href="subsetting-data-frames.html#cb553-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(age) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(drug)) <span class="sc">%&gt;%</span> </span>
-<span id="cb553-3"><a href="subsetting-data-frames.html#cb553-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
-<span id="cb553-4"><a href="subsetting-data-frames.html#cb553-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
-<pre><code>## # A tibble: 2 x 2
+<div class="sourceCode" id="cb572"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb572-1"><a href="subsetting-data-frames.html#cb572-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
+<span id="cb572-2"><a href="subsetting-data-frames.html#cb572-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(age) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(drug)) <span class="sc">%&gt;%</span> </span>
+<span id="cb572-3"><a href="subsetting-data-frames.html#cb572-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
+<span id="cb572-4"><a href="subsetting-data-frames.html#cb572-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
 ##   drug    mean_age
 ##   &lt;chr&gt;      &lt;dbl&gt;
 ## 1 Active      52  
@@ -1292,23 +1318,23 @@ Maybe logical indexes
 <div id="deduplication" class="section level2" number="26.4">
 <h2><span class="header-section-number">26.4</span> Deduplication</h2>
 <p>Another common data management task that I want to discuss in this chapter is deduplicating data. Let’s go ahead and simulate some data to illustrate what I mean:</p>
-<div class="sourceCode" id="cb555"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb555-1"><a href="subsetting-data-frames.html#cb555-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb555-2"><a href="subsetting-data-frames.html#cb555-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>id, <span class="sc">~</span>day, <span class="sc">~</span>x,</span>
-<span id="cb555-3"><a href="subsetting-data-frames.html#cb555-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>,</span>
-<span id="cb555-4"><a href="subsetting-data-frames.html#cb555-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">11</span>,</span>
-<span id="cb555-5"><a href="subsetting-data-frames.html#cb555-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">12</span>,</span>
-<span id="cb555-6"><a href="subsetting-data-frames.html#cb555-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">13</span>,</span>
-<span id="cb555-7"><a href="subsetting-data-frames.html#cb555-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">14</span>,</span>
-<span id="cb555-8"><a href="subsetting-data-frames.html#cb555-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">12</span>,</span>
-<span id="cb555-9"><a href="subsetting-data-frames.html#cb555-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">12</span>,</span>
-<span id="cb555-10"><a href="subsetting-data-frames.html#cb555-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">13</span>,</span>
-<span id="cb555-11"><a href="subsetting-data-frames.html#cb555-11" aria-hidden="true" tabindex="-1"></a>    <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">13</span>,</span>
-<span id="cb555-12"><a href="subsetting-data-frames.html#cb555-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">10</span>,</span>
-<span id="cb555-13"><a href="subsetting-data-frames.html#cb555-13" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">11</span>,</span>
-<span id="cb555-14"><a href="subsetting-data-frames.html#cb555-14" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">10</span></span>
-<span id="cb555-15"><a href="subsetting-data-frames.html#cb555-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb555-16"><a href="subsetting-data-frames.html#cb555-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 12 x 3
+<div class="sourceCode" id="cb574"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb574-1"><a href="subsetting-data-frames.html#cb574-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb574-2"><a href="subsetting-data-frames.html#cb574-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>id, <span class="sc">~</span>day, <span class="sc">~</span>x,</span>
+<span id="cb574-3"><a href="subsetting-data-frames.html#cb574-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb574-4"><a href="subsetting-data-frames.html#cb574-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">11</span>,</span>
+<span id="cb574-5"><a href="subsetting-data-frames.html#cb574-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">12</span>,</span>
+<span id="cb574-6"><a href="subsetting-data-frames.html#cb574-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">13</span>,</span>
+<span id="cb574-7"><a href="subsetting-data-frames.html#cb574-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">14</span>,</span>
+<span id="cb574-8"><a href="subsetting-data-frames.html#cb574-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">12</span>,</span>
+<span id="cb574-9"><a href="subsetting-data-frames.html#cb574-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">12</span>,</span>
+<span id="cb574-10"><a href="subsetting-data-frames.html#cb574-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">13</span>,</span>
+<span id="cb574-11"><a href="subsetting-data-frames.html#cb574-11" aria-hidden="true" tabindex="-1"></a>    <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">13</span>,</span>
+<span id="cb574-12"><a href="subsetting-data-frames.html#cb574-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">10</span>,</span>
+<span id="cb574-13"><a href="subsetting-data-frames.html#cb574-13" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">11</span>,</span>
+<span id="cb574-14"><a href="subsetting-data-frames.html#cb574-14" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">10</span></span>
+<span id="cb574-15"><a href="subsetting-data-frames.html#cb574-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb574-16"><a href="subsetting-data-frames.html#cb574-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 12 × 3
 ##       id   day     x
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1     1     1     1
@@ -1332,9 +1358,9 @@ Maybe logical indexes
 <div id="the-distinct-function" class="section level3" number="26.4.1">
 <h3><span class="header-section-number">26.4.1</span> The distinct() function</h3>
 <p>We can use <code>dplyr</code>’s <code>distinct()</code> function to remove all complete duplicates from the data frame:</p>
-<div class="sourceCode" id="cb557"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb557-1"><a href="subsetting-data-frames.html#cb557-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb557-2"><a href="subsetting-data-frames.html#cb557-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 10 x 3
+<div class="sourceCode" id="cb576"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb576-1"><a href="subsetting-data-frames.html#cb576-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb576-2"><a href="subsetting-data-frames.html#cb576-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 10 × 3
 ##       id   day     x
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1     1     1     1
@@ -1358,9 +1384,9 @@ Maybe logical indexes
 <div id="complete-duplicate-row-add-tag" class="section level3" number="26.4.2">
 <h3><span class="header-section-number">26.4.2</span> Complete duplicate row add tag</h3>
 <p>If want to identify the complete duplicate rows, without immediately dropping them, we can use the <code>duplicated()</code> function inside the <code>mutate()</code> function. This creates a new column in our data frame that has the value <code>TRUE</code> when the row is a complete duplicate and the value <code>FALSE</code> otherwise.</p>
-<div class="sourceCode" id="cb559"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb559-1"><a href="subsetting-data-frames.html#cb559-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb559-2"><a href="subsetting-data-frames.html#cb559-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">duplicated</span>(df))</span></code></pre></div>
-<pre><code>## # A tibble: 12 x 4
+<div class="sourceCode" id="cb578"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb578-1"><a href="subsetting-data-frames.html#cb578-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb578-2"><a href="subsetting-data-frames.html#cb578-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">duplicated</span>(df))</span></code></pre></div>
+<pre><code>## # A tibble: 12 × 4
 ##       id   day     x dup  
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;
 ##  1     1     1     1 FALSE
@@ -1376,13 +1402,13 @@ Maybe logical indexes
 ## 11     5     2    11 FALSE
 ## 12     5     1    10 TRUE</code></pre>
 <p>Alternatively, we could get the same result using:</p>
-<div class="sourceCode" id="cb561"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb561-1"><a href="subsetting-data-frames.html#cb561-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb561-2"><a href="subsetting-data-frames.html#cb561-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by_all</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb561-3"><a href="subsetting-data-frames.html#cb561-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb561-4"><a href="subsetting-data-frames.html#cb561-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_row =</span> <span class="fu">row_number</span>(),</span>
-<span id="cb561-5"><a href="subsetting-data-frames.html#cb561-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">dup   =</span> n_row <span class="sc">&gt;</span> <span class="dv">1</span></span>
-<span id="cb561-6"><a href="subsetting-data-frames.html#cb561-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<pre><code>## # A tibble: 12 x 5
+<div class="sourceCode" id="cb580"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb580-1"><a href="subsetting-data-frames.html#cb580-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb580-2"><a href="subsetting-data-frames.html#cb580-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by_all</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb580-3"><a href="subsetting-data-frames.html#cb580-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb580-4"><a href="subsetting-data-frames.html#cb580-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_row =</span> <span class="fu">row_number</span>(),</span>
+<span id="cb580-5"><a href="subsetting-data-frames.html#cb580-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">dup   =</span> n_row <span class="sc">&gt;</span> <span class="dv">1</span></span>
+<span id="cb580-6"><a href="subsetting-data-frames.html#cb580-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 12 × 5
 ## # Groups:   id, day, x [10]
 ##       id   day     x n_row dup  
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt;
@@ -1405,9 +1431,9 @@ Maybe logical indexes
 <li><p>We created a new column named <code>dup</code> that has a value of <code>TRUE</code> when the value of <code>n_row</code> is greater than 1 and <code>FALSE</code> otherwise.</p></li>
 </ul>
 <p>Notice that R only tags the second in a set of duplicate rows as a duplicate. Below we tag both rows with complete duplicate values.</p>
-<div class="sourceCode" id="cb563"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb563-1"><a href="subsetting-data-frames.html#cb563-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb563-2"><a href="subsetting-data-frames.html#cb563-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">duplicated</span>(.) <span class="sc">|</span> <span class="fu">duplicated</span>(., <span class="at">fromLast =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
-<pre><code>## # A tibble: 12 x 4
+<div class="sourceCode" id="cb582"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb582-1"><a href="subsetting-data-frames.html#cb582-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb582-2"><a href="subsetting-data-frames.html#cb582-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">duplicated</span>(.) <span class="sc">|</span> <span class="fu">duplicated</span>(., <span class="at">fromLast =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 12 × 4
 ##       id   day     x dup  
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;
 ##  1     1     1     1 FALSE
@@ -1425,9 +1451,9 @@ Maybe logical indexes
 </div>
 <div id="partial-duplicate-rows" class="section level3" number="26.4.3">
 <h3><span class="header-section-number">26.4.3</span> Partial duplicate rows</h3>
-<div class="sourceCode" id="cb565"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb565-1"><a href="subsetting-data-frames.html#cb565-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb565-2"><a href="subsetting-data-frames.html#cb565-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(id, day, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 9 x 3
+<div class="sourceCode" id="cb584"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb584-1"><a href="subsetting-data-frames.html#cb584-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb584-2"><a href="subsetting-data-frames.html#cb584-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(id, day, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 9 × 3
 ##      id   day     x
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1     1     1     1
@@ -1450,13 +1476,13 @@ Maybe logical indexes
 <div id="partial-duplicate-rows---add-tag" class="section level3" number="26.4.4">
 <h3><span class="header-section-number">26.4.4</span> Partial duplicate rows - add tag</h3>
 <p>We can tag partial duplicate rows in a similar fashion to the way we tagged complete duplicate rows above:</p>
-<div class="sourceCode" id="cb567"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb567-1"><a href="subsetting-data-frames.html#cb567-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb567-2"><a href="subsetting-data-frames.html#cb567-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id, day) <span class="sc">%&gt;%</span> </span>
-<span id="cb567-3"><a href="subsetting-data-frames.html#cb567-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb567-4"><a href="subsetting-data-frames.html#cb567-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">row_number</span>(), <span class="co"># Counts rows by group</span></span>
-<span id="cb567-5"><a href="subsetting-data-frames.html#cb567-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">dup   =</span> count <span class="sc">&gt;</span> <span class="dv">1</span>     <span class="co"># TRUE if there is more than one row per group</span></span>
-<span id="cb567-6"><a href="subsetting-data-frames.html#cb567-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<pre><code>## # A tibble: 12 x 5
+<div class="sourceCode" id="cb586"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb586-1"><a href="subsetting-data-frames.html#cb586-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb586-2"><a href="subsetting-data-frames.html#cb586-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id, day) <span class="sc">%&gt;%</span> </span>
+<span id="cb586-3"><a href="subsetting-data-frames.html#cb586-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb586-4"><a href="subsetting-data-frames.html#cb586-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">row_number</span>(), <span class="co"># Counts rows by group</span></span>
+<span id="cb586-5"><a href="subsetting-data-frames.html#cb586-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">dup   =</span> count <span class="sc">&gt;</span> <span class="dv">1</span>     <span class="co"># TRUE if there is more than one row per group</span></span>
+<span id="cb586-6"><a href="subsetting-data-frames.html#cb586-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 12 × 5
 ## # Groups:   id, day [9]
 ##       id   day     x count dup  
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt;
@@ -1476,11 +1502,11 @@ Maybe logical indexes
 <div id="count-the-number-of-duplicates" class="section level3" number="26.4.5">
 <h3><span class="header-section-number">26.4.5</span> Count the number of duplicates</h3>
 <p>Finally, sometimes it can be useful to get a count of the number of duplicate rows. The code below returns a data frame that summarizes the number of rows that contain duplicate values for <code>id</code> and <code>day</code>, and what those duplicate values are.</p>
-<div class="sourceCode" id="cb569"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb569-1"><a href="subsetting-data-frames.html#cb569-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb569-2"><a href="subsetting-data-frames.html#cb569-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id, day) <span class="sc">%&gt;%</span> </span>
-<span id="cb569-3"><a href="subsetting-data-frames.html#cb569-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb569-4"><a href="subsetting-data-frames.html#cb569-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 3
+<div class="sourceCode" id="cb588"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb588-1"><a href="subsetting-data-frames.html#cb588-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb588-2"><a href="subsetting-data-frames.html#cb588-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id, day) <span class="sc">%&gt;%</span> </span>
+<span id="cb588-3"><a href="subsetting-data-frames.html#cb588-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb588-4"><a href="subsetting-data-frames.html#cb588-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 3
 ## # Groups:   id, day [3]
 ##      id   day     n
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
@@ -1531,6 +1557,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

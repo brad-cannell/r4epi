@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>14 Importing binary files | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="14 Importing binary files | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-07-22" />
+<meta name="date" content="2021-07-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,8 @@
   
 <link rel="prev" href="importing-plain-text-files.html"/>
 <link rel="next" href="rstudios-data-import-tool.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-3.5.1/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,15 +51,18 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<script src="libs/datatables-binding-0.18/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
@@ -125,6 +128,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -638,7 +664,7 @@ This chapter gives the nuts and bolts of importing data.
 -->
 <p>In the last chapter we learned that there are many different file types that one can use to store data. We also learned how to use the <code>readr</code> package to import several different variations of <strong>plain text files</strong> into R.</p>
 <p>In this chapter, we will focus on data stored in <strong>binary files</strong>. Again, you can think of binary files as being more complex than plain text files and accessing the information in binary files requires the use of special software. Some examples of binary files that I have frequently seen used in epidemiology include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets. Below, we will learn how to import all three file types into R.</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/files.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/files.png" /><!-- --></p>
 <div id="packages-for-importing-data-1" class="section level2" number="14.1">
 <h2><span class="header-section-number">14.1</span> Packages for importing data</h2>
 <p>Technically, base R does not contain any functions that can be used to import the binary file types discussed above. However, the <code>foreign</code> package contains functions that may be used to import SAS data sets and Stata data sets, and is installed by default when you install R on your computer. Having said that, we aren’t going to use the <code>foreign</code> package in this chapter. Instead, we’re going to use the following packages to import data in the examples below. If you haven’t done so already, I suggest that you go ahead and install these packages now.</p>
@@ -646,19 +672,19 @@ This chapter gives the nuts and bolts of importing data.
 <li><p><a href="https://readxl.tidyverse.org/">readxl</a>. We will use the <code>readxl</code> package to import Microsoft Excel files.</p></li>
 <li><p><a href="https://haven.tidyverse.org/">haven</a>. We will use the <code>haven</code> package to import SAS and Stata data sets.</p></li>
 </ul>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="importing-binary-files.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb193-2"><a href="importing-binary-files.html#cb193-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="importing-binary-files.html#cb212-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb212-2"><a href="importing-binary-files.html#cb212-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span></code></pre></div>
 </div>
 <div id="importing-microsoft-excel-spreadsheets" class="section level2" number="14.2">
 <h2><span class="header-section-number">14.2</span> Importing Microsoft Excel spreadsheets</h2>
 <p>I’m probably sent data in Microsoft Excel files more than any other file format. Fortunately, the <code>readxl</code> package makes it really easy to import Excel spreadsheets into R. And, because that package is maintained by the same people who create the <code>readr</code> package that you have already seen, I think it’s likely that the <code>readxl</code> package will feel somewhat familiar right from the start.</p>
 <p>I would be surprised if any of you had never seen an Excel spreadsheet before – they are pretty ubiquitous in the modern world – but I’ll go ahead and show a screenshot of our height and weight data in Excel for the sake of completeness.</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/excel.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/excel.png" /><!-- --></p>
 <p>All we have to do to import this spreadsheet into R as a data frame is pass the path to the excel file to the <code>path</code> argument of the <code>read_excel()</code> function.</p>
 <p><a href="https://www.dropbox.com/s/sckq4owfttijnh5/excel.xlsx?dl=1">You may click here to download this file to your computer.</a></p>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="importing-binary-files.html#cb194-1" aria-hidden="true" tabindex="-1"></a>excel <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/excel.xlsx&quot;</span>)</span>
-<span id="cb194-2"><a href="importing-binary-files.html#cb194-2" aria-hidden="true" tabindex="-1"></a>excel</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 4
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="importing-binary-files.html#cb213-1" aria-hidden="true" tabindex="-1"></a>excel <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/excel.xlsx&quot;</span>)</span>
+<span id="cb213-2"><a href="importing-binary-files.html#cb213-2" aria-hidden="true" tabindex="-1"></a>excel</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 4
 ##   ID    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
 ## 1 001   Male      71     190
@@ -673,18 +699,18 @@ This chapter gives the nuts and bolts of importing data.
 ⚠️<strong>Warning:</strong> Make sure to always include the file extension in your file paths. For example, using “/excel” instead of “/excel.xlsx” above (i.e., no .xlsx) would have resulted in an error telling you that the filed does not exist.
 </p>
 <p>Fortunately for us, just passing the Excel file to the <code>read_excel()</code> function like this will usually “just work.” But, let’s go ahead and simulate another situation that is slightly more complex. Once again, we’ve received data from a team that is using Microsoft Excel to capture some study data.</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/excel_complex.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/excel_complex.png" /><!-- --></p>
 <p>As you can see, this data looks very similar to the csv file we previously imported. However, it looks like the study team has done a little more formatting this time. Additionally, they’ve added a couple of columns we haven’t seen before – date of birth and annual household income.</p>
 <p>As a final little wrinkle, the data for this study is actually the second sheet in this Excel file (also called a workbook). The study team used the first sheet in the workbook as a data dictionary that looks like this:</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/data_dictionary.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/data_dictionary.png" /><!-- --></p>
 <p>Once again, we will have to deal with deal with some of the formatting that was done in Excel before we can analyze our data in R.</p>
 <p><a href="https://www.dropbox.com/s/ldhq5wd17687f1b/excel_complex.xlsx?dl=1">You may click here to download this file to your computer.</a></p>
 <p>We’ll start by taking a look at the result we get when we try to pass this file to the <code>read_excel()</code> function without changing any of <code>read_excel()</code>’s default values.</p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="importing-binary-files.html#cb196-1" aria-hidden="true" tabindex="-1"></a>excel <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/excel_complex.xlsx&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="importing-binary-files.html#cb215-1" aria-hidden="true" tabindex="-1"></a>excel <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/excel_complex.xlsx&quot;</span>)</span></code></pre></div>
 <pre><code>## New names:
 ## * `` -&gt; ...2
 ## * `` -&gt; ...3</code></pre>
-<pre><code>## # A tibble: 8 x 3
+<pre><code>## # A tibble: 8 × 3
 ##   `Height and Weight Study\r\nDa… ...2                           ...3           
 ##   &lt;chr&gt;                           &lt;chr&gt;                          &lt;chr&gt;          
 ## 1 &lt;NA&gt;                            &lt;NA&gt;                           &lt;NA&gt;           
@@ -696,25 +722,25 @@ This chapter gives the nuts and bolts of importing data.
 ## 7 Date of Birth                   Participant&#39;s date of birth    Date           
 ## 8 Annual Household Income         Participant&#39;s annual househol… Continuous (Cu…</code></pre>
 <p>And, as I’m sure you saw coming, this isn’t the result we wanted. However, we can get the result we wanted by making a few tweaks to the default values of the <code>sheet</code>, <code>col_names</code>, <code>col_types</code>, <code>skip</code>, and <code>na</code> arguments of the <code>read_excel()</code> function.</p>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="importing-binary-files.html#cb199-1" aria-hidden="true" tabindex="-1"></a>excel <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(</span>
-<span id="cb199-2"><a href="importing-binary-files.html#cb199-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/excel_complex.xlsx&quot;</span>,</span>
-<span id="cb199-3"><a href="importing-binary-files.html#cb199-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sheet =</span> <span class="st">&quot;Study Phase 1&quot;</span>,</span>
-<span id="cb199-4"><a href="importing-binary-files.html#cb199-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>, <span class="st">&quot;dob&quot;</span>, <span class="st">&quot;income&quot;</span>),</span>
-<span id="cb199-5"><a href="importing-binary-files.html#cb199-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_types =</span> <span class="fu">c</span>(</span>
-<span id="cb199-6"><a href="importing-binary-files.html#cb199-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;text&quot;</span>,</span>
-<span id="cb199-7"><a href="importing-binary-files.html#cb199-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;text&quot;</span>,</span>
-<span id="cb199-8"><a href="importing-binary-files.html#cb199-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
-<span id="cb199-9"><a href="importing-binary-files.html#cb199-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
-<span id="cb199-10"><a href="importing-binary-files.html#cb199-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;date&quot;</span>,</span>
-<span id="cb199-11"><a href="importing-binary-files.html#cb199-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
-<span id="cb199-12"><a href="importing-binary-files.html#cb199-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;skip&quot;</span></span>
-<span id="cb199-13"><a href="importing-binary-files.html#cb199-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb199-14"><a href="importing-binary-files.html#cb199-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">skip =</span> <span class="dv">3</span>,</span>
-<span id="cb199-15"><a href="importing-binary-files.html#cb199-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">na =</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;Missing&quot;</span>)</span>
-<span id="cb199-16"><a href="importing-binary-files.html#cb199-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb199-17"><a href="importing-binary-files.html#cb199-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb199-18"><a href="importing-binary-files.html#cb199-18" aria-hidden="true" tabindex="-1"></a>excel</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 6
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="importing-binary-files.html#cb218-1" aria-hidden="true" tabindex="-1"></a>excel <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(</span>
+<span id="cb218-2"><a href="importing-binary-files.html#cb218-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/excel_complex.xlsx&quot;</span>,</span>
+<span id="cb218-3"><a href="importing-binary-files.html#cb218-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sheet =</span> <span class="st">&quot;Study Phase 1&quot;</span>,</span>
+<span id="cb218-4"><a href="importing-binary-files.html#cb218-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;ht_in&quot;</span>, <span class="st">&quot;wgt_lbs&quot;</span>, <span class="st">&quot;dob&quot;</span>, <span class="st">&quot;income&quot;</span>),</span>
+<span id="cb218-5"><a href="importing-binary-files.html#cb218-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_types =</span> <span class="fu">c</span>(</span>
+<span id="cb218-6"><a href="importing-binary-files.html#cb218-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;text&quot;</span>,</span>
+<span id="cb218-7"><a href="importing-binary-files.html#cb218-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;text&quot;</span>,</span>
+<span id="cb218-8"><a href="importing-binary-files.html#cb218-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb218-9"><a href="importing-binary-files.html#cb218-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb218-10"><a href="importing-binary-files.html#cb218-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;date&quot;</span>,</span>
+<span id="cb218-11"><a href="importing-binary-files.html#cb218-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb218-12"><a href="importing-binary-files.html#cb218-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;skip&quot;</span></span>
+<span id="cb218-13"><a href="importing-binary-files.html#cb218-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb218-14"><a href="importing-binary-files.html#cb218-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">skip =</span> <span class="dv">3</span>,</span>
+<span id="cb218-15"><a href="importing-binary-files.html#cb218-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">na =</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;Missing&quot;</span>)</span>
+<span id="cb218-16"><a href="importing-binary-files.html#cb218-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb218-17"><a href="importing-binary-files.html#cb218-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb218-18"><a href="importing-binary-files.html#cb218-18" aria-hidden="true" tabindex="-1"></a>excel</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 6
 ##   id    sex    ht_in wgt_lbs dob                 income
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dttm&gt;               &lt;dbl&gt;
 ## 1 001   Male      71     190 1981-05-20 00:00:00  46000
@@ -746,9 +772,9 @@ This chapter gives the nuts and bolts of importing data.
 <p>SAS actually allows users to save data in more than one type of binary format. Data can be saved as SAS data sets or as SAS Transport files. SAS data set file names end with the .sas7bdat file extension. SAS Transport file file names end with the .xpt file extension.</p>
 <p>In order to import a SAS data set, we typically only need to pass the correct file path to <code>haven</code>’s <code>read_sas()</code> function.</p>
 <p><a href="https://www.dropbox.com/s/zuu7h4qk4vdtcvt/height_and_weight.sas7bdat?dl=1">You may click here to download this file to your computer.</a></p>
-<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="importing-binary-files.html#cb201-1" aria-hidden="true" tabindex="-1"></a>sas <span class="ot">&lt;-</span> <span class="fu">read_sas</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/height_and_weight.sas7bdat&quot;</span>)</span>
-<span id="cb201-2"><a href="importing-binary-files.html#cb201-2" aria-hidden="true" tabindex="-1"></a>sas</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 4
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="importing-binary-files.html#cb220-1" aria-hidden="true" tabindex="-1"></a>sas <span class="ot">&lt;-</span> <span class="fu">read_sas</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/height_and_weight.sas7bdat&quot;</span>)</span>
+<span id="cb220-2"><a href="importing-binary-files.html#cb220-2" aria-hidden="true" tabindex="-1"></a>sas</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 4
 ##   ID    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
 ## 1 001   Male      71     190
@@ -761,11 +787,11 @@ This chapter gives the nuts and bolts of importing data.
 </ul>
 <p>In addition to SAS data sets, data that has been altered in SAS can also be saved as a SAS transport file. Some of the national, population-based public health surveys (e.g., BRFSS and NHANES) make their data publicly available in this format.</p>
 <p>You can <a href="https://www.cdc.gov/brfss/annual_data/annual_2018.html">download the 2018 BRFSS data as a SAS Transport file here</a>. About halfway down the webpage, there is a link that says, “2018 BRFSS Data (SAS Transport Format).”</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/download_brfss.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/download_brfss.png" /><!-- --></p>
 <p>Clicking that link should download the data to your computer. Notice that the SAS Transport file is actually stored <em>inside</em> a zip file. You can unzip the file first if you would like, but you don’t even have to do that. Amazingly, you can pass the path to the zipped .xpt file directly to the <code>read_xpt()</code> function like so:</p>
-<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="importing-binary-files.html#cb203-1" aria-hidden="true" tabindex="-1"></a>brfss_2018 <span class="ot">&lt;-</span> <span class="fu">read_xpt</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/brfss_2018/LLCP2018XPT.zip&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="importing-binary-files.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(brfss_2018)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 275
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="importing-binary-files.html#cb222-1" aria-hidden="true" tabindex="-1"></a>brfss_2018 <span class="ot">&lt;-</span> <span class="fu">read_xpt</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/brfss_2018/LLCP2018XPT.zip&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="importing-binary-files.html#cb223-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(brfss_2018)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 275
 ##   `_STATE` FMONTH IDATE   IMONTH IDAY  IYEAR DISPCODE SEQNO      `_PSU` CTELENM1
 ##      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
 ## 1        1      1 010520… 01     05    2018      1100 2018000…   2.02e9        1
@@ -806,13 +832,13 @@ This chapter gives the nuts and bolts of importing data.
 </ul>
 <p>But, this demonstration actually gets even cooler. Instead of downloading the SAS Transport file to our computer before importing it, we can actually sometimes import files, including SAS Transport files, directly from the internet.</p>
 <p>For example, you can <a href="https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Demographics&amp;CycleBeginYear=2017">download the 2017-2018 NHANES demographic data as a SAS Transport file here</a></p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/nhanes_link.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/nhanes_link.png" /><!-- --></p>
 <p>If you right-click on the link that says, “DEMO_I Data [XPT - 3.3 MB],” you will see an option to copy the link address.</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/copy_link_address.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/copy_link_address.png" /><!-- --></p>
 <p>Click “Copy Link Address” and then navigate back to RStudio. Now, all you have to do is paste that link address where you would normally type a file path into the <code>read_xpt()</code> function. When you run the code chunk, the <code>read_xpt()</code> function will import the NHANES data directly from the internet (assuming you are connected to the internet). 😲</p>
-<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="importing-binary-files.html#cb206-1" aria-hidden="true" tabindex="-1"></a>nhanes_demo <span class="ot">&lt;-</span> <span class="fu">read_xpt</span>(<span class="st">&quot;https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DEMO_J.XPT&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="importing-binary-files.html#cb207-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(nhanes_demo)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 46
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="importing-binary-files.html#cb225-1" aria-hidden="true" tabindex="-1"></a>nhanes_demo <span class="ot">&lt;-</span> <span class="fu">read_xpt</span>(<span class="st">&quot;https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DEMO_J.XPT&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="importing-binary-files.html#cb226-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(nhanes_demo)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 46
 ##    SEQN SDDSRVYR RIDSTATR RIAGENDR RIDAGEYR RIDAGEMN RIDRETH1 RIDRETH3 RIDEXMON
 ##   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 93703       10        2        2        2       NA        5        6        2
@@ -841,9 +867,9 @@ This chapter gives the nuts and bolts of importing data.
 <h2><span class="header-section-number">14.5</span> Importing Stata data sets</h2>
 <p>Finally, we will import a Stata data set (.dta) to round out our discussion of importing data from other statistical analysis software packages. There isn’t much of anything new here – you could probably have even guessed how to do this without me showing you.</p>
 <p><a href="https://www.dropbox.com/s/2n6q3ntrd9y57al/height_and_weight.dta?dl=1">You may click here to download this file to your computer.</a></p>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="importing-binary-files.html#cb209-1" aria-hidden="true" tabindex="-1"></a>stata <span class="ot">&lt;-</span> <span class="fu">read_stata</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/height_and_weight.dta&quot;</span>)</span>
-<span id="cb209-2"><a href="importing-binary-files.html#cb209-2" aria-hidden="true" tabindex="-1"></a>stata</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 4
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="importing-binary-files.html#cb228-1" aria-hidden="true" tabindex="-1"></a>stata <span class="ot">&lt;-</span> <span class="fu">read_stata</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/height_and_weight.dta&quot;</span>)</span>
+<span id="cb228-2"><a href="importing-binary-files.html#cb228-2" aria-hidden="true" tabindex="-1"></a>stata</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 4
 ##   ID    sex    ht_in wgt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;
 ## 1 001   Male      71     190
@@ -887,6 +913,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

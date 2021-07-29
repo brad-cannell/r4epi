@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>24 Introduction to data management | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="24 Introduction to data management | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-07-22" />
+<meta name="date" content="2021-07-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,8 @@
   
 <link rel="prev" href="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"/>
 <link rel="next" href="creating-and-modifying-columns.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-3.5.1/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,15 +51,18 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<script src="libs/datatables-binding-0.18/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
@@ -125,6 +128,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -654,35 +680,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="the-.data-argument" class="section level3" number="24.2.2">
 <h3><span class="header-section-number">24.2.2</span> The .data argument</h3>
 <p>I first introduced you to data frames in the <a href="lets-get-programming.html#data-frames">Let’s get programming</a> chapter and we’ve been using them as our primary structure for storing and analyzing data in ever since. The R language allows for other data structures (e.g., vectors, lists, and matrices), but data frames are the most commonly used data structure for most of the kinds of things we do in epidemiology. Thankfully, the <code>dplyr</code> package is designed specifically to help people like you and I manage data stored in <em>data frames</em>. Therefore, <code>dplyr</code> verbs always receive a data frame as an input and return a data frame as an output. Specically, the value passed to the <code>.data</code> argument must always be a data frame, and you will get an error if you attempt to pass any other data structure to the <code>.data</code> argument. For example:</p>
-<div class="sourceCode" id="cb362"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb362-1"><a href="introduction-to-data-management.html#cb362-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No problem</span></span>
-<span id="cb362-2"><a href="introduction-to-data-management.html#cb362-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb362-3"><a href="introduction-to-data-management.html#cb362-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb362-4"><a href="introduction-to-data-management.html#cb362-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb362-5"><a href="introduction-to-data-management.html#cb362-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb362-6"><a href="introduction-to-data-management.html#cb362-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb362-7"><a href="introduction-to-data-management.html#cb362-7" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb362-8"><a href="introduction-to-data-management.html#cb362-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 2 x 2
+<div class="sourceCode" id="cb381"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb381-1"><a href="introduction-to-data-management.html#cb381-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No problem</span></span>
+<span id="cb381-2"><a href="introduction-to-data-management.html#cb381-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb381-3"><a href="introduction-to-data-management.html#cb381-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb381-4"><a href="introduction-to-data-management.html#cb381-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb381-5"><a href="introduction-to-data-management.html#cb381-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb381-6"><a href="introduction-to-data-management.html#cb381-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb381-7"><a href="introduction-to-data-management.html#cb381-7" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb381-8"><a href="introduction-to-data-management.html#cb381-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
 ##      id     x
 ##   &lt;dbl&gt; &lt;dbl&gt;
 ## 1     1     0
 ## 2     3     0</code></pre>
-<div class="sourceCode" id="cb364"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb364-1"><a href="introduction-to-data-management.html#cb364-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Problem</span></span>
-<span id="cb364-2"><a href="introduction-to-data-management.html#cb364-2" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb364-3"><a href="introduction-to-data-management.html#cb364-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb364-4"><a href="introduction-to-data-management.html#cb364-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb364-5"><a href="introduction-to-data-management.html#cb364-5" aria-hidden="true" tabindex="-1"></a>) </span>
-<span id="cb364-6"><a href="introduction-to-data-management.html#cb364-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb364-7"><a href="introduction-to-data-management.html#cb364-7" aria-hidden="true" tabindex="-1"></a>l <span class="sc">%&gt;%</span> </span>
-<span id="cb364-8"><a href="introduction-to-data-management.html#cb364-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb383-1"><a href="introduction-to-data-management.html#cb383-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Problem</span></span>
+<span id="cb383-2"><a href="introduction-to-data-management.html#cb383-2" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb383-3"><a href="introduction-to-data-management.html#cb383-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb383-4"><a href="introduction-to-data-management.html#cb383-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb383-5"><a href="introduction-to-data-management.html#cb383-5" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb383-6"><a href="introduction-to-data-management.html#cb383-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb383-7"><a href="introduction-to-data-management.html#cb383-7" aria-hidden="true" tabindex="-1"></a>l <span class="sc">%&gt;%</span> </span>
+<span id="cb383-8"><a href="introduction-to-data-management.html#cb383-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## Error in UseMethod(&quot;filter&quot;): no applicable method for &#39;filter&#39; applied to an object of class &quot;list&quot;</code></pre>
 </div>
 <div id="the-argument" class="section level3" number="24.2.3">
 <h3><span class="header-section-number">24.2.3</span> The … argument</h3>
 <p>The second value passed to all of the <code>dplyr</code> verbs is the <code>...</code> argument. If you are new to R, this probably seems like a really weird argument. And, it kind of is! But, it’s also really useful. The <code>...</code> argument (pronounced “dot dot dot”) has special meaning in the R language. This is true for all functions that use the <code>...</code> argument – not just <code>dplyr</code> verbs. The <code>...</code> argument can be used to pass multiple arguments to a function without knowing exactly what those arguments will look like ahead of time – including entire expressions. For example:</p>
-<div class="sourceCode" id="cb366"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb366-1"><a href="introduction-to-data-management.html#cb366-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb366-2"><a href="introduction-to-data-management.html#cb366-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 2 x 2
+<div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb385-1"><a href="introduction-to-data-management.html#cb385-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb385-2"><a href="introduction-to-data-management.html#cb385-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
 ##      id     x
 ##   &lt;dbl&gt; &lt;dbl&gt;
 ## 1     1     0
@@ -693,17 +719,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="non-standard-evaluation" class="section level3" number="24.2.4">
 <h3><span class="header-section-number">24.2.4</span> Non-standard evaluation</h3>
 <p>A final little peculiarity about the <code>tidyverse</code> packages – <code>dplyr</code> being one of them – that I want to discuss in this chapter is something called <strong>non-standard evaluation</strong>. <em>How</em> non-standard evaluation works really isn’t that important for us. If I’m being honest, I don’t even fully understand how it works “under the hood.” But, it is one of the big advantages of using <code>dplyr</code>, and therefore worth mentioning. Do you remember the <a href="lets-get-programming.html#some-common-errors">section in the Let’s get programming chapter on common errors</a>? In that section I wrote about how a vector that lives in the global environment is a different thing to R than a vector that lives as a column in a data frame in the global environment. So, <code>weight</code> and <code>class$weight</code> are different things, and if you want to access the weight values in <code>class$weight</code> then you have to make sure and write the whole thing out. But, have you noticed that we don’t have to do that in <code>dplyr</code> verbs? For example:</p>
-<div class="sourceCode" id="cb368"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb368-1"><a href="introduction-to-data-management.html#cb368-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb368-2"><a href="introduction-to-data-management.html#cb368-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(df<span class="sc">$</span>x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 2 x 2
+<div class="sourceCode" id="cb387"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb387-1"><a href="introduction-to-data-management.html#cb387-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb387-2"><a href="introduction-to-data-management.html#cb387-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(df<span class="sc">$</span>x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
 ##      id     x
 ##   &lt;dbl&gt; &lt;dbl&gt;
 ## 1     1     0
 ## 2     3     0</code></pre>
 <p>In the example above we wrote out the column name using dollar sign notation. But, we don’t <em>have</em> to:</p>
-<div class="sourceCode" id="cb370"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb370-1"><a href="introduction-to-data-management.html#cb370-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb370-2"><a href="introduction-to-data-management.html#cb370-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 2 x 2
+<div class="sourceCode" id="cb389"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb389-1"><a href="introduction-to-data-management.html#cb389-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb389-2"><a href="introduction-to-data-management.html#cb389-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(x <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
 ##      id     x
 ##   &lt;dbl&gt; &lt;dbl&gt;
 ## 1     1     0
@@ -748,6 +774,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
