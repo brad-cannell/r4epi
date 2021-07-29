@@ -508,7 +508,7 @@ for(i in seq_along(df_xyz)) { # Using seq_along() instead of c(1, 2, 3)
 xyz_means
 ```
 
-Our for loop now gives us the result we want no matter how many columns are in the data frame columns we loop over. Having the flexibility to loop over an arbitrary number of columns wasn't that important in this case -- we knew exactly how many columns we wanted to loop over. However, what if we wanted to add more columns in the future? Using the second method, we wouldn't have to make any changes to our code. This is often an important consideration when we embed for loops inside of functions that we write ourselves.
+Our for loop now gives us the result we want no matter how many columns are in the data frame. Having the flexibility to loop over an arbitrary number of columns wasn't that important in this case -- we knew exactly how many columns we wanted to loop over. However, what if we wanted to add more columns in the future? Using the second method, we wouldn't have to make any changes to our code. This is often an important consideration when we embed for loops inside of functions that we write ourselves.
 
 For example, maybe we think, "that for loop above was really useful. I want to write it into a function so that I can use it again in my other projects." Well, we've already seen how to take our working code, embed it inside of a function, make it more general, and assign it a name. If you forgot how to do this, please review [the function writing process](#the-function-writing-process). In this case, that process would result in something like this:
 
@@ -713,7 +713,7 @@ charlotte
     
     - The second argument to the `assign()` function is `value`. The value you pass to `value` should be the contents you want to assign the object with the name you passed to the `x` argument. Above, we passed the code that imports each sheet of the `city_ses.xlsx` data frame to the `value` argument.
     
-For loops can often be helpful for data transfer task. In the code above, we looped over sheets of a single Excel workbook. However, we could have similarly looped over file paths to import multiple different Excel workbooks instead. We could have even used nested for loops to import multiple sheets from multiple Excel workbooks. The code would not have looked drastically different. 
+For loops can often be helpful for data transfer tasks. In the code above, we looped over sheets of a single Excel workbook. However, we could have similarly looped over file paths to import multiple different Excel workbooks instead. We could have even used nested for loops to import multiple sheets from multiple Excel workbooks. The code would not have looked drastically different. 
 
 ```{r echo=FALSE}
 rm(atlanta, charlotte, houston, i, new_nm, path, sheets, import_cities)
@@ -974,10 +974,10 @@ summary_stats %>%
 ```
 
 ```{r echo=FALSE}
-rm(summary_stats, continuous_stats)
+rm(summary_stats)
 ```
 
-I think that method works really nicely for our continuous variables. However, the situation is slightly more complicated for our categorical variables. To illustrate the problem as simply as possible, let's start by just getting counts for each of our categorical variables: 
+I think that method works really nicely for our continuous variables; however, the situation is slightly more complicated for categorical variables. To illustrate the problem as simply as possible, let's start by just getting counts for each of our categorical variables: 
 
 ```{r}
 study %>% 
@@ -1006,7 +1006,7 @@ study %>%
   )
 ```
 
-Unfortunately, this won't work. At least not currently. There are a couple reasons why this won't work, but one that is probably easiest to wrap your head around is related to the number of results produced by `count()`. What do I mean by that? Well, when we pass each continuous variable to `mean()` (or `median`, `min`, or `max`) we get _one_ result back for each column:
+Unfortunately, this won't work. At least not currently. There are a couple reasons why this won't work, but the one that is probably easiest to wrap your head around is related to the number of results produced by `count()`. What do I mean by that? Well, when we pass each continuous variable to `mean()` (or `median`, `min`, or `max`) we get _one_ result back for each column:
 
 ```{r}
 study %>% 
@@ -1057,7 +1057,7 @@ cat_table <- tibble(
 for(i in c("age_group", "gender", "bmi_3cat")) {
   cat_stats <- study %>% 
     count(.data[[i]]) %>% # Use .data to refer to the current data frame.
-    mutate(variable = names(.)[1]) %>% # Use . to refer to the current data frame.
+    mutate(variable = names(.)[1]) %>% # Use . to refer to the result to this point.
     rename(category = 1)
   
   # Here is where we update cat_table with the results for each column
@@ -1083,7 +1083,7 @@ cat_table <- tibble(
 str(cat_table)
 ```
 
-As you can see, we created an empty data frame with three columns. One to hold the variable name, one to hold the variable categories, and one to hold the count of occurrences of each category. Now, we can use a for loop to iteratively add results to our empty data frame structure. This works similarly to the way we added mean values to the `xyz_means` vector in the first example above. As a reminder, here is what the for loop code looks like:
+As you can see, we created an empty data frame with three columns. One to hold the variable names, one to hold the variable categories, and one to hold the count of occurrences of each category. Now, we can use a for loop to iteratively add results to our empty data frame structure. This works similarly to the way we added mean values to the `xyz_means` vector in the first example above. As a reminder, here is what the for loop code looks like:
 
 ```{r eval=FALSE}
 for(i in c("age_group", "gender", "bmi_3cat")) {
