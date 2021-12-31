@@ -6,12 +6,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>33 Writing functions | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="33 Writing functions | R for Epidemiology" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://brad-cannell.github.io/r4epi/" />
-  
+  <meta property="og:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
   <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="github-repo" content="brad-cannell/r4epi" />
 
@@ -19,12 +19,12 @@
   <meta name="twitter:title" content="33 Writing functions | R for Epidemiology" />
   
   <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  
+  <meta name="twitter:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
 
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-12-16" />
+<meta name="date" content="2021-12-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,9 @@
   
 <link rel="prev" href="introduction-to-repeated-operations.html"/>
 <link rel="next" href="column-wise-operations-in-dplyr.html"/>
-<script src="libs/header-attrs-2.9/header-attrs.js"></script>
-<script src="libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,19 +51,20 @@
 
 
 
-
 <link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.18/datatables.js"></script>
-<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.20/datatables.js"></script>
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RREBTQ0D9"></script>
 <script>
@@ -828,14 +830,14 @@ div.csl-indent {
 <div id="the-function-function" class="section level3" number="33.2.1">
 <h3><span class="header-section-number">33.2.1</span> The function() function</h3>
 <p>It all starts with the <code>function()</code> function. This is how you tell R that you are about to write your own function.</p>
-<div class="figure"><span id="fig:unnamed-chunk-727"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-727"></span>
 <img src="img/07_part_repeated_operations/02_functions/function.png" alt="The function() function." width="900" />
 <p class="caption">
 Figure 33.1: The function() function.
 </p>
 </div>
 <p>If you think back to the chapter on <a href="speaking-rs-language.html#functions">Speaking R’s language</a>, we talked about the analogy that is sometimes drawn between functions and factories.</p>
-<div class="figure"><span id="fig:unnamed-chunk-728"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-728"></span>
 <img src="img/01_part_getting_started/04_speaking_r/factory1.png" alt="A factory making bicycles." width="900" />
 <p class="caption">
 Figure 33.2: A factory making bicycles.
@@ -847,21 +849,21 @@ Figure 33.2: A factory making bicycles.
 ## 1: function()
 ##    ^</code></pre>
 <p>In order to build our bicycles, we need to add some workers and equipment to our empty factory building. The R function equivalent to the workers and equipment is the <strong>function body.</strong></p>
-<div class="figure"><span id="fig:unnamed-chunk-730"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-730"></span>
 <img src="img/07_part_repeated_operations/02_functions/body.png" alt="The function body." width="900" />
 <p class="caption">
 Figure 33.3: The function body.
 </p>
 </div>
 <p>And just like the factory needs doors to contain our workers and equipment and keep them safe (I’m admittedly reaching a little on this one, but just go with it), our function body needs to be wrapped with curly braces.</p>
-<div class="figure"><span id="fig:unnamed-chunk-731"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-731"></span>
 <img src="img/07_part_repeated_operations/02_functions/braces.png" alt="Curly braces around the function body." width="900" />
 <p class="caption">
 Figure 33.4: Curly braces around the function body.
 </p>
 </div>
 <p>We already talked about how the values we pass to <strong>arguments</strong> are raw material inputs that go into the factory.</p>
-<div class="figure"><span id="fig:unnamed-chunk-732"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-732"></span>
 <img src="img/07_part_repeated_operations/02_functions/arguments.png" alt="The function argument(s)." width="900" />
 <p class="caption">
 Figure 33.5: The function argument(s).
@@ -869,7 +871,7 @@ Figure 33.5: The function argument(s).
 </div>
 <p>In the bicycle factory example, the raw materials were steel and rubber. In the function displayed above, the raw materials are variables.</p>
 <p>If we want to be able to call our function (i.e., use it) later, then we have to have some way to refer to it. Therefore, we will assign our function a name.</p>
-<div class="figure"><span id="fig:unnamed-chunk-733"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-733"></span>
 <img src="img/07_part_repeated_operations/02_functions/name.png" alt="The named function." width="900" />
 <p class="caption">
 Figure 33.6: The named function.
@@ -1529,7 +1531,6 @@ Figure 33.6: The named function.
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -1569,6 +1570,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "section",
 "scroll_highlight": true
