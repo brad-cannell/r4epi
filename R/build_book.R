@@ -1,13 +1,16 @@
 # =============================================================================
 # Build book
 # 2022-01-03
-
+#
 # Use this function to build the book instead of the build book button. It does
 # some custom things.
 # =============================================================================
 
 build_book <- function() {
+  # For building a single chapter. Comment out if you want to build the entire book.
   bookdown::preview_chapter("index.Rmd")
+  # For building the entire book. Comment out if you want to build a single chapter.
+  # bookdown::render_book()
   move_up_logo()
 }
 
