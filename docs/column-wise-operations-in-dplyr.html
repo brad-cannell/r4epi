@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2022-01-03" />
+<meta name="date" content="2022-01-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -195,7 +195,11 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="contributing-to-r4epi.html"><a href="contributing-to-r4epi.html#typos"><i class="fa fa-check"></i>Typos</a></li>
 <li class="chapter" data-level="" data-path="contributing-to-r4epi.html"><a href="contributing-to-r4epi.html#issues"><i class="fa fa-check"></i>Issues</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html"><i class="fa fa-check"></i>About the Authors</a>
+<ul>
+<li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html#brad-cannell"><i class="fa fa-check"></i>Brad Cannell</a></li>
+<li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html#melvin-livingston"><i class="fa fa-check"></i>Melvin Livingston</a></li>
+</ul></li>
 <li class="part"><span><b>I Getting Started</b></span></li>
 <li class="chapter" data-level="1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html"><i class="fa fa-check"></i><b>1</b> Installing R and RStudio</a>
 <ul>
@@ -687,7 +691,7 @@ div.csl-indent {
 
 -->
 <p>Throughout the chapters in this book we have learned to do a really vast array of useful data transformations and statistical analyses with the help of the <code>dplyr</code> package.</p>
-<p><img src="img/dplyr.png" width="368" /></p>
+<p><img src="img/07_part_repeated_operations/03_dplyr_column_wise/dplyr.png" width="368" /></p>
 <p>So far, however, we’ve always done these transformations and statistical analyses on one column of our data frame at a time. There isn’t anything inherently “wrong” with this approach, but, for reasons we’ve already discussed, there are often advantages to telling R what you want to do one time, and then asking R to do that thing repeatedly <em>across</em> all, or a subset of, the columns in your data frame. That is exactly what <code>dplyr</code>’s <code>across()</code> function allows us to do.</p>
 <p>There are so many ways we might want to use the <code>across()</code> function in our R programs. I can’t begin to cover, or even imagine, them all. Instead, the goal of this chapter is just to provide you with an overview of the <code>across()</code> function and show you some examples of using it with <code>filter()</code>, <code>mutate()</code>, and <code>summarise()</code> to get you thinking about how you might want to use it in your R programs.</p>
 <p>Before we discuss further, let’s take a look at a quick example. The first thing we will need to do is load <code>dplyr</code>.</p>
@@ -1485,11 +1489,11 @@ We’ve already seen how we can use the <code>filter()</code> function to remove
 <span id="cb1276-13"><a href="column-wise-operations-in-dplyr.html#cb1276-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
 <span id="cb1276-14"><a href="column-wise-operations-in-dplyr.html#cb1276-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 20
-##   age_n_miss age_mean age_median age_min age_max ht_in_n_miss ht_in_mean ht_in_median ht_in_min ht_in_max wt_lbs_n_miss
-##        &lt;int&gt;    &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;int&gt;
-## 1          1     26.9         26      22      48            3       66.0           66        58        76             2
-## # … with 9 more variables: wt_lbs_mean &lt;dbl&gt;, wt_lbs_median &lt;dbl&gt;, wt_lbs_min &lt;dbl&gt;, wt_lbs_max &lt;dbl&gt;, bmi_n_miss &lt;int&gt;,
-## #   bmi_mean &lt;dbl&gt;, bmi_median &lt;dbl&gt;, bmi_min &lt;dbl&gt;, bmi_max &lt;dbl&gt;</code></pre>
+##   age_n_miss age_mean age_median age_min age_max ht_in_n_miss ht_in_mean ht_in_median ht_in_min ht_in_max wt_lbs_n_miss wt_lbs_mean
+##        &lt;int&gt;    &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;int&gt;       &lt;dbl&gt;
+## 1          1     26.9         26      22      48            3       66.0           66        58        76             2        148.
+## # … with 8 more variables: wt_lbs_median &lt;dbl&gt;, wt_lbs_min &lt;dbl&gt;, wt_lbs_max &lt;dbl&gt;, bmi_n_miss &lt;int&gt;, bmi_mean &lt;dbl&gt;,
+## #   bmi_median &lt;dbl&gt;, bmi_min &lt;dbl&gt;, bmi_max &lt;dbl&gt;</code></pre>
 <p>This method works, but it has the same problem that our symptom summaries had above. Our results are hard to read and interpret because they are arranged horizontally. We can once again pivot this data longer, but it won’t be <em>quite</em> as easy as it was before. Our first attempt might look like this:</p>
 <div class="sourceCode" id="cb1278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1278-1"><a href="column-wise-operations-in-dplyr.html#cb1278-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="sc">%&gt;%</span> </span>
 <span id="cb1278-2"><a href="column-wise-operations-in-dplyr.html#cb1278-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
