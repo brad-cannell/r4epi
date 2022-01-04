@@ -8,9 +8,9 @@
 
 build_book <- function() {
   # For building a single chapter. Comment out if you want to build the entire book.
-  bookdown::preview_chapter("index.Rmd")
+  # bookdown::preview_chapter("index.Rmd")
   # For building the entire book. Comment out if you want to build a single chapter.
-  # bookdown::render_book()
+  bookdown::render_book()
   move_up_logo()
 }
 

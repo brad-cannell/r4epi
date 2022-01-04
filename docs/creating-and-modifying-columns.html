@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2021-12-31" />
+<meta name="date" content="2022-01-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -180,9 +180,22 @@ div.csl-indent {
 <li><a href="./">R for Epidemiology</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#goals"><i class="fa fa-check"></i>Goals</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#text-conventions-used-in-this-book"><i class="fa fa-check"></i>Text conventions used in this book</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#other-reading"><i class="fa fa-check"></i>Other reading</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="contributing-to-r4epi.html"><a href="contributing-to-r4epi.html"><i class="fa fa-check"></i>Contributing to R4Epi</a>
+<ul>
+<li class="chapter" data-level="" data-path="contributing-to-r4epi.html"><a href="contributing-to-r4epi.html#typos"><i class="fa fa-check"></i>Typos</a></li>
+<li class="chapter" data-level="" data-path="contributing-to-r4epi.html"><a href="contributing-to-r4epi.html#issues"><i class="fa fa-check"></i>Issues</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
 <li class="part"><span><b>I Getting Started</b></span></li>
 <li class="chapter" data-level="1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html"><i class="fa fa-check"></i><b>1</b> Installing R and RStudio</a>
 <ul>
@@ -1071,8 +1084,7 @@ mutate already in the book.
 <pre><code>##  [1]  2  4  4  6  6  8  8 10 10 12</code></pre>
 <p>As expected, R uses the recycling rules to change the length of the short vector to match the length of the longer vector, and then performs the operation – in this case, addition. So, the net result is 1 + 1 = <code>2</code>, 2 + 2 = <code>4</code>, 3 + 1 = <code>4</code>, 4 + 2 = <code>6</code>, etc. You probably already guessed what’s going to happen if we try to add a length 3 vector to <code>nums</code>, but let’s go ahead and take a look for the sake of completeness:</p>
 <div class="sourceCode" id="cb452"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb452-1"><a href="creating-and-modifying-columns.html#cb452-1" aria-hidden="true" tabindex="-1"></a>nums <span class="sc">+</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## Warning in nums + c(1, 2, 3): longer object length is not a multiple of shorter
-## object length</code></pre>
+<pre><code>## Warning in nums + c(1, 2, 3): longer object length is not a multiple of shorter object length</code></pre>
 <pre><code>##  [1]  2  4  6  5  7  9  8 10 12 11</code></pre>
 <p>Yep, we get an error. 10 / 3 = 3.333333 – not an integer. Because there is no integer value that we can multiply by 3 to get the number 10, R throws us an error telling us that it isn’t able to use the recycling rules.</p>
 <p>Now that you understand R’s recycling rules, let’s return to our motivating example.</p>
@@ -1135,18 +1147,18 @@ mutate already in the book.
 <div class="sourceCode" id="cb461"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb461-1"><a href="creating-and-modifying-columns.html#cb461-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
 <span id="cb461-2"><a href="creating-and-modifying-columns.html#cb461-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_center =</span> age <span class="sc">-</span> <span class="fu">mean</span>(age))</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 9
-##       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt;
-##  1     1     0    65 Acti…           0           1            1     0       11.3
-##  2     1     1    65 Acti…           1           1            1     0       11.3
-##  3     1     2    65 Acti…           1           1            0     0       11.3
-##  4     2     0    49 Acti…           1           1            1     0       -4.7
-##  5     2     1    49 Acti…           0           0            1     0       -4.7
-##  6     2     2    49 Acti…           1           1            1     0       -4.7
-##  7     3     0    48 Plac…           0           0            0     0       -5.7
-##  8     3     1    48 Plac…           0           0            0     0       -5.7
-##  9     3     2    48 Plac…           0           0            0     0       -5.7
-## 10     4     0    37 Plac…           0           0            0     0      -16.7
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi age_center
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt;
+##  1     1     0    65 Active            0           1            1     0       11.3
+##  2     1     1    65 Active            1           1            1     0       11.3
+##  3     1     2    65 Active            1           1            0     0       11.3
+##  4     2     0    49 Active            1           1            1     0       -4.7
+##  5     2     1    49 Active            0           0            1     0       -4.7
+##  6     2     2    49 Active            1           1            1     0       -4.7
+##  7     3     0    48 Placebo           0           0            0     0       -5.7
+##  8     3     1    48 Placebo           0           0            0     0       -5.7
+##  9     3     2    48 Placebo           0           0            0     0       -5.7
+## 10     4     0    37 Placebo           0           0            0     0      -16.7
 ## # … with 50 more rows</code></pre>
 <p>Notice how succinctly we were able to express this fairly complicated task. We had to figure out the find the mean of the variable <code>age</code> in the <code>drug_trial</code> data frame, subtract that value from the value for <code>age</code> in each row of the data frame, and then create a new column in the data frame containing the mean-centered values. Because of the fact that <code>mutate()</code>’s name-value pairs can accept complex expressions a value, and because all of the functions used in the code above are vectorized, we can perform this task using only a single, easy-to-read line of code (<code>age_center = age - mean(age)</code>).</p>
 </div>
@@ -1160,20 +1172,19 @@ mutate already in the book.
 <span id="cb463-5"><a href="creating-and-modifying-columns.html#cb463-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</span>
 <span id="cb463-6"><a href="creating-and-modifying-columns.html#cb463-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 11
-##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
-##  1     1     0    65 Active            0           1            1     0
-##  2     1     1    65 Active            1           1            1     0
-##  3     1     2    65 Active            1           1            0     0
-##  4     2     0    49 Active            1           1            1     0
-##  5     2     1    49 Active            0           0            1     0
-##  6     2     2    49 Active            1           1            1     0
-##  7     3     0    48 Placebo           0           0            0     0
-##  8     3     1    48 Placebo           0           0            0     0
-##  9     3     2    48 Placebo           0           0            0     0
-## 10     4     0    37 Placebo           0           0            0     0
-## # … with 50 more rows, and 3 more variables: se_headache_f &lt;fct&gt;,
-## #   se_diarrhea_f &lt;fct&gt;, se_dry_mouth_f &lt;fct&gt;</code></pre>
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi se_headache_f se_diarrhea_f se_dry_mouth_f
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
+##  1     1     0    65 Active            0           1            1     0 No            Yes           Yes           
+##  2     1     1    65 Active            1           1            1     0 Yes           Yes           Yes           
+##  3     1     2    65 Active            1           1            0     0 Yes           Yes           No            
+##  4     2     0    49 Active            1           1            1     0 Yes           Yes           Yes           
+##  5     2     1    49 Active            0           0            1     0 No            N0            Yes           
+##  6     2     2    49 Active            1           1            1     0 Yes           Yes           Yes           
+##  7     3     0    48 Placebo           0           0            0     0 No            N0            No            
+##  8     3     1    48 Placebo           0           0            0     0 No            N0            No            
+##  9     3     2    48 Placebo           0           0            0     0 No            N0            No            
+## 10     4     0    37 Placebo           0           0            0     0 No            N0            No            
+## # … with 50 more rows</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We created three new factor columns in the <code>drug_trial</code> data called <code>se_headache_f</code>, <code>se_diarrhea_f</code>, and <code>se_dry_mouth_f</code>.</p></li>
@@ -1194,20 +1205,19 @@ mutate already in the book.
 <span id="cb465-10"><a href="creating-and-modifying-columns.html#cb465-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, yn_levs, yn_labs)</span>
 <span id="cb465-11"><a href="creating-and-modifying-columns.html#cb465-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 11
-##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
-##  1     1     0    65 Active            0           1            1     0
-##  2     1     1    65 Active            1           1            1     0
-##  3     1     2    65 Active            1           1            0     0
-##  4     2     0    49 Active            1           1            1     0
-##  5     2     1    49 Active            0           0            1     0
-##  6     2     2    49 Active            1           1            1     0
-##  7     3     0    48 Placebo           0           0            0     0
-##  8     3     1    48 Placebo           0           0            0     0
-##  9     3     2    48 Placebo           0           0            0     0
-## 10     4     0    37 Placebo           0           0            0     0
-## # … with 50 more rows, and 3 more variables: se_headache_f &lt;fct&gt;,
-## #   se_diarrhea_f &lt;fct&gt;, se_dry_mouth_f &lt;fct&gt;</code></pre>
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi se_headache_f se_diarrhea_f se_dry_mouth_f
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
+##  1     1     0    65 Active            0           1            1     0 No            Yes           Yes           
+##  2     1     1    65 Active            1           1            1     0 Yes           Yes           Yes           
+##  3     1     2    65 Active            1           1            0     0 Yes           Yes           No            
+##  4     2     0    49 Active            1           1            1     0 Yes           Yes           Yes           
+##  5     2     1    49 Active            0           0            1     0 No            No            Yes           
+##  6     2     2    49 Active            1           1            1     0 Yes           Yes           Yes           
+##  7     3     0    48 Placebo           0           0            0     0 No            No            No            
+##  8     3     1    48 Placebo           0           0            0     0 No            No            No            
+##  9     3     2    48 Placebo           0           0            0     0 No            No            No            
+## 10     4     0    37 Placebo           0           0            0     0 No            No            No            
+## # … with 50 more rows</code></pre>
 <p>Notice that in the code above we type <code>c(0, 1)</code> and <code>c("No", "Yes")</code> once each instead of 3 times each. In the chapter on <a href="#repeated-operations">repeated operations</a> we will learn techniques for removing even more repetition from the code above.</p>
 </div>
 <div id="rowwise-mutations" class="section level3" number="25.5.5">
@@ -1219,19 +1229,19 @@ mutate already in the book.
 <span id="cb467-3"><a href="creating-and-modifying-columns.html#cb467-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se_year =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth) <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 9
 ## # Rowwise: 
-##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
-##  1     1     0    65 Active            0           1            1     0
-##  2     1     1    65 Active            1           1            1     0
-##  3     1     2    65 Active            1           1            0     0
-##  4     2     0    49 Active            1           1            1     0
-##  5     2     1    49 Active            0           0            1     0
-##  6     2     2    49 Active            1           1            1     0
-##  7     3     0    48 Placebo           0           0            0     0
-##  8     3     1    48 Placebo           0           0            0     0
-##  9     3     2    48 Placebo           0           0            0     0
-## 10     4     0    37 Placebo           0           0            0     0
-## # … with 50 more rows, and 1 more variable: any_se_year &lt;lgl&gt;</code></pre>
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi any_se_year
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;lgl&gt;      
+##  1     1     0    65 Active            0           1            1     0 TRUE       
+##  2     1     1    65 Active            1           1            1     0 TRUE       
+##  3     1     2    65 Active            1           1            0     0 TRUE       
+##  4     2     0    49 Active            1           1            1     0 TRUE       
+##  5     2     1    49 Active            0           0            1     0 TRUE       
+##  6     2     2    49 Active            1           1            1     0 TRUE       
+##  7     3     0    48 Placebo           0           0            0     0 FALSE      
+##  8     3     1    48 Placebo           0           0            0     0 FALSE      
+##  9     3     2    48 Placebo           0           0            0     0 FALSE      
+## 10     4     0    37 Placebo           0           0            0     0 FALSE      
+## # … with 50 more rows</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We created a new column in the <code>drug_trial</code> data called <code>any_se_year</code> using the <code>mutate()</code> function.</p></li>
@@ -1401,19 +1411,19 @@ mutate already in the book.
 <span id="cb499-7"><a href="creating-and-modifying-columns.html#cb499-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 8
 ## # Rowwise: 
-##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
-##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
-##  1     1     0           0           1            1         2 TRUE       
-##  2     1     1           1           1            1         3 TRUE       
-##  3     1     2           1           1            0         2 TRUE       
-##  4     2     0           1           1            1         3 TRUE       
-##  5     2     1           0           0            1         1 TRUE       
-##  6     2     2           1           1            1         3 TRUE       
-##  7     3     0           0           0            0         0 FALSE      
-##  8     3     1           0           0            0         0 FALSE      
-##  9     3     2           0           0            0         0 FALSE      
-## 10     4     0           0           0            0         0 FALSE      
-## # … with 50 more rows, and 1 more variable: all_se_year &lt;lgl&gt;</code></pre>
+##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year all_se_year
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;      
+##  1     1     0           0           1            1         2 TRUE        FALSE      
+##  2     1     1           1           1            1         3 TRUE        TRUE       
+##  3     1     2           1           1            0         2 TRUE        FALSE      
+##  4     2     0           1           1            1         3 TRUE        TRUE       
+##  5     2     1           0           0            1         1 TRUE        FALSE      
+##  6     2     2           1           1            1         3 TRUE        TRUE       
+##  7     3     0           0           0            0         0 FALSE       FALSE      
+##  8     3     1           0           0            0         0 FALSE       FALSE      
+##  9     3     2           0           0            0         0 FALSE       FALSE      
+## 10     4     0           0           0            0         0 FALSE       FALSE      
+## # … with 50 more rows</code></pre>
 <p>Not only am I less like to make a typing error in this code, but I think the differences between each line of code (i.e., what that line of code is doing) stands out more. In other words, the intent of the code isn’t buried in unneeded words.</p>
 <p>Before moving on, I also want to point out that the method above would not have worked on factors. For example:</p>
 <div class="sourceCode" id="cb501"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb501-1"><a href="creating-and-modifying-columns.html#cb501-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
@@ -1448,19 +1458,19 @@ mutate already in the book.
 <span id="cb503-9"><a href="creating-and-modifying-columns.html#cb503-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se =</span> <span class="fu">sum</span>(any_se_year) <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 9
 ## # Groups:   id [20]
-##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
-##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
-##  1     1     0           0           1            1         2 TRUE       
-##  2     1     1           1           1            1         3 TRUE       
-##  3     1     2           1           1            0         2 TRUE       
-##  4     2     0           1           1            1         3 TRUE       
-##  5     2     1           0           0            1         1 TRUE       
-##  6     2     2           1           1            1         3 TRUE       
-##  7     3     0           0           0            0         0 FALSE      
-##  8     3     1           0           0            0         0 FALSE      
-##  9     3     2           0           0            0         0 FALSE      
-## 10     4     0           0           0            0         0 FALSE      
-## # … with 50 more rows, and 2 more variables: all_se_year &lt;lgl&gt;, any_se &lt;lgl&gt;</code></pre>
+##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year all_se_year any_se
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;       &lt;lgl&gt; 
+##  1     1     0           0           1            1         2 TRUE        FALSE       TRUE  
+##  2     1     1           1           1            1         3 TRUE        TRUE        TRUE  
+##  3     1     2           1           1            0         2 TRUE        FALSE       TRUE  
+##  4     2     0           1           1            1         3 TRUE        TRUE        TRUE  
+##  5     2     1           0           0            1         1 TRUE        FALSE       TRUE  
+##  6     2     2           1           1            1         3 TRUE        TRUE        TRUE  
+##  7     3     0           0           0            0         0 FALSE       FALSE       FALSE 
+##  8     3     1           0           0            0         0 FALSE       FALSE       FALSE 
+##  9     3     2           0           0            0         0 FALSE       FALSE       FALSE 
+## 10     4     0           0           0            0         0 FALSE       FALSE       FALSE 
+## # … with 50 more rows</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We created a new column in the <code>drug_trial_sub</code> data called <code>any_se</code> using the <code>mutate()</code> function. The <code>any_se</code> column is TRUE if the participant reported <em>any</em> side effect in <em>any year</em> and FALSE if they <em>never</em> reported a side effect in <em>any year</em>.</p></li>
@@ -1482,19 +1492,19 @@ mutate already in the book.
 <span id="cb505-8"><a href="creating-and-modifying-columns.html#cb505-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se =</span> <span class="fu">sum</span>(any_se_year) <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 9
 ## # Rowwise: 
-##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
-##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
-##  1     1     0           0           1            1         2 TRUE       
-##  2     1     1           1           1            1         3 TRUE       
-##  3     1     2           1           1            0         2 TRUE       
-##  4     2     0           1           1            1         3 TRUE       
-##  5     2     1           0           0            1         1 TRUE       
-##  6     2     2           1           1            1         3 TRUE       
-##  7     3     0           0           0            0         0 FALSE      
-##  8     3     1           0           0            0         0 FALSE      
-##  9     3     2           0           0            0         0 FALSE      
-## 10     4     0           0           0            0         0 FALSE      
-## # … with 50 more rows, and 2 more variables: all_se_year &lt;lgl&gt;, any_se &lt;lgl&gt;</code></pre>
+##       id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year all_se_year any_se
+##    &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;       &lt;lgl&gt; 
+##  1     1     0           0           1            1         2 TRUE        FALSE       TRUE  
+##  2     1     1           1           1            1         3 TRUE        TRUE        TRUE  
+##  3     1     2           1           1            0         2 TRUE        FALSE       TRUE  
+##  4     2     0           1           1            1         3 TRUE        TRUE        TRUE  
+##  5     2     1           0           0            1         1 TRUE        FALSE       TRUE  
+##  6     2     2           1           1            1         3 TRUE        TRUE        TRUE  
+##  7     3     0           0           0            0         0 FALSE       FALSE       FALSE 
+##  8     3     1           0           0            0         0 FALSE       FALSE       FALSE 
+##  9     3     2           0           0            0         0 FALSE       FALSE       FALSE 
+## 10     4     0           0           0            0         0 FALSE       FALSE       FALSE 
+## # … with 50 more rows</code></pre>
 <p>You may be wondering why I used the <code>sum()</code> function when the values for <code>any_se_year</code> are not numbers. The way R treats logical vectors can actually be pretty useful in situations like this. That is, when mathematical operations are applied to logical vectors, R treats FALSE as a 0 and TRUE as a 1. So, for participant 1, R calculated the value for <code>any_se</code> something like this:</p>
 <div class="sourceCode" id="cb507"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb507-1"><a href="creating-and-modifying-columns.html#cb507-1" aria-hidden="true" tabindex="-1"></a>any_se_year <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">TRUE</span>)</span>
 <span id="cb507-2"><a href="creating-and-modifying-columns.html#cb507-2" aria-hidden="true" tabindex="-1"></a>any_se_year</span></code></pre></div>
@@ -1548,8 +1558,8 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": null,
-"text": null
+"link": "https://github.com/brad-cannell/r4epi/edit/master/chapters/05_part_data_management/02_creating_and_modifying_columns.Rmd",
+"text": "Edit"
 },
 "history": {
 "link": null,
