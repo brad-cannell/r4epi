@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2022-01-19" />
+<meta name="date" content="2022-03-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1147,8 +1147,7 @@ div.csl-indent {
 <span id="cb1591-3"><a href="using-the-purrr-package.html#cb1591-3" aria-hidden="true" tabindex="-1"></a>  vect</span>
 <span id="cb1591-4"><a href="using-the-purrr-package.html#cb1591-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb1592"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1592-1"><a href="using-the-purrr-package.html#cb1592-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_na_at</span>(df_xyz<span class="sc">$</span>x, <span class="dv">2</span>)</span></code></pre></div>
-<pre><code>##  [1] -0.56047565          NA  1.55870831  0.07050839  0.12928774  1.71506499  0.46091621 -1.26506123 -0.68685285
-## [10] -0.44566197</code></pre>
+<pre><code>##  [1] -0.56047565          NA  1.55870831  0.07050839  0.12928774  1.71506499  0.46091621 -1.26506123 -0.68685285 -0.44566197</code></pre>
 <p>That’s better! Again, we know that data frame columns <em>are</em> vectors, so we can use our new function inside of mutate to add <code>NA</code> values to each column in our data frame at a position of our choosing:</p>
 <div class="sourceCode" id="cb1594"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1594-1"><a href="using-the-purrr-package.html#cb1594-1" aria-hidden="true" tabindex="-1"></a>df_xyz <span class="sc">%&gt;%</span> </span>
 <span id="cb1594-2"><a href="using-the-purrr-package.html#cb1594-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -1183,8 +1182,7 @@ div.csl-indent {
 <span id="cb1598-3"><a href="using-the-purrr-package.html#cb1598-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> add_na_at, <span class="dv">2</span></span>
 <span id="cb1598-4"><a href="using-the-purrr-package.html#cb1598-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## $x
-##  [1] -0.56047565          NA  1.55870831  0.07050839  0.12928774  1.71506499  0.46091621 -1.26506123 -0.68685285
-## [10] -0.44566197
+##  [1] -0.56047565          NA  1.55870831  0.07050839  0.12928774  1.71506499  0.46091621 -1.26506123 -0.68685285 -0.44566197
 ## 
 ## $y
 ##  [1]  1.2240818         NA  0.4007715         NA -0.5558411  1.7869131  0.4978505 -1.9666172  0.7013559 -0.4727914
@@ -1197,8 +1195,7 @@ div.csl-indent {
 <span id="cb1600-3"><a href="using-the-purrr-package.html#cb1600-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> <span class="sc">~</span> <span class="fu">add_na_at</span>(.x, <span class="dv">2</span>)</span>
 <span id="cb1600-4"><a href="using-the-purrr-package.html#cb1600-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## $x
-##  [1] -0.56047565          NA  1.55870831  0.07050839  0.12928774  1.71506499  0.46091621 -1.26506123 -0.68685285
-## [10] -0.44566197
+##  [1] -0.56047565          NA  1.55870831  0.07050839  0.12928774  1.71506499  0.46091621 -1.26506123 -0.68685285 -0.44566197
 ## 
 ## $y
 ##  [1]  1.2240818         NA  0.4007715         NA -0.5558411  1.7869131  0.4978505 -1.9666172  0.7013559 -0.4727914
@@ -1408,19 +1405,18 @@ div.csl-indent {
 <span id="cb1618-7"><a href="using-the-purrr-package.html#cb1618-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Order like columns next to each other for easier comparison</span></span>
 <span id="cb1618-8"><a href="using-the-purrr-package.html#cb1618-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id_1, <span class="fu">starts_with</span>(<span class="st">&quot;name_f&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;name_l&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;s&quot;</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 10 × 10
-##     id_1 name_first_1 name_first_2 name_first_match name_last_1 name_last_2 name_last_match street_1     street_2   
-##    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;        &lt;lgl&gt;            &lt;chr&gt;       &lt;chr&gt;       &lt;lgl&gt;           &lt;chr&gt;        &lt;chr&gt;      
-##  1     1 Easton       Easton       TRUE             &lt;NA&gt;        Stone       FALSE           Alameda      Alameda    
-##  2     2 Elias        Elas         FALSE            Salazar     Salazar     TRUE            Crissy Field Field      
-##  3     3 Colton       &lt;NA&gt;         FALSE            Fox         Fox         TRUE            San Bruno    &lt;NA&gt;       
-##  4     4 Cameron      Cameron      TRUE             Warren      Waren       FALSE           Nottingham   Notingham  
-##  5     5 Carson       Carsen       FALSE            Mills       Mills       TRUE            Jersey       Jersey     
-##  6     6 Addison      Adison       FALSE            Meyer       &lt;NA&gt;        FALSE           Tingley      &lt;NA&gt;       
-##  7     7 Aubrey       Aubrey       TRUE             Rice        Rice        TRUE            Buena Vista  Buena Vista
-##  8     8 Ellie        &lt;NA&gt;         FALSE            Schmidt     Schmidt     TRUE            Division     Division   
-##  9     9 Robert       Bob          FALSE            Garza       Garza       TRUE            Red Rock     Red Rock   
-## 10    10 Stella       Stella       TRUE             Daniels     &lt;NA&gt;        FALSE           Holland      Holland    
-## # … with 1 more variable: street_match &lt;lgl&gt;</code></pre>
+##     id_1 name_first_1 name_first_2 name_first_match name_last_1 name_last_2 name_last_match street_1     street_2    street_match
+##    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;        &lt;lgl&gt;            &lt;chr&gt;       &lt;chr&gt;       &lt;lgl&gt;           &lt;chr&gt;        &lt;chr&gt;       &lt;lgl&gt;       
+##  1     1 Easton       Easton       TRUE             &lt;NA&gt;        Stone       FALSE           Alameda      Alameda     TRUE        
+##  2     2 Elias        Elas         FALSE            Salazar     Salazar     TRUE            Crissy Field Field       FALSE       
+##  3     3 Colton       &lt;NA&gt;         FALSE            Fox         Fox         TRUE            San Bruno    &lt;NA&gt;        FALSE       
+##  4     4 Cameron      Cameron      TRUE             Warren      Waren       FALSE           Nottingham   Notingham   FALSE       
+##  5     5 Carson       Carsen       FALSE            Mills       Mills       TRUE            Jersey       Jersey      TRUE        
+##  6     6 Addison      Adison       FALSE            Meyer       &lt;NA&gt;        FALSE           Tingley      &lt;NA&gt;        FALSE       
+##  7     7 Aubrey       Aubrey       TRUE             Rice        Rice        TRUE            Buena Vista  Buena Vista TRUE        
+##  8     8 Ellie        &lt;NA&gt;         FALSE            Schmidt     Schmidt     TRUE            Division     Division    TRUE        
+##  9     9 Robert       Bob          FALSE            Garza       Garza       TRUE            Red Rock     Red Rock    TRUE        
+## 10    10 Stella       Stella       TRUE             Daniels     &lt;NA&gt;        FALSE           Holland      Holland     TRUE</code></pre>
 <p>🚩However, in the code chunk above, we still have essentially the same code copied more than twice. That’s a red flag that we should be thinking about removing unnecessary repetition from our code. Because we are using dplyr, and all of our data resides inside of a single data frame, your first instinct might be to use <code>across()</code> inside of <code>mutate()</code> to perform column-wise operations. Unfortunately, that method won’t work in this scenario.</p>
 <p>The <code>across()</code> function will apply the function we pass to the <code>.fns</code> argument to each column passed to the <code>.cols</code> argument, one at a time. But, we need to pass two columns at a time to the <code>is_match()</code> function. For example, <code>name_first_1</code> <em>and</em> <code>name_first_2</code>. That makes this task a little trickier than most. But, here’s how we accomplished it using a for loop:</p>
 <div class="sourceCode" id="cb1620"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1620-1"><a href="using-the-purrr-package.html#cb1620-1" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;name_first&quot;</span>, <span class="st">&quot;name_last&quot;</span>, <span class="st">&quot;street&quot;</span>)</span>
@@ -1435,19 +1431,18 @@ div.csl-indent {
 <span id="cb1620-10"><a href="using-the-purrr-package.html#cb1620-10" aria-hidden="true" tabindex="-1"></a>people <span class="sc">%&gt;%</span> </span>
 <span id="cb1620-11"><a href="using-the-purrr-package.html#cb1620-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id_1, <span class="fu">starts_with</span>(<span class="st">&quot;name_f&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;name_l&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;s&quot;</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 10 × 10
-##     id_1 name_first_1 name_first_2 name_first_match name_last_1 name_last_2 name_last_match street_1     street_2   
-##    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;        &lt;lgl&gt;            &lt;chr&gt;       &lt;chr&gt;       &lt;lgl&gt;           &lt;chr&gt;        &lt;chr&gt;      
-##  1     1 Easton       Easton       TRUE             &lt;NA&gt;        Stone       FALSE           Alameda      Alameda    
-##  2     2 Elias        Elas         FALSE            Salazar     Salazar     TRUE            Crissy Field Field      
-##  3     3 Colton       &lt;NA&gt;         FALSE            Fox         Fox         TRUE            San Bruno    &lt;NA&gt;       
-##  4     4 Cameron      Cameron      TRUE             Warren      Waren       FALSE           Nottingham   Notingham  
-##  5     5 Carson       Carsen       FALSE            Mills       Mills       TRUE            Jersey       Jersey     
-##  6     6 Addison      Adison       FALSE            Meyer       &lt;NA&gt;        FALSE           Tingley      &lt;NA&gt;       
-##  7     7 Aubrey       Aubrey       TRUE             Rice        Rice        TRUE            Buena Vista  Buena Vista
-##  8     8 Ellie        &lt;NA&gt;         FALSE            Schmidt     Schmidt     TRUE            Division     Division   
-##  9     9 Robert       Bob          FALSE            Garza       Garza       TRUE            Red Rock     Red Rock   
-## 10    10 Stella       Stella       TRUE             Daniels     &lt;NA&gt;        FALSE           Holland      Holland    
-## # … with 1 more variable: street_match &lt;lgl&gt;</code></pre>
+##     id_1 name_first_1 name_first_2 name_first_match name_last_1 name_last_2 name_last_match street_1     street_2    street_match
+##    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;        &lt;lgl&gt;            &lt;chr&gt;       &lt;chr&gt;       &lt;lgl&gt;           &lt;chr&gt;        &lt;chr&gt;       &lt;lgl&gt;       
+##  1     1 Easton       Easton       TRUE             &lt;NA&gt;        Stone       FALSE           Alameda      Alameda     TRUE        
+##  2     2 Elias        Elas         FALSE            Salazar     Salazar     TRUE            Crissy Field Field       FALSE       
+##  3     3 Colton       &lt;NA&gt;         FALSE            Fox         Fox         TRUE            San Bruno    &lt;NA&gt;        FALSE       
+##  4     4 Cameron      Cameron      TRUE             Warren      Waren       FALSE           Nottingham   Notingham   FALSE       
+##  5     5 Carson       Carsen       FALSE            Mills       Mills       TRUE            Jersey       Jersey      TRUE        
+##  6     6 Addison      Adison       FALSE            Meyer       &lt;NA&gt;        FALSE           Tingley      &lt;NA&gt;        FALSE       
+##  7     7 Aubrey       Aubrey       TRUE             Rice        Rice        TRUE            Buena Vista  Buena Vista TRUE        
+##  8     8 Ellie        &lt;NA&gt;         FALSE            Schmidt     Schmidt     TRUE            Division     Division    TRUE        
+##  9     9 Robert       Bob          FALSE            Garza       Garza       TRUE            Red Rock     Red Rock    TRUE        
+## 10    10 Stella       Stella       TRUE             Daniels     &lt;NA&gt;        FALSE           Holland      Holland     TRUE</code></pre>
 <p>Now, let’s go over one way to get the same result using <code>purrr</code>. The first method very closely resembles our for loop. In fact, we will basically just copy and paste our for loop body into an anonymous function being passed to the <code>.f</code> argument:</p>
 <div class="sourceCode" id="cb1622"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1622-1"><a href="using-the-purrr-package.html#cb1622-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dfc</span>(</span>
 <span id="cb1622-2"><a href="using-the-purrr-package.html#cb1622-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">.x =</span> <span class="fu">c</span>(<span class="st">&quot;name_first&quot;</span>, <span class="st">&quot;name_last&quot;</span>, <span class="st">&quot;street&quot;</span>),</span>
@@ -1461,18 +1456,18 @@ div.csl-indent {
 <span id="cb1622-10"><a href="using-the-purrr-package.html#cb1622-10" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb1622-11"><a href="using-the-purrr-package.html#cb1622-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## # A tibble: 10 × 9
-##    name_first_1 name_first_2 name_first_match name_last_1 name_last_2 name_last_match street_1     street_2  street_match
-##    &lt;chr&gt;        &lt;chr&gt;        &lt;lgl&gt;            &lt;chr&gt;       &lt;chr&gt;       &lt;lgl&gt;           &lt;chr&gt;        &lt;chr&gt;     &lt;lgl&gt;       
-##  1 Easton       Easton       TRUE             &lt;NA&gt;        Stone       FALSE           Alameda      Alameda   TRUE        
-##  2 Elias        Elas         FALSE            Salazar     Salazar     TRUE            Crissy Field Field     FALSE       
-##  3 Colton       &lt;NA&gt;         FALSE            Fox         Fox         TRUE            San Bruno    &lt;NA&gt;      FALSE       
-##  4 Cameron      Cameron      TRUE             Warren      Waren       FALSE           Nottingham   Notingham FALSE       
-##  5 Carson       Carsen       FALSE            Mills       Mills       TRUE            Jersey       Jersey    TRUE        
-##  6 Addison      Adison       FALSE            Meyer       &lt;NA&gt;        FALSE           Tingley      &lt;NA&gt;      FALSE       
-##  7 Aubrey       Aubrey       TRUE             Rice        Rice        TRUE            Buena Vista  Buena Vi… TRUE        
-##  8 Ellie        &lt;NA&gt;         FALSE            Schmidt     Schmidt     TRUE            Division     Division  TRUE        
-##  9 Robert       Bob          FALSE            Garza       Garza       TRUE            Red Rock     Red Rock  TRUE        
-## 10 Stella       Stella       TRUE             Daniels     &lt;NA&gt;        FALSE           Holland      Holland   TRUE</code></pre>
+##    name_first_1 name_first_2 name_first_match name_last_1 name_last_2 name_last_match street_1     street_2    street_match
+##    &lt;chr&gt;        &lt;chr&gt;        &lt;lgl&gt;            &lt;chr&gt;       &lt;chr&gt;       &lt;lgl&gt;           &lt;chr&gt;        &lt;chr&gt;       &lt;lgl&gt;       
+##  1 Easton       Easton       TRUE             &lt;NA&gt;        Stone       FALSE           Alameda      Alameda     TRUE        
+##  2 Elias        Elas         FALSE            Salazar     Salazar     TRUE            Crissy Field Field       FALSE       
+##  3 Colton       &lt;NA&gt;         FALSE            Fox         Fox         TRUE            San Bruno    &lt;NA&gt;        FALSE       
+##  4 Cameron      Cameron      TRUE             Warren      Waren       FALSE           Nottingham   Notingham   FALSE       
+##  5 Carson       Carsen       FALSE            Mills       Mills       TRUE            Jersey       Jersey      TRUE        
+##  6 Addison      Adison       FALSE            Meyer       &lt;NA&gt;        FALSE           Tingley      &lt;NA&gt;        FALSE       
+##  7 Aubrey       Aubrey       TRUE             Rice        Rice        TRUE            Buena Vista  Buena Vista TRUE        
+##  8 Ellie        &lt;NA&gt;         FALSE            Schmidt     Schmidt     TRUE            Division     Division    TRUE        
+##  9 Robert       Bob          FALSE            Garza       Garza       TRUE            Red Rock     Red Rock    TRUE        
+## 10 Stella       Stella       TRUE             Daniels     &lt;NA&gt;        FALSE           Holland      Holland     TRUE</code></pre>
 <p>In the code above, we used roughly the same amount of code to complete the task with a loop that we used to complete it without a loop. However, this code still has some advantages. We only typed “name_first,” “name_last,” and “street” once at the beginning of the code chunk. Therefore, we didn’t have to worry about forgetting to change a column name after copying and pasting code. Additionally, if we later decide that we also want to compare other columns (e.g., middle name, birth date, city, state, zip code), we only have to update the code in one place – where we create the <code>cols</code> vector.</p>
 </div>
 </div>
