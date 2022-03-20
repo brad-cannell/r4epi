@@ -1225,19 +1225,18 @@ We’ve already seen how we can use the <code>filter()</code> function to remove
 <span id="cb1240-5"><a href="column-wise-operations-in-dplyr.html#cb1240-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</span>
 <span id="cb1240-6"><a href="column-wise-operations-in-dplyr.html#cb1240-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 × 8
-##       id se_headache se_diarrhea se_dry_mouth se_nausea se_headache_f se_diarrhea_f
-##    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;        
-##  1     1           0           1            0         0 No            Yes          
-##  2     2           0           1            1         1 No            Yes          
-##  3     3           0           1            0         0 No            Yes          
-##  4     4           1           0            0         1 Yes           No           
-##  5     5           0           1            0         1 No            Yes          
-##  6     6           1           0            0         0 Yes           No           
-##  7     7           1           1            1         0 Yes           Yes          
-##  8     8           1           0            1         0 Yes           No           
-##  9     9           0           0            0         0 No            No           
-## 10    10           0           0            1         1 No            No           
-## # … with 1 more variable: se_dry_mouth_f &lt;fct&gt;</code></pre>
+##       id se_headache se_diarrhea se_dry_mouth se_nausea se_headache_f se_diarrhea_f se_dry_mouth_f
+##    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
+##  1     1           0           1            0         0 No            Yes           No            
+##  2     2           0           1            1         1 No            Yes           Yes           
+##  3     3           0           1            0         0 No            Yes           No            
+##  4     4           1           0            0         1 Yes           No            No            
+##  5     5           0           1            0         1 No            Yes           No            
+##  6     6           1           0            0         0 Yes           No            No            
+##  7     7           1           1            1         0 Yes           Yes           Yes           
+##  8     8           1           0            1         0 Yes           No            Yes           
+##  9     9           0           0            0         0 No            No            No            
+## 10    10           0           0            1         1 No            No            Yes</code></pre>
 <p>🚩Once again, we have essentially the same code copied more than twice. That’s a red flag that we should be thinking about removing unnecessary repetition from our code. Here’s how we can use <code>across()</code> to do so:</p>
 <div class="sourceCode" id="cb1242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1242-1"><a href="column-wise-operations-in-dplyr.html#cb1242-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
 <span id="cb1242-2"><a href="column-wise-operations-in-dplyr.html#cb1242-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -1248,19 +1247,18 @@ We’ve already seen how we can use the <code>filter()</code> function to remove
 <span id="cb1242-7"><a href="column-wise-operations-in-dplyr.html#cb1242-7" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb1242-8"><a href="column-wise-operations-in-dplyr.html#cb1242-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 × 9
-##       id se_headache se_diarrhea se_dry_mouth se_nausea se_headache_f se_diarrhea_f
-##    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;        
-##  1     1           0           1            0         0 No            Yes          
-##  2     2           0           1            1         1 No            Yes          
-##  3     3           0           1            0         0 No            Yes          
-##  4     4           1           0            0         1 Yes           No           
-##  5     5           0           1            0         1 No            Yes          
-##  6     6           1           0            0         0 Yes           No           
-##  7     7           1           1            1         0 Yes           Yes          
-##  8     8           1           0            1         0 Yes           No           
-##  9     9           0           0            0         0 No            No           
-## 10    10           0           0            1         1 No            No           
-## # … with 2 more variables: se_dry_mouth_f &lt;fct&gt;, se_nausea_f &lt;fct&gt;</code></pre>
+##       id se_headache se_diarrhea se_dry_mouth se_nausea se_headache_f se_diarrhea_f se_dry_mouth_f se_nausea_f
+##    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;          &lt;fct&gt;      
+##  1     1           0           1            0         0 No            Yes           No             No         
+##  2     2           0           1            1         1 No            Yes           Yes            Yes        
+##  3     3           0           1            0         0 No            Yes           No             No         
+##  4     4           1           0            0         1 Yes           No            No             Yes        
+##  5     5           0           1            0         1 No            Yes           No             Yes        
+##  6     6           1           0            0         0 Yes           No            No             No         
+##  7     7           1           1            1         0 Yes           Yes           Yes            No         
+##  8     8           1           0            1         0 Yes           No            Yes            No         
+##  9     9           0           0            0         0 No            No            No             No         
+## 10    10           0           0            1         1 No            No            Yes            Yes</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used a purrr-style lambda to create a factor version of all the side effect columns in our data frame.</p></li>
@@ -1522,11 +1520,10 @@ We’ve already seen how we can use the <code>filter()</code> function to remove
 <span id="cb1279-13"><a href="column-wise-operations-in-dplyr.html#cb1279-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
 <span id="cb1279-14"><a href="column-wise-operations-in-dplyr.html#cb1279-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 20
-##   age_n_miss age_mean age_median age_min age_max ht_in_n_miss ht_in_mean ht_in_median
-##        &lt;int&gt;    &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;
-## 1          1     26.9         26      22      48            3       66.0           66
-## # … with 12 more variables: ht_in_min &lt;dbl&gt;, ht_in_max &lt;dbl&gt;, wt_lbs_n_miss &lt;int&gt;,
-## #   wt_lbs_mean &lt;dbl&gt;, wt_lbs_median &lt;dbl&gt;, wt_lbs_min &lt;dbl&gt;, wt_lbs_max &lt;dbl&gt;,
+##   age_n_miss age_mean age_median age_min age_max ht_in_n_miss ht_in_mean ht_in_median ht_in_min ht_in_max wt_lbs_n_miss
+##        &lt;int&gt;    &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;int&gt;
+## 1          1     26.9         26      22      48            3       66.0           66        58        76             2
+## # … with 9 more variables: wt_lbs_mean &lt;dbl&gt;, wt_lbs_median &lt;dbl&gt;, wt_lbs_min &lt;dbl&gt;, wt_lbs_max &lt;dbl&gt;,
 ## #   bmi_n_miss &lt;int&gt;, bmi_mean &lt;dbl&gt;, bmi_median &lt;dbl&gt;, bmi_min &lt;dbl&gt;, bmi_max &lt;dbl&gt;</code></pre>
 <p>This method works, but it has the same problem that our symptom summaries had above. Our results are hard to read and interpret because they are arranged horizontally. We can once again pivot this data longer, but it won’t be <em>quite</em> as easy as it was before. Our first attempt might look like this:</p>
 <div class="sourceCode" id="cb1281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1281-1"><a href="column-wise-operations-in-dplyr.html#cb1281-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="sc">%&gt;%</span> </span>
@@ -1535,8 +1532,7 @@ We’ve already seen how we can use the <code>filter()</code> function to remove
 <span id="cb1281-4"><a href="column-wise-operations-in-dplyr.html#cb1281-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="fu">c</span>(<span class="st">&quot;characteristic&quot;</span>, <span class="st">&quot;.value&quot;</span>),</span>
 <span id="cb1281-5"><a href="column-wise-operations-in-dplyr.html#cb1281-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">&quot;_&quot;</span></span>
 <span id="cb1281-6"><a href="column-wise-operations-in-dplyr.html#cb1281-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 12 rows [1, 6, 7, 8, 9, 10,
-## 11, 12, 13, 14, 15, 16].</code></pre>
+<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 12 rows [1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].</code></pre>
 <pre><code>## # A tibble: 12 × 8
 ##    characteristic     n  mean median   min   max  `in`   lbs
 ##    &lt;chr&gt;          &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1571,12 +1567,11 @@ We’ve already seen how we can use the <code>filter()</code> function to remove
 <span id="cb1284-14"><a href="column-wise-operations-in-dplyr.html#cb1284-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
 <span id="cb1284-15"><a href="column-wise-operations-in-dplyr.html#cb1284-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 20
-##   `age-n_miss` `age-mean` `age-median` `age-min` `age-max` `ht_in-n_miss` `ht_in-mean`
-##          &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;          &lt;int&gt;        &lt;dbl&gt;
-## 1            1       26.9           26        22        48              3         66.0
-## # … with 13 more variables: ht_in-median &lt;dbl&gt;, ht_in-min &lt;dbl&gt;, ht_in-max &lt;dbl&gt;,
-## #   wt_lbs-n_miss &lt;int&gt;, wt_lbs-mean &lt;dbl&gt;, wt_lbs-median &lt;dbl&gt;, wt_lbs-min &lt;dbl&gt;,
-## #   wt_lbs-max &lt;dbl&gt;, bmi-n_miss &lt;int&gt;, bmi-mean &lt;dbl&gt;, bmi-median &lt;dbl&gt;, bmi-min &lt;dbl&gt;,
+##   `age-n_miss` `age-mean` `age-median` `age-min` `age-max` `ht_in-n_miss` `ht_in-mean` `ht_in-median` `ht_in-min`
+##          &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;          &lt;int&gt;        &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt;
+## 1            1       26.9           26        22        48              3         66.0             66          58
+## # … with 11 more variables: ht_in-max &lt;dbl&gt;, wt_lbs-n_miss &lt;int&gt;, wt_lbs-mean &lt;dbl&gt;, wt_lbs-median &lt;dbl&gt;,
+## #   wt_lbs-min &lt;dbl&gt;, wt_lbs-max &lt;dbl&gt;, bmi-n_miss &lt;int&gt;, bmi-mean &lt;dbl&gt;, bmi-median &lt;dbl&gt;, bmi-min &lt;dbl&gt;,
 ## #   bmi-max &lt;dbl&gt;</code></pre>
 <p>Now, we can simply pass a hyphen to the <code>names_sep</code> argument to <code>pivot_longer()</code>:</p>
 <div class="sourceCode" id="cb1286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1286-1"><a href="column-wise-operations-in-dplyr.html#cb1286-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="sc">%&gt;%</span> </span>
