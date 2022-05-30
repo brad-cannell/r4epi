@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2022-05-24" />
+<meta name="date" content="2022-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -337,6 +337,7 @@ div.csl-indent {
 <li class="chapter" data-level="13" data-path="file-paths.html"><a href="file-paths.html"><i class="fa fa-check"></i><b>13</b> File paths</a>
 <ul>
 <li class="chapter" data-level="13.1" data-path="file-paths.html"><a href="file-paths.html#finding-file-paths"><i class="fa fa-check"></i><b>13.1</b> Finding file paths</a></li>
+<li class="chapter" data-level="13.2" data-path="file-paths.html"><a href="file-paths.html#relative-file-paths"><i class="fa fa-check"></i><b>13.2</b> Relative file paths</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html"><i class="fa fa-check"></i><b>14</b> Importing plain text files</a>
 <ul>
@@ -1183,14 +1184,13 @@ Maybe logical indexes
 <div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb537-1"><a href="subsetting-data-frames.html#cb537-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
 <span id="cb537-2"><a href="subsetting-data-frames.html#cb537-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 12
-##      id  year   age drug   se_headache se_diarrhea se_dry_mouth    mi age_center se_headache_f se_diarrhea_f
-##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;        &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt; &lt;fct&gt;         &lt;fct&gt;        
-## 1     1     0    65 Active           0           1            1     0       11.3 No            Yes          
-## 2     1     1    65 Active           1           1            1     0       11.3 Yes           Yes          
-## 3     1     2    65 Active           1           1            0     0       11.3 Yes           Yes          
-## 4     2     0    49 Active           1           1            1     0       -4.7 Yes           Yes          
-## 5     2     1    49 Active           0           0            1     0       -4.7 No            No           
-## # … with 1 more variable: se_dry_mouth_f &lt;fct&gt;</code></pre>
+##      id  year   age drug   se_headache se_diarrhea se_dry_mouth    mi age_center se_headache_f se_diarrhea_f se_dry_mouth_f
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;        &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
+## 1     1     0    65 Active           0           1            1     0       11.3 No            Yes           Yes           
+## 2     1     1    65 Active           1           1            1     0       11.3 Yes           Yes           Yes           
+## 3     1     2    65 Active           1           1            0     0       11.3 Yes           Yes           No            
+## 4     2     0    49 Active           1           1            1     0       -4.7 Yes           Yes           Yes           
+## 5     2     1    49 Active           0           0            1     0       -4.7 No            No            Yes</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used the <code>slice()</code> function to keep only the first 5 rows in the <code>drug_trial</code> data frame.</p></li>
@@ -1209,29 +1209,28 @@ Maybe logical indexes
 <div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb539-1"><a href="subsetting-data-frames.html#cb539-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
 <span id="cb539-2"><a href="subsetting-data-frames.html#cb539-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 12
-##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi age_center se_headache_f se_diarrhea_f
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt; &lt;fct&gt;         &lt;fct&gt;        
-##  1     1     0    65 Active            0           1            1     0     11.3   No            Yes          
-##  2     2     0    49 Active            1           1            1     0     -4.7   Yes           Yes          
-##  3     3     0    48 Placebo           0           0            0     0     -5.7   No            No           
-##  4     4     0    37 Placebo           0           0            0     0    -16.7   No            No           
-##  5     5     0    71 Placebo           0           0            0     0     17.3   No            No           
-##  6     6     0    48 Placebo           0           0            0     0     -5.7   No            No           
-##  7     7     0    59 Active            1           1            1     0      5.3   Yes           Yes          
-##  8     8     0    60 Placebo           0           0            0     0      6.3   No            No           
-##  9     9     0    61 Active            1           1            1     0      7.3   Yes           Yes          
-## 10    10     0    39 Active            1           0            1     0    -14.7   Yes           No           
-## 11    11     0    61 Placebo           0           0            0     0      7.3   No            No           
-## 12    12     0    62 Placebo           1           0            1     0      8.3   Yes           No           
-## 13    13     0    43 Placebo           0           0            0     0    -10.7   No            No           
-## 14    14     0    63 Placebo           0           0            0     0      9.3   No            No           
-## 15    15     0    69 Active            1           1            1     0     15.3   Yes           Yes          
-## 16    16     0    42 Placebo           0           0            0     0    -11.7   No            No           
-## 17    17     0    60 Placebo           0           0            0     0      6.3   No            No           
-## 18    18     0    41 Active            1           1            1     0    -12.7   Yes           Yes          
-## 19    19     0    43 Placebo           0           0            0     0    -10.7   No            No           
-## 20    20     0    53 Placebo           0           0            0     0     -0.700 No            No           
-## # … with 1 more variable: se_dry_mouth_f &lt;fct&gt;</code></pre>
+##       id  year   age drug   se_headache se_diarrhea se_dry_mouth    mi age_center se_headache_f se_diarrhea_f se_dry_mouth_f
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;        &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
+##  1     1     0    65 Active           0           1            1     0     11.3   No            Yes           Yes           
+##  2     2     0    49 Active           1           1            1     0     -4.7   Yes           Yes           Yes           
+##  3     3     0    48 Place…           0           0            0     0     -5.7   No            No            No            
+##  4     4     0    37 Place…           0           0            0     0    -16.7   No            No            No            
+##  5     5     0    71 Place…           0           0            0     0     17.3   No            No            No            
+##  6     6     0    48 Place…           0           0            0     0     -5.7   No            No            No            
+##  7     7     0    59 Active           1           1            1     0      5.3   Yes           Yes           Yes           
+##  8     8     0    60 Place…           0           0            0     0      6.3   No            No            No            
+##  9     9     0    61 Active           1           1            1     0      7.3   Yes           Yes           Yes           
+## 10    10     0    39 Active           1           0            1     0    -14.7   Yes           No            Yes           
+## 11    11     0    61 Place…           0           0            0     0      7.3   No            No            No            
+## 12    12     0    62 Place…           1           0            1     0      8.3   Yes           No            Yes           
+## 13    13     0    43 Place…           0           0            0     0    -10.7   No            No            No            
+## 14    14     0    63 Place…           0           0            0     0      9.3   No            No            No            
+## 15    15     0    69 Active           1           1            1     0     15.3   Yes           Yes           Yes           
+## 16    16     0    42 Place…           0           0            0     0    -11.7   No            No            No            
+## 17    17     0    60 Place…           0           0            0     0      6.3   No            No            No            
+## 18    18     0    41 Active           1           1            1     0    -12.7   Yes           Yes           Yes           
+## 19    19     0    43 Place…           0           0            0     0    -10.7   No            No            No            
+## 20    20     0    53 Place…           0           0            0     0     -0.700 No            No            No</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used the <code>filter()</code> function to keep only the rows in the <code>drug_trial</code> data frame that contain data from the baseline year.</p></li>
@@ -1317,19 +1316,18 @@ Maybe logical indexes
 <span id="cb549-7"><a href="subsetting-data-frames.html#cb549-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
 <span id="cb549-8"><a href="subsetting-data-frames.html#cb549-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 10 × 12
-##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi age_center se_headache_f se_diarrhea_f
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt; &lt;fct&gt;         &lt;fct&gt;        
-##  1     1     0    NA Active            0           1            1     0       11.3 No            Yes          
-##  2     2     0    49 Active            1           1            1     0       -4.7 Yes           Yes          
-##  3     3     0    48 Placebo           0           0            0     0       -5.7 No            No           
-##  4     4     0    37 &lt;NA&gt;              0           0            0     0      -16.7 No            No           
-##  5     5     0    71 Placebo           0           0            0     0       17.3 No            No           
-##  6     6     0    48 Placebo           0           0            0     0       -5.7 No            No           
-##  7     7     0    59 Active            1           1            1     0        5.3 Yes           Yes          
-##  8     8     0    60 Placebo           0           0            0     0        6.3 No            No           
-##  9     9     0    61 Active            1           1            1     0        7.3 Yes           Yes          
-## 10    10     0    39 Active            1           0            1     0      -14.7 Yes           No           
-## # … with 1 more variable: se_dry_mouth_f &lt;fct&gt;</code></pre>
+##       id  year   age drug   se_headache se_diarrhea se_dry_mouth    mi age_center se_headache_f se_diarrhea_f se_dry_mouth_f
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;        &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
+##  1     1     0    NA Active           0           1            1     0       11.3 No            Yes           Yes           
+##  2     2     0    49 Active           1           1            1     0       -4.7 Yes           Yes           Yes           
+##  3     3     0    48 Place…           0           0            0     0       -5.7 No            No            No            
+##  4     4     0    37 &lt;NA&gt;             0           0            0     0      -16.7 No            No            No            
+##  5     5     0    71 Place…           0           0            0     0       17.3 No            No            No            
+##  6     6     0    48 Place…           0           0            0     0       -5.7 No            No            No            
+##  7     7     0    59 Active           1           1            1     0        5.3 Yes           Yes           Yes           
+##  8     8     0    60 Place…           0           0            0     0        6.3 No            No            No            
+##  9     9     0    61 Active           1           1            1     0        7.3 Yes           Yes           Yes           
+## 10    10     0    39 Active           1           0            1     0      -14.7 Yes           No            Yes</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used the <code>filter()</code> and <code>slice()</code> functions to create a new data frame that contains only a subset of our original <code>drug_trial</code> data frame. The subset includes only the first 10 rows of the data frame remaining after selecting only the baseline year rows from the original data frame.</p></li>

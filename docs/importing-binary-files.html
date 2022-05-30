@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2022-05-24" />
+<meta name="date" content="2022-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -337,6 +337,7 @@ div.csl-indent {
 <li class="chapter" data-level="13" data-path="file-paths.html"><a href="file-paths.html"><i class="fa fa-check"></i><b>13</b> File paths</a>
 <ul>
 <li class="chapter" data-level="13.1" data-path="file-paths.html"><a href="file-paths.html#finding-file-paths"><i class="fa fa-check"></i><b>13.1</b> Finding file paths</a></li>
+<li class="chapter" data-level="13.2" data-path="file-paths.html"><a href="file-paths.html#relative-file-paths"><i class="fa fa-check"></i><b>13.2</b> Relative file paths</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html"><i class="fa fa-check"></i><b>14</b> Importing plain text files</a>
 <ul>
@@ -778,16 +779,16 @@ This chapter gives the nuts and bolts of importing data.
 ## * `` -&gt; ...2
 ## * `` -&gt; ...3</code></pre>
 <pre><code>## # A tibble: 8 × 3
-##   `Height and Weight Study\r\nData Dictionary` ...2                                                   ...3             
-##   &lt;chr&gt;                                        &lt;chr&gt;                                                  &lt;chr&gt;            
-## 1 &lt;NA&gt;                                         &lt;NA&gt;                                                   &lt;NA&gt;             
-## 2 Variable                                     Definition                                             Type             
-## 3 Study ID                                     Randomly assigned participant id                       Continuous       
-## 4 Assigned Sex at Birth                        Sex the participant was assigned at birth              Dichotomous (Fem…
-## 5 Height (inches)                              Participant&#39;s height in inches                         Continuous       
-## 6 Weight (lbs)                                 Participant&#39;s weight in pounds                         Continuous       
-## 7 Date of Birth                                Participant&#39;s date of birth                            Date             
-## 8 Annual Household Income                      Participant&#39;s annual household income from all sources Continuous (Curr…</code></pre>
+##   `Height and Weight Study\r\nData Dictionary` ...2                                                   ...3                  
+##   &lt;chr&gt;                                        &lt;chr&gt;                                                  &lt;chr&gt;                 
+## 1 &lt;NA&gt;                                         &lt;NA&gt;                                                   &lt;NA&gt;                  
+## 2 Variable                                     Definition                                             Type                  
+## 3 Study ID                                     Randomly assigned participant id                       Continuous            
+## 4 Assigned Sex at Birth                        Sex the participant was assigned at birth              Dichotomous (Female/M…
+## 5 Height (inches)                              Participant&#39;s height in inches                         Continuous            
+## 6 Weight (lbs)                                 Participant&#39;s weight in pounds                         Continuous            
+## 7 Date of Birth                                Participant&#39;s date of birth                            Date                  
+## 8 Annual Household Income                      Participant&#39;s annual household income from all sources Continuous (Currency)</code></pre>
 <p>And, as I’m sure you saw coming, this isn’t the result we wanted. However, we can get the result we wanted by making a few tweaks to the default values of the <code>sheet</code>, <code>col_names</code>, <code>col_types</code>, <code>skip</code>, and <code>na</code> arguments of the <code>read_excel()</code> function.</p>
 <div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="importing-binary-files.html#cb203-1" aria-hidden="true" tabindex="-1"></a>excel <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(</span>
 <span id="cb203-2"><a href="importing-binary-files.html#cb203-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/Height and Weight/excel_complex.xlsx&quot;</span>,</span>
@@ -859,21 +860,21 @@ This chapter gives the nuts and bolts of importing data.
 <div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="importing-binary-files.html#cb207-1" aria-hidden="true" tabindex="-1"></a>brfss_2018 <span class="ot">&lt;-</span> <span class="fu">read_xpt</span>(<span class="st">&quot;/Users/bradcannell/Dropbox/Datasets/brfss_2018/LLCP2018XPT.zip&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="importing-binary-files.html#cb208-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(brfss_2018)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 275
-##   `_STATE` FMONTH IDATE    IMONTH IDAY  IYEAR DISPCODE SEQNO `_PSU` CTELENM1 PVTRESD1 COLGHOUS STATERE1 CELLFON4 LADULT
-##      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
-## 1        1      1 01052018 01     05    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA
-## 2        1      1 01122018 01     12    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA
-## 3        1      1 01082018 01     08    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA
-## 4        1      1 01032018 01     03    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA
-## 5        1      1 01122018 01     12    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA
-## 6        1      1 01112018 01     11    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA
-## # … with 260 more variables: NUMADULT &lt;dbl&gt;, NUMMEN &lt;dbl&gt;, NUMWOMEN &lt;dbl&gt;, SAFETIME &lt;dbl&gt;, CTELNUM1 &lt;dbl&gt;,
-## #   CELLFON5 &lt;dbl&gt;, CADULT &lt;dbl&gt;, PVTRESD3 &lt;dbl&gt;, CCLGHOUS &lt;dbl&gt;, CSTATE1 &lt;dbl&gt;, LANDLINE &lt;dbl&gt;, HHADULT &lt;dbl&gt;,
-## #   GENHLTH &lt;dbl&gt;, PHYSHLTH &lt;dbl&gt;, MENTHLTH &lt;dbl&gt;, POORHLTH &lt;dbl&gt;, HLTHPLN1 &lt;dbl&gt;, PERSDOC2 &lt;dbl&gt;, MEDCOST &lt;dbl&gt;,
-## #   CHECKUP1 &lt;dbl&gt;, EXERANY2 &lt;dbl&gt;, SLEPTIM1 &lt;dbl&gt;, CVDINFR4 &lt;dbl&gt;, CVDCRHD4 &lt;dbl&gt;, CVDSTRK3 &lt;dbl&gt;, ASTHMA3 &lt;dbl&gt;,
-## #   ASTHNOW &lt;dbl&gt;, CHCSCNCR &lt;dbl&gt;, CHCOCNCR &lt;dbl&gt;, CHCCOPD1 &lt;dbl&gt;, HAVARTH3 &lt;dbl&gt;, ADDEPEV2 &lt;dbl&gt;, CHCKDNY1 &lt;dbl&gt;,
-## #   DIABETE3 &lt;dbl&gt;, DIABAGE2 &lt;dbl&gt;, LASTDEN4 &lt;dbl&gt;, RMVTETH4 &lt;dbl&gt;, SEX1 &lt;dbl&gt;, MARITAL &lt;dbl&gt;, EDUCA &lt;dbl&gt;,
-## #   RENTHOM1 &lt;dbl&gt;, NUMHHOL3 &lt;dbl&gt;, NUMPHON3 &lt;dbl&gt;, CPDEMO1B &lt;dbl&gt;, VETERAN3 &lt;dbl&gt;, EMPLOY1 &lt;dbl&gt;, CHILDREN &lt;dbl&gt;, …</code></pre>
+##   `_STATE` FMONTH IDATE    IMONTH IDAY  IYEAR DISPCODE SEQNO      `_PSU` CTELENM1 PVTRESD1 COLGHOUS STATERE1 CELLFON4 LADULT
+##      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1        1      1 01052018 01     05    2018      1100 2018000001 2.02e9        1        1       NA        1        2     NA
+## 2        1      1 01122018 01     12    2018      1100 2018000002 2.02e9        1        1       NA        1        2     NA
+## 3        1      1 01082018 01     08    2018      1100 2018000003 2.02e9        1        1       NA        1        2     NA
+## 4        1      1 01032018 01     03    2018      1100 2018000004 2.02e9        1        1       NA        1        2     NA
+## 5        1      1 01122018 01     12    2018      1100 2018000005 2.02e9        1        1       NA        1        2     NA
+## 6        1      1 01112018 01     11    2018      1100 2018000006 2.02e9        1        1       NA        1        2     NA
+## # … with 260 more variables: NUMADULT &lt;dbl&gt;, NUMMEN &lt;dbl&gt;, NUMWOMEN &lt;dbl&gt;, SAFETIME &lt;dbl&gt;, CTELNUM1 &lt;dbl&gt;, CELLFON5 &lt;dbl&gt;,
+## #   CADULT &lt;dbl&gt;, PVTRESD3 &lt;dbl&gt;, CCLGHOUS &lt;dbl&gt;, CSTATE1 &lt;dbl&gt;, LANDLINE &lt;dbl&gt;, HHADULT &lt;dbl&gt;, GENHLTH &lt;dbl&gt;,
+## #   PHYSHLTH &lt;dbl&gt;, MENTHLTH &lt;dbl&gt;, POORHLTH &lt;dbl&gt;, HLTHPLN1 &lt;dbl&gt;, PERSDOC2 &lt;dbl&gt;, MEDCOST &lt;dbl&gt;, CHECKUP1 &lt;dbl&gt;,
+## #   EXERANY2 &lt;dbl&gt;, SLEPTIM1 &lt;dbl&gt;, CVDINFR4 &lt;dbl&gt;, CVDCRHD4 &lt;dbl&gt;, CVDSTRK3 &lt;dbl&gt;, ASTHMA3 &lt;dbl&gt;, ASTHNOW &lt;dbl&gt;,
+## #   CHCSCNCR &lt;dbl&gt;, CHCOCNCR &lt;dbl&gt;, CHCCOPD1 &lt;dbl&gt;, HAVARTH3 &lt;dbl&gt;, ADDEPEV2 &lt;dbl&gt;, CHCKDNY1 &lt;dbl&gt;, DIABETE3 &lt;dbl&gt;,
+## #   DIABAGE2 &lt;dbl&gt;, LASTDEN4 &lt;dbl&gt;, RMVTETH4 &lt;dbl&gt;, SEX1 &lt;dbl&gt;, MARITAL &lt;dbl&gt;, EDUCA &lt;dbl&gt;, RENTHOM1 &lt;dbl&gt;, NUMHHOL3 &lt;dbl&gt;,
+## #   NUMPHON3 &lt;dbl&gt;, CPDEMO1B &lt;dbl&gt;, VETERAN3 &lt;dbl&gt;, EMPLOY1 &lt;dbl&gt;, CHILDREN &lt;dbl&gt;, INCOME2 &lt;dbl&gt;, WEIGHT2 &lt;dbl&gt;, …</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>haven</code>’s <code>read_xpt()</code> function to import a zipped SAS Transport File. That data was imported as a data frame and we assigned that data frame to the R object called <code>brfss_2018</code>.</p></li>
@@ -888,19 +889,19 @@ This chapter gives the nuts and bolts of importing data.
 <div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="importing-binary-files.html#cb210-1" aria-hidden="true" tabindex="-1"></a>nhanes_demo <span class="ot">&lt;-</span> <span class="fu">read_xpt</span>(<span class="st">&quot;https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DEMO_J.XPT&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="importing-binary-files.html#cb211-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(nhanes_demo)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 46
-##    SEQN SDDSRVYR RIDSTATR RIAGENDR RIDAGEYR RIDAGEMN RIDRETH1 RIDRETH3 RIDEXMON RIDEXAGM DMQMILIZ DMQADFC DMDBORN4
-##   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
-## 1 93703       10        2        2        2       NA        5        6        2       27       NA      NA        1
-## 2 93704       10        2        1        2       NA        3        3        1       33       NA      NA        1
-## 3 93705       10        2        2       66       NA        4        4        2       NA        2      NA        1
-## 4 93706       10        2        1       18       NA        5        6        2      222        2      NA        1
-## 5 93707       10        2        1       13       NA        5        7        2      158       NA      NA        1
-## 6 93708       10        2        2       66       NA        5        6        2       NA        2      NA        2
-## # … with 33 more variables: DMDCITZN &lt;dbl&gt;, DMDYRSUS &lt;dbl&gt;, DMDEDUC3 &lt;dbl&gt;, DMDEDUC2 &lt;dbl&gt;, DMDMARTL &lt;dbl&gt;,
-## #   RIDEXPRG &lt;dbl&gt;, SIALANG &lt;dbl&gt;, SIAPROXY &lt;dbl&gt;, SIAINTRP &lt;dbl&gt;, FIALANG &lt;dbl&gt;, FIAPROXY &lt;dbl&gt;, FIAINTRP &lt;dbl&gt;,
-## #   MIALANG &lt;dbl&gt;, MIAPROXY &lt;dbl&gt;, MIAINTRP &lt;dbl&gt;, AIALANGA &lt;dbl&gt;, DMDHHSIZ &lt;dbl&gt;, DMDFMSIZ &lt;dbl&gt;, DMDHHSZA &lt;dbl&gt;,
-## #   DMDHHSZB &lt;dbl&gt;, DMDHHSZE &lt;dbl&gt;, DMDHRGND &lt;dbl&gt;, DMDHRAGZ &lt;dbl&gt;, DMDHREDZ &lt;dbl&gt;, DMDHRMAZ &lt;dbl&gt;, DMDHSEDZ &lt;dbl&gt;,
-## #   WTINT2YR &lt;dbl&gt;, WTMEC2YR &lt;dbl&gt;, SDMVPSU &lt;dbl&gt;, SDMVSTRA &lt;dbl&gt;, INDHHIN2 &lt;dbl&gt;, INDFMIN2 &lt;dbl&gt;, INDFMPIR &lt;dbl&gt;</code></pre>
+##    SEQN SDDSRVYR RIDSTATR RIAGENDR RIDAGEYR RIDAGEMN RIDRETH1 RIDRETH3 RIDEXMON RIDEXAGM DMQMILIZ DMQADFC DMDBORN4 DMDCITZN
+##   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 93703       10        2        2        2       NA        5        6        2       27       NA      NA        1        1
+## 2 93704       10        2        1        2       NA        3        3        1       33       NA      NA        1        1
+## 3 93705       10        2        2       66       NA        4        4        2       NA        2      NA        1        1
+## 4 93706       10        2        1       18       NA        5        6        2      222        2      NA        1        1
+## 5 93707       10        2        1       13       NA        5        7        2      158       NA      NA        1        1
+## 6 93708       10        2        2       66       NA        5        6        2       NA        2      NA        2        1
+## # … with 32 more variables: DMDYRSUS &lt;dbl&gt;, DMDEDUC3 &lt;dbl&gt;, DMDEDUC2 &lt;dbl&gt;, DMDMARTL &lt;dbl&gt;, RIDEXPRG &lt;dbl&gt;, SIALANG &lt;dbl&gt;,
+## #   SIAPROXY &lt;dbl&gt;, SIAINTRP &lt;dbl&gt;, FIALANG &lt;dbl&gt;, FIAPROXY &lt;dbl&gt;, FIAINTRP &lt;dbl&gt;, MIALANG &lt;dbl&gt;, MIAPROXY &lt;dbl&gt;,
+## #   MIAINTRP &lt;dbl&gt;, AIALANGA &lt;dbl&gt;, DMDHHSIZ &lt;dbl&gt;, DMDFMSIZ &lt;dbl&gt;, DMDHHSZA &lt;dbl&gt;, DMDHHSZB &lt;dbl&gt;, DMDHHSZE &lt;dbl&gt;,
+## #   DMDHRGND &lt;dbl&gt;, DMDHRAGZ &lt;dbl&gt;, DMDHREDZ &lt;dbl&gt;, DMDHRMAZ &lt;dbl&gt;, DMDHSEDZ &lt;dbl&gt;, WTINT2YR &lt;dbl&gt;, WTMEC2YR &lt;dbl&gt;,
+## #   SDMVPSU &lt;dbl&gt;, SDMVSTRA &lt;dbl&gt;, INDHHIN2 &lt;dbl&gt;, INDFMIN2 &lt;dbl&gt;, INDFMPIR &lt;dbl&gt;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>haven</code>’s <code>read_xpt()</code> function to import a SAS Transport File directly from the NHANES website. That data was imported as a data frame and we assigned that data frame to the R object called <code>nhanes_demo</code>.</p></li>

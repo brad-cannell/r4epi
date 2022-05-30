@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2022-05-24" />
+<meta name="date" content="2022-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -337,6 +337,7 @@ div.csl-indent {
 <li class="chapter" data-level="13" data-path="file-paths.html"><a href="file-paths.html"><i class="fa fa-check"></i><b>13</b> File paths</a>
 <ul>
 <li class="chapter" data-level="13.1" data-path="file-paths.html"><a href="file-paths.html#finding-file-paths"><i class="fa fa-check"></i><b>13.1</b> Finding file paths</a></li>
+<li class="chapter" data-level="13.2" data-path="file-paths.html"><a href="file-paths.html#relative-file-paths"><i class="fa fa-check"></i><b>13.2</b> Relative file paths</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html"><i class="fa fa-check"></i><b>14</b> Importing plain text files</a>
 <ul>
@@ -1366,8 +1367,8 @@ div.csl-indent {
 ##   age_n_miss age_mean age_median age_min age_max ht_in_n_miss ht_in_mean ht_in_median ht_in_min ht_in_max wt_lbs_n_miss
 ##        &lt;int&gt;    &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;int&gt;
 ## 1          1     26.9         26      22      48            3       66.0           66        58        76             2
-## # … with 9 more variables: wt_lbs_mean &lt;dbl&gt;, wt_lbs_median &lt;dbl&gt;, wt_lbs_min &lt;dbl&gt;, wt_lbs_max &lt;dbl&gt;,
-## #   bmi_n_miss &lt;int&gt;, bmi_mean &lt;dbl&gt;, bmi_median &lt;dbl&gt;, bmi_min &lt;dbl&gt;, bmi_max &lt;dbl&gt;</code></pre>
+## # … with 9 more variables: wt_lbs_mean &lt;dbl&gt;, wt_lbs_median &lt;dbl&gt;, wt_lbs_min &lt;dbl&gt;, wt_lbs_max &lt;dbl&gt;, bmi_n_miss &lt;int&gt;,
+## #   bmi_mean &lt;dbl&gt;, bmi_median &lt;dbl&gt;, bmi_min &lt;dbl&gt;, bmi_max &lt;dbl&gt;</code></pre>
 <p>This method works, but it has the same problem that our symptom summaries had above. Our results are hard to read and interpret because they are arranged horizontally. We can once again pivot this data longer, but it won’t be <em>quite</em> as easy as it was before. Our first attempt might look like this:</p>
 <div class="sourceCode" id="cb1240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1240-1"><a href="column-wise-operations-in-dplyr.html#cb1240-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="sc">%&gt;%</span> </span>
 <span id="cb1240-2"><a href="column-wise-operations-in-dplyr.html#cb1240-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
@@ -1413,9 +1414,8 @@ div.csl-indent {
 ##   `age-n_miss` `age-mean` `age-median` `age-min` `age-max` `ht_in-n_miss` `ht_in-mean` `ht_in-median` `ht_in-min`
 ##          &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;          &lt;int&gt;        &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt;
 ## 1            1       26.9           26        22        48              3         66.0             66          58
-## # … with 11 more variables: ht_in-max &lt;dbl&gt;, wt_lbs-n_miss &lt;int&gt;, wt_lbs-mean &lt;dbl&gt;, wt_lbs-median &lt;dbl&gt;,
-## #   wt_lbs-min &lt;dbl&gt;, wt_lbs-max &lt;dbl&gt;, bmi-n_miss &lt;int&gt;, bmi-mean &lt;dbl&gt;, bmi-median &lt;dbl&gt;, bmi-min &lt;dbl&gt;,
-## #   bmi-max &lt;dbl&gt;</code></pre>
+## # … with 11 more variables: ht_in-max &lt;dbl&gt;, wt_lbs-n_miss &lt;int&gt;, wt_lbs-mean &lt;dbl&gt;, wt_lbs-median &lt;dbl&gt;, wt_lbs-min &lt;dbl&gt;,
+## #   wt_lbs-max &lt;dbl&gt;, bmi-n_miss &lt;int&gt;, bmi-mean &lt;dbl&gt;, bmi-median &lt;dbl&gt;, bmi-min &lt;dbl&gt;, bmi-max &lt;dbl&gt;</code></pre>
 <p>Now, we can simply pass a hyphen to the <code>names_sep</code> argument to <code>pivot_longer()</code>:</p>
 <div class="sourceCode" id="cb1245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1245-1"><a href="column-wise-operations-in-dplyr.html#cb1245-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="sc">%&gt;%</span> </span>
 <span id="cb1245-2"><a href="column-wise-operations-in-dplyr.html#cb1245-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>

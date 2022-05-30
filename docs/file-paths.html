@@ -24,7 +24,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2022-05-24" />
+<meta name="date" content="2022-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -337,6 +337,7 @@ div.csl-indent {
 <li class="chapter" data-level="13" data-path="file-paths.html"><a href="file-paths.html"><i class="fa fa-check"></i><b>13</b> File paths</a>
 <ul>
 <li class="chapter" data-level="13.1" data-path="file-paths.html"><a href="file-paths.html#finding-file-paths"><i class="fa fa-check"></i><b>13.1</b> Finding file paths</a></li>
+<li class="chapter" data-level="13.2" data-path="file-paths.html"><a href="file-paths.html#relative-file-paths"><i class="fa fa-check"></i><b>13.2</b> Relative file paths</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html"><i class="fa fa-check"></i><b>14</b> Importing plain text files</a>
 <ul>
@@ -730,52 +731,97 @@ div.csl-indent {
 This chapter gives an overview of file paths.
 
 Maybe start with importing data and then come back to this?
+
+To preview:
+bookdown::preview_chapter("chapters/03_part_data_transfer/02_file_paths.Rmd")
+
+👆**Here's what we did above:**
 -->
-<p>In this part of the book, we will need to work with file paths. File paths are nothing more than directions that tell R where to find, or place, data on your computer. In my experience, however, some students are a little bit confused about file paths at first. So, in this chapter I will briefly introduce what file paths are and how to find the path to a specific file on your computer.</p>
-<p>Let’s say that I want you to go to the store and buy a loaf of bread.</p>
+<p>In this part of the book, we will need to work with <strong>file paths</strong>. File paths are nothing more than directions that tell R where to find, or place, data on our computer. In our experience, however, some students are a little bit confused about file paths at first. So, in this chapter we will briefly introduce what file paths are and how to find the path to a specific file on our computer.</p>
+<p>Let’s say that we want you to go to the store and buy a loaf of bread.</p>
 <p><img src="img/03_part_data_transfer/02_file_paths/store.png" width="900" /></p>
-<p>When I say “go to the store”, this is really a shorthand way of telling you a much more detailed set of directions.</p>
+<p>When we say, “go to the store”, this is really a shorthand way of telling you a much more detailed set of directions.</p>
 <p><img src="img/03_part_data_transfer/02_file_paths/directions.png" width="900" /></p>
-<p>Not only do you need to do <em>all</em> the steps in the directions above, but you also need to use the <em>exact sequence</em> above in order to arrive at the desired destination.</p>
-<p>File paths aren’t so different. If we want R to “go get” the file called my_study_data.csv, we have to give it directions to where that file is located. But, the file’s location is not a geographic location that involves making left and right turns. Rather, it is a location in your computer’s file system that involves moving deeper into folders that are nested inside one another.</p>
+<p>Not only do you need to do <em>all</em> of the steps in the directions above, but you also need to use the <em>exact sequence</em> above in order to arrive at the desired destination.</p>
+<p>File paths aren’t so different. If we want R to “go get” the file called my_study_data.csv, we have to give it directions to where that file is located. But the file’s location is not a geographic location that involves making left and right turns. Rather, it is a location in your computer’s file system that involves moving deeper into folders that are nested inside one another.</p>
 <p><img src="img/03_part_data_transfer/02_file_paths/locations.png" width="900" /></p>
-<p>For example, let’s say that I have a folder on my desktop called “NTRHD” for “North Texas Regional Health Department.</p>
+<p>For example, let’s say that we have a folder on our desktop called “NTRHD” for “North Texas Regional Health Department.</p>
 <p><img src="img/03_part_data_transfer/02_file_paths/ntrhd.png" width="900" /></p>
 <p>And, my_study_data.csv is inside the NTRHD folder.</p>
 <p><img src="img/03_part_data_transfer/02_file_paths/my_study_data.png" width="900" /></p>
-<p>I can give R directions to that data using the following path:</p>
+<p>We can give R directions to that data using the following path:</p>
 <p><code>/Users/bradcannell/Desktop/NTRHD/my_study_data.csv</code> (On Mac)</p>
 <p>OR</p>
 <p><code>C:/Users/bradcannell/Desktop/NTRHD/my_study_data.csv</code> (On Windows)</p>
 <p class="warning">
-⚠️<strong>Warning:</strong> Mac and Linux use a forward slashes in a file paths (<code>/</code>) by default. Windows uses a backslashes (<code>\</code>) in file paths by default. However, no matter which operating system you are using, you should still use forward slashes in the file paths you pass to import and export functions in RStudio. <strong>In other words, use forward slashes even if you are using Windows.</strong>
+⚠️<strong>Warning:</strong> Mac and Linux use forward slashes in file paths (<code>/</code>) by default. Windows uses backslashes (<code>\</code>) in file paths by default. However, no matter which operating system we are using, we should still use forward slashes in the file paths we pass to import and export functions in RStudio. <strong>In other words, use forward slashes even if you are using Windows.</strong>
 </p>
-<p>These directions may be read in a more human-like way by replacing the slashes with “and then”. For example, starting at the computer’s hard drive (this is typically the C drive on a Windows) go into files that are accessible to the username <code>bradcannell</code>, and then go into the folder called <code>Desktop</code>, and then go into the folder called <code>NTRHD</code>, and then get the file called <code>my_study_data.csv</code>.</p>
+<p>These directions may be read in a more human-like way by replacing the slashes with “and then”. For example, <code>/Users/bradcannell/Desktop/NTRHD/my_study_data.csv</code> can be read as “starting at the computer’s home directory, go into files that are accessible to the username <code>bradcannell</code>, and then go into the folder called <code>Desktop</code>, and then go into the folder called <code>NTRHD</code>, and then get the file called <code>my_study_data.csv</code>.”</p>
 <p class="warning">
 ⚠️<strong>Warning:</strong> You will need to change <code>bradcannell</code> to your username, unless your username also happens to be <code>bradcannell</code>.
 </p>
 <p class="warning">
-⚠️<strong>Warning:</strong> Notice that we typed <code>.csv</code> at the end immediately after the name of our file <code>my_study_data</code>. The <code>.csv</code> we typed is called a file extension. File extensions tell the computer the file’s type and what programs can use it. In general, you MUST use the full file name and extension when importing and exporting data in R.
+⚠️<strong>Warning:</strong> Notice that we typed <code>.csv</code> at the end immediately after the name of our file <code>my_study_data</code>. The <code>.csv</code> we typed is called a <strong>file extension</strong>. File extensions tell the computer the file’s type and what programs can use it. In general, we MUST use the full file name and extension when importing and exporting data in R.
 </p>
 <p><strong>Self Quiz:</strong></p>
-<p>Let’s say we moved <code>my_study_data.csv</code> to a different folder on my desktop called <code>research</code>. What file path would we need to give R to tell it how to find the data?</p>
+<p>Let’s say that we move <code>my_study_data.csv</code> to a different folder on our desktop called <code>research</code>. What file path would we need to give R to tell it how to find the data?</p>
 <p><code>/Users/bradcannell/Desktop/research/my_study_data.csv</code> (On Mac)</p>
 <p>OR</p>
 <p><code>C:/Users/bradcannell/Desktop/research/my_study_data.csv</code> (On Windows)</p>
-<p>Now let’s say that we created a new folder inside of the <code>research</code> folder on my desktop called <code>my studies</code>. Now what file path would we need to give R to tell it how to find the data?</p>
+<p>Now let’s say that we created a new folder inside of the <code>research</code> folder on our desktop called <code>my studies</code>. Now what file path would we need to give R to tell it how to find the data?</p>
 <p><code>/Users/bradcannell/Desktop/research/my studies/my_study_data.csv</code> (On Mac)</p>
 <p>OR</p>
 <p><code>C:/Users/bradcannell/Desktop/research/my studies/my_study_data.csv</code> (On Windows)</p>
 <div id="finding-file-paths" class="section level2" number="13.1">
 <h2><span class="header-section-number">13.1</span> Finding file paths</h2>
-<p>Now that you know how file paths are constructed, you can always type them manually. However, typing file paths manually is tedious and error prone. Luckily, both Windows and MacOS have shortcuts that allow you to easily copy and paste file paths into R.</p>
-<p>On a Mac, right-click on the file you want the path for and a drop-down menu will appear. Then, click the <code>Get Info</code> menu option.</p>
+<p>Now that we know how file paths are constructed, we can always type them manually. However, typing file paths manually is tedious and error prone. Luckily, both Windows and MacOS have shortcuts that allow us to easily copy and paste file paths into R.</p>
+<p>On a Mac, we right-click on the file we want the path for and a drop-down menu will appear. Then, click the <code>Get Info</code> menu option.</p>
 <p><img src="img/03_part_data_transfer/02_file_paths/get_info.png" width="900" /></p>
-<p>Now, just copy the file path in the <code>Where</code> section of the get info window and paste it into your R code.</p>
+<p>Now, we just copy the file path in the <code>Where</code> section of the get info window and paste it into our R code.</p>
 <p><img src="img/03_part_data_transfer/02_file_paths/where.png" width="900" /></p>
-<p>Alternatively, as shown below, you can right click on the file you want the path for to open the same drop-down menu shown above. But, if you hold down the <code>alt/option</code> key the <code>Copy</code> menu option changes to <code>Copy ... as Pathname</code>. You can then left-clicking that option to copy the path and paste it tino your R code.</p>
+<p>Alternatively, as shown below, we can right click on the file we want the path for to open the same drop-down menu shown above. But, if we hold down the <code>alt/option</code> key the <code>Copy</code> menu option changes to <code>Copy ... as Pathname</code>. We can then left-click that option to copy the path and paste it into our R code.</p>
 <p><img src="img/03_part_data_transfer/02_file_paths/file_path_gif.gif" /><!-- --></p>
-<p>A similar method exists in Windows as well. First, <em>hold down the shift key</em> and right click on the file you want the path for. Click <code>Copy as path</code> in the drop-down menu that appears and paste the file path into your R code.</p>
+<p>A similar method exists in Windows as well. First, we <em>hold down the shift key</em> and right click on the file we want the path for. Then, we click <code>Copy as path</code> in the drop-down menu that appears and paste the file path into our R code.</p>
+</div>
+<div id="relative-file-paths" class="section level2" number="13.2">
+<h2><span class="header-section-number">13.2</span> Relative file paths</h2>
+<p>All of the file paths we’ve seen so far in this chapter are <strong>absolute file paths</strong> (as opposed to <strong>relative file paths</strong>). In this case, <em>absolute</em> just means that the file path begins with the computer’s home directory. Remember, that the home directory in the examples above was <code>/Users/bradcannell</code>. When we are collaborating with other people, or sometimes even when we use more than one computer to work on our projects by ourselves, this can problematic. Pause here for a moment and think about why that might be…</p>
+<p>Using absolute file paths can be problematic because the home directory can be different on every computer we use and is almost certainly different on one of our collaborator’s computers. Let’s take a look at an example. In the screenshot below, we are importing an Excel spreadsheet called <code>form_20.xlsx</code> into R as an R data frame named <code>df</code>. Don’t worry about the import code itself. We will learn more about <a href="importing-binary-files.html#importing-microsoft-excel-spreadsheets">importing Microsoft Excel spreadsheets</a> soon. For now, just look at the file path we are passing to the <code>read_excel()</code> function. By doing so, we are telling R where to go find the Excel file that we want to import. In this case, are we giving R an absolute or relative file path?</p>
+<p><img src="img/03_part_data_transfer/02_file_paths/relative_file_paths_01_absolute_brad.png" width="900" /></p>
+<p>We are giving R an <em>absolute</em> file path. We know this because it starts with the home directory – <code>/Users/bradcannell</code>. Does our code work?</p>
+<p>Yes! Our code does work. We can tell because there are no errors on the screen and the <code>df</code> object we created looks as we expect it to when we print it to the screen. Great!!</p>
+<p>Now, let’s say that our research assistant – Arthur Epi – is going to help us analyze this data as well. So, we share this code file with him. What do you think will happen when he runs the code on his computer?</p>
+<p><img src="img/03_part_data_transfer/02_file_paths/relative_file_paths_02_absolute_arthur.png" width="900" /></p>
+<p>When Arthur tries to import this file on his computer using our code, he gets an error. The error tells him that the path <code>/Users/bradcannell/Dropbox/02 Teaching/R4Epi Textbook/my_first_project/data/form_20.xlsx</code> doesn’t exist. And on Arthur’s computer it doesn’t! The file <code>form_20.xlsx</code> exists, but not at the location <code>/Users/bradcannell/Dropbox/02 Teaching/R4Epi Textbook/my_first_project/data/</code>. This is because Arthur’s home directory is <code>/Users/arthurepi</code> not <code>/Users/bradcannell</code>. The directions are totally different!</p>
+<p>To make this point clearer, let’s return to our <em>directions to the store</em> example from earlier in the chapter. In that example, we only gave one list of directions to the store.</p>
+<p><img src="img/03_part_data_transfer/02_file_paths/directions.png" width="900" /></p>
+<p>Notice that these directions assume that we are starting from our house. As long as we leave from our house, they work great! But what happens if we are at someone else’s house and we ask you to go to the store and buy a loaf of bread? You’d walk out the front door and immediately discover that the directions don’t make any sense! You’d think, “Camp Bowie Blvd.? Where is that? I don’t see that street anywhere!”</p>
+<p>Did the store disappear? No, of course not! The store is still there. It’s just that our directions to the store assume that we are starting from our house. If these directions were a file path, they would be an <em>absolute</em> file path. They start all the way from our home and only work from our home.</p>
+<p>So, could Arthur just change the absolute file path to work on his computer? Sure! He could do that, but then the file path wouldn’t work on Brad’s computer anymore. So, could there just be two code chunks in the file – one for Brad’s computer and one for Arthur’s computer? Sure! We could do that, but then one code chunk or the other will always throw an error on someone’s computer. That will mean that we won’t ever be able to just run our R code in its entirety. We’ll have to run it chunk-by-chunk to make sure we skip the chunk that throws an error. And this problem would just be multiplied if we are working with 5, 10, or 15 other collaborators instead of just 1. So, is there a better solution?</p>
+<p>Yes! A better solution is to use a <strong>relative file path</strong>. Returning to our <em>directions to the store</em> example, it would be like giving directions to the store from a common starting point that everyone knows.</p>
+<p><img src="img/03_part_data_transfer/02_file_paths/directions_relative.png" width="900" /></p>
+<p>Notice that the directions are now from a common location, which isn’t somebody’s “home”. Instead, it’s the corner of Camp Bowie Blvd. and Hulen St. You could even say that the directions are now <em>relative</em> to a common starting place. Now, we can give these directions to anyone and they can use them as long as they can find the corner of Camp Bowie and Hulen! Relative file paths work in much the same way. We tell RStudio to anchor itself at a common location that exists on everyone’s computer and then all the directions are relative to that location. But, how can we do that? What location do all of our collaborators have on all of their computers?</p>
+<p>The answer is our R project’s directory (i.e., folder)! In order to effectively use relative file paths in R, we start by creating an R project. If you don’t remember how to create R projects, this would be a good time to go back and review the <a href="r-projects.html#r-projects">R projects</a> chapter.</p>
+<p>In the screenshot below, we can see that our RStudio session is open in the context of our R project called <code>my_first_project</code>.</p>
+<p><img src="img/03_part_data_transfer/02_file_paths/relative_file_paths_03_check_project.png" width="900" /></p>
+<p>In that context, R starts looking for files <em>in our R project folder</em> – no matter where we put the R project folder on our computer.</p>
+<p>For example, in the next screenshot, we can see that the R project folder <a href="r-projects.html#r-projects">we previously created</a> (arrow 1), which is called <code>my_first_project</code>, is located on a computer’s desktop. One way we can tell that it’s an R project is because it contains an R project file (arrow 2). We can also see that our R project now contains a <code>folder</code>, which contains an Excel file called <code>form_20.xlsx</code> (arrow 3). Finally, we can see that we we’ve added a new R markdown file called <code>test_relative_links.Rmd</code> (arrow 4). That file contains the code we wrote to import <code>form_20.xlsx</code> as an R data frame.</p>
+<p><img src="img/03_part_data_transfer/02_file_paths/relative_file_paths_04_check_files.png" width="900" /></p>
+<p>Because we are using an R project, we can tell R where to find <code>form_20.xlsx</code> using a <em>relative</em> file path. That is, we can give R directions that begin at the R project’s directory. Remember, that just means the folder containing the R project file. In this case, <code>my_first_project</code>. Pause here for a minute. With that starting point in mind, how would you tell R to find <code>form_20.xlsx</code>?</p>
+<p>Well, you would say, “go into the folder called <code>data</code>, and then get the file called <code>form_20.xlsx</code>.” Written as a file path, what would that look like?</p>
+<p>It would look like <code>data/form_20.xlsx</code>. Let’s give it a try!</p>
+<p><img src="img/03_part_data_transfer/02_file_paths/relative_file_paths_05_relative_path_brad.png" width="900" /></p>
+<p>It works! We can tell because there are no errors on the screen and the <code>df</code> object we created looks as we expect it to when we print it to the screen.</p>
+<p>Now, let’s try it on Arthur’s computer and see what happens.</p>
+<p><img src="img/03_part_data_transfer/02_file_paths/relative_file_paths_06_relative_path_arthur.png" width="900" /></p>
+<p>As you can see, the absolute path still doesn’t work on Arthur’s computer, but the relative path does! It may not be obvious to you now, but this makes collaborating so much easier!</p>
+<p>Let’s quickly recap what we needed to do to be able to use relative file paths.</p>
+<ol style="list-style-type: decimal">
+<li><p>We need to create an <a href="r-projects.html#r-projects">R project</a>.</p></li>
+<li><p>We needed to save our R code and our data inside of the R project directory.</p></li>
+<li><p>We needed to share the R project folder with our collaborators. This part wasn’t shown, but it was implied. We could have shared our R project by email. We could have shared our R project by using a shared cloud-based file storage service like Dropbox, Google Drive, or OneDrive. Better yet, we could have shared our R project using a <a href="introduction-to-git-and-github.html#introduction-to-git-and-github">GitHub repository</a>, which we will discuss later in the book.</p></li>
+<li><p>We replaced all absolute file paths in our code with relative file paths. In general, we should <em>always</em> use relative file paths if at all possible. It makes our code easier to read and maintain, and it makes life so much easier for us when we collaborate with others!</p></li>
+</ol>
 <p>Now that we know what file paths are and how to find them, let’s use them to import and export data to and from R.</p>
 
 </div>
