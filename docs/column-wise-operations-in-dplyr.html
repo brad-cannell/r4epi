@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2022-09-11" />
+<meta name="date" content="2022-11-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1087,18 +1087,20 @@ div.csl-indent {
 <span id="cb1198-5"><a href="column-wise-operations-in-dplyr.html#cb1198-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</span>
 <span id="cb1198-6"><a href="column-wise-operations-in-dplyr.html#cb1198-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 × 8
-##       id se_headache se_diarrhea se_dry_mouth se_nausea se_headache_f se_diarrhea_f se_dry_mouth_f
-##    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
-##  1     1           0           1            0         0 No            Yes           No            
-##  2     2           0           1            1         1 No            Yes           Yes           
-##  3     3           0           1            0         0 No            Yes           No            
-##  4     4           1           0            0         1 Yes           No            No            
-##  5     5           0           1            0         1 No            Yes           No            
-##  6     6           1           0            0         0 Yes           No            No            
-##  7     7           1           1            1         0 Yes           Yes           Yes           
-##  8     8           1           0            1         0 Yes           No            Yes           
-##  9     9           0           0            0         0 No            No            No            
-## 10    10           0           0            1         1 No            No            Yes</code></pre>
+##       id se_headache se_diarrhea se_dry_mouth se_nausea se_hea…¹ se_di…² se_dr…³
+##    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;fct&gt;    &lt;fct&gt;   &lt;fct&gt;  
+##  1     1           0           1            0         0 No       Yes     No     
+##  2     2           0           1            1         1 No       Yes     Yes    
+##  3     3           0           1            0         0 No       Yes     No     
+##  4     4           1           0            0         1 Yes      No      No     
+##  5     5           0           1            0         1 No       Yes     No     
+##  6     6           1           0            0         0 Yes      No      No     
+##  7     7           1           1            1         0 Yes      Yes     Yes    
+##  8     8           1           0            1         0 Yes      No      Yes    
+##  9     9           0           0            0         0 No       No      No     
+## 10    10           0           0            1         1 No       No      Yes    
+## # … with abbreviated variable names ¹​se_headache_f, ²​se_diarrhea_f,
+## #   ³​se_dry_mouth_f</code></pre>
 <p>🚩Once again, we have essentially the same code copied more than twice. That’s a red flag that we should be thinking about removing unnecessary repetition from our code. Here’s how we can use <code>across()</code> to do so:</p>
 <div class="sourceCode" id="cb1200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1200-1"><a href="column-wise-operations-in-dplyr.html#cb1200-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
 <span id="cb1200-2"><a href="column-wise-operations-in-dplyr.html#cb1200-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -1109,18 +1111,20 @@ div.csl-indent {
 <span id="cb1200-7"><a href="column-wise-operations-in-dplyr.html#cb1200-7" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb1200-8"><a href="column-wise-operations-in-dplyr.html#cb1200-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 10 × 9
-##       id se_headache se_diarrhea se_dry_mouth se_nausea se_headache_f se_diarrhea_f se_dry_mouth_f se_nausea_f
-##    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;          &lt;fct&gt;      
-##  1     1           0           1            0         0 No            Yes           No             No         
-##  2     2           0           1            1         1 No            Yes           Yes            Yes        
-##  3     3           0           1            0         0 No            Yes           No             No         
-##  4     4           1           0            0         1 Yes           No            No             Yes        
-##  5     5           0           1            0         1 No            Yes           No             Yes        
-##  6     6           1           0            0         0 Yes           No            No             No         
-##  7     7           1           1            1         0 Yes           Yes           Yes            No         
-##  8     8           1           0            1         0 Yes           No            Yes            No         
-##  9     9           0           0            0         0 No            No            No             No         
-## 10    10           0           0            1         1 No            No            Yes            Yes</code></pre>
+##       id se_headache se_diarrhea se_dr…¹ se_na…² se_he…³ se_di…⁴ se_dr…⁵ se_na…⁶
+##    &lt;int&gt;       &lt;int&gt;       &lt;int&gt;   &lt;int&gt;   &lt;int&gt; &lt;fct&gt;   &lt;fct&gt;   &lt;fct&gt;   &lt;fct&gt;  
+##  1     1           0           1       0       0 No      Yes     No      No     
+##  2     2           0           1       1       1 No      Yes     Yes     Yes    
+##  3     3           0           1       0       0 No      Yes     No      No     
+##  4     4           1           0       0       1 Yes     No      No      Yes    
+##  5     5           0           1       0       1 No      Yes     No      Yes    
+##  6     6           1           0       0       0 Yes     No      No      No     
+##  7     7           1           1       1       0 Yes     Yes     Yes     No     
+##  8     8           1           0       1       0 Yes     No      Yes     No     
+##  9     9           0           0       0       0 No      No      No      No     
+## 10    10           0           0       1       1 No      No      Yes     Yes    
+## # … with abbreviated variable names ¹​se_dry_mouth, ²​se_nausea, ³​se_headache_f,
+## #   ⁴​se_diarrhea_f, ⁵​se_dry_mouth_f, ⁶​se_nausea_f</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used a purrr-style lambda to create a factor version of all the side effect columns in our data frame.</p></li>
@@ -1336,8 +1340,7 @@ div.csl-indent {
 ##  8    24 Younger than 30 Male      69    140  20.7 Normal    
 ##  9    48 30 and Older    Male      65    158  26.3 Overweight
 ## 10    29 Younger than 30 Male      68    167  25.4 Overweight
-## # … with 58 more rows
-## # ℹ Use `print(n = ...)` to see more rows</code></pre>
+## # … with 58 more rows</code></pre>
 <p>And wrote our own function to calculate the number of missing values, mean, median, min, and max for all of the continuous variables:</p>
 <div class="sourceCode" id="cb1228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1228-1"><a href="column-wise-operations-in-dplyr.html#cb1228-1" aria-hidden="true" tabindex="-1"></a>continuous_stats <span class="ot">&lt;-</span> <span class="cf">function</span>(var) {</span>
 <span id="cb1228-2"><a href="column-wise-operations-in-dplyr.html#cb1228-2" aria-hidden="true" tabindex="-1"></a>  study <span class="sc">%&gt;%</span> </span>
@@ -1386,12 +1389,14 @@ div.csl-indent {
 <span id="cb1237-13"><a href="column-wise-operations-in-dplyr.html#cb1237-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
 <span id="cb1237-14"><a href="column-wise-operations-in-dplyr.html#cb1237-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 20
-##   age_n_miss age_mean age_med…¹ age_min age_max ht_in…² ht_in…³ ht_in…⁴ ht_in…⁵ ht_in…⁶ wt_lb…⁷ wt_lb…⁸ wt_lb…⁹ wt_lb…˟ wt_lb…˟ bmi_n…˟ bmi_m…˟ bmi_m…˟ bmi_min
-##        &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-## 1          1     26.9        26      22      48       3    66.0      66      58      76       2    148.    142.      60     297       4    23.6    22.9    10.6
-## # … with 1 more variable: bmi_max &lt;dbl&gt;, and abbreviated variable names ¹​age_median, ²​ht_in_n_miss, ³​ht_in_mean, ⁴​ht_in_median, ⁵​ht_in_min, ⁶​ht_in_max,
-## #   ⁷​wt_lbs_n_miss, ⁸​wt_lbs_mean, ⁹​wt_lbs_median, ˟​wt_lbs_min, ˟​wt_lbs_max, ˟​bmi_n_miss, ˟​bmi_mean, ˟​bmi_median
-## # ℹ Use `colnames()` to see all variable names</code></pre>
+##   age_n_miss age_mean age_median age_min age_max ht_in…¹ ht_in…² ht_in…³ ht_in…⁴
+##        &lt;int&gt;    &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1          1     26.9         26      22      48       3    66.0      66      58
+## # … with 11 more variables: ht_in_max &lt;dbl&gt;, wt_lbs_n_miss &lt;int&gt;,
+## #   wt_lbs_mean &lt;dbl&gt;, wt_lbs_median &lt;dbl&gt;, wt_lbs_min &lt;dbl&gt;, wt_lbs_max &lt;dbl&gt;,
+## #   bmi_n_miss &lt;int&gt;, bmi_mean &lt;dbl&gt;, bmi_median &lt;dbl&gt;, bmi_min &lt;dbl&gt;,
+## #   bmi_max &lt;dbl&gt;, and abbreviated variable names ¹​ht_in_n_miss, ²​ht_in_mean,
+## #   ³​ht_in_median, ⁴​ht_in_min</code></pre>
 <p>This method works, but it has the same problem that our symptom summaries had above. Our results are hard to read and interpret because they are arranged horizontally. We can once again pivot this data longer, but it won’t be <em>quite</em> as easy as it was before. Our first attempt might look like this:</p>
 <div class="sourceCode" id="cb1239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1239-1"><a href="column-wise-operations-in-dplyr.html#cb1239-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="sc">%&gt;%</span> </span>
 <span id="cb1239-2"><a href="column-wise-operations-in-dplyr.html#cb1239-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
@@ -1399,7 +1404,8 @@ div.csl-indent {
 <span id="cb1239-4"><a href="column-wise-operations-in-dplyr.html#cb1239-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="fu">c</span>(<span class="st">&quot;characteristic&quot;</span>, <span class="st">&quot;.value&quot;</span>),</span>
 <span id="cb1239-5"><a href="column-wise-operations-in-dplyr.html#cb1239-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">&quot;_&quot;</span></span>
 <span id="cb1239-6"><a href="column-wise-operations-in-dplyr.html#cb1239-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 12 rows [1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].</code></pre>
+<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 12 rows [1, 6, 7, 8,
+## 9, 10, 11, 12, 13, 14, 15, 16].</code></pre>
 <pre><code>## # A tibble: 12 × 8
 ##    characteristic     n  mean median   min   max  `in`   lbs
 ##    &lt;chr&gt;          &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1434,13 +1440,15 @@ div.csl-indent {
 <span id="cb1242-14"><a href="column-wise-operations-in-dplyr.html#cb1242-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
 <span id="cb1242-15"><a href="column-wise-operations-in-dplyr.html#cb1242-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 20
-##   `age-n_miss` age-me…¹ age-m…² age-m…³ age-m…⁴ ht_in…⁵ ht_in…⁶ ht_in…⁷ ht_in…⁸ ht_in…⁹ wt_lb…˟ wt_lb…˟ wt_lb…˟ wt_lb…˟ wt_lb…˟ bmi-n…˟ bmi-m…˟ bmi-m…˟ bmi-m…˟
-##          &lt;int&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-## 1            1     26.9      26      22      48       3    66.0      66      58      76       2    148.    142.      60     297       4    23.6    22.9    10.6
-## # … with 1 more variable: `bmi-max` &lt;dbl&gt;, and abbreviated variable names ¹​`age-mean`, ²​`age-median`, ³​`age-min`, ⁴​`age-max`, ⁵​`ht_in-n_miss`, ⁶​`ht_in-mean`,
-## #   ⁷​`ht_in-median`, ⁸​`ht_in-min`, ⁹​`ht_in-max`, ˟​`wt_lbs-n_miss`, ˟​`wt_lbs-mean`, ˟​`wt_lbs-median`, ˟​`wt_lbs-min`, ˟​`wt_lbs-max`, ˟​`bmi-n_miss`, ˟​`bmi-mean`,
-## #   ˟​`bmi-median`, ˟​`bmi-min`
-## # ℹ Use `colnames()` to see all variable names</code></pre>
+##   `age-n_miss` age-mea…¹ age-m…² age-m…³ age-m…⁴ ht_in…⁵ ht_in…⁶ ht_in…⁷ ht_in…⁸
+##          &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1            1      26.9      26      22      48       3    66.0      66      58
+## # … with 11 more variables: `ht_in-max` &lt;dbl&gt;, `wt_lbs-n_miss` &lt;int&gt;,
+## #   `wt_lbs-mean` &lt;dbl&gt;, `wt_lbs-median` &lt;dbl&gt;, `wt_lbs-min` &lt;dbl&gt;,
+## #   `wt_lbs-max` &lt;dbl&gt;, `bmi-n_miss` &lt;int&gt;, `bmi-mean` &lt;dbl&gt;,
+## #   `bmi-median` &lt;dbl&gt;, `bmi-min` &lt;dbl&gt;, `bmi-max` &lt;dbl&gt;, and abbreviated
+## #   variable names ¹​`age-mean`, ²​`age-median`, ³​`age-min`, ⁴​`age-max`,
+## #   ⁵​`ht_in-n_miss`, ⁶​`ht_in-mean`, ⁷​`ht_in-median`, ⁸​`ht_in-min`</code></pre>
 <p>Now, we can simply pass a hyphen to the <code>names_sep</code> argument to <code>pivot_longer()</code>:</p>
 <div class="sourceCode" id="cb1244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1244-1"><a href="column-wise-operations-in-dplyr.html#cb1244-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="sc">%&gt;%</span> </span>
 <span id="cb1244-2"><a href="column-wise-operations-in-dplyr.html#cb1244-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
