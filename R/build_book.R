@@ -7,11 +7,17 @@
 # =============================================================================
 
 build_book <- function() {
+  start <- lubridate::now()
   # For building a single chapter. Comment out if you want to build the entire book.
   # bookdown::preview_chapter("index.Rmd")
   # For building the entire book. Comment out if you want to build a single chapter.
   bookdown::render_book()
   move_up_logo()
+  stop <- lubridate::now()
+  # Provide a message about the length of time it took to build the book.
+  time <- stop - start
+  cat("Book built in: ")
+  print(time)
 }
 
 # Function to raise the R4Epi logo.
