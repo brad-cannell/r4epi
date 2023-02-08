@@ -1,0 +1,221 @@
+# Populations
+
+<!-- 
+Hidden comments placeholder
+---------------------------
+
+To preview:
+bookdown::preview_chapter("chapters/10_part_intro_epi/03_measures_of_association.Rmd")
+
+Copy and paste:
+👆**Here's what we did above:**
+
+-->
+
+<p class="under-construction"> `r fontawesome::fa("hammer", fill = "#000000", height="1em")` This chapter is under heavy development and may still undergo significant changes. </p>
+
+# Useful resources
+
+* [Modern Epidemiology, Chapter 4, Measures of Occurrence](https://wolterskluwer.vitalsource.com/reader/books/9781975166298/epubcfi/6/22)
+
+* [Epi III OneDrive](https://uthtmc-my.sharepoint.com/personal/michael_b_cannell_uth_tmc_edu//_layouts/15/onedrive.aspx?login_hint=Michael%2EB%2ECannell%40uth%2Etmc%2Eedu&id=%2Fpersonal%2Fmichael%5Fb%5Fcannell%5Futh%5Ftmc%5Fedu%2FDocuments%2F03%20Teaching%2F01%20Courses%20%2D%20Current%2FEpi%20III)
+
+# Notes
+
+* Start with the [PPT](https://uthtmc-my.sharepoint.com/:p:/r/personal/michael_b_cannell_uth_tmc_edu/_layouts/15/Doc.aspx?sourcedoc=%7B42BFC14E-B01C-45CA-AC65-E107EBB7DDFB%7D&file=measures_of_occurrence.pptx&action=edit&mobileredirect=true) for the Measures of Occurence module. It looks like there is some useful stuff. 
+
+* Also, add in stuff from the Modern Epi chapter on Measures of Effect and Measures of Occurrence (linked above). 
+
+* Remember that there doesn't need to be a one-to-one correlation between Epi III modules and R4Epi Chapters. We can assign multiple chapters for a given module.
+
+```{r echo=FALSE}
+# Libraries I'm loading to make the chapter graphics work. Hidden from readers.
+# Chunk below contains packages that readers should load to follow along.
+library(tidyr)
+library(ggplot2)
+library(templates)
+
+# Load color template
+data("my_colors")
+```
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+```
+
+
+# Populations
+
+<!--
+Adding some helper functions to help with population plots.
+Set everything to echo=FALSE. The goal here isn't to teach learners how to make
+population plots. It is simply to use them as a visual aid for learning 
+about populations and samples.
+-->
+
+```{r echo=FALSE}
+# Helper function for sampling No and Yes - Simplified
+sample_ny <- function(n = 100, prob_y = 0.5) {
+  sample(c("No", "Yes"), n, TRUE, c(1 - prob_y, prob_y))
+}
+
+# For testing
+# sample_ny(prob_y = 0.1)
+```
+
+
+```{r echo=FALSE}
+# Create a pop of size x with e prop exposed and o prop with outcome
+make_pop <- function(n_total = 100, 
+                     prob_exposed, 
+                     prob_outcome_exposed,
+                     prob_outcome_unexposed,
+                     arrange = FALSE) {
+  # Figure out the smallest integer that will be at least size
+  # n_total when multiplied by 2. The idea is to figure out the dimensions
+  # for the closest thing I can get to a square given n_total
+  n_sqrt <- sqrt(n_total)
+  n_sqrt_ceiling <- ceiling(n_sqrt)
+  drop <- n_sqrt_ceiling^2 - n_total
+  
+  # Make coordinates for grid of points
+  pop <- expand_grid(
+    x = seq(n_sqrt_ceiling),
+    y = seq(n_sqrt_ceiling)
+  )
+  
+  # Drop of n_sqrt is uneven. Drop from bottom right corner.
+  # High x, low y.
+  pop <- pop %>% 
+    arrange(desc(y)) %>% 
+    slice(1:(n() - drop)) %>% 
+    arrange(x, y)
+  
+  # I still want y to be base 1
+  pop$y <- pop$y + (1 - min(pop$y))
+  
+  # Add exposed and unexposed
+  # Helper function for sampling No and Yes - Simplified
+  sample_ny <- function(n = 100, prob_y = 0.5) {
+    sample(c("No", "Yes"), n, TRUE, c(1 - prob_y, prob_y))
+  }
+  
+  # Add exposed
+  pop$exposed <- sample_ny(n = n_total, prob_y = prob_exposed)
+  
+  # Add outcome
+  pop$outcome <- NA_character_
+  n_exp_y <- sum(pop$exposed == "Yes")
+  n_exp_n <- sum(pop$exposed == "No")
+  pop$outcome[pop$exposed == "Yes"] <- sample_ny(n_exp_y, prob_y = prob_outcome_exposed)
+  pop$outcome[pop$exposed == "No"] <- sample_ny(n_exp_n, prob_y = prob_outcome_unexposed)
+  
+  # Add exposure-outcome group columns
+  # To combine the legend, we need to have a single variable with exposure 
+  # and outcome information.
+  pop <- pop %>% 
+    mutate(
+      e_o = case_when(
+        exposed == "Yes" & outcome == "Yes" ~ "a",
+        exposed == "Yes" & outcome == "No" ~ "b",
+        exposed == "No" & outcome == "Yes" ~ "c",
+        exposed == "No" & outcome == "No" ~ "d"
+      ),
+      e_o_f = factor(
+        e_o, c("a", "b", "c", "d"),
+        c(
+          "Exposed - Outcome", "Exposed - No Outcome", 
+          "Not exposed - Outcome", "Not exposed - No outcome"
+        )
+      )
+    )
+  
+  # Arrange 
+  # Sometimes I want the exposed-unexposed to be haphazardly spread around the 
+  # plot. Sometimes, I want the exposed next to the exposed and the unexposed 
+  # next to the unexposed.
+  if (arrange) {
+    # Separate x and y from the rest of the data before arranging
+    x_y <- select(pop, x, y)
+    pop <- pop %>% 
+      select(-x, -y) %>% 
+      arrange(desc(exposed), desc(outcome))
+    # Add x and y back
+    pop <- bind_cols(x_y, pop)
+  }
+  
+  # Return tibble
+  pop
+}
+
+# For testing
+# set.seed(123)
+# make_pop(
+#   n_total = 100,
+#   prob_exposed = 0.5,
+#   prob_outcome_exposed = 0.5,
+#   prob_outcome_unexposed = 0.1,
+#   arrange = FALSE
+# )
+```
+
+```{r echo=FALSE}
+# Pull orange and blue colors from templates package
+u_orange <- filter(my_colors, description == "University Orange") %>% pull(hex)
+u_blue <- filter(my_colors, description == "University Blue") %>% pull(hex)
+```
+
+```{r echo=FALSE}
+# Create a plot helper function
+plot_pop <- function(.data, p_size = 5) {
+  
+  # Store shape codes
+  cir <- 16
+  tri <- 17
+  
+  # Create plot
+  p <- ggplot(.data, aes(x, y, color = e_o_f, shape = e_o_f)) + 
+    geom_point(size = p_size) +
+    scale_color_manual("Exposure-Outcome", values = c(u_orange, u_orange, u_blue, u_blue)) +
+    scale_shape_manual("Exposure-Outcome", values = c(tri, cir, tri, cir)) +
+    theme(
+      panel.background = element_blank(),
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      axis.ticks = element_blank()
+    )
+  
+  # Return plot object
+  p
+}
+
+# For testing
+# pop_plot(pop, 5)
+```
+
+```{r echo=FALSE}
+# Create a population
+set.seed(123)
+pop <- make_pop(
+  n_total = 1000,
+  prob_exposed = 0.5,
+  prob_outcome_exposed = 0.5,
+  prob_outcome_unexposed = 0.1,
+  arrange = TRUE
+)
+```
+
+```{r echo=FALSE}
+# Plot it
+pop %>% 
+  plot_pop(p_size = 3)
+```
+
+<!-- I would like to add counts to the facet ribbons -->
+
+```{r echo=FALSE}
+# Plot it with facets
+pop %>% 
+  plot_pop(p_size = 3) +
+  facet_wrap(vars(e_o_f)) 
+```
