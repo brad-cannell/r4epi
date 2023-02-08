@@ -1,7 +1,20 @@
 # Importing plain text files
 
 <!-- 
-This chapter gives the nuts and bolts of importing data.
+Hidden comments placeholder
+---------------------------
+
+File path for importing files interactively (testing):
+"/Users/bradcannell/Dropbox/R4Epi Textbook/r4epi/data/file_name.ext"
+
+File path for importing files when building the book:
+"data/file_name.ext"
+
+To preview:
+bookdown::preview_chapter("chapters/03_part_data_transfer/03_importing_plain_text_files.Rmd")
+
+Copy and paste:
+👆**Here's what we did above:**
 -->
 
 We previously learned how to manually create a data frame in RStudio with the `data.frame()` function, the `tibble()` function, or the `tribble()` function. This will get the job done, but it’s not always very practical -- particularly when you have larger data sets. 
@@ -52,11 +65,11 @@ knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files
 
 For our first example we will import a text file with values separated by a single space. The contents of the file are the now familiar height and weight data.
 
-[You may click here to download this file to your compter.](https://www.dropbox.com/s/be3w3r3qdaekhm3/single_delimited.txt?dl=1)
+[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/single_delimited.txt)
 
 ```{r}
 single_space <- read_delim(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/single_delimited.txt",
+  file = "data/single_delimited.txt",
   delim = " "
 )
 ```
@@ -97,7 +110,7 @@ But as we said, this is not what we want. So, how do we fix it? Well, in this ca
 
 ```{r}
 single_space <- read_delim(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/single_delimited.txt",
+  file = "data/single_delimited.txt",
   delim = " ",
   na = "."
 )
@@ -125,11 +138,11 @@ knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files
 
 To import tab separated value files in R, we use a variation of the same program we just saw. We just need to tell R that now the values in the data will be delimited by tabs instead of a single space.
 
-[You may click here to download this file to your compter.](https://www.dropbox.com/s/1inpy0cg7k5uxaw/tab.txt?dl=1)
+[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/tab.txt)
 
 ```{r}
 tab <- read_delim(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/tab.txt",
+  file = "data/tab.txt",
   delim = "\t"
 )
 ```
@@ -147,7 +160,7 @@ tab
 I don't personally receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the `readr` package. That is, instead of using the `read_delim()` function with the value of the `delim` argument set to `"\t"`, we can simply pass our file path to the `read_tsv()` function. Under the hood, the `read_tsv()` function does exactly the same thing as the `read_delim()` function with the value of the `delim` argument set to `"\t"`.
 
 ```{r}
-tab <- read_tsv("/Users/bradcannell/Dropbox/Datasets/Height and Weight/tab.txt")
+tab <- read_tsv("data/tab.txt")
 ```
 
 ```{r echo=FALSE}
@@ -170,12 +183,12 @@ knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files
 
 This number line creates a sequence of columns across your data, with each column being 1 character wide. Notice that spaces are also considered a character with width just like any other. We can use these columns to tell R exactly which columns contain the values for each variable. 
 
-[You may click here to download this file to your compter.](https://www.dropbox.com/s/z6uk0ldi36tras5/fixed_width.txt?dl=1)
+[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/fixed_width.txt)
 
 Now, in this case we can just use `readr`'s `read_table()` function to import this data:
 
 ```{r}
-fixed <- read_table("/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width.txt")
+fixed <- read_table("data/fixed_width.txt")
 ```
 
 ```{r echo=FALSE}
@@ -199,7 +212,7 @@ knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files
 In this case, the `read_table()` function does not give us the result we want. 
 
 ```{r}
-fixed <- read_table("/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt")
+fixed <- read_table("data/fixed_width_no_space.txt")
 ```
 
 ```{r echo=FALSE}
@@ -208,7 +221,7 @@ fixed
 
 Instead, it parses the entire data set as a single character column. It does this because it can't tell where the values for one variable stop and the values for the next variable start. However, because all the variables start in the same column, we can tell R how to parse the data correctly. We can actually do this in a couple different ways:
 
-[You may click here to download this file to your compter.](https://www.dropbox.com/s/m1rcalh46vodd1b/fixed_width_no_space.txt?dl=1)
+[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/fixed_width_no_space.txt)
 
 ### Vector of column widths
 
@@ -216,7 +229,7 @@ One way to import this data is to tell R how many columns wide each variable is 
 
 ```{r}
 fixed <- read_fwf(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt",
+  file = "data/fixed_width_no_space.txt",
   col_positions = fwf_widths(
     widths    = c(3, 6, 5, 3),
     col_names = c("id", "sex", "ht_in", "wgt_lbs")
@@ -262,7 +275,7 @@ Another way to import this data is to tell R how which columns each variable sta
 
 ```{r}
 fixed <- read_fwf(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt",
+  file = "data/fixed_width_no_space.txt",
   col_positions = fwf_positions(
     start     = c(1, 4, 10, 15),
     end       = c(3, 9, 11, 17),
@@ -305,7 +318,7 @@ As a shortcut, either of the methods above can be written using named vectors. A
 
 ```{r message=FALSE}
 read_fwf(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt",
+  file = "data/fixed_width_no_space.txt",
   col_positions = fwf_cols(
     id      = 3,
     sex     = 6,
@@ -320,7 +333,7 @@ read_fwf(
 
 ```{r message=FALSE}
 read_fwf(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/fixed_width_no_space.txt",
+  file = "data/fixed_width_no_space.txt",
   col_positions = fwf_cols(
     id      = c(1, 3),
     sex     = c(4, 9),
@@ -345,10 +358,10 @@ knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files
 
 Importing standard csv files into R with the `readr` package is easy and uses a syntax that is very similar to `read_delim()` and `read_tsv()`. In fact, in many cases we only have to pass the path to the csv file to the `read_csv()` function like so:
 
-[You may click here to download this file to your compter.](https://www.dropbox.com/s/weaea47drw0iln5/comma.csv?dl=1)
+[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/comma.csv)
 
 ```{r}
-csv <- read_csv("/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma.csv")
+csv <- read_csv("data/comma.csv")
 ```
 
 ```{r echo=FALSE}
@@ -399,10 +412,10 @@ All of the issues listed above are things we will have to deal with before we ca
 
 So, let's walk through addressing these issues together. We'll start by taking a look at our results with all of `read_csv`'s arguments left at their default values.
 
-[You may click here to download this file to your compter.](https://www.dropbox.com/s/pnq5g6av3jkv8cl/comma_complex.csv?dl=1)
+[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/comma_complex.csv)
 
 ```{r}
-csv <- read_csv("/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv")
+csv <- read_csv("data/comma_complex.csv")
 ```
 
 ```{r echo=FALSE}
@@ -413,7 +426,7 @@ That is obviously not what we wanted. So, let's start adjusting some of `read_cs
 
 ```{r}
 csv <- read_csv(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv",
+  file = "data/comma_complex.csv",
   col_names = c("id", "sex", "ht_in", "wgt_lbs")
 )
 ```
@@ -430,7 +443,7 @@ csv
 
 ```{r}
 csv <- read_csv(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv",
+  file = "data/comma_complex.csv",
   col_names = c("id", "sex", "ht_in", "wgt_lbs"),
   col_types = cols(
     col_character(),
@@ -464,7 +477,7 @@ Next, let's go ahead and tell R to ignore the first three rows of the csv file. 
 
 ```{r}
 csv <- read_csv(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv",
+  file = "data/comma_complex.csv",
   col_names = c("id", "sex", "ht_in", "wgt_lbs"),
   col_types = cols(
     col_character(),
@@ -489,7 +502,7 @@ csv
 
 ```{r}
 csv <- read_csv(
-  file = "/Users/bradcannell/Dropbox/Datasets/Height and Weight/comma_complex.csv",
+  file = "data/comma_complex.csv",
   col_names = c("id", "sex", "ht_in", "wgt_lbs"),
   col_types = cols(
     col_character(),
