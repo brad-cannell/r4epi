@@ -1,7 +1,14 @@
 # Using the purrr package
 
 <!--
+Hidden comments placeholder
+---------------------------
 
+To preview:
+bookdown::preview_chapter("chapters/07_part_repeated_operations/05_using_purrr.Rmd")
+
+Copy and paste:
+👆**Here's what we did above:**
 -->
 
 In this final chapter of the repeated operations part of the book, we are going to discuss the [purrr package](https://purrr.tidyverse.org/). 
@@ -225,33 +232,37 @@ The simulated data contains some demographic information about three different c
 library(readxl)
 ```
 
-[You may click here to download this file to your computer.](https://www.dropbox.com/s/6nt00hmdzfdigp3/city_ses.xlsx?dl=1)
+[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/city_ses.xlsx)
 
 Then, we may import each sheet like this:
 
+<!-- No need to cache because eval=FALSE -->
+
 ```{r eval=FALSE}
 houston <- read_excel(
-  "/Users/bradcannell/Dropbox/Datasets/Cities SES/city_ses.xlsx",
+  "data/city_ses.xlsx",
   sheet = "Houston"
 )
 
 atlanta <- read_excel(
-  "/Users/bradcannell/Dropbox/Datasets/Cities SES/city_ses.xlsx",
+  "data/city_ses.xlsx",
   sheet = "Atlanta"
 )
 
 charlotte <- read_excel(
-  "/Users/bradcannell/Dropbox/Datasets/Cities SES/city_ses.xlsx",
+  "data/city_ses.xlsx",
   sheet = "Charlotte"
 )
 ```
 
 🚩In the code chunks above, we have essentially the same code copied more than twice. That's a red flag that we should be thinking about removing unnecessary repetition from our code. So, our next step was to write a function to remove some of the unnecessary repetition:
 
+<!-- No need to cache because eval=FALSE -->
+
 ```{r eval=FALSE}
 import_cities <- function(sheet) {
   df <- read_excel(
-    "/Users/bradcannell/Dropbox/Datasets/Cities SES/city_ses.xlsx",
+    "data/city_ses.xlsx",
     sheet = sheet
   )
 }
@@ -263,8 +274,10 @@ charlotte <- import_cities("Charlotte")
 
 🚩However, that approach still has some repetition. So, we next learned how to use a for loop as an alternative approach:
 
+<!-- No need to cache because eval=FALSE -->
+
 ```{r eval=FALSE}
-path <- "/Users/bradcannell/Dropbox/Datasets/Cities SES/city_ses.xlsx"
+path <- "data/city_ses.xlsx"
 sheets <- excel_sheets(path)
 
 for(i in seq_along(sheets)) {
@@ -275,10 +288,12 @@ for(i in seq_along(sheets)) {
 
 That works just fine! However, we could alternatively use `purrr::walk()` instead like this:
 
+<!-- No need to cache because eval=FALSE -->
+
 ```{r}
 # Save the file path to an object so we don't have to type it repeatedly 
 # or hard-code it in.
-path <- "/Users/bradcannell/Dropbox/Datasets/Cities SES/city_ses.xlsx"
+path <- "data/city_ses.xlsx"
   
 walk(
   .x = excel_sheets(path),
@@ -395,7 +410,7 @@ rm(returned_by_walk, atlanta, charlotte, houston)
 Finally, we could make our original `walk()` code slightly more concise by using the purrr-style lambda syntax to write our anonymous function like this:
 
 ```{r}
-path <- "/Users/bradcannell/Dropbox/Datasets/Cities SES/city_ses.xlsx"
+path <- "data/city_ses.xlsx"
   
 walk(
   .x = excel_sheets(path),
