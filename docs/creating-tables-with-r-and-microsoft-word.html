@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2022-11-12" />
+<meta name="date" content="2023-02-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -123,7 +123,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -136,7 +136,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -763,84 +763,75 @@ div.csl-indent {
 <div id="opioid-drug-use" class="section level2 hasAnchor" number="40.2">
 <h2><span class="header-section-number">40.2</span> Opioid drug use<a href="creating-tables-with-r-and-microsoft-word.html#opioid-drug-use" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>As a motivating example, let’s say that we are working at the North Texas Regional Health Department and have been asked to create a report about drug use in our region. Our stakeholders are particularly interested in opioid drug use. To create this report, we will analyze data from a sample of 9,985 adults who were asked about their use of drugs. One of the first analyses that we did was a descriptive comparison of the sociodemographic characteristics of 3 subgroups of people in our data. We will use these analyses to create our Table 1.</p>
-<p class="note">
-🗒<strong>Side Note:</strong> This data includes over 9,000 rows, so I don’t show the code for creating a data frame from this data. In fact, I directly imported this data into R from a comma separated values (.csv) file. We haven’t yet learned how to import csv files, but you can view/download the data by <a href="https://www.dropbox.com/s/18pf6liosfsemg9/03_creating_word_tables.Rmd?dl=1">clicking here</a> if you’d like to check it out anyway.
-</p>
-<pre><code>##     var              cat    n n_total   percent        se   t_crit      lcl
-## 1 use_f        Non-users 8315    9985 83.274912 0.3734986 1.960202 82.52992
-## 2 use_f  Use other drugs 1532    9985 15.343015 0.3606903 1.960202 14.64925
-## 3 use_f Use opioid drugs  138    9985  1.382073 0.1168399 1.960202  1.17080
-##         ucl
-## 1 83.994296
-## 2 16.063453
-## 3  1.630841</code></pre>
+<p>You can view/download the data by <a href="https://github.com/brad-cannell/r4epi/blob/master/data/drugs.csv">clicking here</a></p>
+<div class="sourceCode" id="cb1655"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1655-1"><a href="creating-tables-with-r-and-microsoft-word.html#cb1655-1" aria-hidden="true" tabindex="-1"></a>drugs <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;data/drugs.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 9985 Columns: 4
+## ── Column specification ──────────────────────────────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (4): age, edu, female, use
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb1657"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1657-1"><a href="creating-tables-with-r-and-microsoft-word.html#cb1657-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Making factor levels more readable</span></span>
+<span id="cb1657-2"><a href="creating-tables-with-r-and-microsoft-word.html#cb1657-2" aria-hidden="true" tabindex="-1"></a>drugs <span class="ot">&lt;-</span> drugs <span class="sc">%&gt;%</span> </span>
+<span id="cb1657-3"><a href="creating-tables-with-r-and-microsoft-word.html#cb1657-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1657-4"><a href="creating-tables-with-r-and-microsoft-word.html#cb1657-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">edu_f =</span> <span class="fu">factor</span>(</span>
+<span id="cb1657-5"><a href="creating-tables-with-r-and-microsoft-word.html#cb1657-5" aria-hidden="true" tabindex="-1"></a>      edu, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school&quot;</span>, <span class="st">&quot;Some college&quot;</span>, <span class="st">&quot;College graduate&quot;</span>)</span>
+<span id="cb1657-6"><a href="creating-tables-with-r-and-microsoft-word.html#cb1657-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1657-7"><a href="creating-tables-with-r-and-microsoft-word.html#cb1657-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">female_f =</span> <span class="fu">factor</span>(female, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)),</span>
+<span id="cb1657-8"><a href="creating-tables-with-r-and-microsoft-word.html#cb1657-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">use_f =</span> <span class="fu">factor</span>(use, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Non-users&quot;</span>, <span class="st">&quot;Use other drugs&quot;</span>, <span class="st">&quot;Use opioid drugs&quot;</span>))</span>
+<span id="cb1657-9"><a href="creating-tables-with-r-and-microsoft-word.html#cb1657-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>##     var              cat    n n_total   percent        se   t_crit      lcl       ucl
+## 1 use_f        Non-users 8315    9985 83.274912 0.3734986 1.960202 82.52992 83.994296
+## 2 use_f  Use other drugs 1532    9985 15.343015 0.3606903 1.960202 14.64925 16.063453
+## 3 use_f Use opioid drugs  138    9985  1.382073 0.1168399 1.960202  1.17080  1.630841</code></pre>
 <pre><code>##   var use    n     mean       sd   t_crit        sem      lcl      ucl
 ## 1 age   0 8315 36.80173 9.997545 1.960249 0.10963828 36.58681 37.01665
 ## 2 age   1 1532 21.98362 2.979511 1.961515 0.07612296 21.83431 22.13294
 ## 3 age   2  138 17.34740 3.081049 1.977431 0.26227634 16.82877 17.86603</code></pre>
-<pre><code>##   row_var row_cat  col_var col_cat    n n_row n_total percent_total   se_total
-## 1     use       0 female_f      No 3077  8315    9985    30.8162243 0.46210382
-## 2     use       0 female_f     Yes 5238  8315    9985    52.4586880 0.49979512
-## 3     use       1 female_f      No  796  1532    9985     7.9719579 0.27107552
-## 4     use       1 female_f     Yes  736  1532    9985     7.3710566 0.26150858
-## 5     use       2 female_f      No   91   138    9985     0.9113671 0.09510564
-## 6     use       2 female_f     Yes   47   138    9985     0.4707061 0.06850118
-##   t_crit_total  lcl_total  ucl_total percent_row    se_row t_crit_row  lcl_row
-## 1     1.960202 29.9178650 31.7293461    37.00541 0.5295162   1.960202 35.97359
-## 2     1.960202 51.4781679 53.4373162    62.99459 0.5295162   1.960202 61.95076
-## 3     1.960202  7.4565108  8.5197562    51.95822 1.2768770   1.960202 49.45247
-## 4     1.960202  6.8745702  7.9003577    48.04178 1.2768770   1.960202 45.54583
-## 5     1.960202  0.7426382  1.1179996    65.94203 4.0488366   1.960202 57.62323
-## 6     1.960202  0.3538217  0.6259604    34.05797 4.0488366   1.960202 26.61786
-##    ucl_row
-## 1 38.04924
-## 2 64.02641
-## 3 54.45417
-## 4 50.54753
-## 5 73.38214
-## 6 42.37677</code></pre>
-<pre><code>##    row_var row_cat col_var               col_cat    n n_row n_total
-## 1      use       0   edu_f Less than high school 3908  8315    9985
-## 2      use       0   edu_f           High school 2494  8315    9985
-## 3      use       0   edu_f          Some college  915  8315    9985
-## 4      use       0   edu_f      College graduate  998  8315    9985
-## 5      use       1   edu_f Less than high school  322  1532    9985
-## 6      use       1   edu_f           High school  567  1532    9985
-## 7      use       1   edu_f          Some college  321  1532    9985
-## 8      use       1   edu_f      College graduate  322  1532    9985
-## 9      use       2   edu_f Less than high school   36   138    9985
-## 10     use       2   edu_f           High school   36   138    9985
-## 11     use       2   edu_f          Some college   40   138    9985
-## 12     use       2   edu_f      College graduate   26   138    9985
-##    percent_total   se_total t_crit_total  lcl_total  ucl_total percent_row
-## 1     39.1387081 0.48845160     1.960202 38.1855341 40.1002400    46.99940
-## 2     24.9774662 0.43322925     1.960202 24.1379137 25.8362747    29.99399
-## 3      9.1637456 0.28874458     1.960202  8.6132458  9.7456775    11.00421
-## 4      9.9949925 0.30017346     1.960202  9.4217947 10.5989817    12.00241
-## 5      3.2248373 0.17680053     1.960202  2.8957068  3.5899942    21.01828
-## 6      5.6785178 0.23161705     1.960202  5.2411937  6.1499638    37.01044
-## 7      3.2148222 0.17653492     1.960202  2.8862151  3.5794637    20.95300
-## 8      3.2248373 0.17680053     1.960202  2.8957068  3.5899942    21.01828
-## 9      0.3605408 0.05998472     1.960202  0.2601621  0.4994549    26.08696
-## 10     0.3605408 0.05998472     1.960202  0.2601621  0.4994549    26.08696
-## 11     0.4006009 0.06321673     1.960202  0.2939655  0.5457064    28.98551
-## 12     0.2603906 0.05100282     1.960202  0.1773397  0.3821865    18.84058
-##       se_row t_crit_row  lcl_row  ucl_row
-## 1  0.5473707   1.960202 45.92799 48.07358
-## 2  0.5025506   1.960202 29.01822 30.98824
-## 3  0.3432094   1.960202 10.34925 11.69521
-## 4  0.3564220   1.960202 11.32112 12.71881
-## 5  1.0412961   1.960202 19.04975 23.13209
-## 6  1.2339820   1.960202 34.62587 39.46012
-## 7  1.0401075   1.960202 18.98696 23.06466
-## 8  1.0412961   1.960202 19.04975 23.13209
-## 9  3.7515606   1.960202 19.42163 34.07250
-## 10 3.7515606   1.960202 19.42163 34.07250
-## 11 3.8761776   1.960202 22.00774 37.12261
-## 12 3.3408449   1.960202 13.13952 26.26721</code></pre>
+<pre><code>##   row_var row_cat  col_var col_cat    n n_row n_total percent_total   se_total t_crit_total  lcl_total
+## 1     use       0 female_f      No 3077  8315    9985    30.8162243 0.46210382     1.960202 29.9178650
+## 2     use       0 female_f     Yes 5238  8315    9985    52.4586880 0.49979512     1.960202 51.4781679
+## 3     use       1 female_f      No  796  1532    9985     7.9719579 0.27107552     1.960202  7.4565108
+## 4     use       1 female_f     Yes  736  1532    9985     7.3710566 0.26150858     1.960202  6.8745702
+## 5     use       2 female_f      No   91   138    9985     0.9113671 0.09510564     1.960202  0.7426382
+## 6     use       2 female_f     Yes   47   138    9985     0.4707061 0.06850118     1.960202  0.3538217
+##    ucl_total percent_row    se_row t_crit_row  lcl_row  ucl_row
+## 1 31.7293461    37.00541 0.5295162   1.960202 35.97359 38.04924
+## 2 53.4373162    62.99459 0.5295162   1.960202 61.95076 64.02641
+## 3  8.5197562    51.95822 1.2768770   1.960202 49.45247 54.45417
+## 4  7.9003577    48.04178 1.2768770   1.960202 45.54583 50.54753
+## 5  1.1179996    65.94203 4.0488366   1.960202 57.62323 73.38214
+## 6  0.6259604    34.05797 4.0488366   1.960202 26.61786 42.37677</code></pre>
+<pre><code>##    row_var row_cat col_var               col_cat    n n_row n_total percent_total   se_total t_crit_total
+## 1      use       0   edu_f Less than high school 3908  8315    9985    39.1387081 0.48845160     1.960202
+## 2      use       0   edu_f           High school 2494  8315    9985    24.9774662 0.43322925     1.960202
+## 3      use       0   edu_f          Some college  915  8315    9985     9.1637456 0.28874458     1.960202
+## 4      use       0   edu_f      College graduate  998  8315    9985     9.9949925 0.30017346     1.960202
+## 5      use       1   edu_f Less than high school  322  1532    9985     3.2248373 0.17680053     1.960202
+## 6      use       1   edu_f           High school  567  1532    9985     5.6785178 0.23161705     1.960202
+## 7      use       1   edu_f          Some college  321  1532    9985     3.2148222 0.17653492     1.960202
+## 8      use       1   edu_f      College graduate  322  1532    9985     3.2248373 0.17680053     1.960202
+## 9      use       2   edu_f Less than high school   36   138    9985     0.3605408 0.05998472     1.960202
+## 10     use       2   edu_f           High school   36   138    9985     0.3605408 0.05998472     1.960202
+## 11     use       2   edu_f          Some college   40   138    9985     0.4006009 0.06321673     1.960202
+## 12     use       2   edu_f      College graduate   26   138    9985     0.2603906 0.05100282     1.960202
+##     lcl_total  ucl_total percent_row    se_row t_crit_row  lcl_row  ucl_row
+## 1  38.1855341 40.1002400    46.99940 0.5473707   1.960202 45.92799 48.07358
+## 2  24.1379137 25.8362747    29.99399 0.5025506   1.960202 29.01822 30.98824
+## 3   8.6132458  9.7456775    11.00421 0.3432094   1.960202 10.34925 11.69521
+## 4   9.4217947 10.5989817    12.00241 0.3564220   1.960202 11.32112 12.71881
+## 5   2.8957068  3.5899942    21.01828 1.0412961   1.960202 19.04975 23.13209
+## 6   5.2411937  6.1499638    37.01044 1.2339820   1.960202 34.62587 39.46012
+## 7   2.8862151  3.5794637    20.95300 1.0401075   1.960202 18.98696 23.06466
+## 8   2.8957068  3.5899942    21.01828 1.0412961   1.960202 19.04975 23.13209
+## 9   0.2601621  0.4994549    26.08696 3.7515606   1.960202 19.42163 34.07250
+## 10  0.2601621  0.4994549    26.08696 3.7515606   1.960202 19.42163 34.07250
+## 11  0.2939655  0.5457064    28.98551 3.8761776   1.960202 22.00774 37.12261
+## 12  0.1773397  0.3821865    18.84058 3.3408449   1.960202 13.13952 26.26721</code></pre>
 <p>Above, we have the results of several different descriptive analyses we did in R. Remember that we never want to present raw R output. Perhaps you’ve already thought to yourself, “wow, these results are really overwhelming. I’m not sure what I’m even looking at.” Well, that’s exactly how many of the people in your audience will feel as well. In its current form, this information is really hard for us to process. We want to take some of the information from the output above and use it to create a Table 1 in Word that is much easier to read.</p>
 <p>Specifically, we want our final Table 1 to look like this:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/table1.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/table1.png" width="900" /></p>
 <p>You may also <a href="https://www.dropbox.com/s/bu8r81jhzr2r3cj/final_table_01.docx?dl=0">click here to view/download the Word file that contains the Table 1</a>.</p>
 <p>Now that you’ve seen the end result, let’s learn how to make this Table 1 together, step-by-step. Go ahead and open Microsoft Word now if you want to follow along.</p>
 </div>
@@ -848,9 +839,9 @@ div.csl-indent {
 <h2><span class="header-section-number">40.3</span> Table columns<a href="creating-tables-with-r-and-microsoft-word.html#table-columns" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The first thing I typically do is figure out how many columns and rows my table will need. This is generally pretty straightforward; although, there are exceptions. For a basic Table 1 like the one we are creating above we need the following columns:</p>
 <p>One column for our row headers (i.e., the names and categories of the variables we are presenting in our analysis).</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/row_header.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/row_header.png" width="900" /></p>
 <p>One column for each subgroup that we will be describing in our table. In this case, there are 3 subgroups so we will need 3 additional columns.</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/subgroups.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/subgroups.png" width="900" /></p>
 <p>So, we will need 4 total columns.</p>
 <p class="note">
 🗒<strong>Side Note:</strong> If you are going to describe the entire sample overall without stratifying it into subgroups then you would simply have 2 columns. One for the row headers and one for the values.
@@ -860,13 +851,13 @@ div.csl-indent {
 <h2><span class="header-section-number">40.4</span> Table rows<a href="creating-tables-with-r-and-microsoft-word.html#table-rows" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Next, we need to figure out how many rows our table will need. This is also pretty straightforward. Generally, we will need the following rows:</p>
 <p>One row for the title. Some people write their table titles outside (above or below) the actual table. I like to include the title directly in the top row of the table. That way, it moves with the table if the table gets moved around.</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/title.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/title.png" width="900" /></p>
 <p>One row for the column headers. The column headers generally include a label like “Characteristic” for the row headers column and a descriptive label for each subgroup we are describing in our table.</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/column_header.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/column_header.png" width="900" /></p>
 <p>One row for each variable we will analyze in our analysis. In this example, we have three – age, sex, and education. <strong>NOTE</strong> that we do <em>NOT</em> need a separate row for each category of each variable.</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/variables.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/variables.png" width="900" /></p>
 <p>One row for the footer.</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/footer.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/footer.png" width="900" /></p>
 <p>So, we will need 6 total rows.</p>
 </div>
 <div id="make-the-table-skeleton" class="section level2 hasAnchor" number="40.5">
@@ -877,7 +868,7 @@ div.csl-indent {
 <div id="fill-in-column-headers" class="section level2 hasAnchor" number="40.6">
 <h2><span class="header-section-number">40.6</span> Fill in column headers<a href="creating-tables-with-r-and-microsoft-word.html#fill-in-column-headers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Now we have our table skeleton. The next thing I would typically do is fill in the column headers. Remember that our column headers look like this:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/column_header.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/column_header.png" width="900" /></p>
 <p>Here are a couple of suggestions for filling in your column headers:</p>
 <ul>
 <li><p>Put your column headers in the second row of the empty table shell. The title will eventually go into the first row. I don’t add the title right away because it is typically long and will distort the table’s dimensions. Later, we will see how to horizontally merge table cells to remove this distortion, but we don’t want to do that now. Right now, we want to leave all the cells unmerged so that we can easily resize our columns.</p></li>
@@ -892,19 +883,19 @@ div.csl-indent {
 <div id="group-sample-sizes" class="section level3 hasAnchor" number="40.6.1">
 <h3><span class="header-section-number">40.6.1</span> Group sample sizes<a href="creating-tables-with-r-and-microsoft-word.html#group-sample-sizes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>You should always include the group sample size in the column header. They should typically be in the format “(n = sample size)” and typed in the same cell as the label, but below the label (i.e., hit the return key). The group sample sizes can often provide important context to the statistics listed below in the table, and clue the reader into missing data issues.</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/sample_size.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/sample_size.png" width="900" /></p>
 </div>
 <div id="formatting-column-headers" class="section level3 hasAnchor" number="40.6.2">
 <h3><span class="header-section-number">40.6.2</span> Formatting column headers<a href="creating-tables-with-r-and-microsoft-word.html#formatting-column-headers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>I generally bold my column headers, horizontally center them, and vertically align them to the bottom of the row.</p>
 <p>At this point, your table should look like this in Microsoft Word:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_column_headers.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_column_headers.png" width="900" /></p>
 </div>
 </div>
 <div id="fill-in-row-headers" class="section level2 hasAnchor" number="40.7">
 <h2><span class="header-section-number">40.7</span> Fill in row headers<a href="creating-tables-with-r-and-microsoft-word.html#fill-in-row-headers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The next thing I would typically do is fill in the row headers. Remember, that our row headers look like this:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/row_header.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/row_header.png" width="900" /></p>
 <p>Here are a couple of suggestions for filling in your row headers:</p>
 <ul>
 <li><p>The variables should be organized in a way that is meaningful. In our example, we have only 3 sociodemographic variables. However, if we also had some variables about health status and some variables related to criminal history, then we would almost certainly want the variables that fit into each of these categories to be vertically arranged next to each other.</p></li>
@@ -914,21 +905,21 @@ div.csl-indent {
 <h3><span class="header-section-number">40.7.1</span> Label statistics<a href="creating-tables-with-r-and-microsoft-word.html#label-statistics" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>You should always tell the reader what kind statistics they are looking at – don’t assume that they know. For example, the highlighted number in figure <a href="creating-tables-with-r-and-microsoft-word.html#fig:what-stats">40.1</a> are 36.8 and 10. What is 36.8? The mean, the median? The percentage of people who had a non-missing value for age? What is 10? The sample size? The standard error of the mean? An odds ratio? You know that 36.8 is a mean and 10 is the standard deviation because I identified what they were in row header. <a href="creating-tables-with-r-and-microsoft-word.html#fig:identify-stats">40.2</a> When you label the statistics in the row headers as we’ve done in our example, they should take the format you see in figure <a href="creating-tables-with-r-and-microsoft-word.html#fig:identify-stats">40.2</a>. That is, the variable name, followed by a comma, followed by the statistics used in that row. Also notice the use of parentheses. We used parentheses around the letters “sd” (for standard deviation) because the numbers inside the parentheses in that row are standard deviations. So, the label used to identify the statistics should give the reader a blueprint for interpreting the statistics that matches the format of the statistics themselves.</p>
 <div class="figure"><span style="display:block;" id="fig:what-stats"></span>
-<img src="img/09_part_presenting_results/03_creating_word_tables/what_stats.png" alt="What are these numbers."  />
+<img src="img/09_part_presenting_results/03_creating_word_tables/what_stats.png" alt="What are these numbers." width="900" />
 <p class="caption">
 Figure 40.1: What are these numbers.
 </p>
 </div>
 <div class="figure"><span style="display:block;" id="fig:identify-stats"></span>
-<img src="img/09_part_presenting_results/03_creating_word_tables/identify_stats.png" alt="Identifying statistics in the row header."  />
+<img src="img/09_part_presenting_results/03_creating_word_tables/identify_stats.png" alt="Identifying statistics in the row header." width="900" />
 <p class="caption">
 Figure 40.2: Identifying statistics in the row header.
 </p>
 </div>
 <p>The statistics can, and sometimes are, labeled in the column header instead of the row header. This can sometimes be a great idea. However, it can also be a source of confusion. For example, in the figure below, the column headers include labels (i.e., n (%)) for the statistics below. However, <em>not all the statistics below are counts (n) and percentages</em>!</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/bad_stat_labels.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/bad_stat_labels.png" width="900" /></p>
 <p>Even though the Age variable has its own separate statistics label in the row header, this is still generally a really bad idea! Therefore, I highly recommend only labeling your statistics in the column header when those labels are accurate for <em>every</em> value in the column. For example:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/good_stat_labels.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/good_stat_labels.png" width="900" /></p>
 </div>
 <div id="formatting-row-headers" class="section level3 hasAnchor" number="40.7.2">
 <h3><span class="header-section-number">40.7.2</span> Formatting row headers<a href="creating-tables-with-r-and-microsoft-word.html#formatting-row-headers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -940,7 +931,7 @@ Figure 40.2: Identifying statistics in the row header.
 <li><p>Hit the return key once after the last category for each categorical variable. This creates a blank line that adds vertical separation between row headers and makes them easier to read.</p></li>
 </ul>
 <p>At this point, your table should look like this in Microsoft Word:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_row_headers.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_row_headers.png" width="900" /></p>
 </div>
 </div>
 <div id="fill-in-data-values" class="section level2 hasAnchor" number="40.8">
@@ -976,14 +967,10 @@ Figure 40.2: Identifying statistics in the row header.
 <div id="significant-digits" class="section level3 hasAnchor" number="40.8.5">
 <h3><span class="header-section-number">40.8.5</span> Significant digits<a href="creating-tables-with-r-and-microsoft-word.html#significant-digits" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>No matter which of the methods above you choose, you will almost never want to give your reader the level of precision that R will give you. For example, the first row of the R results below indicates that 83.274912% of our sample reported that they don’t use drugs.</p>
-<pre><code>##     var              cat    n n_total   percent        se   t_crit      lcl
-## 1 use_f        Non-users 8315    9985 83.274912 0.3734986 1.960202 82.52992
-## 2 use_f  Use other drugs 1532    9985 15.343015 0.3606903 1.960202 14.64925
-## 3 use_f Use opioid drugs  138    9985  1.382073 0.1168399 1.960202  1.17080
-##         ucl
-## 1 83.994296
-## 2 16.063453
-## 3  1.630841</code></pre>
+<pre><code>##     var              cat    n n_total   percent        se   t_crit      lcl       ucl
+## 1 use_f        Non-users 8315    9985 83.274912 0.3734986 1.960202 82.52992 83.994296
+## 2 use_f  Use other drugs 1532    9985 15.343015 0.3606903 1.960202 14.64925 16.063453
+## 3 use_f Use opioid drugs  138    9985  1.382073 0.1168399 1.960202  1.17080  1.630841</code></pre>
 <p>Notice the level of precision there. R gives us the percentage out to 6 decimal places. If you fill your table with numbers like this, it will be much harder for your readers to digest your table and make comparisons between groups. It’s just the way our brains work. So, the logical next question is, “how many decimal places should I report?” Unfortunately, this is another one of those times that I have to give you an answer that may be a little unsatisfying. It is true that there are rules for <a href="https://en.wikipedia.org/wiki/Significant_figures">significant figures (significant digits)</a>; however, the rules are not always helpful to students in my experience. Therefore, I’m going to share with you a few things I try to consider when deciding how many digits to present.</p>
 <ul>
 <li><p>I don’t recall <em>ever</em> presenting a level of precision greater than 3 decimal places in the research I’ve been involved with. If you are working in physics or genetics and measuring really tiny things it may be totally valid to report 6, 8, or 10 digits to the right of the decimal. But, in epidemiology – a population science – this is rarely, if ever, useful.</p></li>
@@ -999,7 +986,7 @@ Figure 40.2: Identifying statistics in the row header.
 <p>Second, make sure the values line up horizontally with the correct variable names and category labels.</p>
 <p>Third, I tend to horizontally center all my values in their columns.</p>
 <p>At this point, your table should look like this in Microsoft Word:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_data_values.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_data_values.png" width="900" /></p>
 </div>
 </div>
 <div id="fill-in-title" class="section level2 hasAnchor" number="40.9">
@@ -1008,7 +995,7 @@ Figure 40.2: Identifying statistics in the row header.
 <p>Remember, all tables and figures need to be able to <em>stand on their own</em>. What does that mean? It means that if I pick up your report and flip straight to the table, I should be able to understand what it’s about and how to read it without reading any of the other text in your report. The title is a critical part of making a table stand on its own. In general, your title should tell the reader what the table contains (e.g., sociodemographic characteristics) and who the table is about (e.g., results of the Texas Opioid Study). I will usually also add the size of the sample of people included in the table (e.g., n = 9985) and the year the data was collected (e.g., 2020).</p>
 <p>In different circumstances, more or less information may be needed. However, always ask yourself, “can this table stand on its own? Can most readers understand what’s going on in this table even if they didn’t read the full report?”</p>
 <p>At this point, your table should look like this in Microsoft Word:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_title.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_title.png" width="900" /></p>
 <p>Don’t worry about your title being all bunched up in the corner. We will fix it soon.</p>
 </div>
 <div id="fill-in-footnotes" class="section level2 hasAnchor" number="40.10">
@@ -1019,15 +1006,15 @@ Figure 40.2: Identifying statistics in the row header.
 <div id="formatting-footnotes" class="section level3 hasAnchor" number="40.10.1">
 <h3><span class="header-section-number">40.10.1</span> Formatting footnotes<a href="creating-tables-with-r-and-microsoft-word.html#formatting-footnotes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>When using footnotes, you need to somehow let the reader know which element in the table each footnote goes with. Sometimes, there will be guidelines that require you to use certain symbols (e.g., *, †, and ‡), but I typically use numbers to match table elements to footnotes when I can. In the example below, there is a superscript “1” immediately after the word “Age” that lets the reader know that footnote number 1 is adding additional information to this part of the table.</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/number_footnotes.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/number_footnotes.png" width="900" /></p>
 <p>If you do use numbers to match table elements to footnotes, make sure you do so in the order people read [English], which is left to right and top to bottom. For example, the following would be inappropriate because the number 2 comes before the number 1 when reading from top to bottom:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/bad_footnote_1.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/bad_footnote_1.png" width="900" /></p>
 <p>As another example, the following would be inappropriate because the number 2 comes before the number 1 when reading from left to right:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/bad_footnote_2.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/bad_footnote_2.png" width="900" /></p>
 <p>Additionally, when using numbers to match table elements to footnotes, it’s a good idea to superscript the numbers in the table. This makes it clear that the number is being used to identify a footnote rather than being part of the text or abbreviation. Formatting a number as a superscript is easy in Microsoft Word. Just highlight the number you want to format and click the superscript button like so:</p>
 <p><img src="img/09_part_presenting_results/03_creating_word_tables/make_footnotes.gif" /><!-- --></p>
 <p>At this point, your table should look like this in Microsoft Word:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_footnotes.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_footnotes.png" width="900" /></p>
 </div>
 </div>
 <div id="final-formatting" class="section level2 hasAnchor" number="40.11">
@@ -1047,7 +1034,7 @@ Figure 40.2: Identifying statistics in the row header.
 <p>To spread our title out across the entire width of the table, we just need to will select all the cells in the first row, then right click and select <code>merge cells</code>.</p>
 <p><img src="img/09_part_presenting_results/03_creating_word_tables/merge_title.gif" /><!-- --></p>
 <p>After merging the footnote cells in exactly the same way, your table should look like this:</p>
-<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_merged.png" /><!-- --></p>
+<p><img src="img/09_part_presenting_results/03_creating_word_tables/make_merged.png" width="900" /></p>
 </div>
 <div id="remove-cell-borders" class="section level3 hasAnchor" number="40.11.3">
 <h3><span class="header-section-number">40.11.3</span> Remove cell borders<a href="creating-tables-with-r-and-microsoft-word.html#remove-cell-borders" class="anchor-section" aria-label="Anchor link to header"></a></h3>
