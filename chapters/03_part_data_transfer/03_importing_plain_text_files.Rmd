@@ -67,7 +67,7 @@ For our first example we will import a text file with values separated by a sing
 
 [You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/single_delimited.txt)
 
-```{r read-in-single-delimited-txt, cache = TRUE, cache.invalidate.if = tools::md5sum('data/single_delimited.txt')}
+```{r read-in-single-delimited-txt, cache = TRUE}
 single_space <- read_delim(
   file = "data/single_delimited.txt",
   delim = " "
@@ -108,7 +108,7 @@ Did you see the period in the third value of the third row? The period is there 
 
 But as we said, this is not what we want. So, how do we fix it? Well, in this case, we will simply need to tell R that missing values are represented with a period in the data we are importing. We do that by passing that information to the `na` argument of the `read_delim()` function:
 
-```{r read-in-single-delimited-txt-2, cache = TRUE, cache.invalidate.if = tools::md5sum('data/single_delimited.txt')}
+```{r read-in-single-delimited-txt-2, cache = TRUE}
 single_space <- read_delim(
   file = "data/single_delimited.txt",
   delim = " ",
@@ -140,7 +140,7 @@ To import tab separated value files in R, we use a variation of the same program
 
 [You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/tab.txt)
 
-```{r read-in-tab-txt, cache = TRUE, cache.invalidate.if = tools::md5sum('data/tab.txt')}
+```{r read-in-tab-txt, cache = TRUE}
 tab <- read_delim(
   file = "data/tab.txt",
   delim = "\t"
@@ -159,7 +159,7 @@ tab
 
 I don't personally receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the `readr` package. That is, instead of using the `read_delim()` function with the value of the `delim` argument set to `"\t"`, we can simply pass our file path to the `read_tsv()` function. Under the hood, the `read_tsv()` function does exactly the same thing as the `read_delim()` function with the value of the `delim` argument set to `"\t"`.
 
-```{r read-in-tab-txt-2, cache = TRUE, cache.invalidate.if = tools::md5sum('data/tab.txt')}
+```{r read-in-tab-txt-2, cache = TRUE}
 tab <- read_tsv("data/tab.txt")
 ```
 
@@ -187,7 +187,7 @@ This number line creates a sequence of columns across your data, with each colum
 
 Now, in this case we can just use `readr`'s `read_table()` function to import this data:
 
-```{r read-in-fixed-width-txt, cache = TRUE, cache.invalidate.if = tools::md5sum('data/fixed_width.txt')}
+```{r read-in-fixed-width-txt, cache = TRUE}
 fixed <- read_table("data/fixed_width.txt")
 ```
 
@@ -211,7 +211,7 @@ knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files
 
 In this case, the `read_table()` function does not give us the result we want. 
 
-```{r read-in-fixed-width-no-space-txt, cache = TRUE, cache.invalidate.if = tools::md5sum('data/fixed_width_no_space.txt')}
+```{r read-in-fixed-width-no-space-txt, cache = TRUE}
 fixed <- read_table("data/fixed_width_no_space.txt")
 ```
 
@@ -227,7 +227,7 @@ Instead, it parses the entire data set as a single character column. It does thi
 
 One way to import this data is to tell R how many columns wide each variable is in the raw data. We do that like so:
 
-```{r read-in-fixed-width-no-space-txt-2, cache = TRUE, cache.invalidate.if = tools::md5sum('data/fixed_width_no_space.txt')}
+```{r read-in-fixed-width-no-space-txt-2, cache = TRUE}
 fixed <- read_fwf(
   file = "data/fixed_width_no_space.txt",
   col_positions = fwf_widths(
@@ -273,7 +273,7 @@ knitr::include_graphics("img/03_part_data_transfer/03_importing_plain_text_files
 
 Another way to import this data is to tell R how which columns each variable starts and stops at in the raw data. We do that like so:
 
-```{r read-in-fixed-width-no-space-txt-3, cache = TRUE, cache.invalidate.if = tools::md5sum('data/fixed_width_no_space.txt')}
+```{r read-in-fixed-width-no-space-txt-3, cache = TRUE}
 fixed <- read_fwf(
   file = "data/fixed_width_no_space.txt",
   col_positions = fwf_positions(
@@ -316,7 +316,7 @@ As a shortcut, either of the methods above can be written using named vectors. A
 
 **Column widths:**
 
-```{r read-in-fixed-width-no-space-txt-4, cache = TRUE, cache.invalidate.if = tools::md5sum('data/fixed_width_no_space.txt'), message=FALSE}
+```{r read-in-fixed-width-no-space-txt-4, cache = TRUE, message=FALSE}
 read_fwf(
   file = "data/fixed_width_no_space.txt",
   col_positions = fwf_cols(
@@ -331,7 +331,7 @@ read_fwf(
 
 **Column positions:**
 
-```{r read-in-fixed-width-no-space-txt-5, cache = TRUE, cache.invalidate.if = tools::md5sum('data/fixed_width_no_space.txt'), message=FALSE}
+```{r read-in-fixed-width-no-space-txt-5, cache = TRUE, message=FALSE}
 read_fwf(
   file = "data/fixed_width_no_space.txt",
   col_positions = fwf_cols(
@@ -360,7 +360,7 @@ Importing standard csv files into R with the `readr` package is easy and uses a 
 
 [You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/comma.csv)
 
-```{r read-in-comma-csv, cache = TRUE, cache.invalidate.if = tools::md5sum('data/comma.csv')}
+```{r read-in-comma-csv, cache = TRUE}
 csv <- read_csv("data/comma.csv")
 ```
 
@@ -414,7 +414,7 @@ So, let's walk through addressing these issues together. We'll start by taking a
 
 [You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/data/comma_complex.csv)
 
-```{r read-in-comma-complex-csv, cache = TRUE, cache.invalidate.if = tools::md5sum('data/comma_complex.csv')}
+```{r read-in-comma-complex-csv, cache = TRUE}
 csv <- read_csv("data/comma_complex.csv")
 ```
 
@@ -424,7 +424,7 @@ csv
 
 That is obviously not what we wanted. So, let's start adjusting some of `read_csv()`'s defaults -- staring with the column names.
 
-```{r read-in-comma-complex-csv-2, cache = TRUE, cache.invalidate.if = tools::md5sum('data/comma_complex.csv')}
+```{r read-in-comma-complex-csv-2, cache = TRUE}
 csv <- read_csv(
   file = "data/comma_complex.csv",
   col_names = c("id", "sex", "ht_in", "wgt_lbs")
@@ -441,7 +441,7 @@ csv
 
 * Because the character vector of names only contained 4 values, the last column was dropped from the data. R gives us a warning message to let us know. Specially, for each row it says that it was expecting 4 columns (because we gave it 4 column names), but actually found 5 columns. We'll get rid of this message next.
 
-```{r read-in-comma-complex-csv-3, cache = TRUE, cache.invalidate.if = tools::md5sum('data/comma_complex.csv')}
+```{r read-in-comma-complex-csv-3, cache = TRUE}
 csv <- read_csv(
   file = "data/comma_complex.csv",
   col_names = c("id", "sex", "ht_in", "wgt_lbs"),
@@ -475,7 +475,7 @@ csv
 
 Next, let's go ahead and tell R to ignore the first three rows of the csv file. They don't contain anything that is of use to us at this point.
 
-```{r read-in-comma-complex-csv-4, cache = TRUE, cache.invalidate.if = tools::md5sum('data/comma_complex.csv')}
+```{r read-in-comma-complex-csv-4, cache = TRUE}
 csv <- read_csv(
   file = "data/comma_complex.csv",
   col_names = c("id", "sex", "ht_in", "wgt_lbs"),
@@ -500,7 +500,7 @@ csv
 
 * The remaining warning above is R telling us that it still had to convert the word "Missing" to an `NA` in the 4th row of the `wgt_lbs` column because it didn't know how to turn the word "Missing" into an integer. This is actually exactly what we wanted to happen, but we can get rid of the warning by explicitly adding the word "Missing" to the list of values R looks for in the `na` argument.
 
-```{r read-in-comma-complex-csv-5, cache = TRUE, cache.invalidate.if = tools::md5sum('data/comma_complex.csv')}
+```{r read-in-comma-complex-csv-5, cache = TRUE}
 csv <- read_csv(
   file = "data/comma_complex.csv",
   col_names = c("id", "sex", "ht_in", "wgt_lbs"),
