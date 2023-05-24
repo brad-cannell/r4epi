@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-02-08" />
+<meta name="date" content="2023-05-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1038,15 +1038,18 @@ mutate already in the book.
 <div class="sourceCode" id="cb434"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb434-1"><a href="creating-and-modifying-columns.html#cb434-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
 <span id="cb434-2"><a href="creating-and-modifying-columns.html#cb434-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">complete =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span></code></pre></div>
 <pre><code>## Error in `mutate()`:
-## ! Problem while computing `complete = c(0, 1)`.
-## ✖ `complete` must be size 60 or 1, not 2.</code></pre>
+## ℹ In argument: `complete = c(0, 1)`.
+## Caused by error:
+## ! `complete` must be size 60 or 1, not 2.</code></pre>
 <p>This doesn’t work, but it actually isn’t for the reason you may be thinking. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). However, <code>tidyverse</code> functions throw errors when you try to recycle anything other than a single number. They are designed this way to protect you from accidentally getting unexpected results. So, I’m going to switch back over to using base R to round out our discussion of the recycling rules. Let’s try our example above again using base R:</p>
 <div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="creating-and-modifying-columns.html#cb436-1" aria-hidden="true" tabindex="-1"></a>drug_trial<span class="sc">$</span>complete <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span></code></pre></div>
-<pre><code>## Error:
+<pre><code>## Error in `$&lt;-`:
 ## ! Assigned data `c(0, 1)` must be compatible with existing data.
 ## ✖ Existing data has 60 rows.
 ## ✖ Assigned data has 2 rows.
-## ℹ Only vectors of size 1 are recycled.</code></pre>
+## ℹ Only vectors of size 1 are recycled.
+## Caused by error in `vectbl_recycle_rhs_rows()`:
+## ! Can&#39;t recycle input of size 2 to size 60.</code></pre>
 <div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="creating-and-modifying-columns.html#cb438-1" aria-hidden="true" tabindex="-1"></a>drug_trial</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 8
 ##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
@@ -1238,19 +1241,19 @@ mutate already in the book.
 <span id="cb465-5"><a href="creating-and-modifying-columns.html#cb465-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</span>
 <span id="cb465-6"><a href="creating-and-modifying-columns.html#cb465-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 11
-##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi se_headache_f se_diarrhe…¹ se_dr…²
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;        &lt;fct&gt;  
-##  1     1     0    65 Active            0           1            1     0 No            Yes          Yes    
-##  2     1     1    65 Active            1           1            1     0 Yes           Yes          Yes    
-##  3     1     2    65 Active            1           1            0     0 Yes           Yes          No     
-##  4     2     0    49 Active            1           1            1     0 Yes           Yes          Yes    
-##  5     2     1    49 Active            0           0            1     0 No            N0           Yes    
-##  6     2     2    49 Active            1           1            1     0 Yes           Yes          Yes    
-##  7     3     0    48 Placebo           0           0            0     0 No            N0           No     
-##  8     3     1    48 Placebo           0           0            0     0 No            N0           No     
-##  9     3     2    48 Placebo           0           0            0     0 No            N0           No     
-## 10     4     0    37 Placebo           0           0            0     0 No            N0           No     
-## # … with 50 more rows, and abbreviated variable names ¹​se_diarrhea_f, ²​se_dry_mouth_f</code></pre>
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi se_headache_f se_diarrhea_f se_dry_mouth_f
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
+##  1     1     0    65 Active            0           1            1     0 No            Yes           Yes           
+##  2     1     1    65 Active            1           1            1     0 Yes           Yes           Yes           
+##  3     1     2    65 Active            1           1            0     0 Yes           Yes           No            
+##  4     2     0    49 Active            1           1            1     0 Yes           Yes           Yes           
+##  5     2     1    49 Active            0           0            1     0 No            N0            Yes           
+##  6     2     2    49 Active            1           1            1     0 Yes           Yes           Yes           
+##  7     3     0    48 Placebo           0           0            0     0 No            N0            No            
+##  8     3     1    48 Placebo           0           0            0     0 No            N0            No            
+##  9     3     2    48 Placebo           0           0            0     0 No            N0            No            
+## 10     4     0    37 Placebo           0           0            0     0 No            N0            No            
+## # … with 50 more rows</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We created three new factor columns in the <code>drug_trial</code> data called <code>se_headache_f</code>, <code>se_diarrhea_f</code>, and <code>se_dry_mouth_f</code>.</p></li>
@@ -1271,19 +1274,19 @@ mutate already in the book.
 <span id="cb467-10"><a href="creating-and-modifying-columns.html#cb467-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, yn_levs, yn_labs)</span>
 <span id="cb467-11"><a href="creating-and-modifying-columns.html#cb467-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 60 × 11
-##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi se_headache_f se_diarrhe…¹ se_dr…²
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;        &lt;fct&gt;  
-##  1     1     0    65 Active            0           1            1     0 No            Yes          Yes    
-##  2     1     1    65 Active            1           1            1     0 Yes           Yes          Yes    
-##  3     1     2    65 Active            1           1            0     0 Yes           Yes          No     
-##  4     2     0    49 Active            1           1            1     0 Yes           Yes          Yes    
-##  5     2     1    49 Active            0           0            1     0 No            No           Yes    
-##  6     2     2    49 Active            1           1            1     0 Yes           Yes          Yes    
-##  7     3     0    48 Placebo           0           0            0     0 No            No           No     
-##  8     3     1    48 Placebo           0           0            0     0 No            No           No     
-##  9     3     2    48 Placebo           0           0            0     0 No            No           No     
-## 10     4     0    37 Placebo           0           0            0     0 No            No           No     
-## # … with 50 more rows, and abbreviated variable names ¹​se_diarrhea_f, ²​se_dry_mouth_f</code></pre>
+##       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi se_headache_f se_diarrhea_f se_dry_mouth_f
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;fct&gt;         &lt;fct&gt;         &lt;fct&gt;         
+##  1     1     0    65 Active            0           1            1     0 No            Yes           Yes           
+##  2     1     1    65 Active            1           1            1     0 Yes           Yes           Yes           
+##  3     1     2    65 Active            1           1            0     0 Yes           Yes           No            
+##  4     2     0    49 Active            1           1            1     0 Yes           Yes           Yes           
+##  5     2     1    49 Active            0           0            1     0 No            No            Yes           
+##  6     2     2    49 Active            1           1            1     0 Yes           Yes           Yes           
+##  7     3     0    48 Placebo           0           0            0     0 No            No            No            
+##  8     3     1    48 Placebo           0           0            0     0 No            No            No            
+##  9     3     2    48 Placebo           0           0            0     0 No            No            No            
+## 10     4     0    37 Placebo           0           0            0     0 No            No            No            
+## # … with 50 more rows</code></pre>
 <p>Notice that in the code above we type <code>c(0, 1)</code> and <code>c("No", "Yes")</code> once each instead of 3 times each. In the chapter on <a href="#repeated-operations">repeated operations</a> we will learn techniques for removing even more repetition from the code above.</p>
 </div>
 <div id="rowwise-mutations" class="section level3 hasAnchor" number="26.5.5">
@@ -1505,8 +1508,8 @@ mutate already in the book.
 <span id="cb503-11"><a href="creating-and-modifying-columns.html#cb503-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">all_se_year =</span> n_se_year <span class="sc">==</span> <span class="dv">3</span></span>
 <span id="cb503-12"><a href="creating-and-modifying-columns.html#cb503-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Error in `mutate()`:
-## ! Problem while computing `n_se_year = sum(se_headache, se_diarrhea, se_dry_mouth)`.
-## ℹ The error occurred in row 1.
+## ℹ In argument: `n_se_year = sum(se_headache, se_diarrhea, se_dry_mouth)`.
+## ℹ In row 1.
 ## Caused by error in `Summary.factor()`:
 ## ! &#39;sum&#39; not meaningful for factors</code></pre>
 <p>The <code>sum()</code> function cannot add factors. Back when I <a href="numerical-descriptions-of-categorical-variables.html#factor-vectors">first introduced factors in this book</a>, I suggested that you keep the numeric version of your variables in your data frames and create factors as new variables. I said that I thought this was a good idea because I often find that it can be useful to have both versions of the variable hanging around during the analysis process. The situation above is an example of what I was talking about.</p>

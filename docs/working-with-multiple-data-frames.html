@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-02-08" />
+<meta name="date" content="2023-05-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1268,7 +1268,7 @@ Add link to cheat sheet
 <div class="sourceCode" id="cb882"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb882-1"><a href="working-with-multiple-data-frames.html#cb882-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
 <span id="cb882-2"><a href="working-with-multiple-data-frames.html#cb882-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
 <pre><code>## Error in `left_join()`:
-## ! Join columns must be present in data.
+## ! Join columns in `y` must be present in the data.
 ## ✖ Problem with `id`.</code></pre>
 <p>This error is <code>left_join()</code> telling us that it couldn’t find a column named <code>id</code> in both data frames. To get around this error, we can simply tell <code>left_join()</code> which column is the matching key column in the opposite data frame using a named vector like this:</p>
 <div class="sourceCode" id="cb884"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb884-1"><a href="working-with-multiple-data-frames.html#cb884-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
@@ -1319,6 +1319,9 @@ Add link to cheat sheet
 <p>Now, to conduct our analysis, we need to combine the data in <code>demographics</code> with the data in the longitudinal <code>grip_strength</code> data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to-many merge, we use the exact same syntax that we used to perform a one-to-one merge. R will figure out the relationship between the data frames automatically. Take a look:</p>
 <div class="sourceCode" id="cb890"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb890-1"><a href="working-with-multiple-data-frames.html#cb890-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
 <span id="cb890-2"><a href="working-with-multiple-data-frames.html#cb890-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in left_join(., grip_strength, by = &quot;id&quot;): Each row in `x` is expected to match at most 1 row in `y`.
+## ℹ Row 1 of `x` matches multiple rows.
+## ℹ If multiple matches are expected, set `multiple = &quot;all&quot;` to silence this warning.</code></pre>
 <pre><code>## # A tibble: 9 × 6
 ##   id    dob        race_eth visit grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
@@ -1335,12 +1338,12 @@ Add link to cheat sheet
 <div id="multiple-key-columns" class="section level4 hasAnchor" number="31.2.2.7">
 <h4><span class="header-section-number">31.2.2.7</span> Multiple key columns<a href="working-with-multiple-data-frames.html#multiple-key-columns" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Let’s throw one more little wrinkle into our analysis. Let’s say that each participant had a medical exam prior to being sent into the gym to do their functional assessments. The results of that medical exam, along with the participant’s study id, were recorded in the university hospital system’s electronic medical records. As part of that medical exam, each participant’s weight was recorded. Luckily, we were given access to the electronic medical records, which look like this:</p>
-<div class="sourceCode" id="cb892"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb892-1"><a href="working-with-multiple-data-frames.html#cb892-1" aria-hidden="true" tabindex="-1"></a>emr <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb892-2"><a href="working-with-multiple-data-frames.html#cb892-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
-<span id="cb892-3"><a href="working-with-multiple-data-frames.html#cb892-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;pre&quot;</span>, <span class="st">&quot;post&quot;</span>), <span class="dv">4</span>),</span>
-<span id="cb892-4"><a href="working-with-multiple-data-frames.html#cb892-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> <span class="fu">c</span>(<span class="dv">105</span>, <span class="dv">99</span>, <span class="dv">200</span>, <span class="dv">201</span>, <span class="dv">136</span>, <span class="dv">133</span>, <span class="dv">170</span>, <span class="dv">175</span>)</span>
-<span id="cb892-5"><a href="working-with-multiple-data-frames.html#cb892-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb892-6"><a href="working-with-multiple-data-frames.html#cb892-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb893"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb893-1"><a href="working-with-multiple-data-frames.html#cb893-1" aria-hidden="true" tabindex="-1"></a>emr <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb893-2"><a href="working-with-multiple-data-frames.html#cb893-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;1001&quot;</span>, <span class="st">&quot;1002&quot;</span>, <span class="st">&quot;1003&quot;</span>, <span class="st">&quot;1004&quot;</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
+<span id="cb893-3"><a href="working-with-multiple-data-frames.html#cb893-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;pre&quot;</span>, <span class="st">&quot;post&quot;</span>), <span class="dv">4</span>),</span>
+<span id="cb893-4"><a href="working-with-multiple-data-frames.html#cb893-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> <span class="fu">c</span>(<span class="dv">105</span>, <span class="dv">99</span>, <span class="dv">200</span>, <span class="dv">201</span>, <span class="dv">136</span>, <span class="dv">133</span>, <span class="dv">170</span>, <span class="dv">175</span>)</span>
+<span id="cb893-5"><a href="working-with-multiple-data-frames.html#cb893-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb893-6"><a href="working-with-multiple-data-frames.html#cb893-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 8 × 3
 ##   id    visit weight
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
@@ -1353,8 +1356,11 @@ Add link to cheat sheet
 ## 7 1004  pre      170
 ## 8 1004  post     175</code></pre>
 <p>Now, we would like to add participant weight to our analysis. Our first attempt might look something like this:</p>
-<div class="sourceCode" id="cb894"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb894-1"><a href="working-with-multiple-data-frames.html#cb894-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb894-2"><a href="working-with-multiple-data-frames.html#cb894-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, emr, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb895"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb895-1"><a href="working-with-multiple-data-frames.html#cb895-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb895-2"><a href="working-with-multiple-data-frames.html#cb895-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, emr, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in left_join(., grip_strength, emr, by = &quot;id&quot;): Each row in `x` is expected to match at most 1 row in `y`.
+## ℹ Row 1 of `x` matches multiple rows.
+## ℹ If multiple matches are expected, set `multiple = &quot;all&quot;` to silence this warning.</code></pre>
 <pre><code>## # A tibble: 9 × 6
 ##   id    dob        race_eth visit grip_r grip_l
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
@@ -1368,9 +1374,15 @@ Add link to cheat sheet
 ## 8 1004  1955-03-12        4 post      27     26
 ## 9 1005  1942-06-07        3 &lt;NA&gt;      NA     NA</code></pre>
 <p>Of course, that doesn’t work because <code>left_join()</code> can only merge two data frames at a time – <code>x</code> and <code>y</code>. The <code>emr</code> data frame was ignored. Then we think, “hmmm, maybe we should try merging them sequentially.” In other words, merge <code>demographics</code> and <code>grip_strength</code> first. Then merge the combined <code>demographics</code>/<code>grip_strength</code> data frame with <code>emr</code>. So, our next attempt might look like this:</p>
-<div class="sourceCode" id="cb896"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb896-1"><a href="working-with-multiple-data-frames.html#cb896-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb896-2"><a href="working-with-multiple-data-frames.html#cb896-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb896-3"><a href="working-with-multiple-data-frames.html#cb896-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb898"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb898-1"><a href="working-with-multiple-data-frames.html#cb898-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb898-2"><a href="working-with-multiple-data-frames.html#cb898-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb898-3"><a href="working-with-multiple-data-frames.html#cb898-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in left_join(., grip_strength, by = &quot;id&quot;): Each row in `x` is expected to match at most 1 row in `y`.
+## ℹ Row 1 of `x` matches multiple rows.
+## ℹ If multiple matches are expected, set `multiple = &quot;all&quot;` to silence this warning.</code></pre>
+<pre><code>## Warning in left_join(., emr, by = &quot;id&quot;): Each row in `x` is expected to match at most 1 row in `y`.
+## ℹ Row 1 of `x` matches multiple rows.
+## ℹ If multiple matches are expected, set `multiple = &quot;all&quot;` to silence this warning.</code></pre>
 <pre><code>## # A tibble: 17 × 8
 ##    id    dob        race_eth visit.x grip_r grip_l visit.y weight
 ##    &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
@@ -1397,9 +1409,12 @@ Add link to cheat sheet
 <p>But in reality, study id alone no longer uniquely identifies observations in our data. Now, observations are uniquely identified by study id and visit. For example, <code>1001</code> <em>and</em> <code>pre</code> are a unique observation, <code>1001</code> <em>and</em> <code>post</code> are a unique observation, <code>1002</code> <em>and</em> <code>pre</code> are a unique observation, and so on. We now have two key columns that identify unique observations. And once we give that information to <code>left_join</code>, the relationship between the data frames becomes a one-to-one relationship. In other words, each observation (defined by <code>id</code> <em>and</em> <code>visit</code>) in one data frame is related to no more than one observation (defined by <code>id</code> <em>and</em> <code>visit</code>) in the other data frame.</p>
 <p><img src="img/05_part_data_management/08_multiple_data_frames/one_to_one_emr.png" width="900" /></p>
 <p>Here is how we tell <code>left_join()</code> to merge our data frames by <code>id</code> <em>and</em> <code>visit</code>:</p>
-<div class="sourceCode" id="cb898"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb898-1"><a href="working-with-multiple-data-frames.html#cb898-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
-<span id="cb898-2"><a href="working-with-multiple-data-frames.html#cb898-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb898-3"><a href="working-with-multiple-data-frames.html#cb898-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;visit&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb902"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb902-1"><a href="working-with-multiple-data-frames.html#cb902-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb902-2"><a href="working-with-multiple-data-frames.html#cb902-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb902-3"><a href="working-with-multiple-data-frames.html#cb902-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;visit&quot;</span>))</span></code></pre></div>
+<pre><code>## Warning in left_join(., grip_strength, by = &quot;id&quot;): Each row in `x` is expected to match at most 1 row in `y`.
+## ℹ Row 1 of `x` matches multiple rows.
+## ℹ If multiple matches are expected, set `multiple = &quot;all&quot;` to silence this warning.</code></pre>
 <pre><code>## # A tibble: 9 × 7
 ##   id    dob        race_eth visit grip_r grip_l weight
 ##   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
