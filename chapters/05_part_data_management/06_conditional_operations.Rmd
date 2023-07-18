@@ -65,7 +65,7 @@ rainy_days %>%
 
 * We used `dplyr`'s `if_else()` function to assign the values `wear` and `no wear` to the column `raincoat` conditional on the values in each row of the `weather` column.
 
-* You can type `?if_else` into your R console to view the help documentation for this function and follow along with the explanation below.
+* You can type `?if_else` into our R console to view the help documentation for this function and follow along with the explanation below.
 
 * The first argument to the `if_else()` function is the `condition` argument. The condition should typically be composed of a series of operands and operators (we'll talk more about these soon) that tell R the condition(s) that we want it to test. For example, is the value of `weather` equal to `rain`?
 
@@ -75,7 +75,7 @@ rainy_days %>%
 
 * Finally, we assigned all the values returned by the `if_else()` function to a new column that we named `raincoat`.
 
-<p class="note"> 🗒**Side Note:** For the rest of the book, I will pass values to the `if_else()` function by position instead of name. In other words, I won't write `condition =`, `true =`, or `false =` anymore. However, the first value passed to the `if_else()` function will always be passed to the `condition` argument, the second value will always be passed to the `true` argument, and the third value will always be passed to the `false` argument.</p>
+<p class="note"> 🗒**Side Note:** For the rest of the book, we will pass values to the `if_else()` function by position instead of name. In other words, we won't write `condition =`, `true =`, or `false =` anymore. However, the first value passed to the `if_else()` function will always be passed to the `condition` argument, the second value will always be passed to the `true` argument, and the third value will always be passed to the `false` argument.</p>
 
 Before moving on, let's dive into this a little further. R must always be able to reduce whatever value we pass to the `condition` argument of `if_else()` to TRUE or FALSE. That's how R views any expression we pass to the `condition` argument. We can literally even pass the value `TRUE` or the value `FALSE` (not that doing so has much practical application):
 
@@ -128,7 +128,7 @@ Let's start by taking a look at some commonly used operands:
 knitr::include_graphics("img/05_part_data_management/06_conditional_processing/operands.png")
 ```
 
-As you can see in the table above, operands are the _values_ we want to check, or test. Operands can be variables or they can be individual values (also called constants). The example above (`weather == "rain"`) contained two operands; the variable `weather` and the character constant `"rain"`. The operator we used in this case was the equality operator (`==`). Next, let's take a look at some other commonly used operators.
+As we can see in the table above, operands are the _values_ we want to check, or test. Operands can be variables or they can be individual values (also called constants). The example above (`weather == "rain"`) contained two operands; the variable `weather` and the character constant `"rain"`. The operator we used in this case was the equality operator (`==`). Next, let's take a look at some other commonly used operators.
 
 ```{r echo=FALSE}
 knitr::include_graphics("img/05_part_data_management/06_conditional_processing/comparison-numeric.png")
@@ -146,13 +146,13 @@ knitr::include_graphics("img/05_part_data_management/06_conditional_processing/a
 knitr::include_graphics("img/05_part_data_management/06_conditional_processing/logical.png")
 ```
 
-I think that most of the operators above will be familiar, or a least intuitive, for most of you. However, I do want to provide a little bit of commentary for a few of them.
+We think that most of the operators above will be familiar, or a least intuitive, for most of you. However, we do want to provide a little bit of commentary for a few of them.
 
-* We haven't seen the `%in%` operator before, but I will wait to discuss it below. 
+* We haven't seen the `%in%` operator before, but we will wait to discuss it below. 
 
 * Some of you may have been a little surprised by the results we get from using less than (`<`) and greater than (`>`) with characters. It's basically just testing alphabetical order. A comes before B in the alphabet, so A is less than B. Additionally, when two letters are the same, the upper-case letter is considered greater than the lowercase letter. However, alphabetical order takes precedence over case. So, b is still greater than A even though b is lowercase and A is upper case.
 
-* Many of you may not have seen the modulus operator (`%%`) before. The modulus operator returns the remainder that is left after dividing two numbers. For example, 4 divided by 2 is 2 with a remainder of 0 because 2 goes into 4 _exactly_ two times. Said another way, 2 * 2 = 4 and 4 - 4 = 0. So, `4 %% 2 = 0`. However, 3 divided by 2 is 1 with a remainder of 1 because 2 goes into 3 one time with 1 left over. Said another way, 2 * 1 = 2 and 3 - 2 = 1. So, `3 %% 2 = 1`.  How is this useful? Well, the only times I can remember using the modulus operator have been when I needed to separate even and odd rows of a data frame. For example, let's say that we have a data frame where each person has two rows. The first row always corresponds to treatment A and the second row always corresponds to treatment B. However, for some reason (maybe blinding?), there was no `treatment` column in the data when we received it. We could use the modulus operator to add a `treatment` column like this:
+* Many of you may not have seen the modulus operator (`%%`) before. The modulus operator returns the remainder that is left after dividing two numbers. For example, 4 divided by 2 is 2 with a remainder of 0 because 2 goes into 4 _exactly_ two times. Said another way, 2 * 2 = 4 and 4 - 4 = 0. So, `4 %% 2 = 0`. However, 3 divided by 2 is 1 with a remainder of 1 because 2 goes into 3 one time with 1 left over. Said another way, 2 * 1 = 2 and 3 - 2 = 1. So, `3 %% 2 = 1`.  How is this useful? Well, the only times we can remember using the modulus operator have been when we needed to separate even and odd rows of a data frame. For example, let's say that we have a data frame where each person has two rows. The first row always corresponds to treatment A and the second row always corresponds to treatment B. However, for some reason (maybe blinding?), there was no `treatment` column in the data when we received it. We could use the modulus operator to add a `treatment` column like this:
 
 ```{r}
 df <- tibble(
@@ -171,7 +171,7 @@ df %>%
   )
 ```
 
-* I also want to remind you that we should always use the `is.na()` function to check for missing values. Not the equality operator. Using the equality operator when there are missing values can give results that may be unexpected. For example:
+* We also want to remind you that we should always use the `is.na()` function to check for missing values. Not the equality operator (`==`). Using the equality operator when there are missing values can give results that may be unexpected. For example:
 
 ```{r}
 df <- tibble(
@@ -271,7 +271,7 @@ blood_pressure %>%
 
 * We used `dplyr`'s `case_when()` function to create a new column in our data frame (`bp`) that contains information about each person's blood pressure category. 
 
-* You can type `?case_when` into your R console to view the help documentation for this function and follow along with the explanation below.
+* You can type `?case_when` into our R console to view the help documentation for this function and follow along with the explanation below.
 
 * The `case_when()` function only has a single argument -- the `...` argument. You should pass one or more two-sided formulas separated by commas to this argument. What in the heck does that mean?
 
@@ -279,15 +279,15 @@ blood_pressure %>%
   
   - The `LHS` should be the condition or conditions that we want to test. You can think of this as being equivalent to the `condition` argument of the `if_else()` function. 
   
-  - The `RHS` should be the value you want the `case_when()` function to return when the condition on the left-hand side is met. You can think of this as being equivalent to the `true` argument of the `if_else()` function. 
+  - The `RHS` should be the value we want the `case_when()` function to return when the condition on the left-hand side is met. You can think of this as being equivalent to the `true` argument of the `if_else()` function. 
   
   - The tilde symbol (`~`) is used to separate the conditions on the left-hand side and the return values on the right-hand side. 
   
-* The `case_when()` function doesn't have a direct equivalent to the `if_else()` function's `false` argument. Instead, it evaluates each two-sided formula sequentially until if finds a condition that is met. If it never finds a condition that is met, then it returns an `NA`. I will expand on this more below.
+* The `case_when()` function doesn't have a direct equivalent to the `if_else()` function's `false` argument. Instead, it evaluates each two-sided formula sequentially until if finds a condition that is met. If it never finds a condition that is met, then it returns an `NA`. We will expand on this more below.
 
 * Finally, we assigned all the values returned by the `case_when()` function to a new column that we named `bp`.
   
-<p class="note"> 🗒**Side Note:** Traditionally, the tilde symbol is used to represent relationships in a statistical model. Here, it doesn't have that meaning. I assume this symbol was picked somewhat out of necessity. Remember, any of the comparison operators, arithmetic operators, and logical operators may be used to define a condition in the left-hand side, and commas are used to separated multiple two-sided formulas. Therefore, there aren't very many symbols left to choose from. Therefore, tilde it is. That's my guess anyway. </p>
+<p class="note"> 🗒**Side Note:** Traditionally, the tilde symbol (`~`) is used to represent relationships in a statistical model. Here, it doesn't have that meaning. We assume this symbol was picked somewhat out of necessity. Remember, any of the comparison operators, arithmetic operators, and logical operators may be used to define a condition in the left-hand side, and commas are used to separated multiple two-sided formulas. Therefore, there aren't very many symbols left to choose from. Therefore, tilde it is. That's our guess anyway. </p>
 
 The `case_when()` function was really useful for creating the `bp` column above, but there was also a lot going on there. Next, we'll take a look at a slightly less complex example and clarify a few things along the way. 
 
@@ -299,9 +299,9 @@ In epidemiology, recoding variables is really common. For example, we may collec
 2 = `adolescent` when the participant is between the ages of 12 and less than 18   
 3 = `adult` when the participant is 18 years old or older   
 
-<p class="note"> 🗒**Side Note:** You may not have ever heard of **collapsing** variables before. It simply means combing two or more values of your variable. We can collapse continuous variables into categories, as we discussed in the example above, or we can collapse categories into broader categories (as you will see with the race category example below). After we collapse a variable, it always contains fewer (and broader) possible values than it contained before we collapsed it.</p>
+<p class="note"> 🗒**Side Note:** You may not have ever heard of **collapsing** variables before. It simply means combing two or more values of our variable. We can collapse continuous variables into categories, as we discussed in the example above, or we can collapse categories into broader categories (as we will see with the race category example below). After we collapse a variable, it always contains fewer (and broader) possible values than it contained before we collapsed it.</p>
 
-I'm going to show you how to do this below using the `case_when()` function. However, I'm going to do it piecemeal so that I can highlight a few important concepts. First, let's simulate some data that includes 10 participant's ages.
+We're going to show you how to do this below using the `case_when()` function. However, we're going to do it piecemeal so that we can highlight a few important concepts. First, let's simulate some data that includes 10 participant's ages.
 
 ```{r}
 # Simulate some age data
@@ -344,9 +344,9 @@ ages %>%
   
   - Finally, after the `case_when()` function has tested all conditions, the returned values are assigned to a new column that we named `age_3cat`.
   
-* Notice that I named the new variable `age_3cat`. I'm not sure where I picked up this naming convention, but I use it a lot when I collapse variables. The basic format is the name of variable I'm collapsing, an underscore, and the number of categories in the collapsed variable. I like using this convention for two reasons. First, the resulting column names are meaningful and informative. Second, I don't have to spend any time trying to think of a different meaningful or informative name for my new variable. It's totally fine if you don't adopt this naming convention, but I would recommend that you try to use names that are more informative than `age2` or something like that.
+* Notice that we named the new variable `age_3cat`. We're  not sure where we picked up this naming convention, but we use it a lot when we collapse variables. The basic format is the name of variable we're collapsing, an underscore, and the number of categories in the collapsed variable. We like using this convention for two reasons. First, the resulting column names are meaningful and informative. Second, we don't have to spend any time trying to think of a different meaningful or informative name for my new variable. It's totally fine if you don't adopt this naming convention, but we would recommend that you try to use names that are more informative than `age2` or something like that.
 
-* Notice that I used a number (`1`) on the right-hand side of the two-sided formula above. We could have used a character value instead (i.e., `child`); however, for reasons I discussed in the section on factor variables, I prefer to recode my variables using numeric categories and then later creating a factor version of the variable using the `_f` naming convention.
+* Notice that we used a number (`1`) on the right-hand side of the two-sided formula above. We could have used a character value instead (i.e., `child`); however, for reasons we discussed in the section on factor variables, we prefer to recode my variables using numeric categories and then later creating a factor version of the variable using the `_f` naming convention.
 
 Now, let's add a second two-sided formula to our `case_when()` function.
 
@@ -380,11 +380,11 @@ ages %>%
   
   - Finally, after the `case_when()` function has tested all conditions, the returned values are assigned to a new column that we named `age_3cat`.
   
-* In everyday speech, we may express the second two-sided condition above as "categorize all people between the ages of 12 and 18 as an adolescent." I want to make two points about that before moving on.
+* In everyday speech, we may express the second two-sided condition above as "categorize all people between the ages of 12 and 18 as an adolescent." We want to make two points about that before moving on.
 
-  - First, while that statement may be totally reasonable in everyday speech, it isn't quite specific enough for what we are trying to do here. "Between 12 and 18" is a little bit ambiguous. What category is a person put in if they are exactly 12? What category are they put in if they are exactly 18? So, clearly we need to be more precise. I'm not aware of any hard and fast rules for making these kinds of decisions about categorization, but I tend to _include_ the lower end of the range in the current category and _exclude_ the value on the upper end of the range in the current category. So, in the example above, I would say, "categorize all people between the ages of 12 and less than 18 as an adolescent."
+  - First, while that statement may be totally reasonable in everyday speech, it isn't quite specific enough for what we are trying to do here. "Between 12 and 18" is a little bit ambiguous. What category is a person put in if they are exactly 12? What category are they put in if they are exactly 18? So, clearly we need to be more precise. We're not aware of any hard and fast rules for making these kinds of decisions about categorization, but we tend to _include_ the lower end of the range in the current category and _exclude_ the value on the upper end of the range in the current category. So, in the example above, we would say, "categorize all people between the ages of 12 and less than 18 as an adolescent."
   
-  - Second, when we are testing for a "between" condition like this one, I often see students write code like this: `age >= 12 & < 18`. R won't understand that. You have to use the column name in each condition to be tested (i.e., `age >= 12 & age < 18`), even though it doesn't change. Otherwise, you get an error that looks something like this:
+  - Second, when we are testing for a "between" condition like this one, we often see students write code like this: `age >= 12 & < 18`. R won't understand that. We have to use the column name in each condition to be tested (i.e., `age >= 12 & age < 18`), even though it doesn't change. Otherwise, we get an error that looks something like this:
   
 ```{r error=TRUE}
 ages %>% 
@@ -415,7 +415,7 @@ ages %>%
 
 ## case_when() is lazy
 
-What do I mean when I say that `case_when()` is lazy? Well, it may not have registered when I mentioned it above, but `case_when()` stops evaluating two-sided functions for a value as soon as it finds one that is `TRUE`. For example:
+What do we mean when we say that `case_when()` is lazy? Well, it may not have registered when we mentioned it above, but `case_when()` stops evaluating two-sided functions for a value as soon as it finds one that is `TRUE`. For example:
 
 ```{r}
 df <- tibble(
@@ -458,7 +458,7 @@ ages %>%
 
 We've already talked about how R uses the special `NA` value to represent missing data. We've also learned how to convert other representations of missing data (e.g., ".") to `NA` when we are importing data. However, It is extremely common for data sets that we use in epidemiology to include "don't know" and "refused" answer options in addition to true "missing". By convention, those options are often coded as `7` and `9`. For questions that include 7 or more response options (e.g., month), then `77` and `99` are commonly used to represent "don't know" and "refused". For questions that include 77 or more response options (e.g., age), then `777` and `999` are commonly used to represent "don't know" and "refused". 
   
-Differentiating between true missing (i.e., the respondent was never asked the question or just left the response blank on a written questionnaire), don't know (i.e., the respondent doesn't know the answer), and refused (i.e., the respondent knows the answer, but doesn't want to reveille it -- possibly out of shame, fear, or embarrassment) can be of some interest for survey design purposes. However, all three of the values described above typically just amount to missing data by the time you get around to the substantive analyses. In other words, knowing that a person refused to give their age doesn't help me figure out how old they are any more than if they had never been asked at all. Therefore, we commonly use conditional operations in epidemiology to recode these kinds of values to explicitly missing values (`NA`). 
+Differentiating between true missing (i.e., the respondent was never asked the question or just left the response blank on a written questionnaire), don't know (i.e., the respondent doesn't know the answer), and refused (i.e., the respondent knows the answer, but doesn't want to reveille it -- possibly out of shame, fear, or embarrassment) can be of some interest for survey design purposes. However, all three of the values described above typically just amount to missing data by the time we get around to the substantive analyses. In other words, knowing that a person refused to give their age doesn't help me figure out how old they are any more than if they had never been asked at all. Therefore, we commonly use conditional operations in epidemiology to recode these kinds of values to explicitly missing values (`NA`). 
 
 We'll walk through an example below, but first we will simulate some additional data. Specifically, we'll add a `race` column and a `hispanic` column to our `ages` data frame, and name the new data frame `demographics`.
 
@@ -506,9 +506,9 @@ demographics %>%
   )
 ```
 
-I intentionally made this error because it's a really easy one to make, and you will probably make it too. If you look back to the [Let's get programming chapter](#missing-data), you will see that I briefly discussed the `NA` value being type logical by default. I also talked about "type coercion" and how most of the time you don’t have to worry about it. I said that R generally coerces `NA` to `NA_character` or `NA_double` or whatever for you under the hood, automatically. I also said that sometimes it doesn’t, especially when using the if_else() and case_when() functions, and it will cause R to give you an error. Finally, I said I would discuss it later. It's later now. Long story short, the developers of the `if_else()` function do this on purpose to make the function's returned result more predictable and slightly faster. 
+We intentionally made this error because it's a really easy one to make, and you will probably make it too. If we look back to the [Let's get programming chapter](#missing-data), we will see that we briefly discussed the `NA` value being type logical by default. We also talked about "type coercion" and how most of the time we don’t have to worry about it. We said that R generally coerces `NA` to `NA_character`, `NA_double`, or whatever specific version of `NA` is most appropriate for the data type automatically. We also said that there are some exceptions. Notably, when using the `if_else()` and `case_when()` functions, R will throw an error instead of automatically type coercing. Finally, we said we would discuss it later. It's later now. Long story short, the developers of the `if_else()` function do this on purpose to make the function's returned result more predictable and slightly faster. 
 
-For you, it just means that you have to remember to use `NA_character`, `NA_integer`, or `NA_real` as appropriate. For example, the error message above says, "`false` must be a logical vector, not a double vector." This means that the value we passed to the `false` argument was type double, but `if_else()` was expecting it to be type logical. Why? Well, `if_else()` was expecting it to be type logical because the value we passed to the `true` argument (`NA`) is type logical, and vectors can only ever have one type. To fix this error, we simply need to change the value we are passing to the `true` argument from logical (`NA`) to double (`NA_real`) so that it matches the values we are passing to the `false` argument.
+For us, this just means that we have to remember to use `NA_character`, `NA_integer`, or `NA_real` as appropriate. For example, the error message above says, "`false` must be a logical vector, not a double vector." This means that the value we passed to the `false` argument was type double, but `if_else()` was expecting it to be type logical. Why? Well, `if_else()` was expecting it to be type logical because the value we passed to the `true` argument (`NA`) is type logical, and vectors can only ever have one type. To fix this error, we simply need to change the value we are passing to the `true` argument from logical (`NA`) to double (`NA_real`) so that it matches the values we are passing to the `false` argument.
 
 Let's try again using `NA_real` instead of `NA`.
 
@@ -521,7 +521,7 @@ demographics %>%
   )
 ```
 
-Great! We can move on with creating our new race and ethnicity column now that we've explicitly transformed `7`'s and `9`'s to `NA`. There's nothing "new" in the code below, so I'm not going to explain it line-by-line. However, it's a little bit dense, so I recommend that you take a few minutes to review it thoroughly and make sure you understand what each line is doing.
+Great! We can move on with creating our new race and ethnicity column now that we've explicitly transformed `7`'s and `9`'s to `NA`. There's nothing "new" in the code below, so we're not going to explain it line-by-line. However, it's a little bit dense, so we recommend that you take a few minutes to review it thoroughly and make sure you understand what each line is doing.
 
 ```{r error=TRUE}
 demographics %>% 
@@ -572,7 +572,7 @@ demographics %>%
 
   - We put this two-sided formula first because if we don't know a person's Hispanic ethnicity, then we can't put them into any category of `race_eth_4cat`. All categories of `race_eth_4cat` are dependent on a known value for `hispanic`. For example, look at participant number 1. They reported being white, but they don't give their ethnicity. Which category do we put them in? We can't put them in `White, non-Hispanic` because they very well could be Hispanic. We can't put them in `Hispanic, any race` because they very well could be non-Hispanic. We don't know. We never will. We code them as missing and don't evaluate any further. And because `case_when()` is lazy, any other participants with a missing value for `hispanic` would also only have this first two-sided formula evaluated.  
   
-  - There were no actual `NA` values in the `hispanic` column, but I put it in the code for completeness. There will be some true missing (`NA`) values in most real-world data sets.
+  - There were no actual `NA` values in the `hispanic` column, but we put it in the code for completeness. There will be some true missing (`NA`) values in most real-world data sets.
   
   - Notice that we finally used the `%in%` operator above (`hispanic %in% c(7, 9)`). This is equivalent to typing `hispanic == 7 | hispanic == 9`. Notice that's an _OR_. In this case, it doesn't save us a ton of typing and visual clutter, but in many cases it can. 
   
@@ -590,7 +590,7 @@ demographics %>%
 
   - Notice that there is nothing at all about `race` or `hispanic` in this two-sided formula. It just says `TRUE`. What does `case_when()` do when a condition on the left-hand side evaluates to `TRUE`? It returns the value on the right-hand side. In this case `4`.  
   
-<p class="warning"> ⚠️**Warning:** Sometimes, adding an a final `TRUE` condition like the one above can be really useful. However, you have to be really careful. You can easily get unintended results if you aren't absolutely sure that you've already accounted for every possible combination of relevant conditions in the two-sided formulas that come before.</p>
+<p class="warning"> ⚠️**Warning:** Sometimes, adding an a final `TRUE` condition like the one above can be really useful. However, we have to be really careful. We can easily get unintended results if we aren't absolutely sure that we've already accounted for every possible combination of relevant conditions in the two-sided formulas that come before.</p>
 
 Let's go ahead and wrap up this chapter with one consolidated code chunk that cleans our demographics data:
 
