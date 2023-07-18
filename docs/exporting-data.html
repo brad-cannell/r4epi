@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-05-24" />
+<meta name="date" content="2023-07-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -706,7 +706,12 @@ div.csl-indent {
 <li class="chapter" data-level="41" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html"><i class="fa fa-check"></i><b>41</b> Introduction to Epidemiology</a>
 <ul>
 <li class="chapter" data-level="41.1" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#measurement"><i class="fa fa-check"></i><b>41.1</b> Measurement</a></li>
-<li class="chapter" data-level="41.2" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#uncertainty"><i class="fa fa-check"></i><b>41.2</b> Uncertainty</a></li>
+<li class="chapter" data-level="41.2" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#uncertainty"><i class="fa fa-check"></i><b>41.2</b> Uncertainty</a>
+<ul>
+<li class="chapter" data-level="41.2.1" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#statistical-uncertainty"><i class="fa fa-check"></i><b>41.2.1</b> Statistical uncertainty</a></li>
+<li class="chapter" data-level="41.2.2" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#uncertainty-in-the-research-process"><i class="fa fa-check"></i><b>41.2.2</b> Uncertainty in the research process</a></li>
+<li class="chapter" data-level="41.2.3" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#epistemological-uncertainty"><i class="fa fa-check"></i><b>41.2.3</b> Epistemological uncertainty</a></li>
+</ul></li>
 <li class="chapter" data-level="41.3" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#summary-6"><i class="fa fa-check"></i><b>41.3</b> Summary</a></li>
 </ul></li>
 <li class="part"><span><b>X Appendix</b></span></li>
@@ -754,11 +759,11 @@ Exporting data for use in R (Rds)
 We may also want to briefly touch on the difference between memory and disk.
 -->
 <p>The data frames we’ve created so far don’t currently live in our global environment from one programming session to the next because we haven’t yet learned how to efficiently store our data long-term. This limitation makes it difficult to share our data with others or even to come back later to modify or analyze our data ourselves. In this chapter, you will learn to <strong>export</strong> data from R’s memory to a file on your hard drive so that you may efficiently store it or share it with others. In the examples that follow, I’m going to use this simulated data.</p>
-<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="exporting-data.html#cb232-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb232-2"><a href="exporting-data.html#cb232-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id  =</span> <span class="fu">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>),</span>
-<span id="cb232-3"><a href="exporting-data.html#cb232-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">67</span>, <span class="dv">52</span>, <span class="dv">56</span>),</span>
-<span id="cb232-4"><a href="exporting-data.html#cb232-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">edu =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>)</span>
-<span id="cb232-5"><a href="exporting-data.html#cb232-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="exporting-data.html#cb232-1" tabindex="-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb232-2"><a href="exporting-data.html#cb232-2" tabindex="-1"></a>  <span class="at">id  =</span> <span class="fu">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>),</span>
+<span id="cb232-3"><a href="exporting-data.html#cb232-3" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">67</span>, <span class="dv">52</span>, <span class="dv">56</span>),</span>
+<span id="cb232-4"><a href="exporting-data.html#cb232-4" tabindex="-1"></a>  <span class="at">edu =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>)</span>
+<span id="cb232-5"><a href="exporting-data.html#cb232-5" tabindex="-1"></a>)</span></code></pre></div>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We created a data frame that is meant to simulate some demographic information about 4 hypothetical study participants.</p></li>
@@ -780,7 +785,7 @@ We may also want to briefly touch on the difference between memory and disk.
 <p>So, with all these options what format should you choose? My answer to this sort of depends on the answers to two questions. First, will this data be shared with anyone else? Second, will I need any of the metadata that would be lost if I export this data to a plain text file?</p>
 <p>Unless you have a compelling reason to do otherwise, I’m going to suggest that you always export your R data frames as csv files if you plan to share your data with others. The reason is simple. They just work. I can think of many times when someone sent me a SAS or Stata data set and I wasn’t able to import it for some reason or the data didn’t import in the way that I expected it to. I don’t recall ever having that experience with a csv file. Further, every operating system and statistical analysis software application that I’m aware of is able to accept csv files. Perhaps for that reason, they have become the closest thing to a standard for data sharing that exists – at least that I’m aware of.</p>
 <p>Exporting an R data frame to a csv file is really easy. The example below shows how to export our simulated demographic data to a csv file on my computer’s desktop:</p>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="exporting-data.html#cb233-1" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv</span>(demo, <span class="st">&quot;/Users/bradcannell/Desktop/demo.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="exporting-data.html#cb233-1" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv</span>(demo, <span class="st">&quot;/Users/bradcannell/Desktop/demo.csv&quot;</span>)</span></code></pre></div>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>readr</code>’s <code>write_csv()</code> function to export a data frame called <code>demo</code> in our global environment to a csv file on our desktop called <code>demo.csv</code>.</p></li>
@@ -800,7 +805,7 @@ We may also want to briefly touch on the difference between memory and disk.
 <p>In the chapter on <a href="importing-binary-files.html#importing-binary-files">importing binary files</a> I mentioned that most statistical analysis software allows you to save your data in a binary file format. The primary advantage to doing so is that potentially useful metadata is stored alongside your analysis data. We were first introduced to <a href="numerical-descriptions-of-categorical-variables.html#factor-vectors">factor vectors</a> in the chapter on numerical descriptions of categorical variables. There, we saw how coercing some of your variables to factors can be useful. However, doing so requires R to store metadata along with the analysis data. That metadata would be lost if you were to export your data frame to a plain text file. This is an example of a time when we may want to consider exporting our data to a binary file format.</p>
 <p>R actually allows you to save your data in multiple different binary file formats. The two most popular are the .Rdata format and the .Rds format. I’m going to suggest that you use the .Rds format to save your R data frames. Exporting to this format is really easy with the <code>readr</code> package.</p>
 <p>The example below shows how to export our simulated demographic data to an .Rds file on my computer’s desktop:</p>
-<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="exporting-data.html#cb234-1" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_rds</span>(demo, <span class="st">&quot;/Users/bradcannell/Desktop/demo.rds&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="exporting-data.html#cb234-1" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_rds</span>(demo, <span class="st">&quot;/Users/bradcannell/Desktop/demo.rds&quot;</span>)</span></code></pre></div>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>readr</code>’s <code>write_rds()</code> function to export a data frame called <code>demo</code> in our globabl environment to an .Rds file on our desktop called <code>demo.rds</code>.</p></li>
@@ -814,7 +819,7 @@ We may also want to briefly touch on the difference between memory and disk.
 </ul>
 <p>To load the .Rds data back into your global environment, simply pass the path to the .Rds file to <code>readr</code>s <code>read_rds()</code> function:</p>
 <!-- No need to cache the code chunk below. It has the eval=FALSE option. -->
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="exporting-data.html#cb235-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(<span class="st">&quot;/Users/bradcannell/Desktop/demo.rds&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="exporting-data.html#cb235-1" tabindex="-1"></a>demo <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(<span class="st">&quot;/Users/bradcannell/Desktop/demo.rds&quot;</span>)</span></code></pre></div>
 <p>There is a final thought I want to share on exporting data frames. When I got to the end of this chapter, it occurred to me that the way I wrote it may give the impression that that you must choose to export data frames as plain text files <em>or</em> binary files, but not <em>both</em>. That isn’t the case. I frequently export my data as a csv file that I can easily open and view and/or share with others, but <em>also</em> export it to an .Rds file that retains useful metadata I might need the next time I return to my analysis. I suppose there could be times that your files are so large that this is not an efficient strategy, but that is generally not the case in my projects.</p>
 
 </div>

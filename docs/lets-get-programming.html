@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-05-24" />
+<meta name="date" content="2023-07-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -706,7 +706,12 @@ div.csl-indent {
 <li class="chapter" data-level="41" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html"><i class="fa fa-check"></i><b>41</b> Introduction to Epidemiology</a>
 <ul>
 <li class="chapter" data-level="41.1" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#measurement"><i class="fa fa-check"></i><b>41.1</b> Measurement</a></li>
-<li class="chapter" data-level="41.2" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#uncertainty"><i class="fa fa-check"></i><b>41.2</b> Uncertainty</a></li>
+<li class="chapter" data-level="41.2" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#uncertainty"><i class="fa fa-check"></i><b>41.2</b> Uncertainty</a>
+<ul>
+<li class="chapter" data-level="41.2.1" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#statistical-uncertainty"><i class="fa fa-check"></i><b>41.2.1</b> Statistical uncertainty</a></li>
+<li class="chapter" data-level="41.2.2" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#uncertainty-in-the-research-process"><i class="fa fa-check"></i><b>41.2.2</b> Uncertainty in the research process</a></li>
+<li class="chapter" data-level="41.2.3" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#epistemological-uncertainty"><i class="fa fa-check"></i><b>41.2.3</b> Epistemological uncertainty</a></li>
+</ul></li>
 <li class="chapter" data-level="41.3" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#summary-6"><i class="fa fa-check"></i><b>41.3</b> Summary</a></li>
 </ul></li>
 <li class="part"><span><b>X Appendix</b></span></li>
@@ -757,27 +762,27 @@ div.csl-indent {
 <li><p>Simulated data can also be useful for learning about and testing statistical assumptions. In epidemiology, we use statistics to draw conclusions about populations of people we are interested in based on samples of people drawn from the population. Because we don’t actually have data from <em>all</em> the people in the population, we have to make some assumptions about the population based on what we find in our sample. When we simulate data, we know the truth about our population because we <em>created</em> our population to have that truth. We can then use this simulated population to play “what if” games with our analysis. <em>What if we only sampled half as many people?</em> <em>What if their heights aren’t actually normally distributed?</em> <em>What if we used a probit model instead of a logit model?</em> Going through this process and answering these questions can help us understand how much, and under what circumstances, we can trust the answers we found in the real world.</p></li>
 </ol>
 <p>So, let’s go ahead and write a complete R program to simulate and analyze some data. As I said, it doesn’t have to be complicated. In fact, in just a few lines of R code below we simulate and analyze some data about a hypothetical class.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="lets-get-programming.html#cb15-1" aria-hidden="true" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb15-2"><a href="lets-get-programming.html#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">names   =</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>),</span>
-<span id="cb15-3"><a href="lets-get-programming.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
-<span id="cb15-4"><a href="lets-get-programming.html#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="lets-get-programming.html#cb16-1" aria-hidden="true" tabindex="-1"></a>class</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="lets-get-programming.html#cb15-1" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb15-2"><a href="lets-get-programming.html#cb15-2" tabindex="-1"></a>  <span class="at">names   =</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>),</span>
+<span id="cb15-3"><a href="lets-get-programming.html#cb15-3" tabindex="-1"></a>  <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
+<span id="cb15-4"><a href="lets-get-programming.html#cb15-4" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="lets-get-programming.html#cb16-1" tabindex="-1"></a>class</span></code></pre></div>
 <pre><code>##   names heights
 ## 1  John      68
 ## 2 Sally      63
 ## 3  Brad      71
 ## 4  Anne      72</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="lets-get-programming.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(class<span class="sc">$</span>heights)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="lets-get-programming.html#cb18-1" tabindex="-1"></a><span class="fu">mean</span>(class<span class="sc">$</span>heights)</span></code></pre></div>
 <pre><code>## [1] 68.5</code></pre>
 <p>As you can see, this data frame contains the students’ names and heights. We also use the <code>mean()</code> function to calculate the average height of the class. By the end of this chapter, you will understand all the elements of this R code and how to simulate your own data.</p>
 </div>
 <div id="vectors" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Vectors<a href="lets-get-programming.html#vectors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Vectors are the most fundamental data structure in R. Here, data structure means “container for our data.” There are other data structures as well; however, they are all built from vectors. That’s why I say vectors are the most fundamental data structure. Some of these other structures include matrices, lists, and data frames. In this book, we won’t use matrices or lists much at all, so you can forget about them for now. Instead, we will almost exclusively use data frames to hold and manipulate our data. However, because data frames are built from vectors, it can be useful to start by learning a little bit about them. Let’s create our first vector now.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="lets-get-programming.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an example vector</span></span>
-<span id="cb20-2"><a href="lets-get-programming.html#cb20-2" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>)</span>
-<span id="cb20-3"><a href="lets-get-programming.html#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Print contents to the screen</span></span>
-<span id="cb20-4"><a href="lets-get-programming.html#cb20-4" aria-hidden="true" tabindex="-1"></a>names</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="lets-get-programming.html#cb20-1" tabindex="-1"></a><span class="co"># Create an example vector</span></span>
+<span id="cb20-2"><a href="lets-get-programming.html#cb20-2" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>)</span>
+<span id="cb20-3"><a href="lets-get-programming.html#cb20-3" tabindex="-1"></a><span class="co"># Print contents to the screen</span></span>
+<span id="cb20-4"><a href="lets-get-programming.html#cb20-4" tabindex="-1"></a>names</span></code></pre></div>
 <pre><code>## [1] &quot;John&quot;  &quot;Sally&quot; &quot;Brad&quot;  &quot;Anne&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -802,44 +807,44 @@ div.csl-indent {
 <div id="vector-types" class="section level3 hasAnchor" number="5.2.1">
 <h3><span class="header-section-number">5.2.1</span> Vector types<a href="lets-get-programming.html#vector-types" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>There are several different vector <strong>types</strong>, but each vector can have only one type. The type of the vector above was character. We can validate that with the <code>typeof()</code> function like so:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="lets-get-programming.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(names)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="lets-get-programming.html#cb22-1" tabindex="-1"></a><span class="fu">typeof</span>(names)</span></code></pre></div>
 <pre><code>## [1] &quot;character&quot;</code></pre>
 <p>The other vector types that we will use in this book are double, integer, and logical. Double vectors hold <a href="https://en.wikipedia.org/wiki/Real_number">real numbers</a> and integer vectors hold <a href="https://en.wikipedia.org/wiki/Integer">integers</a>. Collectively, double vectors and integer vectors are known as numeric vectors. Logical vectors can only hold the values TRUE and FALSE. Here are some examples of each:</p>
 </div>
 <div id="double-vectors" class="section level3 hasAnchor" number="5.2.2">
 <h3><span class="header-section-number">5.2.2</span> Double vectors<a href="lets-get-programming.html#double-vectors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="lets-get-programming.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A numeric vector</span></span>
-<span id="cb24-2"><a href="lets-get-programming.html#cb24-2" aria-hidden="true" tabindex="-1"></a>my_numbers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">12.5</span>, <span class="fl">13.98765</span>, pi)</span>
-<span id="cb24-3"><a href="lets-get-programming.html#cb24-3" aria-hidden="true" tabindex="-1"></a>my_numbers</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="lets-get-programming.html#cb24-1" tabindex="-1"></a><span class="co"># A numeric vector</span></span>
+<span id="cb24-2"><a href="lets-get-programming.html#cb24-2" tabindex="-1"></a>my_numbers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">12.5</span>, <span class="fl">13.98765</span>, pi)</span>
+<span id="cb24-3"><a href="lets-get-programming.html#cb24-3" tabindex="-1"></a>my_numbers</span></code></pre></div>
 <pre><code>## [1] 12.500000 13.987650  3.141593</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="lets-get-programming.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(my_numbers)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="lets-get-programming.html#cb26-1" tabindex="-1"></a><span class="fu">typeof</span>(my_numbers)</span></code></pre></div>
 <pre><code>## [1] &quot;double&quot;</code></pre>
 </div>
 <div id="integer-vectors" class="section level3 hasAnchor" number="5.2.3">
 <h3><span class="header-section-number">5.2.3</span> Integer vectors<a href="lets-get-programming.html#integer-vectors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Creating integer vectors involves a weird little quirk of the R language. For some reason, and I have no idea why, we must type an “L” behind the number to make it an integer.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="lets-get-programming.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># An integer vector - first attempt</span></span>
-<span id="cb28-2"><a href="lets-get-programming.html#cb28-2" aria-hidden="true" tabindex="-1"></a>my_ints_1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
-<span id="cb28-3"><a href="lets-get-programming.html#cb28-3" aria-hidden="true" tabindex="-1"></a>my_ints_1</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="lets-get-programming.html#cb28-1" tabindex="-1"></a><span class="co"># An integer vector - first attempt</span></span>
+<span id="cb28-2"><a href="lets-get-programming.html#cb28-2" tabindex="-1"></a>my_ints_1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb28-3"><a href="lets-get-programming.html#cb28-3" tabindex="-1"></a>my_ints_1</span></code></pre></div>
 <pre><code>## [1] 1 2 3</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="lets-get-programming.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(my_ints_1)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="lets-get-programming.html#cb30-1" tabindex="-1"></a><span class="fu">typeof</span>(my_ints_1)</span></code></pre></div>
 <pre><code>## [1] &quot;double&quot;</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="lets-get-programming.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># An integer vector - second attempt</span></span>
-<span id="cb32-2"><a href="lets-get-programming.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Must put &quot;L&quot; behind the number to make it an integer. No idea why they chose &quot;L&quot;.</span></span>
-<span id="cb32-3"><a href="lets-get-programming.html#cb32-3" aria-hidden="true" tabindex="-1"></a>my_ints_2 <span class="ot">&lt;-</span> <span class="fu">c</span>(1L, 2L, 3L)</span>
-<span id="cb32-4"><a href="lets-get-programming.html#cb32-4" aria-hidden="true" tabindex="-1"></a>my_ints_2</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="lets-get-programming.html#cb32-1" tabindex="-1"></a><span class="co"># An integer vector - second attempt</span></span>
+<span id="cb32-2"><a href="lets-get-programming.html#cb32-2" tabindex="-1"></a><span class="co"># Must put &quot;L&quot; behind the number to make it an integer. No idea why they chose &quot;L&quot;.</span></span>
+<span id="cb32-3"><a href="lets-get-programming.html#cb32-3" tabindex="-1"></a>my_ints_2 <span class="ot">&lt;-</span> <span class="fu">c</span>(1L, 2L, 3L)</span>
+<span id="cb32-4"><a href="lets-get-programming.html#cb32-4" tabindex="-1"></a>my_ints_2</span></code></pre></div>
 <pre><code>## [1] 1 2 3</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="lets-get-programming.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(my_ints_2)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="lets-get-programming.html#cb34-1" tabindex="-1"></a><span class="fu">typeof</span>(my_ints_2)</span></code></pre></div>
 <pre><code>## [1] &quot;integer&quot;</code></pre>
 </div>
 <div id="logical-vectors" class="section level3 hasAnchor" number="5.2.4">
 <h3><span class="header-section-number">5.2.4</span> Logical vectors<a href="lets-get-programming.html#logical-vectors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="lets-get-programming.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A logical vector</span></span>
-<span id="cb36-2"><a href="lets-get-programming.html#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Type TRUE and FALSE in all caps</span></span>
-<span id="cb36-3"><a href="lets-get-programming.html#cb36-3" aria-hidden="true" tabindex="-1"></a>my_logical <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
-<span id="cb36-4"><a href="lets-get-programming.html#cb36-4" aria-hidden="true" tabindex="-1"></a>my_logical</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="lets-get-programming.html#cb36-1" tabindex="-1"></a><span class="co"># A logical vector</span></span>
+<span id="cb36-2"><a href="lets-get-programming.html#cb36-2" tabindex="-1"></a><span class="co"># Type TRUE and FALSE in all caps</span></span>
+<span id="cb36-3"><a href="lets-get-programming.html#cb36-3" tabindex="-1"></a>my_logical <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb36-4"><a href="lets-get-programming.html#cb36-4" tabindex="-1"></a>my_logical</span></code></pre></div>
 <pre><code>## [1]  TRUE FALSE  TRUE</code></pre>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="lets-get-programming.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(my_logical)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="lets-get-programming.html#cb38-1" tabindex="-1"></a><span class="fu">typeof</span>(my_logical)</span></code></pre></div>
 <pre><code>## [1] &quot;logical&quot;</code></pre>
 <p>Rather than have an abstract discussion about the particulars of each of these vector types right now, I think it’s best to wait and learn more about them when they naturally arise in the context of a real challenge we are trying to solve with data. At this point, just having some vague idea that they exist is good enough.</p>
 </div>
@@ -847,18 +852,18 @@ div.csl-indent {
 <div id="data-frames" class="section level2 hasAnchor" number="5.3">
 <h2><span class="header-section-number">5.3</span> Data frames<a href="lets-get-programming.html#data-frames" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Vectors are useful for storing a single characteristic where all the data is of the same type. However, in epidemiology, we typically want to store information about many different characteristics of whatever we happen to be studying. For example, we didn’t just want the names of the people in our class, we also wanted the heights. Of course, we can also store the heights in a vector like so:</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="lets-get-programming.html#cb40-1" aria-hidden="true" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
-<span id="cb40-2"><a href="lets-get-programming.html#cb40-2" aria-hidden="true" tabindex="-1"></a>heights</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="lets-get-programming.html#cb40-1" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
+<span id="cb40-2"><a href="lets-get-programming.html#cb40-2" tabindex="-1"></a>heights</span></code></pre></div>
 <pre><code>## [1] 68 63 71 72</code></pre>
 <p>But this vector, in and of itself, doesn’t tell us which height goes with which person. When we want to create relationships between our vectors, we can use them to build a data frame. For example:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="lets-get-programming.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector of names</span></span>
-<span id="cb42-2"><a href="lets-get-programming.html#cb42-2" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>)</span>
-<span id="cb42-3"><a href="lets-get-programming.html#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector of heights</span></span>
-<span id="cb42-4"><a href="lets-get-programming.html#cb42-4" aria-hidden="true" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
-<span id="cb42-5"><a href="lets-get-programming.html#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine them into a data frame</span></span>
-<span id="cb42-6"><a href="lets-get-programming.html#cb42-6" aria-hidden="true" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(names, heights)</span>
-<span id="cb42-7"><a href="lets-get-programming.html#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the data frame to the screen</span></span>
-<span id="cb42-8"><a href="lets-get-programming.html#cb42-8" aria-hidden="true" tabindex="-1"></a>class</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="lets-get-programming.html#cb42-1" tabindex="-1"></a><span class="co"># Create a vector of names</span></span>
+<span id="cb42-2"><a href="lets-get-programming.html#cb42-2" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>)</span>
+<span id="cb42-3"><a href="lets-get-programming.html#cb42-3" tabindex="-1"></a><span class="co"># Create a vector of heights</span></span>
+<span id="cb42-4"><a href="lets-get-programming.html#cb42-4" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
+<span id="cb42-5"><a href="lets-get-programming.html#cb42-5" tabindex="-1"></a><span class="co"># Combine them into a data frame</span></span>
+<span id="cb42-6"><a href="lets-get-programming.html#cb42-6" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(names, heights)</span>
+<span id="cb42-7"><a href="lets-get-programming.html#cb42-7" tabindex="-1"></a><span class="co"># Print the data frame to the screen</span></span>
+<span id="cb42-8"><a href="lets-get-programming.html#cb42-8" tabindex="-1"></a>class</span></code></pre></div>
 <pre><code>##   names heights
 ## 1  John      68
 ## 2 Sally      63
@@ -883,14 +888,14 @@ div.csl-indent {
 </ul>
 <p>Try copying and pasting the code above into the RStudio console on your computer. You should notice the <code>class</code> data frame appear in your <strong>global environment</strong>. You may also notice that the global environment pane gives you some additional information about this data frame to the right of its name. Specifically, you should see <code>4 obs. of 2 variables</code>. This is R telling us that <code>class</code> has four rows or observations (<code>4 obs.</code>) and two columns or variables (<code>2 variables</code>). If you click the little blue arrow to the left of the data frame’s name, you will see information about the individual vectors that make up the data frame.</p>
 <p>As a shortcut, instead of creating individual vectors and then combining them into a data frame as we’ve done above, most R programmers will create the vectors (columns) directly inside of the data frame function like this:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="lets-get-programming.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the class data frame</span></span>
-<span id="cb44-2"><a href="lets-get-programming.html#cb44-2" aria-hidden="true" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb44-3"><a href="lets-get-programming.html#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">names   =</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>),</span>
-<span id="cb44-4"><a href="lets-get-programming.html#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
-<span id="cb44-5"><a href="lets-get-programming.html#cb44-5" aria-hidden="true" tabindex="-1"></a>) <span class="co"># Closing parenthesis down here.</span></span>
-<span id="cb44-6"><a href="lets-get-programming.html#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-7"><a href="lets-get-programming.html#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the data frame to the screen</span></span>
-<span id="cb44-8"><a href="lets-get-programming.html#cb44-8" aria-hidden="true" tabindex="-1"></a>class</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="lets-get-programming.html#cb44-1" tabindex="-1"></a><span class="co"># Create the class data frame</span></span>
+<span id="cb44-2"><a href="lets-get-programming.html#cb44-2" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb44-3"><a href="lets-get-programming.html#cb44-3" tabindex="-1"></a>  <span class="at">names   =</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>),</span>
+<span id="cb44-4"><a href="lets-get-programming.html#cb44-4" tabindex="-1"></a>  <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
+<span id="cb44-5"><a href="lets-get-programming.html#cb44-5" tabindex="-1"></a>) <span class="co"># Closing parenthesis down here.</span></span>
+<span id="cb44-6"><a href="lets-get-programming.html#cb44-6" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="lets-get-programming.html#cb44-7" tabindex="-1"></a><span class="co"># Print the data frame to the screen</span></span>
+<span id="cb44-8"><a href="lets-get-programming.html#cb44-8" tabindex="-1"></a>class</span></code></pre></div>
 <pre><code>##   names heights
 ## 1  John      68
 ## 2 Sally      63
@@ -906,30 +911,30 @@ div.csl-indent {
 <h2><span class="header-section-number">5.4</span> Tibbles<a href="lets-get-programming.html#tibbles" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><a href="https://tibble.tidyverse.org/">Tibbles</a> are a data structure that come from another <a href="https://www.tidyverse.org/">tidyverse</a> package – the <code>tibble</code> package. Tibbles <em>are</em> data frames and serve the same purpose in R that data frames serve; however, they are enhanced in several ways. 💪 You are welcome to look over the <a href="https://tibble.tidyverse.org/">tibble documentation</a> or the <a href="https://r4ds.had.co.nz/tibbles.html">tibbles chapter in R for Data Science</a> if you are interested in learning about all the differences between tibbles and data frames. For our purposes, there are really only a couple things I want you to know about tibbles right now.</p>
 <p>First, tibbles are a part of the <code>tibble</code> package – NOT base R. Therefore, we have to install and load either the <code>tibble</code> package or the <code>dplyr</code> package (which loads the tibble package for us behind the scenes) before we can create tibbles. I typically just load the <code>dplyr</code> package.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="lets-get-programming.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install the dplyr package. YOU ONLY NEED TO DO THIS ONE TIME.</span></span>
-<span id="cb46-2"><a href="lets-get-programming.html#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;dplyr&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="lets-get-programming.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dplyr package. YOU NEED TO DO THIS EVERY TIME YOU START A NEW R SESSION.</span></span>
-<span id="cb47-2"><a href="lets-get-programming.html#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="lets-get-programming.html#cb46-1" tabindex="-1"></a><span class="co"># Install the dplyr package. YOU ONLY NEED TO DO THIS ONE TIME.</span></span>
+<span id="cb46-2"><a href="lets-get-programming.html#cb46-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;dplyr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="lets-get-programming.html#cb47-1" tabindex="-1"></a><span class="co"># Load the dplyr package. YOU NEED TO DO THIS EVERY TIME YOU START A NEW R SESSION.</span></span>
+<span id="cb47-2"><a href="lets-get-programming.html#cb47-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 <p>Second, we can create tibbles using one of three functions: <code>as_tibble()</code>, <code>tibble()</code>, or <code>tribble()</code>. I’ll show you some examples shortly.</p>
 <p>Third, try not to be confused by the terminology. Remember, tibbles <em>are</em> data frames. They are just enhanced data frames.</p>
 <div id="the-as_tibble-function" class="section level3 hasAnchor" number="5.4.1">
 <h3><span class="header-section-number">5.4.1</span> The as_tibble function<a href="lets-get-programming.html#the-as_tibble-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We use the <code>as_tibble()</code> function to turn an already existing basic data frame into a tibble. For example:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="lets-get-programming.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame</span></span>
-<span id="cb48-2"><a href="lets-get-programming.html#cb48-2" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb48-3"><a href="lets-get-programming.html#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
-<span id="cb48-4"><a href="lets-get-programming.html#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">age  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>)</span>
-<span id="cb48-5"><a href="lets-get-programming.html#cb48-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb48-6"><a href="lets-get-programming.html#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-7"><a href="lets-get-programming.html#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
-<span id="cb48-8"><a href="lets-get-programming.html#cb48-8" aria-hidden="true" tabindex="-1"></a>my_df</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="lets-get-programming.html#cb48-1" tabindex="-1"></a><span class="co"># Create a data frame</span></span>
+<span id="cb48-2"><a href="lets-get-programming.html#cb48-2" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb48-3"><a href="lets-get-programming.html#cb48-3" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
+<span id="cb48-4"><a href="lets-get-programming.html#cb48-4" tabindex="-1"></a>  <span class="at">age  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>)</span>
+<span id="cb48-5"><a href="lets-get-programming.html#cb48-5" tabindex="-1"></a>)</span>
+<span id="cb48-6"><a href="lets-get-programming.html#cb48-6" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="lets-get-programming.html#cb48-7" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
+<span id="cb48-8"><a href="lets-get-programming.html#cb48-8" tabindex="-1"></a>my_df</span></code></pre></div>
 <pre><code>##     name age
 ## 1   john  24
 ## 2 alexis  44
 ## 3  Steph  26
 ## 4 Quiera  25</code></pre>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="lets-get-programming.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the class of my_df</span></span>
-<span id="cb50-2"><a href="lets-get-programming.html#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(my_df)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="lets-get-programming.html#cb50-1" tabindex="-1"></a><span class="co"># View the class of my_df</span></span>
+<span id="cb50-2"><a href="lets-get-programming.html#cb50-2" tabindex="-1"></a><span class="fu">class</span>(my_df)</span></code></pre></div>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -939,11 +944,11 @@ div.csl-indent {
 <li>The result returned by the <code>class()</code> function tells us that <code>my_df</code> is a data frame.</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="lets-get-programming.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use as_tibble() to turn my_df into a tibble</span></span>
-<span id="cb52-2"><a href="lets-get-programming.html#cb52-2" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(my_df)</span>
-<span id="cb52-3"><a href="lets-get-programming.html#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-4"><a href="lets-get-programming.html#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
-<span id="cb52-5"><a href="lets-get-programming.html#cb52-5" aria-hidden="true" tabindex="-1"></a>my_df</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="lets-get-programming.html#cb52-1" tabindex="-1"></a><span class="co"># Use as_tibble() to turn my_df into a tibble</span></span>
+<span id="cb52-2"><a href="lets-get-programming.html#cb52-2" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(my_df)</span>
+<span id="cb52-3"><a href="lets-get-programming.html#cb52-3" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="lets-get-programming.html#cb52-4" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
+<span id="cb52-5"><a href="lets-get-programming.html#cb52-5" tabindex="-1"></a>my_df</span></code></pre></div>
 <pre><code>## # A tibble: 4 × 2
 ##   name     age
 ##   &lt;chr&gt;  &lt;dbl&gt;
@@ -951,8 +956,8 @@ div.csl-indent {
 ## 2 alexis    44
 ## 3 Steph     26
 ## 4 Quiera    25</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="lets-get-programming.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the class of my_df</span></span>
-<span id="cb54-2"><a href="lets-get-programming.html#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(my_df)</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="lets-get-programming.html#cb54-1" tabindex="-1"></a><span class="co"># View the class of my_df</span></span>
+<span id="cb54-2"><a href="lets-get-programming.html#cb54-2" tabindex="-1"></a><span class="fu">class</span>(my_df)</span></code></pre></div>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -966,14 +971,14 @@ div.csl-indent {
 <div id="the-tibble-function" class="section level3 hasAnchor" number="5.4.2">
 <h3><span class="header-section-number">5.4.2</span> The tibble function<a href="lets-get-programming.html#the-tibble-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We can use the <code>tibble()</code> function in place of the <code>data.frame()</code> function when we want to create a tibble from scratch. For example:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="lets-get-programming.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame</span></span>
-<span id="cb56-2"><a href="lets-get-programming.html#cb56-2" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb56-3"><a href="lets-get-programming.html#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
-<span id="cb56-4"><a href="lets-get-programming.html#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">age  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>)</span>
-<span id="cb56-5"><a href="lets-get-programming.html#cb56-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb56-6"><a href="lets-get-programming.html#cb56-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-7"><a href="lets-get-programming.html#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
-<span id="cb56-8"><a href="lets-get-programming.html#cb56-8" aria-hidden="true" tabindex="-1"></a>my_df</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="lets-get-programming.html#cb56-1" tabindex="-1"></a><span class="co"># Create a data frame</span></span>
+<span id="cb56-2"><a href="lets-get-programming.html#cb56-2" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb56-3"><a href="lets-get-programming.html#cb56-3" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
+<span id="cb56-4"><a href="lets-get-programming.html#cb56-4" tabindex="-1"></a>  <span class="at">age  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>)</span>
+<span id="cb56-5"><a href="lets-get-programming.html#cb56-5" tabindex="-1"></a>)</span>
+<span id="cb56-6"><a href="lets-get-programming.html#cb56-6" tabindex="-1"></a></span>
+<span id="cb56-7"><a href="lets-get-programming.html#cb56-7" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
+<span id="cb56-8"><a href="lets-get-programming.html#cb56-8" tabindex="-1"></a>my_df</span></code></pre></div>
 <pre><code>## # A tibble: 4 × 2
 ##   name     age
 ##   &lt;chr&gt;  &lt;dbl&gt;
@@ -981,8 +986,8 @@ div.csl-indent {
 ## 2 alexis    44
 ## 3 Steph     26
 ## 4 Quiera    25</code></pre>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="lets-get-programming.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the class of my_df</span></span>
-<span id="cb58-2"><a href="lets-get-programming.html#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(my_df)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="lets-get-programming.html#cb58-1" tabindex="-1"></a><span class="co"># View the class of my_df</span></span>
+<span id="cb58-2"><a href="lets-get-programming.html#cb58-2" tabindex="-1"></a><span class="fu">class</span>(my_df)</span></code></pre></div>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -996,17 +1001,17 @@ div.csl-indent {
 <div id="the-tribble-function" class="section level3 hasAnchor" number="5.4.3">
 <h3><span class="header-section-number">5.4.3</span> The tribble function<a href="lets-get-programming.html#the-tribble-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Alternatively, we can use the <code>tribble()</code> function in place of the <code>data.frame()</code> function when we want to create a tibble from scratch. For example:</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="lets-get-programming.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame</span></span>
-<span id="cb60-2"><a href="lets-get-programming.html#cb60-2" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb60-3"><a href="lets-get-programming.html#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>name,    <span class="sc">~</span>age,</span>
-<span id="cb60-4"><a href="lets-get-programming.html#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;john&quot;</span>,   <span class="dv">24</span>, </span>
-<span id="cb60-5"><a href="lets-get-programming.html#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;alexis&quot;</span>, <span class="dv">44</span>, </span>
-<span id="cb60-6"><a href="lets-get-programming.html#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Steph&quot;</span>,  <span class="dv">26</span>,</span>
-<span id="cb60-7"><a href="lets-get-programming.html#cb60-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Quiera&quot;</span>, <span class="dv">25</span></span>
-<span id="cb60-8"><a href="lets-get-programming.html#cb60-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb60-9"><a href="lets-get-programming.html#cb60-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-10"><a href="lets-get-programming.html#cb60-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
-<span id="cb60-11"><a href="lets-get-programming.html#cb60-11" aria-hidden="true" tabindex="-1"></a>my_df</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="lets-get-programming.html#cb60-1" tabindex="-1"></a><span class="co"># Create a data frame</span></span>
+<span id="cb60-2"><a href="lets-get-programming.html#cb60-2" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb60-3"><a href="lets-get-programming.html#cb60-3" tabindex="-1"></a>  <span class="sc">~</span>name,    <span class="sc">~</span>age,</span>
+<span id="cb60-4"><a href="lets-get-programming.html#cb60-4" tabindex="-1"></a>  <span class="st">&quot;john&quot;</span>,   <span class="dv">24</span>, </span>
+<span id="cb60-5"><a href="lets-get-programming.html#cb60-5" tabindex="-1"></a>  <span class="st">&quot;alexis&quot;</span>, <span class="dv">44</span>, </span>
+<span id="cb60-6"><a href="lets-get-programming.html#cb60-6" tabindex="-1"></a>  <span class="st">&quot;Steph&quot;</span>,  <span class="dv">26</span>,</span>
+<span id="cb60-7"><a href="lets-get-programming.html#cb60-7" tabindex="-1"></a>  <span class="st">&quot;Quiera&quot;</span>, <span class="dv">25</span></span>
+<span id="cb60-8"><a href="lets-get-programming.html#cb60-8" tabindex="-1"></a>)</span>
+<span id="cb60-9"><a href="lets-get-programming.html#cb60-9" tabindex="-1"></a></span>
+<span id="cb60-10"><a href="lets-get-programming.html#cb60-10" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
+<span id="cb60-11"><a href="lets-get-programming.html#cb60-11" tabindex="-1"></a>my_df</span></code></pre></div>
 <pre><code>## # A tibble: 4 × 2
 ##   name     age
 ##   &lt;chr&gt;  &lt;dbl&gt;
@@ -1014,8 +1019,8 @@ div.csl-indent {
 ## 2 alexis    44
 ## 3 Steph     26
 ## 4 Quiera    25</code></pre>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="lets-get-programming.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the class of my_df</span></span>
-<span id="cb62-2"><a href="lets-get-programming.html#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(my_df)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="lets-get-programming.html#cb62-1" tabindex="-1"></a><span class="co"># View the class of my_df</span></span>
+<span id="cb62-2"><a href="lets-get-programming.html#cb62-2" tabindex="-1"></a><span class="fu">class</span>(my_df)</span></code></pre></div>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1036,40 +1041,40 @@ div.csl-indent {
 <h3><span class="header-section-number">5.4.4</span> Why use tibbles<a href="lets-get-programming.html#why-use-tibbles" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>At this point, some students wonder, “If tibbles are just data frames, why use them? Why not just use the <code>data.frame()</code> function?” That’s a fair question. As I have said multiple times already, tibbles are enhanced. However, I don’t believe that going into detail about those enhancements is going to be useful to most of you at this point – and may even be confusing. But, I will show you one quick example that’s pretty self-explanatory.</p>
 <p>Let’s say that we are given some data that contains four people’s age in years. We want to create a data frame from that data. However, let’s say that we also want a column in our new data frame that contains those same ages in months. Well, we could do the math ourselves. We could just multiply each age in years by 12 (for the sake of simplicity, assume that everyone’s age in years is gathered on their birthday). But, we’d rather have R do the math for us. We can do so by asking R to multiply each value of the the column called <code>age_years</code> by 12. Take a look:</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="lets-get-programming.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame using the data.frame() function</span></span>
-<span id="cb64-2"><a href="lets-get-programming.html#cb64-2" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb64-3"><a href="lets-get-programming.html#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name       =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
-<span id="cb64-4"><a href="lets-get-programming.html#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_years  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>),</span>
-<span id="cb64-5"><a href="lets-get-programming.html#cb64-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_months =</span> age_years <span class="sc">*</span> <span class="dv">12</span></span>
-<span id="cb64-6"><a href="lets-get-programming.html#cb64-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="lets-get-programming.html#cb64-1" tabindex="-1"></a><span class="co"># Create a data frame using the data.frame() function</span></span>
+<span id="cb64-2"><a href="lets-get-programming.html#cb64-2" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb64-3"><a href="lets-get-programming.html#cb64-3" tabindex="-1"></a>  <span class="at">name       =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
+<span id="cb64-4"><a href="lets-get-programming.html#cb64-4" tabindex="-1"></a>  <span class="at">age_years  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>),</span>
+<span id="cb64-5"><a href="lets-get-programming.html#cb64-5" tabindex="-1"></a>  <span class="at">age_months =</span> age_years <span class="sc">*</span> <span class="dv">12</span></span>
+<span id="cb64-6"><a href="lets-get-programming.html#cb64-6" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Error in data.frame(name = c(&quot;john&quot;, &quot;alexis&quot;, &quot;Steph&quot;, &quot;Quiera&quot;), age_years = c(24, : object &#39;age_years&#39; not found</code></pre>
 <p>Uh, oh! We got an error! This error says that the column <code>age_years</code> can’t be found. How can that be? We are clearly passing the column name <code>age_years</code> to the <code>data.frame()</code> function in the code chunk above. Unfortunately, the <code>data.frame()</code> function doesn’t allow us to <em>create</em> and <em>refer to</em> a column name in the same function call. So, we would need to break this task up into two steps if we wanted to use the <code>data.frame()</code> function. Here’s one way we could do this:</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="lets-get-programming.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame using the data.frame() function</span></span>
-<span id="cb66-2"><a href="lets-get-programming.html#cb66-2" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb66-3"><a href="lets-get-programming.html#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name       =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
-<span id="cb66-4"><a href="lets-get-programming.html#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_years  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>)</span>
-<span id="cb66-5"><a href="lets-get-programming.html#cb66-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb66-6"><a href="lets-get-programming.html#cb66-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-7"><a href="lets-get-programming.html#cb66-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the age in months column to my_df</span></span>
-<span id="cb66-8"><a href="lets-get-programming.html#cb66-8" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> my_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">age_months =</span> age_years <span class="sc">*</span> <span class="dv">12</span>)</span>
-<span id="cb66-9"><a href="lets-get-programming.html#cb66-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-10"><a href="lets-get-programming.html#cb66-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
-<span id="cb66-11"><a href="lets-get-programming.html#cb66-11" aria-hidden="true" tabindex="-1"></a>my_df</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="lets-get-programming.html#cb66-1" tabindex="-1"></a><span class="co"># Create a data frame using the data.frame() function</span></span>
+<span id="cb66-2"><a href="lets-get-programming.html#cb66-2" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb66-3"><a href="lets-get-programming.html#cb66-3" tabindex="-1"></a>  <span class="at">name       =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
+<span id="cb66-4"><a href="lets-get-programming.html#cb66-4" tabindex="-1"></a>  <span class="at">age_years  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>)</span>
+<span id="cb66-5"><a href="lets-get-programming.html#cb66-5" tabindex="-1"></a>)</span>
+<span id="cb66-6"><a href="lets-get-programming.html#cb66-6" tabindex="-1"></a></span>
+<span id="cb66-7"><a href="lets-get-programming.html#cb66-7" tabindex="-1"></a><span class="co"># Add the age in months column to my_df</span></span>
+<span id="cb66-8"><a href="lets-get-programming.html#cb66-8" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> my_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">age_months =</span> age_years <span class="sc">*</span> <span class="dv">12</span>)</span>
+<span id="cb66-9"><a href="lets-get-programming.html#cb66-9" tabindex="-1"></a></span>
+<span id="cb66-10"><a href="lets-get-programming.html#cb66-10" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
+<span id="cb66-11"><a href="lets-get-programming.html#cb66-11" tabindex="-1"></a>my_df</span></code></pre></div>
 <pre><code>##     name age_years age_months
 ## 1   john        24        288
 ## 2 alexis        44        528
 ## 3  Steph        26        312
 ## 4 Quiera        25        300</code></pre>
 <p>Alternatively, we can use the <code>tibble()</code> function to get the result we want in just one step like so:</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="lets-get-programming.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame using the tibble() function</span></span>
-<span id="cb68-2"><a href="lets-get-programming.html#cb68-2" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb68-3"><a href="lets-get-programming.html#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name       =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
-<span id="cb68-4"><a href="lets-get-programming.html#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_years  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>),</span>
-<span id="cb68-5"><a href="lets-get-programming.html#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_months =</span> age_years <span class="sc">*</span> <span class="dv">12</span></span>
-<span id="cb68-6"><a href="lets-get-programming.html#cb68-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb68-7"><a href="lets-get-programming.html#cb68-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-8"><a href="lets-get-programming.html#cb68-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
-<span id="cb68-9"><a href="lets-get-programming.html#cb68-9" aria-hidden="true" tabindex="-1"></a>my_df</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="lets-get-programming.html#cb68-1" tabindex="-1"></a><span class="co"># Create a data frame using the tibble() function</span></span>
+<span id="cb68-2"><a href="lets-get-programming.html#cb68-2" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb68-3"><a href="lets-get-programming.html#cb68-3" tabindex="-1"></a>  <span class="at">name       =</span> <span class="fu">c</span>(<span class="st">&quot;john&quot;</span>, <span class="st">&quot;alexis&quot;</span>, <span class="st">&quot;Steph&quot;</span>, <span class="st">&quot;Quiera&quot;</span>),</span>
+<span id="cb68-4"><a href="lets-get-programming.html#cb68-4" tabindex="-1"></a>  <span class="at">age_years  =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">44</span>, <span class="dv">26</span>, <span class="dv">25</span>),</span>
+<span id="cb68-5"><a href="lets-get-programming.html#cb68-5" tabindex="-1"></a>  <span class="at">age_months =</span> age_years <span class="sc">*</span> <span class="dv">12</span></span>
+<span id="cb68-6"><a href="lets-get-programming.html#cb68-6" tabindex="-1"></a>)</span>
+<span id="cb68-7"><a href="lets-get-programming.html#cb68-7" tabindex="-1"></a></span>
+<span id="cb68-8"><a href="lets-get-programming.html#cb68-8" tabindex="-1"></a><span class="co"># Print my_df to the screen</span></span>
+<span id="cb68-9"><a href="lets-get-programming.html#cb68-9" tabindex="-1"></a>my_df</span></code></pre></div>
 <pre><code>## # A tibble: 4 × 3
 ##   name   age_years age_months
 ##   &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;
@@ -1084,11 +1089,11 @@ div.csl-indent {
 <h2><span class="header-section-number">5.5</span> Missing data<a href="lets-get-programming.html#missing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>As indicated in the warning box at the end of the data frames section of this chapter, all columns in our data frames have to have the same length. So what do we do when we are truly missing information in some of our observations? For example, how do we create the <code>class</code> data frame if we are missing Anne’s height for some reason?</p>
 <p>In R, we represent missing data with an <code>NA</code>. For example:</p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="lets-get-programming.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the class data frame</span></span>
-<span id="cb70-2"><a href="lets-get-programming.html#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
-<span id="cb70-3"><a href="lets-get-programming.html#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">names   =</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>),</span>
-<span id="cb70-4"><a href="lets-get-programming.html#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="cn">NA</span>) <span class="co"># Now we are missing Anne&#39;s height</span></span>
-<span id="cb70-5"><a href="lets-get-programming.html#cb70-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="lets-get-programming.html#cb70-1" tabindex="-1"></a><span class="co"># Create the class data frame</span></span>
+<span id="cb70-2"><a href="lets-get-programming.html#cb70-2" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb70-3"><a href="lets-get-programming.html#cb70-3" tabindex="-1"></a>  <span class="at">names   =</span> <span class="fu">c</span>(<span class="st">&quot;John&quot;</span>, <span class="st">&quot;Sally&quot;</span>, <span class="st">&quot;Brad&quot;</span>, <span class="st">&quot;Anne&quot;</span>),</span>
+<span id="cb70-4"><a href="lets-get-programming.html#cb70-4" tabindex="-1"></a>  <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="cn">NA</span>) <span class="co"># Now we are missing Anne&#39;s height</span></span>
+<span id="cb70-5"><a href="lets-get-programming.html#cb70-5" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>##   names heights
 ## 1  John      68
 ## 2 Sally      63
@@ -1098,14 +1103,14 @@ div.csl-indent {
 ⚠️<strong>Warning:</strong> Make sure you capitalize <code>NA</code> and don’t use any spaces or quotation marks. Also, make sure you use <code>NA</code> instead of writing <code>"Missing"</code> or something like that.
 </p>
 <p>By default, R considers <code>NA</code> to be a logical-type value (as opposed to character or numeric). for example:</p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="lets-get-programming.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="cn">NA</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="lets-get-programming.html#cb72-1" tabindex="-1"></a><span class="fu">typeof</span>(<span class="cn">NA</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;logical&quot;</code></pre>
 <p>However, you can tell R to make <code>NA</code> a different type by using one of the more specific forms of <code>NA</code>. For example:</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="lets-get-programming.html#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="cn">NA_character_</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="lets-get-programming.html#cb74-1" tabindex="-1"></a><span class="fu">typeof</span>(<span class="cn">NA_character_</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;character&quot;</code></pre>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="lets-get-programming.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="cn">NA_integer_</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="lets-get-programming.html#cb76-1" tabindex="-1"></a><span class="fu">typeof</span>(<span class="cn">NA_integer_</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;integer&quot;</code></pre>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="lets-get-programming.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="cn">NA_real_</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="lets-get-programming.html#cb78-1" tabindex="-1"></a><span class="fu">typeof</span>(<span class="cn">NA_real_</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;double&quot;</code></pre>
 <p>Most of the time, you won’t have to worry about doing this because R will take care of converting <code>NA</code> for you. What do I mean by that? Well, remember that every vector can have only one type. So, when you add an <code>NA</code> (logical by default) to a vector with double values as we did above (i.e., <code>c(68, 63, 71, NA)</code>), that would cause you to have three double values and one logical value in the same vector, which is not allowed. Therefore, R will automatically convert the <code>NA</code> to <code>NA_real_</code> for you behind the scenes.</p>
 <p>This is a concept known as “type coercion” and you can read more about it <a href="https://r4ds.had.co.nz/vectors.html#coercion">here</a> if you are interested. As I said, most of the time you don’t have to worry about type coercion – it will happen automatically. But, sometimes it doesn’t and it will cause R to give you an error. I mostly encounter this when using the <code>if_else()</code> and <code>case_when()</code> functions, which we will discuss later.</p>
@@ -1118,7 +1123,7 @@ div.csl-indent {
 <div id="manual-calculation-of-the-mean" class="section level3 hasAnchor" number="5.6.1">
 <h3><span class="header-section-number">5.6.1</span> Manual calculation of the mean<a href="lets-get-programming.html#manual-calculation-of-the-mean" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For starters, we can add up all the heights and divide by the total number of heights to find the mean.</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="lets-get-programming.html#cb80-1" aria-hidden="true" tabindex="-1"></a>(<span class="dv">68</span> <span class="sc">+</span> <span class="dv">63</span> <span class="sc">+</span> <span class="dv">71</span> <span class="sc">+</span> <span class="dv">72</span>) <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="lets-get-programming.html#cb80-1" tabindex="-1"></a>(<span class="dv">68</span> <span class="sc">+</span> <span class="dv">63</span> <span class="sc">+</span> <span class="dv">71</span> <span class="sc">+</span> <span class="dv">72</span>) <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
 <pre><code>## [1] 68.5</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1130,7 +1135,7 @@ div.csl-indent {
 </div>
 <div id="dollar-sign-notation" class="section level3 hasAnchor" number="5.6.2">
 <h3><span class="header-section-number">5.6.2</span> Dollar sign notation<a href="lets-get-programming.html#dollar-sign-notation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="lets-get-programming.html#cb82-1" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>heights</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="lets-get-programming.html#cb82-1" tabindex="-1"></a>class<span class="sc">$</span>heights</span></code></pre></div>
 <pre><code>## [1] 68 63 71 72</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1143,42 +1148,42 @@ div.csl-indent {
 <div id="bracket-notation" class="section level3 hasAnchor" number="5.6.3">
 <h3><span class="header-section-number">5.6.3</span> Bracket notation<a href="lets-get-programming.html#bracket-notation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Further, we can use <strong>bracket notation</strong> to access each value in a vector. I think it’s easier to demonstrate bracket notation than it is to describe it. For example, we could access the third value in the names vector like this:</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="lets-get-programming.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the heights vector</span></span>
-<span id="cb84-2"><a href="lets-get-programming.html#cb84-2" aria-hidden="true" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
-<span id="cb84-3"><a href="lets-get-programming.html#cb84-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb84-4"><a href="lets-get-programming.html#cb84-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Bracket notation</span></span>
-<span id="cb84-5"><a href="lets-get-programming.html#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the third element in the heights vector with bracket notation</span></span>
-<span id="cb84-6"><a href="lets-get-programming.html#cb84-6" aria-hidden="true" tabindex="-1"></a>heights[<span class="dv">3</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="lets-get-programming.html#cb84-1" tabindex="-1"></a><span class="co"># Create the heights vector</span></span>
+<span id="cb84-2"><a href="lets-get-programming.html#cb84-2" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
+<span id="cb84-3"><a href="lets-get-programming.html#cb84-3" tabindex="-1"></a></span>
+<span id="cb84-4"><a href="lets-get-programming.html#cb84-4" tabindex="-1"></a><span class="co"># Bracket notation</span></span>
+<span id="cb84-5"><a href="lets-get-programming.html#cb84-5" tabindex="-1"></a><span class="co"># Access the third element in the heights vector with bracket notation</span></span>
+<span id="cb84-6"><a href="lets-get-programming.html#cb84-6" tabindex="-1"></a>heights[<span class="dv">3</span>]</span></code></pre></div>
 <pre><code>## [1] 71</code></pre>
 <p>Remember, that data frame columns are also vectors. So, we can combine the dollar sign notation and bracket notation, to access each individual value of the <code>height</code> column in the <code>class</code> data frame. This will help us get around the problem of typing each individual height value. For example:</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="lets-get-programming.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First way to calculate the mean</span></span>
-<span id="cb86-2"><a href="lets-get-programming.html#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (68 + 63 + 71 + 72) / 4</span></span>
-<span id="cb86-3"><a href="lets-get-programming.html#cb86-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb86-4"><a href="lets-get-programming.html#cb86-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Second way. Use dollar sign notation and bracket notation so that we don&#39;t </span></span>
-<span id="cb86-5"><a href="lets-get-programming.html#cb86-5" aria-hidden="true" tabindex="-1"></a><span class="co"># have to type individual heights</span></span>
-<span id="cb86-6"><a href="lets-get-programming.html#cb86-6" aria-hidden="true" tabindex="-1"></a>(class<span class="sc">$</span>heights[<span class="dv">1</span>] <span class="sc">+</span> class<span class="sc">$</span>heights[<span class="dv">2</span>] <span class="sc">+</span> class<span class="sc">$</span>heights[<span class="dv">3</span>] <span class="sc">+</span> class<span class="sc">$</span>heights[<span class="dv">4</span>]) <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="lets-get-programming.html#cb86-1" tabindex="-1"></a><span class="co"># First way to calculate the mean</span></span>
+<span id="cb86-2"><a href="lets-get-programming.html#cb86-2" tabindex="-1"></a><span class="co"># (68 + 63 + 71 + 72) / 4</span></span>
+<span id="cb86-3"><a href="lets-get-programming.html#cb86-3" tabindex="-1"></a></span>
+<span id="cb86-4"><a href="lets-get-programming.html#cb86-4" tabindex="-1"></a><span class="co"># Second way. Use dollar sign notation and bracket notation so that we don&#39;t </span></span>
+<span id="cb86-5"><a href="lets-get-programming.html#cb86-5" tabindex="-1"></a><span class="co"># have to type individual heights</span></span>
+<span id="cb86-6"><a href="lets-get-programming.html#cb86-6" tabindex="-1"></a>(class<span class="sc">$</span>heights[<span class="dv">1</span>] <span class="sc">+</span> class<span class="sc">$</span>heights[<span class="dv">2</span>] <span class="sc">+</span> class<span class="sc">$</span>heights[<span class="dv">3</span>] <span class="sc">+</span> class<span class="sc">$</span>heights[<span class="dv">4</span>]) <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
 <pre><code>## [1] 68.5</code></pre>
 </div>
 <div id="the-sum-function" class="section level3 hasAnchor" number="5.6.4">
 <h3><span class="header-section-number">5.6.4</span> The sum function<a href="lets-get-programming.html#the-sum-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The second method is better in the sense that we no longer have to worry about mistyping the heights. However, who wants to type <code>class$heights[...]</code> over and over? What if we had a hundred numbers? What if we had a thousand numbers? This wouldn’t work. Luckily, there is a function that adds all the numbers contained in a numeric vector – the <code>sum()</code> function. Let’s take a look:</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="lets-get-programming.html#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the heights vector</span></span>
-<span id="cb88-2"><a href="lets-get-programming.html#cb88-2" aria-hidden="true" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
-<span id="cb88-3"><a href="lets-get-programming.html#cb88-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-4"><a href="lets-get-programming.html#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add together all the individual heights with the sum function</span></span>
-<span id="cb88-5"><a href="lets-get-programming.html#cb88-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(heights)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="lets-get-programming.html#cb88-1" tabindex="-1"></a><span class="co"># Create the heights vector</span></span>
+<span id="cb88-2"><a href="lets-get-programming.html#cb88-2" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
+<span id="cb88-3"><a href="lets-get-programming.html#cb88-3" tabindex="-1"></a></span>
+<span id="cb88-4"><a href="lets-get-programming.html#cb88-4" tabindex="-1"></a><span class="co"># Add together all the individual heights with the sum function</span></span>
+<span id="cb88-5"><a href="lets-get-programming.html#cb88-5" tabindex="-1"></a><span class="fu">sum</span>(heights)</span></code></pre></div>
 <pre><code>## [1] 274</code></pre>
 <p>Remember, that data frame columns are also vectors. So, we can combine the dollar sign notation and <code>sum()</code> function, to add up all the individual heights in the <code>heights</code> column of the <code>class</code> data frame. It looks like this:</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="lets-get-programming.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First way to calculate the mean</span></span>
-<span id="cb90-2"><a href="lets-get-programming.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (68 + 63 + 71 + 72) / 4</span></span>
-<span id="cb90-3"><a href="lets-get-programming.html#cb90-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb90-4"><a href="lets-get-programming.html#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Second way. Use dollar sign notation and bracket notation so that we don&#39;t </span></span>
-<span id="cb90-5"><a href="lets-get-programming.html#cb90-5" aria-hidden="true" tabindex="-1"></a><span class="co"># have to type individual heights</span></span>
-<span id="cb90-6"><a href="lets-get-programming.html#cb90-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (class$heights[1] + class$heights[2] + class$heights[3] + class$heights[4]) / 4</span></span>
-<span id="cb90-7"><a href="lets-get-programming.html#cb90-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb90-8"><a href="lets-get-programming.html#cb90-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Third way. Use dollar sign notation and sum function so that we don&#39;t have </span></span>
-<span id="cb90-9"><a href="lets-get-programming.html#cb90-9" aria-hidden="true" tabindex="-1"></a><span class="co"># to type as much</span></span>
-<span id="cb90-10"><a href="lets-get-programming.html#cb90-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(class<span class="sc">$</span>heights) <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="lets-get-programming.html#cb90-1" tabindex="-1"></a><span class="co"># First way to calculate the mean</span></span>
+<span id="cb90-2"><a href="lets-get-programming.html#cb90-2" tabindex="-1"></a><span class="co"># (68 + 63 + 71 + 72) / 4</span></span>
+<span id="cb90-3"><a href="lets-get-programming.html#cb90-3" tabindex="-1"></a></span>
+<span id="cb90-4"><a href="lets-get-programming.html#cb90-4" tabindex="-1"></a><span class="co"># Second way. Use dollar sign notation and bracket notation so that we don&#39;t </span></span>
+<span id="cb90-5"><a href="lets-get-programming.html#cb90-5" tabindex="-1"></a><span class="co"># have to type individual heights</span></span>
+<span id="cb90-6"><a href="lets-get-programming.html#cb90-6" tabindex="-1"></a><span class="co"># (class$heights[1] + class$heights[2] + class$heights[3] + class$heights[4]) / 4</span></span>
+<span id="cb90-7"><a href="lets-get-programming.html#cb90-7" tabindex="-1"></a></span>
+<span id="cb90-8"><a href="lets-get-programming.html#cb90-8" tabindex="-1"></a><span class="co"># Third way. Use dollar sign notation and sum function so that we don&#39;t have </span></span>
+<span id="cb90-9"><a href="lets-get-programming.html#cb90-9" tabindex="-1"></a><span class="co"># to type as much</span></span>
+<span id="cb90-10"><a href="lets-get-programming.html#cb90-10" tabindex="-1"></a><span class="fu">sum</span>(class<span class="sc">$</span>heights) <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
 <pre><code>## [1] 68.5</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1192,8 +1197,8 @@ div.csl-indent {
 <p><span class="red-text">!!</span> Before we move on, I want to point out something that is actually kind of a big deal. In the third method above, we didn’t manually add up all the individual heights - R did this calculation for us. Further, we didn’t store the sum of the individual heights somewhere and then divide that stored value by 4. Heck, we didn’t even see what the sum of the individual heights were. Instead, the returned value from the sum function (274) was used <em>directly</em> in the next calculation (<code>/ 4</code>) by R without us seeing the result. In other words, <code>(68 + 63 + 71 + 72) / 4</code>, <code>274 / 4</code>, and <code>sum(class$heights) / 4</code> are all exactly the same thing to R. However, the third method (<code>sum(class$heights) / 4</code>) is much more <strong>scalable</strong> (i.e., adding a lot more numbers doesn’t make this any harder to do) and much less error prone. Just to be clear, the BIG DEAL is that we now know that the values returned by functions can be <em>directly</em> passed to other functions in exactly the same way as if we typed the values ourselves.</p>
 <p>This concept, functions passing values to other functions is known as <strong>nesting functions</strong>. It’s called nesting functions because we can put functions inside of other functions.</p>
 <p>“But, Brad, there’s only one function in the command <code>sum(class$heights) / 4</code> – the <code>sum()</code> function.” Really? Is there? Remember when I said that operators are also functions in R? Well, the division operator is a function. And, like all functions it can be written with parentheses like this:</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="lets-get-programming.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Writing the division operator as a function with parentheses</span></span>
-<span id="cb92-2"><a href="lets-get-programming.html#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">/</span><span class="st">`</span>(<span class="dv">8</span>, <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="lets-get-programming.html#cb92-1" tabindex="-1"></a><span class="co"># Writing the division operator as a function with parentheses</span></span>
+<span id="cb92-2"><a href="lets-get-programming.html#cb92-2" tabindex="-1"></a><span class="st">`</span><span class="at">/</span><span class="st">`</span>(<span class="dv">8</span>, <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1206,10 +1211,10 @@ div.csl-indent {
 </ul></li>
 </ul>
 <p>So, the following two commands mean exactly the same thing to R:</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="lets-get-programming.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="dv">8</span> <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="lets-get-programming.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">/</span><span class="st">`</span>(<span class="dv">8</span>, <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="lets-get-programming.html#cb94-1" tabindex="-1"></a><span class="dv">8</span> <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="lets-get-programming.html#cb95-1" tabindex="-1"></a><span class="st">`</span><span class="at">/</span><span class="st">`</span>(<span class="dv">8</span>, <span class="dv">4</span>)</span></code></pre></div>
 <p>And if we use this second form of the division operator, we can clearly see that one function is <em>nested</em> inside another function.</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="lets-get-programming.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">/</span><span class="st">`</span>(<span class="fu">sum</span>(class<span class="sc">$</span>heights), <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="lets-get-programming.html#cb96-1" tabindex="-1"></a><span class="st">`</span><span class="at">/</span><span class="st">`</span>(<span class="fu">sum</span>(class<span class="sc">$</span>heights), <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## [1] 68.5</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1230,27 +1235,27 @@ div.csl-indent {
 <div id="the-length-function" class="section level3 hasAnchor" number="5.6.6">
 <h3><span class="header-section-number">5.6.6</span> The length function<a href="lets-get-programming.html#the-length-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>I think most of us would agree that the third method we learned for calculating the mean height is preferable to the first two methods for most situations. However, the third method still requires us to know how many individual heights are in the <code>heights</code> column (i.e., 4). Luckily, there is a function that tells us how many individual values are contained in a vector – the <code>length()</code> function. Let’s take a look:</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="lets-get-programming.html#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the heights vector</span></span>
-<span id="cb98-2"><a href="lets-get-programming.html#cb98-2" aria-hidden="true" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
-<span id="cb98-3"><a href="lets-get-programming.html#cb98-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb98-4"><a href="lets-get-programming.html#cb98-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Return the number of individual values in heights</span></span>
-<span id="cb98-5"><a href="lets-get-programming.html#cb98-5" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(heights)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="lets-get-programming.html#cb98-1" tabindex="-1"></a><span class="co"># Create the heights vector</span></span>
+<span id="cb98-2"><a href="lets-get-programming.html#cb98-2" tabindex="-1"></a>heights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
+<span id="cb98-3"><a href="lets-get-programming.html#cb98-3" tabindex="-1"></a></span>
+<span id="cb98-4"><a href="lets-get-programming.html#cb98-4" tabindex="-1"></a><span class="co"># Return the number of individual values in heights</span></span>
+<span id="cb98-5"><a href="lets-get-programming.html#cb98-5" tabindex="-1"></a><span class="fu">length</span>(heights)</span></code></pre></div>
 <pre><code>## [1] 4</code></pre>
 <p>Remember, that data frame columns are also vectors. So, we can combine the dollar sign notation and <code>length()</code> function to automatically calculate the number of values in the <code>heights</code> column of the <code>class</code> data frame. It looks like this:</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="lets-get-programming.html#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First way to calculate the mean</span></span>
-<span id="cb100-2"><a href="lets-get-programming.html#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (68 + 63 + 71 + 72) / 4</span></span>
-<span id="cb100-3"><a href="lets-get-programming.html#cb100-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-4"><a href="lets-get-programming.html#cb100-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Second way. Use dollar sign notation and bracket notation so that we don&#39;t </span></span>
-<span id="cb100-5"><a href="lets-get-programming.html#cb100-5" aria-hidden="true" tabindex="-1"></a><span class="co"># have to type individual heights</span></span>
-<span id="cb100-6"><a href="lets-get-programming.html#cb100-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (class$heights[1] + class$heights[2] + class$heights[3] + class$heights[4]) / 4</span></span>
-<span id="cb100-7"><a href="lets-get-programming.html#cb100-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-8"><a href="lets-get-programming.html#cb100-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Third way. Use dollar sign notation and sum function so that we don&#39;t have </span></span>
-<span id="cb100-9"><a href="lets-get-programming.html#cb100-9" aria-hidden="true" tabindex="-1"></a><span class="co"># to type as much</span></span>
-<span id="cb100-10"><a href="lets-get-programming.html#cb100-10" aria-hidden="true" tabindex="-1"></a><span class="co"># sum(class$heights) / 4</span></span>
-<span id="cb100-11"><a href="lets-get-programming.html#cb100-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-12"><a href="lets-get-programming.html#cb100-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Fourth way. Use dollar sign notation with the sum function and the length </span></span>
-<span id="cb100-13"><a href="lets-get-programming.html#cb100-13" aria-hidden="true" tabindex="-1"></a><span class="co"># function</span></span>
-<span id="cb100-14"><a href="lets-get-programming.html#cb100-14" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(class<span class="sc">$</span>heights) <span class="sc">/</span> <span class="fu">length</span>(class<span class="sc">$</span>heights)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="lets-get-programming.html#cb100-1" tabindex="-1"></a><span class="co"># First way to calculate the mean</span></span>
+<span id="cb100-2"><a href="lets-get-programming.html#cb100-2" tabindex="-1"></a><span class="co"># (68 + 63 + 71 + 72) / 4</span></span>
+<span id="cb100-3"><a href="lets-get-programming.html#cb100-3" tabindex="-1"></a></span>
+<span id="cb100-4"><a href="lets-get-programming.html#cb100-4" tabindex="-1"></a><span class="co"># Second way. Use dollar sign notation and bracket notation so that we don&#39;t </span></span>
+<span id="cb100-5"><a href="lets-get-programming.html#cb100-5" tabindex="-1"></a><span class="co"># have to type individual heights</span></span>
+<span id="cb100-6"><a href="lets-get-programming.html#cb100-6" tabindex="-1"></a><span class="co"># (class$heights[1] + class$heights[2] + class$heights[3] + class$heights[4]) / 4</span></span>
+<span id="cb100-7"><a href="lets-get-programming.html#cb100-7" tabindex="-1"></a></span>
+<span id="cb100-8"><a href="lets-get-programming.html#cb100-8" tabindex="-1"></a><span class="co"># Third way. Use dollar sign notation and sum function so that we don&#39;t have </span></span>
+<span id="cb100-9"><a href="lets-get-programming.html#cb100-9" tabindex="-1"></a><span class="co"># to type as much</span></span>
+<span id="cb100-10"><a href="lets-get-programming.html#cb100-10" tabindex="-1"></a><span class="co"># sum(class$heights) / 4</span></span>
+<span id="cb100-11"><a href="lets-get-programming.html#cb100-11" tabindex="-1"></a></span>
+<span id="cb100-12"><a href="lets-get-programming.html#cb100-12" tabindex="-1"></a><span class="co"># Fourth way. Use dollar sign notation with the sum function and the length </span></span>
+<span id="cb100-13"><a href="lets-get-programming.html#cb100-13" tabindex="-1"></a><span class="co"># function</span></span>
+<span id="cb100-14"><a href="lets-get-programming.html#cb100-14" tabindex="-1"></a><span class="fu">sum</span>(class<span class="sc">$</span>heights) <span class="sc">/</span> <span class="fu">length</span>(class<span class="sc">$</span>heights)</span></code></pre></div>
 <pre><code>## [1] 68.5</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1264,23 +1269,23 @@ div.csl-indent {
 <div id="the-mean-function" class="section level3 hasAnchor" number="5.6.7">
 <h3><span class="header-section-number">5.6.7</span> The mean function<a href="lets-get-programming.html#the-mean-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The fourth method above is definitely the best method yet. However, this need to find the mean value of a numeric vector is so common that someone had the sense to create a function that takes care of all the above steps for us – the <code>mean()</code> function. And as you probably saw coming, we can use the mean function like so:</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="lets-get-programming.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First way to calculate the mean</span></span>
-<span id="cb102-2"><a href="lets-get-programming.html#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (68 + 63 + 71 + 72) / 4</span></span>
-<span id="cb102-3"><a href="lets-get-programming.html#cb102-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-4"><a href="lets-get-programming.html#cb102-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Second way. Use dollar sign notation and bracket notation so that we don&#39;t </span></span>
-<span id="cb102-5"><a href="lets-get-programming.html#cb102-5" aria-hidden="true" tabindex="-1"></a><span class="co"># have to type individual heights</span></span>
-<span id="cb102-6"><a href="lets-get-programming.html#cb102-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (class$heights[1] + class$heights[2] + class$heights[3] + class$heights[4]) / 4</span></span>
-<span id="cb102-7"><a href="lets-get-programming.html#cb102-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-8"><a href="lets-get-programming.html#cb102-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Third way. Use dollar sign notation and sum function so that we don&#39;t have </span></span>
-<span id="cb102-9"><a href="lets-get-programming.html#cb102-9" aria-hidden="true" tabindex="-1"></a><span class="co"># to type as much</span></span>
-<span id="cb102-10"><a href="lets-get-programming.html#cb102-10" aria-hidden="true" tabindex="-1"></a><span class="co"># sum(class$heights) / 4</span></span>
-<span id="cb102-11"><a href="lets-get-programming.html#cb102-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-12"><a href="lets-get-programming.html#cb102-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Fourth way. Use dollar sign notation with the sum function and the length </span></span>
-<span id="cb102-13"><a href="lets-get-programming.html#cb102-13" aria-hidden="true" tabindex="-1"></a><span class="co"># function</span></span>
-<span id="cb102-14"><a href="lets-get-programming.html#cb102-14" aria-hidden="true" tabindex="-1"></a><span class="co"># sum(class$heights) / length(class$heights)</span></span>
-<span id="cb102-15"><a href="lets-get-programming.html#cb102-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-16"><a href="lets-get-programming.html#cb102-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Fifth way. Use dollar sign notation with the mean function</span></span>
-<span id="cb102-17"><a href="lets-get-programming.html#cb102-17" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(class<span class="sc">$</span>heights)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="lets-get-programming.html#cb102-1" tabindex="-1"></a><span class="co"># First way to calculate the mean</span></span>
+<span id="cb102-2"><a href="lets-get-programming.html#cb102-2" tabindex="-1"></a><span class="co"># (68 + 63 + 71 + 72) / 4</span></span>
+<span id="cb102-3"><a href="lets-get-programming.html#cb102-3" tabindex="-1"></a></span>
+<span id="cb102-4"><a href="lets-get-programming.html#cb102-4" tabindex="-1"></a><span class="co"># Second way. Use dollar sign notation and bracket notation so that we don&#39;t </span></span>
+<span id="cb102-5"><a href="lets-get-programming.html#cb102-5" tabindex="-1"></a><span class="co"># have to type individual heights</span></span>
+<span id="cb102-6"><a href="lets-get-programming.html#cb102-6" tabindex="-1"></a><span class="co"># (class$heights[1] + class$heights[2] + class$heights[3] + class$heights[4]) / 4</span></span>
+<span id="cb102-7"><a href="lets-get-programming.html#cb102-7" tabindex="-1"></a></span>
+<span id="cb102-8"><a href="lets-get-programming.html#cb102-8" tabindex="-1"></a><span class="co"># Third way. Use dollar sign notation and sum function so that we don&#39;t have </span></span>
+<span id="cb102-9"><a href="lets-get-programming.html#cb102-9" tabindex="-1"></a><span class="co"># to type as much</span></span>
+<span id="cb102-10"><a href="lets-get-programming.html#cb102-10" tabindex="-1"></a><span class="co"># sum(class$heights) / 4</span></span>
+<span id="cb102-11"><a href="lets-get-programming.html#cb102-11" tabindex="-1"></a></span>
+<span id="cb102-12"><a href="lets-get-programming.html#cb102-12" tabindex="-1"></a><span class="co"># Fourth way. Use dollar sign notation with the sum function and the length </span></span>
+<span id="cb102-13"><a href="lets-get-programming.html#cb102-13" tabindex="-1"></a><span class="co"># function</span></span>
+<span id="cb102-14"><a href="lets-get-programming.html#cb102-14" tabindex="-1"></a><span class="co"># sum(class$heights) / length(class$heights)</span></span>
+<span id="cb102-15"><a href="lets-get-programming.html#cb102-15" tabindex="-1"></a></span>
+<span id="cb102-16"><a href="lets-get-programming.html#cb102-16" tabindex="-1"></a><span class="co"># Fifth way. Use dollar sign notation with the mean function</span></span>
+<span id="cb102-17"><a href="lets-get-programming.html#cb102-17" tabindex="-1"></a><span class="fu">mean</span>(class<span class="sc">$</span>heights)</span></code></pre></div>
 <pre><code>## [1] 68.5</code></pre>
 <p>Congratulations again! You completed your first analysis using R!</p>
 </div>
@@ -1288,28 +1293,28 @@ div.csl-indent {
 <div id="some-common-errors" class="section level2 hasAnchor" number="5.7">
 <h2><span class="header-section-number">5.7</span> Some common errors<a href="lets-get-programming.html#some-common-errors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Before we move on, I want to briefly discuss a couple common errors that will frustrate many of you early in your R journey. You may have noticed that I went out of my way to differentiate between the <code>heights</code> vector and the <code>heights</code> column in the <code>class</code> data frame. As annoying as that may have been, I did it for a reason. The <code>heights</code> vector and the <code>heights</code> column in the <code>class</code> data frame are two separate things to the R interpreter, and you have to be very specific about which one you are referring to. To make this more concrete, let’s add a <code>weight</code> column to our <code>class</code> data frame.</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="lets-get-programming.html#cb104-1" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>weight <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">160</span>, <span class="dv">170</span>, <span class="dv">180</span>, <span class="dv">190</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="lets-get-programming.html#cb104-1" tabindex="-1"></a>class<span class="sc">$</span>weight <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">160</span>, <span class="dv">170</span>, <span class="dv">180</span>, <span class="dv">190</span>)</span></code></pre></div>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li>We created a new column in our data frame – <code>weight</code> – using dollar sign notation.</li>
 </ul>
 <p>Now, let’s find the mean weight of the students in our class.</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="lets-get-programming.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(weight)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="lets-get-programming.html#cb105-1" tabindex="-1"></a><span class="fu">mean</span>(weight)</span></code></pre></div>
 <pre><code>## Error in mean(weight): object &#39;weight&#39; not found</code></pre>
 <p>Uh, oh! What happened? Why is R saying that <code>weight</code> doesn’t exist? We clearly created it above, right? Wrong. We didn’t create an <em>object</em> called weight in the code chunk above. We created a <em>column</em> called <code>weight</code> in the <em>object</em> called <code>class</code> in the code chunk above. Those are <em>different things</em> to R. If we want to get the mean of <code>weight</code> we have to tell R that <code>weight</code> is a column in <code>class</code> like so:</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="lets-get-programming.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(class<span class="sc">$</span>weight)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="lets-get-programming.html#cb107-1" tabindex="-1"></a><span class="fu">mean</span>(class<span class="sc">$</span>weight)</span></code></pre></div>
 <pre><code>## [1] 175</code></pre>
 <p>A related issue can arise when you have an object and a column with the same name but different values. For example:</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="lets-get-programming.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># An object called scores</span></span>
-<span id="cb109-2"><a href="lets-get-programming.html#cb109-2" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">9</span>, <span class="dv">3</span>)</span>
-<span id="cb109-3"><a href="lets-get-programming.html#cb109-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-4"><a href="lets-get-programming.html#cb109-4" aria-hidden="true" tabindex="-1"></a><span class="co"># A colummn in the class data frame called scores</span></span>
-<span id="cb109-5"><a href="lets-get-programming.html#cb109-5" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">95</span>, <span class="dv">97</span>, <span class="dv">93</span>, <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="lets-get-programming.html#cb109-1" tabindex="-1"></a><span class="co"># An object called scores</span></span>
+<span id="cb109-2"><a href="lets-get-programming.html#cb109-2" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">9</span>, <span class="dv">3</span>)</span>
+<span id="cb109-3"><a href="lets-get-programming.html#cb109-3" tabindex="-1"></a></span>
+<span id="cb109-4"><a href="lets-get-programming.html#cb109-4" tabindex="-1"></a><span class="co"># A colummn in the class data frame called scores</span></span>
+<span id="cb109-5"><a href="lets-get-programming.html#cb109-5" tabindex="-1"></a>class<span class="sc">$</span>scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">95</span>, <span class="dv">97</span>, <span class="dv">93</span>, <span class="dv">100</span>)</span></code></pre></div>
 <p>If you ask R for the mean of <code>scores</code>, R will give you an answer.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="lets-get-programming.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(scores)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="lets-get-programming.html#cb110-1" tabindex="-1"></a><span class="fu">mean</span>(scores)</span></code></pre></div>
 <pre><code>## [1] 5.666667</code></pre>
 <p>However, if you wanted the mean of the <code>scores</code> column in the <code>class</code> data frame, this won’t be the <em>correct</em> answer. Hopefully, you already know how to get the correct answer, which is:</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="lets-get-programming.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(class<span class="sc">$</span>scores)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="lets-get-programming.html#cb112-1" tabindex="-1"></a><span class="fu">mean</span>(class<span class="sc">$</span>scores)</span></code></pre></div>
 <pre><code>## [1] 96.25</code></pre>
 <p>Again, the <code>scores</code> object and the <code>scores</code> column of the <code>class</code> object are different things to R.</p>
 </div>
