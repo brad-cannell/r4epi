@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-07-18" />
+<meta name="date" content="2023-08-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -754,50 +754,50 @@ div.csl-indent {
 <div id="measures-of-dispersion" class="section level1 hasAnchor" number="21">
 <h1><span class="header-section-number">21</span> Measures of Dispersion<a href="measures-of-dispersion.html#measures-of-dispersion" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>In the chapter on <a href="measures-of-central-tendency.html#measures-of-central-tendency">measures of central tendency</a>, we found the minimum value, mean value, median value, mode value, and maximum value of the weight variable in our hypothetical sample of students. We’ll go ahead start this lesson by rerunning that analysis below, but this time we will analyze heights instead of weights.</p>
-<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="measures-of-dispersion.html#cb331-1" tabindex="-1"></a><span class="co"># Load the dplyr package. We will need several of dplyr&#39;s functions in the </span></span>
-<span id="cb331-2"><a href="measures-of-dispersion.html#cb331-2" tabindex="-1"></a><span class="co"># code below.</span></span>
-<span id="cb331-3"><a href="measures-of-dispersion.html#cb331-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="measures-of-dispersion.html#cb332-1" tabindex="-1"></a><span class="co"># Simulate some data</span></span>
-<span id="cb332-2"><a href="measures-of-dispersion.html#cb332-2" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb332-3"><a href="measures-of-dispersion.html#cb332-3" tabindex="-1"></a>  <span class="sc">~</span>id,   <span class="sc">~</span>sex,     <span class="sc">~</span>ht_in, <span class="sc">~</span>wt_lbs,</span>
-<span id="cb332-4"><a href="measures-of-dispersion.html#cb332-4" tabindex="-1"></a>  <span class="st">&quot;001&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">190</span>,</span>
-<span id="cb332-5"><a href="measures-of-dispersion.html#cb332-5" tabindex="-1"></a>  <span class="st">&quot;002&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">177</span>,</span>
-<span id="cb332-6"><a href="measures-of-dispersion.html#cb332-6" tabindex="-1"></a>  <span class="st">&quot;003&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">64</span>,     <span class="dv">130</span>,</span>
-<span id="cb332-7"><a href="measures-of-dispersion.html#cb332-7" tabindex="-1"></a>  <span class="st">&quot;004&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">153</span>,</span>
-<span id="cb332-8"><a href="measures-of-dispersion.html#cb332-8" tabindex="-1"></a>  <span class="st">&quot;005&quot;</span>, <span class="cn">NA</span>,       <span class="dv">73</span>,     <span class="dv">173</span>,</span>
-<span id="cb332-9"><a href="measures-of-dispersion.html#cb332-9" tabindex="-1"></a>  <span class="st">&quot;006&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">182</span>,</span>
-<span id="cb332-10"><a href="measures-of-dispersion.html#cb332-10" tabindex="-1"></a>  <span class="st">&quot;007&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">186</span>,</span>
-<span id="cb332-11"><a href="measures-of-dispersion.html#cb332-11" tabindex="-1"></a>  <span class="st">&quot;008&quot;</span>, <span class="cn">NA</span>,       <span class="dv">73</span>,     <span class="dv">185</span>,</span>
-<span id="cb332-12"><a href="measures-of-dispersion.html#cb332-12" tabindex="-1"></a>  <span class="st">&quot;009&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">71</span>,     <span class="dv">157</span>,</span>
-<span id="cb332-13"><a href="measures-of-dispersion.html#cb332-13" tabindex="-1"></a>  <span class="st">&quot;010&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">66</span>,     <span class="dv">155</span>,</span>
-<span id="cb332-14"><a href="measures-of-dispersion.html#cb332-14" tabindex="-1"></a>  <span class="st">&quot;011&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">213</span>,</span>
-<span id="cb332-15"><a href="measures-of-dispersion.html#cb332-15" tabindex="-1"></a>  <span class="st">&quot;012&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">151</span>,</span>
-<span id="cb332-16"><a href="measures-of-dispersion.html#cb332-16" tabindex="-1"></a>  <span class="st">&quot;013&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">147</span>,</span>
-<span id="cb332-17"><a href="measures-of-dispersion.html#cb332-17" tabindex="-1"></a>  <span class="st">&quot;014&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">196</span>,</span>
-<span id="cb332-18"><a href="measures-of-dispersion.html#cb332-18" tabindex="-1"></a>  <span class="st">&quot;015&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">75</span>,     <span class="dv">212</span>,</span>
-<span id="cb332-19"><a href="measures-of-dispersion.html#cb332-19" tabindex="-1"></a>  <span class="st">&quot;016&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">19000</span>,</span>
-<span id="cb332-20"><a href="measures-of-dispersion.html#cb332-20" tabindex="-1"></a>  <span class="st">&quot;017&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">194</span>,</span>
-<span id="cb332-21"><a href="measures-of-dispersion.html#cb332-21" tabindex="-1"></a>  <span class="st">&quot;018&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
-<span id="cb332-22"><a href="measures-of-dispersion.html#cb332-22" tabindex="-1"></a>  <span class="st">&quot;019&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
-<span id="cb332-23"><a href="measures-of-dispersion.html#cb332-23" tabindex="-1"></a>  <span class="st">&quot;020&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">102</span></span>
-<span id="cb332-24"><a href="measures-of-dispersion.html#cb332-24" tabindex="-1"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="measures-of-dispersion.html#cb333-1" tabindex="-1"></a><span class="co"># Recreate our mode function</span></span>
-<span id="cb333-2"><a href="measures-of-dispersion.html#cb333-2" tabindex="-1"></a>mode_val <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb333-3"><a href="measures-of-dispersion.html#cb333-3" tabindex="-1"></a>  value_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(x)</span>
-<span id="cb333-4"><a href="measures-of-dispersion.html#cb333-4" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">names</span>(value_counts)[value_counts <span class="sc">==</span> <span class="fu">max</span>(value_counts)]</span>
-<span id="cb333-5"><a href="measures-of-dispersion.html#cb333-5" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(value_counts) <span class="sc">==</span> <span class="fu">length</span>(result)) {</span>
-<span id="cb333-6"><a href="measures-of-dispersion.html#cb333-6" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb333-7"><a href="measures-of-dispersion.html#cb333-7" tabindex="-1"></a>  }</span>
-<span id="cb333-8"><a href="measures-of-dispersion.html#cb333-8" tabindex="-1"></a>  result</span>
-<span id="cb333-9"><a href="measures-of-dispersion.html#cb333-9" tabindex="-1"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="measures-of-dispersion.html#cb334-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
-<span id="cb334-2"><a href="measures-of-dispersion.html#cb334-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb334-3"><a href="measures-of-dispersion.html#cb334-3" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in),</span>
-<span id="cb334-4"><a href="measures-of-dispersion.html#cb334-4" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in),</span>
-<span id="cb334-5"><a href="measures-of-dispersion.html#cb334-5" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in),</span>
-<span id="cb334-6"><a href="measures-of-dispersion.html#cb334-6" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in) <span class="sc">%&gt;%</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">&quot; , &quot;</span>),</span>
-<span id="cb334-7"><a href="measures-of-dispersion.html#cb334-7" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in)</span>
-<span id="cb334-8"><a href="measures-of-dispersion.html#cb334-8" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="measures-of-dispersion.html#cb334-1" tabindex="-1"></a><span class="co"># Load the dplyr package. We will need several of dplyr&#39;s functions in the </span></span>
+<span id="cb334-2"><a href="measures-of-dispersion.html#cb334-2" tabindex="-1"></a><span class="co"># code below.</span></span>
+<span id="cb334-3"><a href="measures-of-dispersion.html#cb334-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="measures-of-dispersion.html#cb335-1" tabindex="-1"></a><span class="co"># Simulate some data</span></span>
+<span id="cb335-2"><a href="measures-of-dispersion.html#cb335-2" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb335-3"><a href="measures-of-dispersion.html#cb335-3" tabindex="-1"></a>  <span class="sc">~</span>id,   <span class="sc">~</span>sex,     <span class="sc">~</span>ht_in, <span class="sc">~</span>wt_lbs,</span>
+<span id="cb335-4"><a href="measures-of-dispersion.html#cb335-4" tabindex="-1"></a>  <span class="st">&quot;001&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">190</span>,</span>
+<span id="cb335-5"><a href="measures-of-dispersion.html#cb335-5" tabindex="-1"></a>  <span class="st">&quot;002&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">177</span>,</span>
+<span id="cb335-6"><a href="measures-of-dispersion.html#cb335-6" tabindex="-1"></a>  <span class="st">&quot;003&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">64</span>,     <span class="dv">130</span>,</span>
+<span id="cb335-7"><a href="measures-of-dispersion.html#cb335-7" tabindex="-1"></a>  <span class="st">&quot;004&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">153</span>,</span>
+<span id="cb335-8"><a href="measures-of-dispersion.html#cb335-8" tabindex="-1"></a>  <span class="st">&quot;005&quot;</span>, <span class="cn">NA</span>,       <span class="dv">73</span>,     <span class="dv">173</span>,</span>
+<span id="cb335-9"><a href="measures-of-dispersion.html#cb335-9" tabindex="-1"></a>  <span class="st">&quot;006&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">182</span>,</span>
+<span id="cb335-10"><a href="measures-of-dispersion.html#cb335-10" tabindex="-1"></a>  <span class="st">&quot;007&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">186</span>,</span>
+<span id="cb335-11"><a href="measures-of-dispersion.html#cb335-11" tabindex="-1"></a>  <span class="st">&quot;008&quot;</span>, <span class="cn">NA</span>,       <span class="dv">73</span>,     <span class="dv">185</span>,</span>
+<span id="cb335-12"><a href="measures-of-dispersion.html#cb335-12" tabindex="-1"></a>  <span class="st">&quot;009&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">71</span>,     <span class="dv">157</span>,</span>
+<span id="cb335-13"><a href="measures-of-dispersion.html#cb335-13" tabindex="-1"></a>  <span class="st">&quot;010&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">66</span>,     <span class="dv">155</span>,</span>
+<span id="cb335-14"><a href="measures-of-dispersion.html#cb335-14" tabindex="-1"></a>  <span class="st">&quot;011&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">213</span>,</span>
+<span id="cb335-15"><a href="measures-of-dispersion.html#cb335-15" tabindex="-1"></a>  <span class="st">&quot;012&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">151</span>,</span>
+<span id="cb335-16"><a href="measures-of-dispersion.html#cb335-16" tabindex="-1"></a>  <span class="st">&quot;013&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">147</span>,</span>
+<span id="cb335-17"><a href="measures-of-dispersion.html#cb335-17" tabindex="-1"></a>  <span class="st">&quot;014&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">196</span>,</span>
+<span id="cb335-18"><a href="measures-of-dispersion.html#cb335-18" tabindex="-1"></a>  <span class="st">&quot;015&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">75</span>,     <span class="dv">212</span>,</span>
+<span id="cb335-19"><a href="measures-of-dispersion.html#cb335-19" tabindex="-1"></a>  <span class="st">&quot;016&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">19000</span>,</span>
+<span id="cb335-20"><a href="measures-of-dispersion.html#cb335-20" tabindex="-1"></a>  <span class="st">&quot;017&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">194</span>,</span>
+<span id="cb335-21"><a href="measures-of-dispersion.html#cb335-21" tabindex="-1"></a>  <span class="st">&quot;018&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
+<span id="cb335-22"><a href="measures-of-dispersion.html#cb335-22" tabindex="-1"></a>  <span class="st">&quot;019&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
+<span id="cb335-23"><a href="measures-of-dispersion.html#cb335-23" tabindex="-1"></a>  <span class="st">&quot;020&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">102</span></span>
+<span id="cb335-24"><a href="measures-of-dispersion.html#cb335-24" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="measures-of-dispersion.html#cb336-1" tabindex="-1"></a><span class="co"># Recreate our mode function</span></span>
+<span id="cb336-2"><a href="measures-of-dispersion.html#cb336-2" tabindex="-1"></a>mode_val <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb336-3"><a href="measures-of-dispersion.html#cb336-3" tabindex="-1"></a>  value_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(x)</span>
+<span id="cb336-4"><a href="measures-of-dispersion.html#cb336-4" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">names</span>(value_counts)[value_counts <span class="sc">==</span> <span class="fu">max</span>(value_counts)]</span>
+<span id="cb336-5"><a href="measures-of-dispersion.html#cb336-5" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(value_counts) <span class="sc">==</span> <span class="fu">length</span>(result)) {</span>
+<span id="cb336-6"><a href="measures-of-dispersion.html#cb336-6" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb336-7"><a href="measures-of-dispersion.html#cb336-7" tabindex="-1"></a>  }</span>
+<span id="cb336-8"><a href="measures-of-dispersion.html#cb336-8" tabindex="-1"></a>  result</span>
+<span id="cb336-9"><a href="measures-of-dispersion.html#cb336-9" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb337-1"><a href="measures-of-dispersion.html#cb337-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb337-2"><a href="measures-of-dispersion.html#cb337-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb337-3"><a href="measures-of-dispersion.html#cb337-3" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in),</span>
+<span id="cb337-4"><a href="measures-of-dispersion.html#cb337-4" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in),</span>
+<span id="cb337-5"><a href="measures-of-dispersion.html#cb337-5" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in),</span>
+<span id="cb337-6"><a href="measures-of-dispersion.html#cb337-6" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in) <span class="sc">%&gt;%</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">&quot; , &quot;</span>),</span>
+<span id="cb337-7"><a href="measures-of-dispersion.html#cb337-7" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in)</span>
+<span id="cb337-8"><a href="measures-of-dispersion.html#cb337-8" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 5
 ##   min_height mean_height median_height mode_height max_height
 ##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
@@ -822,13 +822,13 @@ div.csl-indent {
 <p><img src="img/04_part_descriptive_analysis/dispersion_03_overview.png" width="1080" /></p>
 <p><strong>Range</strong></p>
 <p>The range is simply the difference between the maximum and minimum value in the data.</p>
-<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="measures-of-dispersion.html#cb336-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
-<span id="cb336-2"><a href="measures-of-dispersion.html#cb336-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb336-3"><a href="measures-of-dispersion.html#cb336-3" tabindex="-1"></a>    <span class="at">min_height  =</span> <span class="fu">min</span>(ht_in),</span>
-<span id="cb336-4"><a href="measures-of-dispersion.html#cb336-4" tabindex="-1"></a>    <span class="at">mean_height =</span> <span class="fu">mean</span>(ht_in),</span>
-<span id="cb336-5"><a href="measures-of-dispersion.html#cb336-5" tabindex="-1"></a>    <span class="at">max_height  =</span> <span class="fu">max</span>(ht_in),</span>
-<span id="cb336-6"><a href="measures-of-dispersion.html#cb336-6" tabindex="-1"></a>    <span class="at">range       =</span> max_height <span class="sc">-</span> min_height</span>
-<span id="cb336-7"><a href="measures-of-dispersion.html#cb336-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb339-1"><a href="measures-of-dispersion.html#cb339-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb339-2"><a href="measures-of-dispersion.html#cb339-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb339-3"><a href="measures-of-dispersion.html#cb339-3" tabindex="-1"></a>    <span class="at">min_height  =</span> <span class="fu">min</span>(ht_in),</span>
+<span id="cb339-4"><a href="measures-of-dispersion.html#cb339-4" tabindex="-1"></a>    <span class="at">mean_height =</span> <span class="fu">mean</span>(ht_in),</span>
+<span id="cb339-5"><a href="measures-of-dispersion.html#cb339-5" tabindex="-1"></a>    <span class="at">max_height  =</span> <span class="fu">max</span>(ht_in),</span>
+<span id="cb339-6"><a href="measures-of-dispersion.html#cb339-6" tabindex="-1"></a>    <span class="at">range       =</span> max_height <span class="sc">-</span> min_height</span>
+<span id="cb339-7"><a href="measures-of-dispersion.html#cb339-7" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 4
 ##   min_height mean_height max_height range
 ##        &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
@@ -859,7 +859,7 @@ div.csl-indent {
 🗒<strong>Side Note:</strong> If the 6 observations here represented our entire population of interest, then we could simply divide by n instead of n-1.
 </p>
 <p>Getting R to do this math for us is really straightforward. We simply use base R’s <code>var()</code> function.</p>
-<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="measures-of-dispersion.html#cb338-1" tabindex="-1"></a><span class="fu">var</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">58</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">78</span>, <span class="dv">3</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="measures-of-dispersion.html#cb341-1" tabindex="-1"></a><span class="fu">var</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">58</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">78</span>, <span class="dv">3</span>)))</span></code></pre></div>
 <pre><code>## [1] 120</code></pre>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
@@ -879,19 +879,19 @@ div.csl-indent {
 <p>That is, about 68% of all the observations fall within one standard deviation of the mean (that is, 10.95 inches). About 95% of all observations are within 2 standard deviations of the mean (that is, 10.95 * 2 = 21.9 inches), and about 99.9% of all observations are within 3 standard deviations of the mean (that is, 10.95 * 3 = 32.85 inches).</p>
 <p>Don’t forget that these percentage rules apply to values <strong>around</strong> the mean. In other words, half the values will be greater than the mean and half the values will be lower than the mean. You will often see this graphically illustrated with a “normal curve” or “bell curve.”</p>
 <!-- Helpful site: http://t-redactyl.io/blog/2016/03/creating-plots-in-r-using-ggplot2-part-9-function-plots.html -->
-<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-313-1.png" width="672" /></p>
+<p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-322-1.png" width="672" /></p>
 <p>Unfortunately, the current data is nowhere near normally distributed and does not make for a good example of this rule.</p>
 <div id="comparing-distributions" class="section level2 hasAnchor" number="21.1">
 <h2><span class="header-section-number">21.1</span> Comparing distributions<a href="measures-of-dispersion.html#comparing-distributions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Now that you understand what the different measures of distribution are and how they are calculated, let’s further develop your “feel” for interpreting them. I like to do this by comparing different simulated distributions.</p>
-<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="measures-of-dispersion.html#cb340-1" tabindex="-1"></a>sim_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb340-2"><a href="measures-of-dispersion.html#cb340-2" tabindex="-1"></a>  <span class="at">all_68     =</span> <span class="fu">rep</span>(<span class="dv">68</span>, <span class="dv">20</span>),</span>
-<span id="cb340-3"><a href="measures-of-dispersion.html#cb340-3" tabindex="-1"></a>  <span class="at">half_58_78 =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">58</span>, <span class="dv">10</span>), <span class="fu">rep</span>(<span class="dv">78</span>, <span class="dv">10</span>)),</span>
-<span id="cb340-4"><a href="measures-of-dispersion.html#cb340-4" tabindex="-1"></a>  <span class="at">even_58_78 =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">58</span>, <span class="at">to =</span> <span class="dv">78</span>, <span class="at">length.out =</span> <span class="dv">20</span>),</span>
-<span id="cb340-5"><a href="measures-of-dispersion.html#cb340-5" tabindex="-1"></a>  <span class="at">half_48_88 =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">48</span>, <span class="dv">10</span>), <span class="fu">rep</span>(<span class="dv">88</span>, <span class="dv">10</span>)),</span>
-<span id="cb340-6"><a href="measures-of-dispersion.html#cb340-6" tabindex="-1"></a>  <span class="at">even_48_88 =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">48</span>, <span class="at">to =</span> <span class="dv">88</span>, <span class="at">length.out =</span> <span class="dv">20</span>)</span>
-<span id="cb340-7"><a href="measures-of-dispersion.html#cb340-7" tabindex="-1"></a>)</span>
-<span id="cb340-8"><a href="measures-of-dispersion.html#cb340-8" tabindex="-1"></a>sim_data</span></code></pre></div>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="measures-of-dispersion.html#cb343-1" tabindex="-1"></a>sim_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb343-2"><a href="measures-of-dispersion.html#cb343-2" tabindex="-1"></a>  <span class="at">all_68     =</span> <span class="fu">rep</span>(<span class="dv">68</span>, <span class="dv">20</span>),</span>
+<span id="cb343-3"><a href="measures-of-dispersion.html#cb343-3" tabindex="-1"></a>  <span class="at">half_58_78 =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">58</span>, <span class="dv">10</span>), <span class="fu">rep</span>(<span class="dv">78</span>, <span class="dv">10</span>)),</span>
+<span id="cb343-4"><a href="measures-of-dispersion.html#cb343-4" tabindex="-1"></a>  <span class="at">even_58_78 =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">58</span>, <span class="at">to =</span> <span class="dv">78</span>, <span class="at">length.out =</span> <span class="dv">20</span>),</span>
+<span id="cb343-5"><a href="measures-of-dispersion.html#cb343-5" tabindex="-1"></a>  <span class="at">half_48_88 =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">48</span>, <span class="dv">10</span>), <span class="fu">rep</span>(<span class="dv">88</span>, <span class="dv">10</span>)),</span>
+<span id="cb343-6"><a href="measures-of-dispersion.html#cb343-6" tabindex="-1"></a>  <span class="at">even_48_88 =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">48</span>, <span class="at">to =</span> <span class="dv">88</span>, <span class="at">length.out =</span> <span class="dv">20</span>)</span>
+<span id="cb343-7"><a href="measures-of-dispersion.html#cb343-7" tabindex="-1"></a>)</span>
+<span id="cb343-8"><a href="measures-of-dispersion.html#cb343-8" tabindex="-1"></a>sim_data</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 5
 ##    all_68 half_58_78 even_58_78 half_48_88 even_48_88
 ##     &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
@@ -927,12 +927,12 @@ div.csl-indent {
 </ul></li>
 </ul>
 <p>I can use this simulated data to quickly demonstrate a couple of these concepts for you. Let’s use R to calculate and compare the mean, variance, and standard deviation of each variable.</p>
-<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="measures-of-dispersion.html#cb342-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb342-2"><a href="measures-of-dispersion.html#cb342-2" tabindex="-1"></a>  <span class="at">Column   =</span> <span class="fu">names</span>(sim_data),</span>
-<span id="cb342-3"><a href="measures-of-dispersion.html#cb342-3" tabindex="-1"></a>  <span class="at">Mean     =</span> purrr<span class="sc">::</span><span class="fu">map_dbl</span>(sim_data, mean),</span>
-<span id="cb342-4"><a href="measures-of-dispersion.html#cb342-4" tabindex="-1"></a>  <span class="at">Variance =</span> purrr<span class="sc">::</span><span class="fu">map_dbl</span>(sim_data, var),</span>
-<span id="cb342-5"><a href="measures-of-dispersion.html#cb342-5" tabindex="-1"></a>  <span class="at">SD       =</span> purrr<span class="sc">::</span><span class="fu">map_dbl</span>(sim_data, sd)</span>
-<span id="cb342-6"><a href="measures-of-dispersion.html#cb342-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb345"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb345-1"><a href="measures-of-dispersion.html#cb345-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb345-2"><a href="measures-of-dispersion.html#cb345-2" tabindex="-1"></a>  <span class="at">Column   =</span> <span class="fu">names</span>(sim_data),</span>
+<span id="cb345-3"><a href="measures-of-dispersion.html#cb345-3" tabindex="-1"></a>  <span class="at">Mean     =</span> purrr<span class="sc">::</span><span class="fu">map_dbl</span>(sim_data, mean),</span>
+<span id="cb345-4"><a href="measures-of-dispersion.html#cb345-4" tabindex="-1"></a>  <span class="at">Variance =</span> purrr<span class="sc">::</span><span class="fu">map_dbl</span>(sim_data, var),</span>
+<span id="cb345-5"><a href="measures-of-dispersion.html#cb345-5" tabindex="-1"></a>  <span class="at">SD       =</span> purrr<span class="sc">::</span><span class="fu">map_dbl</span>(sim_data, sd)</span>
+<span id="cb345-6"><a href="measures-of-dispersion.html#cb345-6" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 4
 ##   Column      Mean Variance    SD
 ##   &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;

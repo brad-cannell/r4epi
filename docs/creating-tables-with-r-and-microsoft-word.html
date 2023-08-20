@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-07-18" />
+<meta name="date" content="2023-08-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -753,7 +753,7 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="creating-tables-with-r-and-microsoft-word" class="section level1 hasAnchor" number="40">
 <h1><span class="header-section-number">40</span> Creating tables with R and Microsoft Word<a href="creating-tables-with-r-and-microsoft-word.html#creating-tables-with-r-and-microsoft-word" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>At this point, you should all know that it is generally a bad idea to submit raw R output as part of a report, presentation, or publication. You should also understand when it is most appropriate to use tables, as opposed to charts and graphs, to present your results. If not, please stop here and read Chapter 7 of <em>Successful Scientific Writing</em>, which discusses the “why” behind much of what I will show you “how” to do in this chapter.<span class="citation"><sup><a href="#ref-Matthews2014-ah">14</a></sup></span></p>
+<p>At this point, you should all know that it is generally a bad idea to submit raw R output as part of a report, presentation, or publication. You should also understand when it is most appropriate to use tables, as opposed to charts and graphs, to present your results. If not, please stop here and read Chapter 7 of <em>Successful Scientific Writing</em>, which discusses the “why” behind much of what I will show you “how” to do in this chapter.<span class="citation"><sup><a href="#ref-Matthews2014-ah">15</a></sup></span></p>
 <p><em>R for Epidemiology</em> is predominantly a book about using R to manage, visualize, and analyze data in ways that are common in the field epidemiology. However, in most modern work/research environments it is difficult to escape the requirement to share your results in a Microsoft Word document. And often, because we are dealing with data, those results include tables of some sort. However, not all tables communicate your results equally well. In this chapter, I will walk you through the process of starting with some results you calculated in R and ending with a nicely formatted table in Microsoft Word. Specifically, we are going to create a Table 1.</p>
 <div id="table-1" class="section level2 hasAnchor" number="40.1">
 <h2><span class="header-section-number">40.1</span> Table 1<a href="creating-tables-with-r-and-microsoft-word.html#table-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -769,7 +769,7 @@ div.csl-indent {
 <h2><span class="header-section-number">40.2</span> Opioid drug use<a href="creating-tables-with-r-and-microsoft-word.html#opioid-drug-use" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>As a motivating example, let’s say that we are working at the North Texas Regional Health Department and have been asked to create a report about drug use in our region. Our stakeholders are particularly interested in opioid drug use. To create this report, we will analyze data from a sample of 9,985 adults who were asked about their use of drugs. One of the first analyses that we did was a descriptive comparison of the sociodemographic characteristics of 3 subgroups of people in our data. We will use these analyses to create our Table 1.</p>
 <p>You can view/download the data by <a href="https://github.com/brad-cannell/r4epi/blob/master/data/drugs.csv">clicking here</a></p>
-<div class="sourceCode" id="cb1661"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1661-1"><a href="creating-tables-with-r-and-microsoft-word.html#cb1661-1" tabindex="-1"></a>drugs <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;data/drugs.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1664"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1664-1"><a href="creating-tables-with-r-and-microsoft-word.html#cb1664-1" tabindex="-1"></a>drugs <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;data/drugs.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Rows: 9985 Columns: 4
 ## ── Column specification ──────────────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -777,15 +777,15 @@ div.csl-indent {
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb1663"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1663-1"><a href="creating-tables-with-r-and-microsoft-word.html#cb1663-1" tabindex="-1"></a><span class="co"># Making factor levels more readable</span></span>
-<span id="cb1663-2"><a href="creating-tables-with-r-and-microsoft-word.html#cb1663-2" tabindex="-1"></a>drugs <span class="ot">&lt;-</span> drugs <span class="sc">%&gt;%</span> </span>
-<span id="cb1663-3"><a href="creating-tables-with-r-and-microsoft-word.html#cb1663-3" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1663-4"><a href="creating-tables-with-r-and-microsoft-word.html#cb1663-4" tabindex="-1"></a>    <span class="at">edu_f =</span> <span class="fu">factor</span>(</span>
-<span id="cb1663-5"><a href="creating-tables-with-r-and-microsoft-word.html#cb1663-5" tabindex="-1"></a>      edu, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school&quot;</span>, <span class="st">&quot;Some college&quot;</span>, <span class="st">&quot;College graduate&quot;</span>)</span>
-<span id="cb1663-6"><a href="creating-tables-with-r-and-microsoft-word.html#cb1663-6" tabindex="-1"></a>    ),</span>
-<span id="cb1663-7"><a href="creating-tables-with-r-and-microsoft-word.html#cb1663-7" tabindex="-1"></a>    <span class="at">female_f =</span> <span class="fu">factor</span>(female, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)),</span>
-<span id="cb1663-8"><a href="creating-tables-with-r-and-microsoft-word.html#cb1663-8" tabindex="-1"></a>    <span class="at">use_f =</span> <span class="fu">factor</span>(use, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Non-users&quot;</span>, <span class="st">&quot;Use other drugs&quot;</span>, <span class="st">&quot;Use opioid drugs&quot;</span>))</span>
-<span id="cb1663-9"><a href="creating-tables-with-r-and-microsoft-word.html#cb1663-9" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb1666"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1666-1"><a href="creating-tables-with-r-and-microsoft-word.html#cb1666-1" tabindex="-1"></a><span class="co"># Making factor levels more readable</span></span>
+<span id="cb1666-2"><a href="creating-tables-with-r-and-microsoft-word.html#cb1666-2" tabindex="-1"></a>drugs <span class="ot">&lt;-</span> drugs <span class="sc">%&gt;%</span> </span>
+<span id="cb1666-3"><a href="creating-tables-with-r-and-microsoft-word.html#cb1666-3" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1666-4"><a href="creating-tables-with-r-and-microsoft-word.html#cb1666-4" tabindex="-1"></a>    <span class="at">edu_f =</span> <span class="fu">factor</span>(</span>
+<span id="cb1666-5"><a href="creating-tables-with-r-and-microsoft-word.html#cb1666-5" tabindex="-1"></a>      edu, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school&quot;</span>, <span class="st">&quot;Some college&quot;</span>, <span class="st">&quot;College graduate&quot;</span>)</span>
+<span id="cb1666-6"><a href="creating-tables-with-r-and-microsoft-word.html#cb1666-6" tabindex="-1"></a>    ),</span>
+<span id="cb1666-7"><a href="creating-tables-with-r-and-microsoft-word.html#cb1666-7" tabindex="-1"></a>    <span class="at">female_f =</span> <span class="fu">factor</span>(female, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)),</span>
+<span id="cb1666-8"><a href="creating-tables-with-r-and-microsoft-word.html#cb1666-8" tabindex="-1"></a>    <span class="at">use_f =</span> <span class="fu">factor</span>(use, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Non-users&quot;</span>, <span class="st">&quot;Use other drugs&quot;</span>, <span class="st">&quot;Use opioid drugs&quot;</span>))</span>
+<span id="cb1666-9"><a href="creating-tables-with-r-and-microsoft-word.html#cb1666-9" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>##     var              cat    n n_total   percent        se   t_crit      lcl       ucl
 ## 1 use_f        Non-users 8315    9985 83.274912 0.3734986 1.960202 82.52992 83.994296
 ## 2 use_f  Use other drugs 1532    9985 15.343015 0.3606903 1.960202 14.64925 16.063453
@@ -1050,7 +1050,7 @@ Creating your own packages
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body">
 <div id="ref-Matthews2014-ah" class="csl-entry">
-<div class="csl-left-margin">14. </div><div class="csl-right-inline">Matthews JR, Matthews RW. <em>Successful Scientific Writing: A <span class="nocase">Step-by-Step</span> Guide for the Biological and Medical Sciences</em>. Cambridge University Press; 2014.</div>
+<div class="csl-left-margin">15. </div><div class="csl-right-inline">Matthews JR, Matthews RW. <em>Successful Scientific Writing: A <span class="nocase">Step-by-Step</span> Guide for the Biological and Medical Sciences</em>. Cambridge University Press; 2014.</div>
 </div>
 </div>
             </section>

@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-07-18" />
+<meta name="date" content="2023-08-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -753,25 +753,31 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="using-pipes" class="section level1 hasAnchor" number="11">
 <h1><span class="header-section-number">11</span> Using Pipes<a href="using-pipes.html#using-pipes" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<!-- 
+Hidden comments placeholder
+---------------------------
+
+To preview:
+bookdown::preview_chapter("chapters/02_part_coding_tools_and_best_practices/05_using_pipes.Rmd")
+
+Copy and paste:
+👆**Here's what we did above:**
+-->
 <div id="what-are-pipes" class="section level2 hasAnchor" number="11.1">
 <h2><span class="header-section-number">11.1</span> What are pipes?<a href="using-pipes.html#what-are-pipes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>🤔 What are pipes? This <code>%&gt;%</code> is the pipe operator. The pipe operator is not part of base R. So, you will need to install and load a package to use it. There is actually more than one package that you can use. I recommend that you install and load the <code>dplyr</code> package.</p>
-<ul>
-<li><p>You can install the <code>dplyr</code> package by copying and pasting the following command in your R console <code>install.packages("dplyr")</code></p></li>
-<li><p>You can load the <code>dplyr</code> package by copying and pasting the following command in your R console <code>library(dplyr)</code></p></li>
-</ul>
+<p>🤔 What are pipes? This <code>|&gt;</code> is the pipe operator. As of version 4.1, the pipe operator is part of base R. Prior to version 4.1, the pipe operator was only available from the <a href="https://magrittr.tidyverse.org/">magrittr</a>. The pipe imported from the <code>magrittr</code> package looked like <code>%&gt;%</code> and you may still come across it in R code – including in this book.</p>
 <p>🤔 What does the pipe operator do? In my opinion, the pipe operator makes your R code <em>much</em> easier to read and understand.</p>
 <p>🤔 How does it do that? It makes your R code easier to read and understand by allowing you to view your nested functions in the order you want them to execute, as opposed to viewing them literally nested inside of each other.</p>
-<p>You were first introduced to nesting functions in the <a href="lets-get-programming.html#nesting-functions">Let’s get programming chapter</a>. Recall that functions return values, and the R language allows us to directly pass those returned values into other functions for further calculations. We referred to this as <strong>nesting functions</strong> and said it was a big deal because it allows us to do very complex operations in a scalable way and without storing a bunch of unneeded values.</p>
+<p>You were first introduced to nesting functions in the <a href="lets-get-programming.html#nesting-functions">Let’s get programming chapter</a>. Recall that functions return values, and the R language allows us to directly pass those returned values into other functions for further calculations. We referred to this as <strong>nesting functions</strong> and said it was a big deal because it allows us to do very complex operations in a scalable way, without storing a bunch of unneeded intermediate objects in our global environment.</p>
 <p>In that chapter, we also discussed a potential downside of nesting functions. Namely, our R code can become really difficult to read when we start nesting lots of functions inside one another.</p>
-<p>Pipes allow us to retain the benefits of nesting functions without making our code really difficult to read. At this point, I think it’s best to show you an example. In the code below we want to generate a sequence of numbers, then we want to calculate the log of each of the numbers, and then find the mean of the logged values.</p>
+<p>Pipes allow us to retain the benefits of nesting functions without making our code really difficult to read. At this point, we think it’s best to show you an example. In the code below we want to generate a sequence of numbers, then we want to calculate the log of each of the numbers, and then find the mean of the logged values.</p>
 <div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="using-pipes.html#cb130-1" tabindex="-1"></a><span class="co"># Performing an operation using a series of steps.</span></span>
 <span id="cb130-2"><a href="using-pipes.html#cb130-2" tabindex="-1"></a>my_numbers <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">2</span>, <span class="at">to =</span> <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">2</span>)</span>
 <span id="cb130-3"><a href="using-pipes.html#cb130-3" tabindex="-1"></a>my_numbers_logged <span class="ot">&lt;-</span> <span class="fu">log</span>(my_numbers)</span>
 <span id="cb130-4"><a href="using-pipes.html#cb130-4" tabindex="-1"></a>mean_my_numbers_logged <span class="ot">&lt;-</span> <span class="fu">mean</span>(my_numbers_logged)</span>
 <span id="cb130-5"><a href="using-pipes.html#cb130-5" tabindex="-1"></a>mean_my_numbers_logged</span></code></pre></div>
 <pre><code>## [1] 3.662703</code></pre>
-<p>👆<strong>Here’s what we did above:</strong></p>
+<p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
 <li>We created a vector of numbers called <code>my_numbers</code> using the <code>seq()</code> function.<br />
 </li>
@@ -781,8 +787,8 @@ div.csl-indent {
 </li>
 <li>Finally, we printed the value of <code>mean_my_numbers_logged</code> to the screen to view.</li>
 </ul>
-<p>The obvious first question here is, “why would I ever want to do that?” Good question! You probably won’t ever want to do what we just did in the code chunk above, but we haven’t learned many functions for working with real data yet and I don’t want to distract you with a bunch of new functions right now. Instead, I want to demonstrate what pipes do. So, we’re stuck with this silly example.</p>
-<p>👍 What’s nice about the code above? I would argue that it is pretty easy to read because each line does one thing and it follows a series of steps in logical order – create the numbers, log the numbers, get the mean.</p>
+<p>The obvious first question here is, “why would I ever want to do that?” Good question! You probably won’t ever want to do what we just did in the code chunk above, but we haven’t learned many functions for working with real data yet and we don’t want to distract you with a bunch of new functions right now. Instead, we want to demonstrate what pipes do. So, we’re stuck with this silly example.</p>
+<p>👍 What’s nice about the code above? We would argue that it is pretty easy to read because each line does one thing and it follows a series of steps in logical order. First, create the numbers. Second, log the numbers. Third, get the mean of the logged numbers.</p>
 <p>👎 What could be better about the code above? All we really wanted was the mean value of the logged numbers (i.e., <code>mean_my_numbers_logged</code>); however, on our way to getting <code>mean_my_numbers_logged</code> we also created two other objects that we don’t care about – <code>my_numbers</code> and <code>my_numbers_logged</code>. It took us time to do the extra typing required to create those objects, and those objects are now cluttering up our global environment. It may not seem like that big of a deal here, but in a real data analysis project these things can really add up.</p>
 <p>Next, let’s try nesting these functions instead:</p>
 <div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="using-pipes.html#cb132-1" tabindex="-1"></a><span class="co"># Performing an operation using nested functions.</span></span>
@@ -795,11 +801,11 @@ div.csl-indent {
 <li><p>Then, we printed the value of <code>mean_my_numbers_logged</code> to the screen to view.</p></li>
 </ul>
 <p>👍 What’s nice about the code above? It is certainly more efficient than the sequential step method we used at first. We went from using 4 lines of code to using 2 lines of code, and we didn’t generate any unneeded objects.</p>
-<p>👎 What could be better about the code above? Many people would say that this code is harder to read than than the the sequential step method we used at first. This is primarily due to the fact that each line no longer does one thing, and the code no longer follows a sequence of steps from start to finish. For example, the final operation we want to do is calculate the mean, but the <code>mean()</code> function is the first function we use in the code.</p>
+<p>👎 What could be better about the code above? Many people would say that this code is harder to read than than the the sequential step method we used at first. This is primarily due to the fact that each line no longer does one thing, and the code no longer follows a sequence of steps from start to finish. For example, the final operation we want to do is calculate the mean, but the <code>mean()</code> function is the first function we see when we read the code.</p>
 <p>Finally, let’s try see what this code looks like when we use pipes:</p>
 <div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="using-pipes.html#cb134-1" tabindex="-1"></a><span class="co"># Performing an operation using pipes.</span></span>
-<span id="cb134-2"><a href="using-pipes.html#cb134-2" tabindex="-1"></a>mean_my_numbers_logged <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">2</span>, <span class="at">to =</span> <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb134-3"><a href="using-pipes.html#cb134-3" tabindex="-1"></a>  <span class="fu">log</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb134-2"><a href="using-pipes.html#cb134-2" tabindex="-1"></a>mean_my_numbers_logged <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">2</span>, <span class="at">to =</span> <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb134-3"><a href="using-pipes.html#cb134-3" tabindex="-1"></a>  <span class="fu">log</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb134-4"><a href="using-pipes.html#cb134-4" tabindex="-1"></a>  <span class="fu">mean</span>()</span>
 <span id="cb134-5"><a href="using-pipes.html#cb134-5" tabindex="-1"></a>mean_my_numbers_logged</span></code></pre></div>
 <pre><code>## [1] 3.662703</code></pre>
@@ -809,22 +815,22 @@ div.csl-indent {
 <li><p>Then, we printed the value of <code>mean_my_numbers_logged</code> to the screen to view.</p></li>
 </ul>
 <p>👏 As you can see, by using pipes we were able to retain the benefits of performing the operation in a series of steps (i.e., each line of code does one thing and they follow in sequential order) and the benefits of nesting functions (i.e., more efficient code).</p>
-<p>The utility of the pipe operator may not be immediately apparent to you based on this very simple example. So, next I’m going to show you a little snippet of code from one of my research projects. In the code chunk that follows, the operation I’m trying to perform on my data is written in two different ways – without pipes and with pipes. It’s very unlikely that you will know what this code does, but that isn’t really the point. Just try to get a sense of which version is easier for you to read.</p>
+<p>The utility of the pipe operator may not be immediately apparent to you based on this very simple example. So, next we’re going to show you a little snippet of code from one of our research projects. In the code chunk that follows, the operation we’re trying to perform on the data is written in two different ways – without pipes and with pipes. It’s very unlikely that you will know what this code does, but that isn’t really the point. Just try to get a sense of which version is easier for you to read.</p>
 <div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="using-pipes.html#cb136-1" tabindex="-1"></a><span class="co"># Nest functions without pipes</span></span>
 <span id="cb136-2"><a href="using-pipes.html#cb136-2" tabindex="-1"></a>responses <span class="ot">&lt;-</span> <span class="fu">select</span>(<span class="fu">ungroup</span>(<span class="fu">filter</span>(<span class="fu">group_by</span>(<span class="fu">filter</span>(merged_data, <span class="sc">!</span><span class="fu">is.na</span>(incident_number)), incident_number), <span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>)), date_entered, detect_data, validation)</span>
 <span id="cb136-3"><a href="using-pipes.html#cb136-3" tabindex="-1"></a></span>
 <span id="cb136-4"><a href="using-pipes.html#cb136-4" tabindex="-1"></a><span class="co"># Nest functions with pipes</span></span>
-<span id="cb136-5"><a href="using-pipes.html#cb136-5" tabindex="-1"></a>responses <span class="ot">&lt;-</span> merged_data <span class="sc">%&gt;%</span> </span>
-<span id="cb136-6"><a href="using-pipes.html#cb136-6" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(incident_number)) <span class="sc">%&gt;%</span> </span>
-<span id="cb136-7"><a href="using-pipes.html#cb136-7" tabindex="-1"></a>  <span class="fu">group_by</span>(incident_number) <span class="sc">%&gt;%</span> </span>
-<span id="cb136-8"><a href="using-pipes.html#cb136-8" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb136-9"><a href="using-pipes.html#cb136-9" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb136-5"><a href="using-pipes.html#cb136-5" tabindex="-1"></a>responses <span class="ot">&lt;-</span> merged_data <span class="sc">|&gt;</span> </span>
+<span id="cb136-6"><a href="using-pipes.html#cb136-6" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(incident_number)) <span class="sc">|&gt;</span> </span>
+<span id="cb136-7"><a href="using-pipes.html#cb136-7" tabindex="-1"></a>  <span class="fu">group_by</span>(incident_number) <span class="sc">|&gt;</span> </span>
+<span id="cb136-8"><a href="using-pipes.html#cb136-8" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb136-9"><a href="using-pipes.html#cb136-9" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb136-10"><a href="using-pipes.html#cb136-10" tabindex="-1"></a>  <span class="fu">select</span>(date_entered, detect_data, validation)</span></code></pre></div>
 <p>What do you think? Even without knowing what this code does, do you feel like one version is easier to read than the other?</p>
 </div>
 <div id="how-do-pipes-work" class="section level2 hasAnchor" number="11.2">
 <h2><span class="header-section-number">11.2</span> How do pipes work?<a href="using-pipes.html#how-do-pipes-work" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Perhaps I’ve convinced you that pipes are generally useful. But, it may not be totally obvious to you <em>how</em> to use them. They are actually really simple. Start by thinking about pipes as having a left side and a right side.</p>
+<p>Perhaps we’ve convinced you that pipes are generally useful. But, it may not be totally obvious to you <em>how</em> to use them. They are actually really simple. Start by thinking about pipes as having a left side and a right side.</p>
 <div class="figure"><span style="display:block;" id="fig:left-right"></span>
 <img src="img/02_part_coding_tools_and_best_practices/05_using_pipes/left_right.png" alt="Pipes have a left side and a right side." width="900" />
 <p class="caption">
@@ -857,9 +863,9 @@ Figure 11.4: Pipe the left side to the first argument of the function on the rig
 <div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="using-pipes.html#cb137-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>))</span></code></pre></div>
 <pre><code>## [1] 5</code></pre>
 <p>We can also use a pipe to pass that vector of numbers to the <code>mean()</code> function.</p>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="using-pipes.html#cb139-1" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>) <span class="sc">%&gt;%</span> <span class="fu">mean</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="using-pipes.html#cb139-1" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>) <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span></code></pre></div>
 <pre><code>## [1] 5</code></pre>
-<p>So, the R interpreter took the thing on the left side of the pipe operator, stuck it into the first argument of the function on the right side of the pipe operator, and then executed the function. In this case, the <code>mean()</code> function doesn’t require any other arguments, so we don’t have to write anything else inside of the <code>mean()</code> function’s parentheses. When we see <code>c(2, 4, 6, 8) %&gt;% mean()</code>, R sees <code>mean(c(2, 4, 6, 8))</code></p>
+<p>So, the R interpreter took the thing on the left side of the pipe operator, stuck it into the first argument of the function on the right side of the pipe operator, and then executed the function. In this case, the <code>mean()</code> function doesn’t require any other arguments, so we don’t have to write anything else inside of the <code>mean()</code> function’s parentheses. When we see <code>c(2, 4, 6, 8) |&gt; mean()</code>, R sees <code>mean(c(2, 4, 6, 8))</code></p>
 <p>Here’s one more example. Pretty soon we will learn how to use the <code>filter()</code> function from the <code>dplyr</code> package to keep only a subset of rows from our data frame. Let’s start by simulating some data:</p>
 <div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="using-pipes.html#cb141-1" tabindex="-1"></a><span class="co"># Simulate some data</span></span>
 <span id="cb141-2"><a href="using-pipes.html#cb141-2" tabindex="-1"></a>height_and_weight <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
@@ -894,13 +900,13 @@ Figure 11.4: Pipe the left side to the first argument of the function on the rig
 <p>We can also use a pipe to pass the <code>height_and_weight</code> data frame to the <code>filter()</code> function.</p>
 <div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="using-pipes.html#cb145-1" tabindex="-1"></a><span class="co"># First value = data frame name (height_and_weight)</span></span>
 <span id="cb145-2"><a href="using-pipes.html#cb145-2" tabindex="-1"></a><span class="co"># Second value = condition for keeping rows (when the value of sex is Female)</span></span>
-<span id="cb145-3"><a href="using-pipes.html#cb145-3" tabindex="-1"></a>height_and_weight <span class="sc">%&gt;%</span> <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>)</span></code></pre></div>
+<span id="cb145-3"><a href="using-pipes.html#cb145-3" tabindex="-1"></a>height_and_weight <span class="sc">|&gt;</span> <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 4
 ##   id    sex    ht_in wt_lbs
 ##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 003   Female    64    130
 ## 2 004   Female    65    154</code></pre>
-<p>As you can see, we get the exact same result. So, the R interpreter took the thing on the left side of the pipe operator, stuck it into the first argument of the function on the right side of the pipe operator, and then executed the function. In this case, the <code>filter()</code> function needs a value supplied to two arguments in order work. So, we wrote <code>sex == "Female"</code> inside of the <code>filter()</code> function’s parentheses. When we see <code>height_and_weight %&gt;% filter(sex == "Female")</code>, R sees <code>filter(height_and_weight, sex == "Female")</code>.</p>
+<p>As you can see, we get the exact same result. So, the R interpreter took the thing on the left side of the pipe operator, stuck it into the first argument of the function on the right side of the pipe operator, and then executed the function. In this case, the <code>filter()</code> function needs a value supplied to two arguments in order work. So, we wrote <code>sex == "Female"</code> inside of the <code>filter()</code> function’s parentheses. When we see <code>height_and_weight |&gt; filter(sex == "Female")</code>, R sees <code>filter(height_and_weight, sex == "Female")</code>.</p>
 <p class="note">
 🗒<strong>Side Note:</strong> This pattern – a data frame piped into a function, which is usually then piped into one or more additional functions is something that you will see over and over in this book.
 </p>
@@ -911,32 +917,53 @@ Figure 11.4: Pipe the left side to the first argument of the function on the rig
 </ol>
 <div id="keyboard-shortcut" class="section level3 hasAnchor" number="11.2.1">
 <h3><span class="header-section-number">11.2.1</span> Keyboard shortcut<a href="using-pipes.html#keyboard-shortcut" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Typing <code>%&gt;%</code> over and over can be tedious! Thankfully, RStudio provides a keyboard shortcut for inserting the pipe operator into your R code.</p>
+<p>Typing <code>|&gt;</code> over and over can be tedious! Thankfully, RStudio provides a keyboard shortcut for inserting the pipe operator into your R code.</p>
 <p>On Mac type <code>shift + command + m</code>.</p>
 <p>On Windows type <code>shift + control + m</code></p>
 <p>It may not seem totally intuitive at first, but this shortcut is really handy once you get used to it.</p>
 </div>
 <div id="pipe-style" class="section level3 hasAnchor" number="11.2.2">
 <h3><span class="header-section-number">11.2.2</span> Pipe style<a href="using-pipes.html#pipe-style" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>As with all the code we write, style is an important consideration. I generally agree with the recommendations given in the <a href="https://style.tidyverse.org/pipes.html">Tidyverse style guide</a>. In particular, I tend to use pipes in such a way that each line of my code does one, and only one, thing. For example:</p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="using-pipes.html#cb147-1" tabindex="-1"></a><span class="co"># Each line does one thing - Use</span></span>
-<span id="cb147-2"><a href="using-pipes.html#cb147-2" tabindex="-1"></a>responses <span class="ot">&lt;-</span> merged_data <span class="sc">%&gt;%</span> </span>
-<span id="cb147-3"><a href="using-pipes.html#cb147-3" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(incident_number)) <span class="sc">%&gt;%</span> </span>
-<span id="cb147-4"><a href="using-pipes.html#cb147-4" tabindex="-1"></a>  <span class="fu">group_by</span>(incident_number) <span class="sc">%&gt;%</span> </span>
-<span id="cb147-5"><a href="using-pipes.html#cb147-5" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb147-6"><a href="using-pipes.html#cb147-6" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb147-7"><a href="using-pipes.html#cb147-7" tabindex="-1"></a>  <span class="fu">select</span>(date_entered, detect_data, validation)</span>
-<span id="cb147-8"><a href="using-pipes.html#cb147-8" tabindex="-1"></a></span>
-<span id="cb147-9"><a href="using-pipes.html#cb147-9" tabindex="-1"></a><span class="co"># Some lines do more than one thing - Don&#39;t use</span></span>
-<span id="cb147-10"><a href="using-pipes.html#cb147-10" tabindex="-1"></a>responses <span class="ot">&lt;-</span> merged_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(incident_number)) <span class="sc">%&gt;%</span> </span>
-<span id="cb147-11"><a href="using-pipes.html#cb147-11" tabindex="-1"></a>  <span class="fu">group_by</span>(incident_number) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb147-12"><a href="using-pipes.html#cb147-12" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">select</span>(date_entered, detect_data, validation)</span></code></pre></div>
-<p>As previously stated, there is a certain amount of subjectivity in what constitutes “good” style. But, I will once again reiterate that it is important to adopt <em>some</em> style and use it consistently.</p>
+<p>As with all the code we write, style is an important consideration. We generally agree with the recommendations given in the <a href="https://style.tidyverse.org/pipes.html">Tidyverse style guide</a>. In particular:</p>
+<ol style="list-style-type: decimal">
+<li><p>We tend to use pipes in such a way that each line of code does one, and only one, thing.</p></li>
+<li><p>If a line of code contains a pipe operator, the pipe operator should generally be the last thing typed on the line.</p></li>
+<li><p>The pipe operator should always have a space in front of it.</p></li>
+<li><p>If the pipe operator isn’t the last thing typed on the line, then it should be have a space after it too.</p></li>
+<li><p>“If the function you’re piping into has named arguments (like <code>mutate()</code> or <code>summarize()</code>), put each argument on a new line. If the function doesn’t have named arguments (like <code>select()</code> or <code>filter()</code>), keep everything on one line unless it doesn’t fit, in which case you should put each argument on its own line.”<span class="citation"><sup><a href="#ref-Wickham2023-ta">6</a></sup></span></p></li>
+<li><p>“After the first step of the pipeline, indent each line by two spaces. RStudio will automatically put the spaces in for you after a line break following a <code>|&gt;</code> . If you’re putting each argument on its own line, indent by an extra two spaces. Make sure <code>)</code> is on its own line, and un-indented to match the horizontal position of the function name.”<span class="citation"><sup><a href="#ref-Wickham2023-ta">6</a></sup></span></p></li>
+</ol>
+<p>Each of these recommendations are demonstrated in the code below.</p>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="using-pipes.html#cb147-1" tabindex="-1"></a><span class="co"># Do this...</span></span>
+<span id="cb147-2"><a href="using-pipes.html#cb147-2" tabindex="-1"></a>female_height_and_weight <span class="ot">&lt;-</span> height_and_weight <span class="sc">|&gt;</span> <span class="co"># Line 1</span></span>
+<span id="cb147-3"><a href="using-pipes.html#cb147-3" tabindex="-1"></a>  <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>) <span class="sc">|&gt;</span>                     <span class="co"># Line 2</span></span>
+<span id="cb147-4"><a href="using-pipes.html#cb147-4" tabindex="-1"></a>  <span class="fu">summarise</span>(                                     <span class="co"># Line 3</span></span>
+<span id="cb147-5"><a href="using-pipes.html#cb147-5" tabindex="-1"></a>    <span class="at">mean_ht =</span> <span class="fu">mean</span>(ht_in),                       <span class="co"># Line 4</span></span>
+<span id="cb147-6"><a href="using-pipes.html#cb147-6" tabindex="-1"></a>    <span class="at">sd_ht   =</span> <span class="fu">sd</span>(ht_in)                          <span class="co"># Line 5</span></span>
+<span id="cb147-7"><a href="using-pipes.html#cb147-7" tabindex="-1"></a>  ) <span class="sc">|&gt;</span>                                           <span class="co"># Line 6</span></span>
+<span id="cb147-8"><a href="using-pipes.html#cb147-8" tabindex="-1"></a>  <span class="fu">print</span>()                                        <span class="co"># Line 7</span></span></code></pre></div>
+<pre><code>## # A tibble: 1 × 2
+##   mean_ht sd_ht
+##     &lt;dbl&gt; &lt;dbl&gt;
+## 1    64.5 0.707</code></pre>
+<p>In the code above, we would first like you to notice that each line of code does one, and only one, thing. Line 1 <em>only</em> assigns the result of the code pipeline to a new object – <code>female_height_and_weight</code>, line 2 <em>only</em> keeps the rows in the data frame we want – rows for females, line 3 <em>only</em> opens the <code>summarise()</code> function, line 4 <em>only</em> calculates the mean of the <code>ht_in</code> column, line 5 <em>only</em> calculates the standard deviation of the <code>ht_in</code> column, line 6 <em>only</em> closes the <code>summarise()</code> function, and line 7 <em>only</em> prints the result to the screen.</p>
+<p>Second, we’d like you to notice that each line containing a pipe operator (i.e., lines 1, 2, and 6) <em>ends</em> with the pipe operator, and the pipe operators all have a space in front of them.</p>
+<p>Third, we’d like you to notice that each named argument in the <code>summarise()</code> function is written on its own line (i.e., lines 4 and 5).</p>
+<p>Finally, we’d like you notice that each step of the pipeline is indented two spaces (i.e., lines 2, 3, 6, and 7), lines 4 and 5 are indented an <em>additional</em> two spaces because they contain named arguments to the <code>summarise()</code> function, and that the <code>summarise()</code> function’s closing parenthesis is on its own line (i.e., line 6), horizontally aligned with the “s” in “summarise(”.</p>
+<p>Now compare that with the code in the code chunk below.</p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="using-pipes.html#cb149-1" tabindex="-1"></a><span class="co"># Avoid this...</span></span>
+<span id="cb149-2"><a href="using-pipes.html#cb149-2" tabindex="-1"></a>female_height_and_weight <span class="ot">&lt;-</span> height_and_weight <span class="sc">|&gt;</span> <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb149-3"><a href="using-pipes.html#cb149-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_ht =</span> <span class="fu">mean</span>(ht_in), <span class="at">sd_ht =</span> <span class="fu">sd</span>(ht_in)) <span class="sc">|&gt;</span> <span class="fu">print</span>()  </span></code></pre></div>
+<pre><code>## # A tibble: 1 × 2
+##   mean_ht sd_ht
+##     &lt;dbl&gt; &lt;dbl&gt;
+## 1    64.5 0.707</code></pre>
+<p>Although we get the same result as before, most people would agree that the code is harder to quickly glance at and read. Further, most people would also agree that it would be more difficult to add or rearrange steps when the code is written that way. As previously stated, there is a certain amount of subjectivity in what constitutes “good” style. But, we will once again reiterate that it is important to adopt <em>some</em> style and use it consistently. If you are a beginning R programmer, why not adopt the tried-and-true styles suggested here and adjust later if you have a compelling reason to do so?</p>
 </div>
 </div>
 <div id="final-thought-on-pipes" class="section level2 hasAnchor" number="11.3">
 <h2><span class="header-section-number">11.3</span> Final thought on pipes<a href="using-pipes.html#final-thought-on-pipes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>I think it’s important to note that not everyone in the R programming community is a fan of using pipes. I hope I’ve made a compelling case for why I use pipes, but I acknowledge that it is ultimately a preference, and that using pipes is not the best choice in all circumstances. Whether or not you choose to use the pipe operator is up to you; however, I will be using them extensively throughout the remainder of this book.</p>
+<p>We think it’s important to note that not everyone in the R programming community is a fan of using pipes. We hope the we’ve made a compelling case for why we use pipes, but we acknowledge that it is ultimately a preference, and that using pipes is not the best choice in all circumstances. Whether or not you choose to use the pipe operator is up to you; however, we will be using them extensively throughout the remainder of this book.</p>
 
 </div>
 </div>
@@ -944,6 +971,12 @@ Figure 11.4: Pipe the left side to the first argument of the function on the rig
 
 
 
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-Wickham2023-ta" class="csl-entry">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">Wickham H, Çetinkaya-Rundel M, Grolemund G. Workflow: Code style. In: <em><span>R</span> for Data Science</em>. second.; 2023.</div>
+</div>
 </div>
             </section>
 
