@@ -1,5 +1,16 @@
 # Let’s Get Programming
 
+<!-- 
+Hidden comments placeholder
+---------------------------
+
+To preview:
+bookdown::preview_chapter("chapters/01_part_getting_started/05_lets_get_programming.Rmd")
+
+Copy and paste:
+👆**Here's what we did above:**
+-->
+
 In this chapter, we are going to tie together many of the concepts we've learned so far, and you are going to create your first basic R program. Specifically, you are going to write a program that simulates some data and analyzes it. 
 
 ## Simulating data
@@ -125,6 +136,112 @@ typeof(my_logical)
 ```
 
 Rather than have an abstract discussion about the particulars of each of these vector types right now, I think it's best to wait and learn more about them when they naturally arise in the context of a real challenge we are trying to solve with data. At this point, just having some vague idea that they exist is good enough.
+
+### Factor vectors
+
+Above, we said that we would only work with three vector types in this book: double, integer, and logical. Technically, that is true. Factors aren't technically a vector type (we will explain below) but calling them a vector type is close enough to true for our purposes. We will briefly introduce you to factors here, and then discuss them in more depth later in the chapter on [Numerical Descriptions of Categorical Variables]. We cover them in greater depth there because factors are most useful in the context of working with categorical data -- data that is grouped into discrete categories. Some examples of categorical variables commonly seen in public health data are sex, race or ethnicity, and level of educational attainment.
+
+In R, we can represent a categorical variable in multiple different ways. For example, let's say that we are interested in recording people's highest level of formal education completed in our data. The discrete categories we are interested in are:
+
+- 1 = Less than high school
+
+- 2 = High school graduate
+
+- 3 = Some college
+
+- 4 = College graduate
+
+We could then create a numeric vector to record the level of educational attainment for four hypothetical people as shown below.
+
+```{r}
+# A numeric vector of education categories
+education_num <- c(3, 1, 4, 1)
+education_num
+```
+
+But what is less-than-ideal about storing our categorical data this way? Well, it isn't obvious what the numbers in `education_num` mean. For the purposes of this example, we defined them above, but if we didn’t have that information then we would likely have no idea what categories the numbers represent.
+
+We could also create a character vector to record the level of educational attainment for four hypothetical people as shown below.
+
+```{r}
+# A character vector of education categories
+education_chr <- c(
+  "Some college", "Less than high school", "College graduate", 
+  "Less than high school"
+)
+education_chr
+```
+
+But this strategy also has a few limitations that we will discuss in in the chapter on [Numerical Descriptions of Categorical Variables]. For now, we just need to quickly learn how to create and identify factor vectors. 
+
+Typically, we don't _create_ factors from scratch. Instead, we typically convert (or "coerce") an existing numeric or character vector into a factor. For example, we can coerce `education_num` to a factor like this:
+
+```{r}
+# Coerce education_num to a factor
+education_num_f <- factor(
+  x      = education_num,
+  levels = 1:4,
+  labels = c(
+    "Less than high school", "High school graduate", "Some college", 
+    "College graduate"
+  )
+)
+education_num_f
+```
+
+👆 **Here's what we did above:**
+
+* We used the `factor()` function to create a new factor version of `education_num`. 
+
+  - You can type `?factor` into your R console to view the help documentation for this function and follow along with the explanation below.
+  
+  - The first argument to the `factor()` function is the `x` argument. The value passed to the `x` argument should be a vector of data. We passed the `education_num` vector to the `x` argument.
+  
+  - The second argument to the `factor()` function is the `levels` argument. This argument tells R the unique values that the new factor variable can take. We used the shorthand `1:4` to tell R that `education_num_f` can take the unique values 1, 2, 3, or 4.
+  
+  - The third argument to the `factor()` function is the `labels` argument. The value passed to the `labels` argument should be a character vector of labels (i.e., descriptive text) for each value in the `levels` argument. The order of the labels in the character vector we pass to the `labels` argument should match the order of the values passed to the `levels` argument. For example, the ordering of `levels` and `labels` above tells R that `1` should be labeled with "Less than high school", `2` should be labeled with "High school graduate", etc.
+  
+* We used the assignment operator (`<-`) to save our new factor vector in our global environment as `education_num_f`. 
+
+  - If we had used the name `education_num` instead, then the previous values in the `education_num` vector would have been replaced with the new values. That is sometimes what we want to happen. However, when it comes to creating factors, we typically keep the numeric version of the vector and create an additional factor version of the vector. We just often find that it can be useful to have both versions of the variable hanging around during the analysis process.
+    
+  - We also use the `_f` naming convention in our code. That means that when we create a new factor vector, we name it the same thing the original vector was named with the addition of `_f` (for factor) at the end.
+
+* We printed the vector to the screen. The values in `education_num_f` _look_ similar to the character strings displayed in `education_chr`. Notice, however, that the values no longer have quotes around them and R displays `Levels: Less than high school High school graduate Some college College graduate` below the data values. This is R telling us the _possible_ categorical values that this factor could take on. This is a telltale sign that the vector being printed to the screen is a factor. 
+
+Interestingly, although R uses labels to make factors _look_ like character vectors, they are still integer vectors under the hood. For example:
+
+```{r}
+typeof(education_num_f)
+```
+
+And we can still view them as such.
+
+```{r}
+as.numeric(education_num_f)
+```
+
+It is also possible to coerce character vectors to factors. For example, we can coerce `education_chr` to a factor like so:
+
+```{r}
+# Coerce education_chr to a factor
+education_chr_f <- factor(
+  x      = education_chr,
+  levels = c(
+    "Less than high school", "High school graduate", "Some college", 
+    "College graduate"
+  )
+)
+education_chr_f
+```
+
+👆 **Here's what we did above:**
+
+* We coerced a character vector (`education_chr`) to a factor using the `factor()` function. 
+
+* Because the levels _are_ character strings, there was no need to pass any values to the `labels` argument this time. Keep in mind, though, that the order of the values passed to the `levels` argument matters. It will be the order that the factor levels will be displayed in our analyses.
+
+You might reasonably wonder why we would want to convert character vectors to factors, but we will save that discussion for the chapter on [Numerical Descriptions of Categorical Variables].
 
 ## Data frames
 
