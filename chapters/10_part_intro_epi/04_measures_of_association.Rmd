@@ -1,0 +1,287 @@
+# Measures of Association
+
+```{=html}
+<!-- 
+Hidden comments placeholder
+---------------------------
+
+To preview:
+bookdown::preview_chapter("chapters/10_part_intro_epi/04_measures_of_association.Rmd")
+
+Copy and paste:
+👆**Here's what we did above:**
+
+-->
+```
+
+::: under-construction
+`r fontawesome::fa("hammer", fill = "#000000", height="1em")` This chapter is under heavy development and may still undergo significant changes.
+:::
+
+<!-- Add a banner -->
+
+As a reminder, we said that epidemiology is usually defined as something like, "the study of the occurrence and distribution of health-related states or events in specified populations, including the study of the determinants influencing such states, and the application of this knowledge to control the health problems" @Porta2008-ij in the [Introduction to Epidemiology] chapter. In the chapter about [measures of occurrence][Measures of Occurrence], we focused on some of the ways we can measure the _occurrence_ of those health-related states or events. In this chatper, we will start discussing ways we can measure the _distribution_ of those health-related states or events. 
+
+::: note
+🗒**Side Note:** Writing (and reading) "health-related states or events" over and over starts to get cumbersome after a while. Therefore, we will often just use "conditions" or "events" in the text below instead. Further, the methods we discuss below can just as easily be applied to better understanding characteristics of populations that would not typically be described as a "condition" or "event". For example, sex assigned at birth or ethnicity.
+:::
+
+Remember, that our measurement and analysis goals can be broken down into description, prediction, and/or causally explanation of health-related states or events in populations of people.
+
+```{r measures-of-association-description-prediction-causation, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/01_intro_epi/description_prediction_causation.png")
+```
+
+We said that when we describe health-related states or events, we are not necessarily looking for associations in the data between two or more variables. Sometimes, we are simply looking at the distribution of values in a single variable/measure.
+
+For example:
+
+- How many ventilators are available in Texas?
+
+- What is the average age of people living in Florida?
+
+- How much time elapses, on average, between exposure to a pathogen and occurrence of disease symptoms?
+
+However, there are also times when we want to compare the distribution of value in one variable within levels of another variable. Most people would consider these comparisons to be equivalent to measuring associations. 
+
+For example:
+
+- Are there more ventilators available in Texas or New York?
+
+- Are people older, on average, in Florida or Pennsylvania?
+
+- Is symptom onset quicker, on average, for Cholera or E. coli?
+
+One could also make the case that this starts to overlap with prediction. It sort of just depends on how the information is being used. But, when our goal is prediction, it is safe to say that associations will be of great interest to us. So, what are associations?
+
+> “[An <span class="u-orange-text">association</span> is a] <span class="u-orange-text">statistical dependence</span> between two or more events, characteristics, or other variables. An association is present if the <span class="u-orange-text">probability of occurrence</span> of an event or characteristic, or the quantity of a variable, varies with the occurrence of one or more other events, the presence of one or more other characteristics, or the quantity of one or more <span class="u-orange-text">other variables</span>." @Porta2008-ij
+
+Said another way, when the distribution (e.g., middle, spread, shape, proportion of people) of one variable is different on average across levels of a second variable, then there is an association between the first variable and the second variable. 
+
+Yet another way to describe an association is to simply say that there is an association between two variables when knowing the value of variable one tells us something about (or helps us predict) the value variable two. 
+
+Let's simulate some data to help us understand what association looks like in action.
+
+```{r measures-of-association-load-packages}
+# Load the packages we will need below
+library(dplyr, warn.conflicts = FALSE)
+library(freqtables)
+```
+
+```{r measures-of-association-sim-x-y-no-association}
+# Create a simulated data frame with two variables
+df <- tibble(
+  # Create one variable, x, that has 50 rows with a value of 0 and 50 rows with
+  # a value of 1.
+  x = c(rep(0, 50), rep(1, 50)),
+  # Create a second variable, y, that has 100 values of either 0 or 1.
+  # If x equals 0, then y have 25 rows with a value of 0 and 25 rows with a 
+  # value of 1.
+  # If x equals 1, then y have 25 rows with a value of 0 and 25 rows with a 
+  # value of 1.
+  y = c(rep(0, 25), rep(1, 25), rep(0, 25), rep(1, 25))
+)
+```
+
+Now, let's explore the relationship between `x` and `y` in the data we simulated above. Specifically, let's ask R to calculate the distribution of `y` across levels of `x`. Here, "the distribution of `y`" means the proportion of 0's and 1's, and "across levels of `x`" means do the calculation for all rows where `x` equals 0 and separately for all rows where `x` equals 1.
+
+```{r measures-of-association-freq-x-y}
+df |>
+  # Use the freq_table function to calculate the distribution of y across 
+  # levels of x
+  freq_table(x, y) |> 
+  # Keep a subset of the columns to make the results easier to read.
+  select(row_var:col_cat, percent_row)
+```
+
+In the results above, we can see that when `x` is 0 (`row_cat` = 0), then `y` is 1 (`col_cat` = 1) 50% of the time. Similarly, when `x` is 1 (`row_cat` = 1), then `y` is 1 (`col_cat` = 1) 50% of the time. 
+
+In this case, does the distribution of `y` differ across levels of `x`? No. When `x` is 0, `y` equals 1 50% of the time, and when `x` is 1, `y` equals 1 50% of the time. 
+
+In this case, does knowing the value of `x` tell us something about (or help us predict) the value y. No. The value of `y` is equally likely to be 1 or 0 no matter what the value of `x` is. 
+
+So, is there an association between `x` and `y` in the simulated data above? No, there is no association between `x` and `y` in the simulated data above. Said another way, `x` and `y` and **statistically independent** of each other. 
+
+Now, let's simulate a second data frame where `x` and `y` are associated with each other. 
+
+```{r measures-of-association-sim-x-y}
+# Set the seed for the random number generator so that we can reproduce our results
+set.seed(123)
+
+# Create a simulated data frame with two variables
+df <- tibble(
+  # Create one variable, x, that has 100 values of either 0 or 1.
+  # The probability of a value being 0 over the long run is 0.5 and the 
+  # probability of a value being 1 over the long run is 0.5
+  x = sample(0:1, 100, TRUE, c(0.5, 0.5)),
+  # Create a second variable, y, that has 100 values of either 0 or 1.
+  # If x equals 0, then the probability of the y value being 0 over the long run is 
+  # 0.2 and the probability of the y value being 1 over the long run is 0.8.
+  # If x equals 0, then the probability of the y value being 0 over the long run is 
+  # 0.5 and the probability of the y value being 1 over the long run is 0.5.
+  y = if_else(
+    x == 0,
+    sample(0:1, 100, TRUE, c(0.2, 0.8)),
+    sample(0:1, 100, TRUE, c(0.5, 0.5))
+  )
+)
+```
+
+And let's once again explore the relationship between `x` and `y` in the data we simulated above.
+
+```{r measures-of-association-freq-x-y}
+df |>
+  # Use the freq_table function to calculate the distribution of y across 
+  # levels of x
+  freq_table(x, y) |> 
+  # Keep a subset of the columns to make the results easier to read.
+  select(row_var:col_cat, percent_row)
+```
+
+In the results above, we can see that when `x` is 0 (`row_cat` = 0), then `y` is 1 (`col_cat` = 1) 81% of the time. Alternatively, when `x` is 1 (`row_cat` = 1), then `y` is 1 (`col_cat` = 1) 47% of the time. 
+
+In this case, does the distribution of `y` differ across levels of `x`? Yes! When `x` is 0, `y` equals 1 81% of the time, and when `x` is 1, `y` equals 1 only 47% of the time. 
+
+In this case, does knowing the value of `x` tell us something about (or help us predict) the value y. Yes! The value of `y` is more likely to be 1 when `x` is 0 than when `x` is 1. 
+
+So, is there an association between `x` and `y` in the simulated data above? Yes! There is an association between `x` and `y` in the simulated data above. We can also say that there is a **statistical dependence** between `x` and `y`.
+
+At this point, we hope you are starting to develop an intuitive understanding of associations. Let's try to simplify and formalize our definition of an association even further by writing it as an equation. We recognize that many people are scared of equations (including us sometimes), but this is an occasion where an equation might actually make it easier for us to understand the concept. Let's give it a shot. 
+
+<!-- For Testing -->
+<!-- $$Pr[Y=1|X=1] \neq Pr[Y=1|X=0]$$ -->
+\begin{equation}
+  Pr[Y=1|X=1] \neq Pr[Y=1|X=0]
+   (\#eq:association)
+\end{equation}
+
+Now, let's break equation \@ref(eq:association) down into its component parts and see what it tells us.
+
+- $Pr[]$ is read as "the probability of"
+
+- $Y=1$ is read as "Y equals 1." Typically, Y equals 1 when the thing that Y represents happens. 
+
+  - $Y=0$ (not shown above) would be read as "Y equals 0," and would typically mean that the thing Y represents did not happen.
+
+  - For example, if Y represents Alzheimer's Disease, then $Y=1$ for each person who has Alzheimer's Disease and $Y=0$ for each person who does not have Alzheimer's Disease.
+  
+- $|$ is read as "given that" or "if".
+
+- - $X=1$ is read as "X equals 1." Typically, X equals 1 when the thing that X represents happens. 
+
+  - $X=0$ (not shown above) would be read as "X equals 0," and would typically mean that the thing X represents did not happen.
+
+  - For example, if X represents APOEe4 allele, then $X=1$ for each person who has an APOEe4 allele and $X=0$ for each person who does not have an APOEe4 allele.
+  
+So, how would we put all of this together and say it in words? Give it a try in your head before reading on.
+
+- The probability that Y equals 1 given that X equals 1 is not equal to the probability that Y equals 1 given that X equals 0.
+
+Or, if we're still talking about Alzheimer's Disease and APOEe4 allele:
+
+- The probability of Alzheimer’s Disease among people who carry at least one APOEe4 allele is not equal to the probability of Alzheimer’s Disease among people who do not carry any APOEe4 alleles.
+
+And what exactly does "probability" mean?
+
+
+# Probability
+
+When we talk about the probability of something in everyday speech, we are typically making a statement about how likely it is that something will happen. In statistics (and epidemiology), we actually need to distinguish between two different kinds of probability. 
+
+1. **Frequency probability** is the limit of the relative frequency of an event in a sequence of N random trials as N approaches infinity. @Porta2008-ij For example, if we flip a coin a really large number of times -- a nearly infinite amount of times -- then how frequently would the coin come up heads? The frequency probability is that number of times. 
+
+2. **Subjective probability** is a measure, ranging from 0 to 1, of the degree of belief in a hypothesis or statement. @Porta2008-ij For example, if we say that we believe there is a 50% probability of rain today, then we are making a subjective probability statement. We believe that it is just as likely to rain today as not. 
+
+In epidemiology, when we talk about probability, we are typically talking about frequency probability. And we can write out an equation for frequency probability like this:
+
+$$P(Y)=\frac{Number\, of\, times\, Y\, occurs}{Total\, number\, of\, all\, possible\, outcomes}$$
+
+::: note
+🗒**Side Note:** Notice that probability is sometimes written at $Pr$ and sometimes written as just $P$.
+:::
+
+Thinking back to our Alzheimer’s example, how would we write out the probability of Alzheimer's Disease using this equation?
+
+$$P(Y)=\frac{Number\, of\, times\, Alzheimer's\, Disease\, occurs}{Total\, number\, of\, times\, Alzheimer's\, Disease\, could\, have\, occured}$$
+
+## Conditional probabilities
+
+The probabilities described above were all **marginal** or **unconditional** probabilities. Unconditional probabilities describe how likely an event occurrence is without incorporating information about other events that may affect the first event. For example, the unconditional probability of rain would be the probability of rain before knowing if there are clouds in the sky or not. Conversely, the **conditional probability** of an event describes how likely an event occurrence is given that some other event has already occurred. Going back to our rain example, the conditional probability of rain would be the probability of rain given that there are dark clouds looming in the sky.
+
+And we can write out an equation for conditional probabilites that looks like this:
+
+$$P(Y|X) = \frac{P(Y \cap X)}{P(X)}$$
+
+The new symbol in the equation above that looks like an upside-down U is read as "intersects." Visually, it looks like this:
+
+```{r measures-of-association-intersection, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/01_intro_epi/intersection.png")
+```
+
+# Left off here... create a picture from the intersection slide
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r echo=FALSE}
+# clean up
+rm(list = ls())
+```
