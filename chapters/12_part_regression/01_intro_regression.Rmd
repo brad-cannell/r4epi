@@ -22,4 +22,834 @@ Copy and paste:
 # knitr::include_graphics("img/12_part_regression/01_intro_regression/figure.png")
 ```
 
+As a reminder, epidemiology is the study of the occurrence and distribution of health-related states or events in specified populations, including the study of the determinants influencing such states, and the application of this knowledge to control the health problems. In previous chapters, we focused on some of the ways we can measure the occurrence of those states or events. In this part of the book, we are going to add another useful tool to our toolbox for measuring occurrence and association – regression.
 
+> "A regression of a variable Y on another variable, say an exposure X, is a <span class="u-orange-text">function</span> that describes how some feature of the distribution of Y <span class="u-orange-text">changes</span> across population <span class="u-orange-text">subgroups</span> defined by values of X." @Lash2021-mb
+
+We can write that statement as an equation like this:
+
+<!-- For Testing -->
+<!-- $$E(Y|X = x)$$ -->
+\begin{equation}
+  E(Y|X = x)
+   (\#eq:regression-basic)
+\end{equation}
+
+Where, $E()$ means "expected value" or "average" of whatever is inside of the parentheses. So, we could articulate this equation in words as, The average value of Y when the variable X has a specific value, x. 
+
+For example, we could write a statement like "the average grade in an introduction to epidemiology class is 95" as $E(Grade) = 95$. Further, we could write a statement like "The average grade in an introduction to epidemiology class is a 98 among people who study 10 hours per week" as $E(Grade|Hours = 10) = 98$.
+
+```{r intro-regression-regression-equation-annotated-01, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/regression_equation_annotated_01.png")
+```
+
+I will try to use the terms regressand and regressor in this class – even though they are not the most commonly used terms and probably have no intuitive meaning to the vast majority of you. In fact, I will use them precisely because they don’t have any intuitive meaning to the vast majority of people. The other terms shown above can come loaded with preconceived notions for any people that may or may not be accurate.
+
+```{r intro-regression-regression-equation-annotated-02, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/regression_equation_annotated_02.png")
+```
+
+There is no preference for causal, or even temporal, relationships.
+
+For example, we intuitively know that our grade does not cause the number of hours we study. It couldn’t possibly. The studying occurs before we ever get a grade. Further, it doesn’t even really make sense to say that our grade predicts the number of hours we will study. Again, the studying occurs before we ever get the grade. In this case, our intuition will help us from making inaccurate statements about the results of regression analysis, but that won’t always be true. Causal and temporal relationships won’t always be so obvious. In those cases, the other terms can sometimes inadvertently invite us to make statements about the relationship between the variables that we can’t really justify.
+
+Here are the regression models we will cover this semester; although, we will not cover them all today. They all fall under the blanket term, “Generalized Linear Models, “ or GLMs for short.
+
+GLMs are made up of three components:
+1. Linear predictor of the outcome
+2. Transformation of the mean of the response variable (the link function)
+3. The assumed distribution of the response variable (from the exponential family)
+
+<!-- Make the table below directly in R -->
+
+```{r intro-regression-regression-models-01, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/regression_models_01.png")
+```
+
+Today, we will discuss linear, logistic, and Poisson regression. We will cover Cox proportional hazards regression later as part of our broader discussion of survival analysis. 
+
+```{r intro-regression-regression-models-02, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/regression_models_02.png")
+```
+
+<!-- Below here from lab warm-up -->
+
+In this lab warm-up, we will review some of the basics of regression analysis, and the R code we need to write to fit regression models to our data. Specifically, we will review three different regression models - linear, logistic, and Poisson.
+
+Linear regression, logistic regression, and Poisson regression are all specific cases of a group of regression models called **Generalized Linear Models (GLMs)**. In R, we fit GLMs with the `glm()` function. In general, we will need to pass the following the following information to the `glm()` function:
+
+```{r eval=FALSE}
+glm(
+  # The regression formula Y ~ X
+  # The distribution family and link function
+  # The data frame
+)
+```
+
+The formula we pass to the `glm()` function takes the form `Y ~ X`, where `Y` is the outcome variable and `X` is the predictor variable or variables.
+
+In this module, we will use one of the following distribution family and link functions:
+
+| Regression Model | Distribution Family |   Link Function   |
+|:----------------:|:-------------------:|:-----------------:|
+|      Linear      |     gaussian()      | link = "identity" |
+|     Logistic     |     binomial()      |  link = "logit"   |
+|     Poisson      |      poisson()      |   link = "log"    |
+
+And finally, we will pass the name of a data frame to the `data` argument of the `glm()` function.
+
+Although not strictly necessary, we will also use the `broom` package to to make the results from the `glm()` function a little easier to work with.
+
+```{r}
+# Load the packages we will need below
+library(dplyr, warn.conflicts = FALSE)
+library(broom)
+library(ggplot2)
+library(meantables)
+library(freqtables)
+```
+
+## Model syntax and interpretation
+
+The introduction to R4Epi says that our philosophy is "to start each concept by showing you the end result and then deconstruct how we arrived at that result, where possible. We find that it is easier for many people to understand new concepts when learning them as a component of a final product." In that  spirit, this section will briefly cover the R syntax we will use to fit linear, logistic, and Poisson regression models. We will also briefly cover interpretation of the results.
+
+Before we can fit any models to our data, we need to have some data. Therefore, we will simulate some very simple data below that we can use for illustrative purposes.
+
+```{r}
+set.seed(123)
+n <- 20
+df <- tibble(
+  x_cont  = rnorm(n, 10, 1),
+  x_cat   = sample(0:1, n, TRUE, c(.7, .3)),
+  y_cont  = if_else(
+    x_cat == 0, 
+    x_cont + rnorm(n, 1, 0.1), 
+    x_cont - rnorm(n, 1, 0.1)
+  ),
+  y_cat   = if_else(
+    x_cat == 0,
+    sample(0:1, n, TRUE, c(.9, .1)),
+    sample(0:1, n, TRUE, c(.5, .5))
+  ),
+  y_count = if_else(
+    x_cat == 0,
+    sample(1:5, n, TRUE, c(.1, .2, .3, .2, .2)),
+    sample(1:5, n, TRUE, c(.3, .3, .2, .1, .1))
+  )
+)
+
+df
+```
+
+### Linear regression
+
+Now that we have some simulated data, we will fit our models. We will start with linear models.
+
+#### Continuous regressand continuous regressor
+
+```{r}
+glm(
+  y_cont ~ x_cont,                      # Formula
+  family = gaussian(link = "identity"), # Family/distribution/Link function
+  data   = df                           # Data
+)
+```
+
+##### Interpretation
+
+1. Intercept: The mean value of `y_cont` when `x_cont` is equal to zero. 
+
+2. x_cont: The average change in `y_cont` for each one-unit increase in `x_cont`. 
+
+#### Continuous regressand categorical regressor
+
+```{r}
+glm(
+  y_cont ~ x_cat,                       # Formula
+  family = gaussian(link = "identity"), # Family/distribution/Link function
+  data   = df                           # Data
+)
+```
+
+##### Interpretation
+
+1. Intercept: The mean value of `y_cont` when `x_cat` is equal to zero. 
+
+2. x_cat: The change in the mean value of `y_cont` when `x_cat` changes from zero to one. 
+
+### Logistic regression
+
+Now, let's take a look at a couple of logistic models.
+
+#### Categorical regressand continuous regressor
+
+```{r}
+glm(
+  y_cat  ~ x_cont,                   # Formula
+  family = binomial(link = "logit"), # Family/distribution/Link function
+  data   = df                        # Data
+)
+```
+
+##### Interpretation
+
+1. Intercept: The natural log of the odds of `y_cat` when `x_cont` is equal to zero. 
+
+2. x_cont: The average change in the natural log of the odds of `y_cont` for each one-unit increase in `x_cont`. 
+
+#### Categorical regressand categorical regressor
+
+```{r}
+glm(
+  y_cat  ~ x_cat,                    # Formula
+  family = binomial(link = "logit"), # Family/distribution/Link function
+  data   = df                        # Data
+)
+```
+
+##### Interpretation
+
+1. Intercept: The natural log of the odds of `y_cat` when `x_cat` is equal to zero. 
+
+2. x_catt: The average change in the natural log of the odds of `y_cont` when `x_cat` changes from zero to one.
+
+### Poisson regression
+
+Finally, let's take a look at a couple of Poisson models.
+
+#### Count regressand continuous regressor
+
+```{r}
+glm(
+  y_count  ~ x_cont,                # Formula
+  family   = poisson(link = "log"), # Family/distribution/Link function
+  data     = df                     # Data
+)
+```
+
+##### Interpretation
+
+1. Intercept: The natural log of the mean of `y_count` when `x_cont` is equal to zero. 
+
+2. x_cont: The average change in the log of the mean of `y_cont` for each one-unit increase in `x_cont`. 
+
+#### Count regressand categorical regressor
+
+```{r}
+glm(
+  y_count  ~ x_cat,                 # Formula
+  family   = poisson(link = "log"), # Family/distribution/Link function
+  data     = df                     # Data
+)
+```
+
+##### Interpretation
+
+1. Intercept: The natural log of the mean of `y_count` when `x_cat` is equal to zero. 
+
+2. x_cat: The average change in the natural log of the mean of `y_count` when `x_cat` changes from zero to one.
+
+<!-- Above here from lab warm-up -->
+
+In the sections above, we got a glimpse into the syntax we will need to use to perform linear, logistic, and Poisson regression in R. However, the syntax alone is not very useful if we don't understand what's happening in a more intuitive way. The the sections that follow, that's exactly what we will try to develop. 
+
+## Family history and diabetes
+
+For this example, we want to regress diabetes (0=Negative, 1=Positive) on Family History (0=No, 1=Yes), to investigate the relationship between diabetes and family history of diabetes in our data.
+
+For dichotomous variables that take the values 0 and 1 only, the mean is equal to the proportion of 1’s.
+- 1, 1, 1, 0, 0
+- Mean = (1 + 1 + 1 + 0 + 0) / 5 = 0.6
+- Proportion of 1s = 3/5 = 0.6
+
+<!-- Below here from lab warm-up -->
+
+```{r}
+diabetes <- tidyr::expand_grid(
+  family_history = c(1, 0),
+  diabetes       = c(1, 0)
+) %>% 
+  mutate(count = c(58, 196, 63, 381)) %>% 
+  tidyr::uncount(count)
+
+diabetes
+```
+
+Remember, in the frequentist view, the regression of a variable Y on another variable X is the function that describes how the average (mean) value of Y changes across population subgroups defined by values of X. @Lash2021-mb
+
+The mean value of diabetes across subgroups defined by family history are: 
+
+```{r}
+diabetes %>% 
+  group_by(family_history) %>% 
+  mean_table(diabetes)
+```
+
+```{r}
+diabetes %>% 
+  freq_table(family_history, diabetes) %>% 
+  select(row_var:n, percent_row)
+```
+
+Take a look at the proportion of people with family history of diabetes who have diabetes and the proportion of people without family history of diabetes who have diabetes. You should notice that it is the same as the subgroup means. 
+
+This illustrates an important property: "When the regressand Y is a binary indicator (0, 1) variable, E(Y|X=x) is called a binary regression, and this regression simplifies in a very useful manner. Specifically, when Y can be only 0 or 1 the average E(Y|X=x) equals the proportion of population members who have Y=1 among those who have X=x."
+
+Now, let's fit a linear regression model to this data.
+
+### Linear regression
+
+```{r}
+glm(
+  diabetes ~ family_history,
+  family = gaussian(link = "identity"),
+  data   = diabetes
+)
+```
+
+1. Intercept: The mean value of `diabetes` when `family_history` is equal to zero. 
+
+2. family_history: The average change in `diabetes` for each one-unit increase in `family_history`.
+
+0.14189 + 0.08645
+
+Hopefully, this illustration has given increased your comfort level with regression analysis. It's just an extension of the simpler methods we previously learned about. However, these same concepts extend to multivariable (not to be confused with multivariate) regression. This is one of the primary reasons we use regression. Imagine how messy the mean tables and/or frequency tables would get if we had 10 regressor variables instead of one.
+
+However, we will not typically use linear regression with binary outcomes as we did above. This was only meant to give you a feel for what regression is doing under the hood. Now, let's take a look at a more realistic example using a continuous outcome. 
+
+<!-- Above here from lab warm-up -->
+
+<!-- Figure out a better way to include the information from the 4 slides below -->
+
+```{r intro-regression-regression-terminology-01, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/terminology_01.png")
+```
+
+```{r intro-regression-regression-terminology-02, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/terminology_02.png")
+```
+
+```{r intro-regression-regression-terminology-03, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/terminology_03.png")
+```
+
+```{r intro-regression-regression-terminology-04, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/terminology_04.png")
+```
+
+The type of model you select will depend heavily on the form of your regressand, Y.
+- Continuous
+- Dichotomous
+- Count
+- Censored
+
+“In the absence of extensive information regarding the nature of the variables of interest, a frequently employed strategy is to assume initially that they are linearly related. Subsequent analysis, then involves the following steps:
+	1. Determine whether or not the assumptions underlying a linear relationship are met in the data available.
+	2. Obtain the equation for the line that best fits the sample data.
+	3. Evaluate the equation to obtain some idea of the strength of the relationship and the usefulness of the equation for predicting and estimating.
+	4. If the data appear to conform satisfactorily to the linear model, use the equation obtained for the sample to predict and estimate.
+
+Do you remember learning the slope-intercept form of the equation of a straight line back in Algebra?
+
+<!-- Figure out a better way to include the information from the 6 slides below -->
+
+```{r intro-regression-regression-slope-intercept-01, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/slope_intercept_01.png")
+```
+
+```{r intro-regression-regression-slope-intercept-02, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/slope_intercept_02.png")
+```
+
+```{r intro-regression-regression-slope-intercept-03, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/slope_intercept_03.png")
+```
+
+```{r intro-regression-regression-slope-intercept-04, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/slope_intercept_04.png")
+```
+
+```{r intro-regression-regression-slope-intercept-05, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/slope_intercept_05.png")
+```
+
+```{r intro-regression-regression-slope-intercept-06, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/slope_intercept_06.png")
+```
+
+## Waist circumference and deep abdominal adipose tissue
+
+> “Despres et al. point out that the topography of adipose tissue (AT) is associated with metabolic complications considered as risk factors for cardiovascular disease. It is important, they state, to measure the amount of of intraabdominal AT as part of the evaluation of the cardiovascular-disease risk of an individual. Computed tomography (CT), the only available technique that precisely and reliably measures the amount of deep abdominal AT, however, is costly and requires irradiation of the subject. In addition, the technique is not available to many physicians. Depres and his colleagues conducted a study to develop equations to predict the amount of deep abdominal AT from simple anthropometric measurements. Their subjects were men between the ages of 18 and 42 years who were free from metabolic disease that would require treatment. Among the measurements taken on each subject were deep abdominal AT obtained by CT and waist circumference. A question of interest is how well one can predict and estimate deep abdominal AT from knowledge of waist circumference.” @Daniel2013-qq
+
+<!-- Below here from lab warm-up -->
+
+```{r}
+set.seed(123)
+n <- 100
+daat_waist <- tibble(
+  waist    = rnorm(n, 39, 2),
+  waist_c  = waist - 39,
+  beta1    = rnorm(n, 3.45, 0.2),
+  daat_bar = rnorm(n, 101, 8),
+  daat     = daat_bar + (beta1 * waist_c)
+)
+daat_waist
+```
+
+### Continuous regressor (waist circumference)
+
+What is the average waist circumference?
+
+```{r}
+mean(daat_waist$waist)
+```
+
+What is the average deep abdominal adipose tissue?
+
+```{r}
+mean(daat_waist$daat)
+```
+
+What is the relationship between deep abdominal adipose tissue and waist circumference?
+
+```{r}
+ggplot(daat_waist, aes(x = waist, y = daat)) +
+  geom_point()
+```
+
+```{r}
+ggplot(daat_waist, aes(x = waist, y = daat)) +
+  geom_point() +
+  geom_hline(yintercept = mean(daat_waist$daat), color = "red") 
+```
+
+```{r}
+cor.test(daat_waist$daat, daat_waist$waist)
+```
+
+```{r}
+ggplot(daat_waist, aes(x = waist, y = daat)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) 
+```
+
+What is the relationship between deep abdominal adipose tissue (regressand) and waist circumference (regressor)?
+
+```{r}
+glm(
+  daat ~ waist,
+  family = gaussian(link = "identity"),
+  data   = daat_waist
+)
+```
+
+#### Interpretation
+
+1. Intercept: The mean value of deep abdominal adipose tissue when waist circumference is 0 is -9.580. 
+
+2. waist: The average change in deep abdominal adipose tissue for each one inch increase in waist circumference is 2.86. 
+
+```{r}
+ggplot(daat_waist, aes(x = waist, y = daat)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) + 
+  geom_abline(intercept = -9.580, slope = 2.862, color = "red", linetype = "dashed") 
+```
+
+### Categorical regressor (large waist)
+
+```{r}
+daat_waist <- daat_waist %>% 
+  mutate(
+    large_waist   = if_else(waist < mean(waist), 0, 1),
+    large_waist_f = factor(large_waist, 0:1, c("No", "Yes"))
+  )
+daat_waist
+```
+
+```{r}
+daat_by_large_f <- daat_waist %>% 
+  group_by(large_waist_f) %>% 
+  mean_table(daat)
+
+daat_by_large_f
+```
+
+```{r}
+ggplot(daat_waist, aes(x = large_waist_f, y = daat)) +
+  geom_point() +
+  geom_segment(
+    aes(x = c(0.75, 1.75), y = mean, xend = c(1.25, 2.25), yend = mean), 
+    size = 1.5, color = "red", data = daat_by_large_f
+  )
+```
+
+What is the relationship between deep abdominal adipose tissue (regressand) and tall (regressor)?
+
+```{r}
+glm(
+  daat ~ large_waist_f,
+  family = gaussian(link = "identity"),
+  data   = daat_waist
+)
+```
+
+#### Interpretation
+
+1. Intercept: The mean value of deep abdominal adipose tissue among people who are not tall is equal to 98.228. 
+
+2. large_waist_fYes: The average change in deep abdominal adipose tissue for people with a large waste circumference compared to people with a small waste circumference is 8.854.
+
+98.228 + 8.854
+
+<!-- Above here from lab warm-up -->
+
+## Linear regression
+
+Finally, we can add multiple regressors to the model. 
+
+<!-- Give an example -->
+
+Make sure that the linear relationship modeled is at least a useful approximation of the real world. In order to do this, one must be very familiar with one’s data.
+
+Unlikely that this would ever be a perfect fit; however, most would expect a perfectly fit regression (where it even possible) to be to complicated to be of practical value.
+
+Assumptions
+- εi ~ i.i.d.N(0,σ2) is the error term
+- Normal distribution
+- Mean zero
+- Constant variance
+- εi and εj are statistically independent if i ≠ j
+- LINE (Linear, Independent, Normal, Equal Variance)
+
+## Logistic regression
+
+Now, let’s talk about logistic regression.
+
+```{r intro-regression-regression-models-03, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/regression_models_03.png")
+```
+
+<!-- Below here from lab warm-up -->
+
+### Elder mistreatment
+
+```{r}
+set.seed(123)
+n <- 100
+em_dementia <- tibble(
+  age = sample(65:100, n, TRUE),
+  dementia = case_when(
+    age < 70 ~ sample(0:1, n, TRUE, c(.99, .01)),
+    age < 75 ~ sample(0:1, n, TRUE, c(.97, .03)),
+    age < 80 ~ sample(0:1, n, TRUE, c(.91, .09)),
+    age < 85 ~ sample(0:1, n, TRUE, c(.84, .16)),
+    age < 90 ~ sample(0:1, n, TRUE, c(.78, .22)),
+    TRUE ~ sample(0:1, n, TRUE, c(.67, .33))
+  ),
+  dementia_f = factor(dementia, 0:1, c("No", "Yes")),
+  em = case_when(
+    dementia_f == "No"  ~ sample(0:1, n, TRUE, c(.9, .1)),
+    dementia_f == "Yes" ~ sample(0:1, n, TRUE, c(.5, .5))
+  ),
+  em_f = factor(em, 0:1, c("No", "Yes"))
+)
+em_dementia
+```
+
+#### Categorical regressor (dementia)
+
+```{r}
+em_dementia %>% 
+  freq_table(dementia_f, em_f) %>% 
+  select(row_var:n_row, percent_row)
+```
+
+```{r}
+glm(
+  em_f  ~ dementia_f,
+  family = binomial(link = "logit"),
+  data   = em_dementia
+)
+```
+
+##### Interpretation
+
+1. Intercept: The natural log of the odds of `elder mistreatment` among people who do not have dementia is -2.734. (Generally not of great interest or directly interpreted)
+
+2. dementia_fYes: The average change in the natural log of the odds of `elder mistreatment` among people with dementia compared to people without dementia.
+
+```{r}
+tibble(
+  intercpet   = exp(-2.1734),
+  dementia_or = exp(2.282)
+)
+```
+
+3. dementia_fYes: People with dementia have 9.8 times the odds of `elder mistreatment` among compared to people without dementia.
+
+```{r}
+em_dementia_ct <- matrix(
+  c(a = 7, b = 11, c = 5, d = 77),
+  ncol = 2,
+  byrow = TRUE
+)
+
+em_dementia_ct <- addmargins(em_dementia_ct)
+
+dimnames(em_dementia_ct) <- list(
+  Dementia = c("Yes", "No", "col_sum"), # Row names
+  EM       = c("Yes", "No", "row_sum")  # Then column names
+)
+
+em_dementia_ct
+```
+
+```{r}
+incidence_prop <- em_dementia_ct[, "Yes"] / em_dementia_ct[, "row_sum"]
+em_dementia_ct <- cbind(em_dementia_ct, incidence_prop)
+em_dementia_ct
+```
+
+```{r}
+incidence_odds <- em_dementia_ct[, "incidence_prop"] / (1 - em_dementia_ct[, "incidence_prop"])
+em_dementia_ct <- cbind(em_dementia_ct, incidence_odds)
+em_dementia_ct
+```
+
+```{r}
+ior <- em_dementia_ct["Yes", "incidence_odds"] / em_dementia_ct["No", "incidence_odds"]
+ior
+```
+
+```{r}
+# Alternative coding
+em_dementia %>% 
+  freq_table(dementia_f, em_f) %>% 
+  select(row_var:n_row, percent_row) %>% 
+  filter(col_cat == "Yes") %>% 
+  mutate(
+    prop_row = percent_row / 100,
+    odds = prop_row / (1 - prop_row)
+  ) %>% 
+  summarise(or = odds[row_cat == "Yes"] / odds[row_cat == "No"])
+```
+
+#### Continuous regressor (age)
+
+```{r}
+ggplot(em_dementia, aes(x = age, y = em_f)) +
+  geom_point()
+```
+
+```{r}
+em_dementia %>%
+  group_by(em_f) %>% 
+  mean_table(age)
+```
+
+```{r}
+glm(
+  em_f  ~ age,
+  family = binomial(link = "logit"),
+  data   = em_dementia
+)
+```
+
+##### Interpretation
+
+1. Intercept: The natural log of the odds of `elder mistreatment` among people who do not have dementia is -3.80. (Generally not of great interest or directly interpreted)
+
+2. age: The average change in the natural log of the odds of `elder mistreatment` for each one-year increase in age is 0.02.
+
+```{r}
+glm(
+  em_f  ~ age,
+  family = binomial(link = "logit"),
+  data   = em_dementia
+) %>% 
+  broom::tidy(exp = TRUE, ci = TRUE)
+```
+
+```{r}
+em_age_70 <- -3.180 + (0.02127 * 70)
+em_age_70
+```
+
+```{r}
+em_age_71 <- -3.180 + (0.02127 * 71)
+em_age_71
+```
+
+```{r}
+em_age_71 - em_age_70
+```
+
+```{r}
+exp(0.02127)
+```
+
+```{r}
+em_dementia %>% 
+  filter(age %in% c(70, 71))
+```
+
+<!-- Above here from lab warm-up -->
+
+Assumptions
+- The outcome, Y, follows a Bernoulli distribution
+- The mean of Y is given by the logistic function (see previous slide)
+- Observations are independent
+
+Make sure that the linear relationship modeled is at least a useful approximation of the real world. In order to do this, one must be very familiar with one’s data.
+
+Unlikely that this would ever be a perfect fit; however, most would expect a perfectly fit regression (where it even possible) to be to complicated to be of practical value.
+
+## Poisson regression
+
+Now, let’s talk about Poisson regression. We still have our intercept and slope, but now we have this thing called the offset. This will explicitly model period of time. 
+
+```{r intro-regression-regression-models-04, echo=FALSE}
+knitr::include_graphics("img/12_part_regression/01_intro_regression/regression_models_04.png")
+```
+
+### Number of drinks and personal problems
+
+Consider a study with the following questions:
+
+1. “The last time you drank, how many drinks did you drink?”
+
+2. “Sometimes people have personal problems that might result in problems with work, family or friends. Have you had personal problems like that?”
+
+<!-- Below here from lab warm-up -->
+
+```{r}
+set.seed(100)
+n <- 100
+drinks <- tibble(
+  problems = sample(0:1, n, TRUE, c(.7, .3)),
+  age = rnorm(n, 50, 10),
+  drinks = case_when(
+    problems == 0 & age > 50 ~ sample(0:5, n, TRUE, c(.8, .05, .05, .05, .025, .025)),
+    problems == 0 & age <= 50 ~ sample(0:5, n, TRUE, c(.7, .1, .1, .05, .025, .025)),
+    problems == 1 & age > 50 ~ sample(0:5, n, TRUE, c(.2, .3, .2, .2, .05, .05)),
+    problems == 1 & age <= 50 ~ sample(0:5, n, TRUE, c(.3, .1, .1, .2, .2, .1)),
+  )
+)
+
+drinks
+```
+
+### Count regressand and continuous regressor
+
+```{r}
+mean(drinks$drinks)
+```
+
+```{r}
+ggplot(drinks, aes(x = age, y = drinks)) +
+  geom_point() 
+```
+
+```{r}
+ggplot(drinks, aes(x = age, y = drinks)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+glm(
+  drinks  ~ age,
+  family  = poisson(link = "log"),
+  data    = drinks
+)
+```
+
+#### Interpretation
+
+1. Intercept: The natural log of the mean number of `drinks` when `age` is equal to zero is 0.113739. 
+
+2. age: The average change in the natural log of the mean number of `drinks` for each one-year increase in `age` is -0.001131. 
+
+```{r}
+glm(
+  drinks  ~ age,
+  family  = poisson(link = "log"),
+  data    = drinks
+) %>% 
+  broom::tidy(exp = TRUE)
+```
+
+3. Participants reported 0.9 times the number of drinks at their last drinking episode for each one-year increase in age.
+
+```{r}
+drinks_age_50 <- 0.113739 + (-0.001131 * 50)
+drinks_age_50
+```
+
+```{r}
+drinks_age_51 <- 0.113739 + (-0.001131 * 51)
+drinks_age_51
+```
+
+```{r}
+drinks_age_51 - drinks_age_50
+```
+
+```{r}
+exp(-0.001131)
+```
+
+This is an incidence rate ratio. Remember that a rate is just the number of events per some specified period of time. In this case, the specified period of time is the same for all participants, so the “missing” time cancels out, and we get a rate ratio.
+
+What's our null value for a rate ratio?
+
+### Count regressand categorical regressor
+
+```{r}
+mean(drinks$drinks)
+```
+
+```{r}
+ggplot(drinks, aes(x = factor(problems), y = drinks)) +
+  geom_point() 
+```
+
+```{r}
+ggplot(drinks, aes(x = factor(problems), y = drinks)) +
+  geom_jitter(width = 0, height = 0.25, alpha = .5) 
+```
+
+```{r}
+glm(
+  drinks  ~ problems,
+  family  = poisson(link = "log"),
+  data    = drinks
+)
+```
+
+#### Interpretation
+
+1. Intercept: The natural log of the mean number of `drinks` when `problems` is equal to zero is -0.3848. 
+
+2. problems: The average change in the natural log of the mean of `drinks` when `problems` changes from zero to one.
+
+```{r}
+glm(
+  drinks  ~ problems,
+  family  = poisson(link = "log"),
+  data    = drinks
+) %>% 
+  broom::tidy(exp = TRUE)
+```
+
+3. Participants reporting that they had personal problems, drank 2.99 times more drinks at their last drinking episode compared to those who reported no personal problems.
+
+This is an incidence rate ratio. Remember that a rate is just the number of events per some specified period of time. In this case, the specified period of time is the same for all participants, so the “missing” time cancels out, and we get a rate ratio.
+
+<!-- Above here from lab warm-up -->
+
+Assumptions
+- Natural logarithm of the expected number of events per unit time changes linearly with the predictors
+- At each level of the predictors, the number of events per unit time has variance equal to the mean
+- Observations are independent
