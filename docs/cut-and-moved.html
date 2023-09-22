@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | R for Epidemiology</title>
+  <title>51 Cut and moved | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | R for Epidemiology" />
+  <meta property="og:title" content="51 Cut and moved | R for Epidemiology" />
   <meta property="og:type" content="book" />
   <meta property="og:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
   <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="github-repo" content="brad-cannell/r4epi" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | R for Epidemiology" />
+  <meta name="twitter:title" content="51 Cut and moved | R for Epidemiology" />
   
   <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="twitter:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-
+<link rel="prev" href="incidence-rate-difference.html"/>
+<link rel="next" href="introduction-to-random-error.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -856,19 +856,156 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="cut-and-moved" class="section level1 hasAnchor" number="51">
+<h1><span class="header-section-number">51</span> Cut and moved<a href="cut-and-moved.html#cut-and-moved" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="measures-of-association-1" class="section level2 hasAnchor" number="51.1">
+<h2><span class="header-section-number">51.1</span> Measures of association<a href="cut-and-moved.html#measures-of-association-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Remember, that our measurement and analysis goals can be broken down into description, prediction, and/or causally explanation of health-related states or events in populations of people.</p>
+<p><img src="img/10_part_intro_epi/01_intro_epi/description_prediction_causation.png" width="900" /></p>
+<p>We said that when we describe health-related states or events, we are not necessarily looking for associations in the data between two or more variables. Sometimes, we are simply looking at the distribution of values in a single variable/measure.</p>
+<p>For example:</p>
+<ul>
+<li><p>How many ventilators are available in Texas?</p></li>
+<li><p>What is the average age of people living in Florida?</p></li>
+<li><p>How much time elapses, on average, between exposure to a pathogen and occurrence of disease symptoms?</p></li>
+</ul>
+<p>However, there are also times when we want to compare the distribution of value in one variable within levels of another variable. Most people would consider these comparisons to be equivalent to measuring associations.</p>
+<p>For example:</p>
+<ul>
+<li><p>Are there more ventilators available in Texas or New York?</p></li>
+<li><p>Are people older, on average, in Florida or Pennsylvania?</p></li>
+<li><p>Is symptom onset quicker, on average, for Cholera or E. coli?</p></li>
+</ul>
+<blockquote>
+<p>“[An <span class="u-orange-text">association</span> is a] <span class="u-orange-text">statistical dependence</span> between two or more events, characteristics, or other variables. An association is present if the <span class="u-orange-text">probability of occurrence</span> of an event or characteristic, or the quantity of a variable, varies with the occurrence of one or more other events, the presence of one or more other characteristics, or the quantity of one or more <span class="u-orange-text">other variables</span>.”<span class="citation"><sup><a href="#ref-Porta2008-ij">1</a></sup></span></p>
+</blockquote>
+<p>Said another way, when the distribution (e.g., middle, spread, shape, proportion of people) of one variable is different on average across levels of a second variable, then there is an association between the first variable and the second variable.</p>
+<p>Yet another way to describe an association is to simply say that there is an association between two variables when knowing the value of variable one tells us something about (or helps us predict) the value variable two.</p>
+<p>Let’s simulate some data to help us understand what association looks like in action.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="cut-and-moved.html#cb78-1" tabindex="-1"></a><span class="co"># Load the packages we will need below</span></span>
+<span id="cb78-2"><a href="cut-and-moved.html#cb78-2" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb78-3"><a href="cut-and-moved.html#cb78-3" tabindex="-1"></a><span class="fu">library</span>(freqtables)</span></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="cut-and-moved.html#cb79-1" tabindex="-1"></a><span class="co"># Create a simulated data frame with two variables</span></span>
+<span id="cb79-2"><a href="cut-and-moved.html#cb79-2" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb79-3"><a href="cut-and-moved.html#cb79-3" tabindex="-1"></a>  <span class="co"># Create one variable, x, that has 50 rows with a value of 0 and 50 rows with</span></span>
+<span id="cb79-4"><a href="cut-and-moved.html#cb79-4" tabindex="-1"></a>  <span class="co"># a value of 1.</span></span>
+<span id="cb79-5"><a href="cut-and-moved.html#cb79-5" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">50</span>), <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">50</span>)),</span>
+<span id="cb79-6"><a href="cut-and-moved.html#cb79-6" tabindex="-1"></a>  <span class="co"># Create a second variable, y, that has 100 values of either 0 or 1.</span></span>
+<span id="cb79-7"><a href="cut-and-moved.html#cb79-7" tabindex="-1"></a>  <span class="co"># If x equals 0, then y have 25 rows with a value of 0 and 25 rows with a </span></span>
+<span id="cb79-8"><a href="cut-and-moved.html#cb79-8" tabindex="-1"></a>  <span class="co"># value of 1.</span></span>
+<span id="cb79-9"><a href="cut-and-moved.html#cb79-9" tabindex="-1"></a>  <span class="co"># If x equals 1, then y have 25 rows with a value of 0 and 25 rows with a </span></span>
+<span id="cb79-10"><a href="cut-and-moved.html#cb79-10" tabindex="-1"></a>  <span class="co"># value of 1.</span></span>
+<span id="cb79-11"><a href="cut-and-moved.html#cb79-11" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">25</span>), <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">25</span>))</span>
+<span id="cb79-12"><a href="cut-and-moved.html#cb79-12" tabindex="-1"></a>)</span></code></pre></div>
+<p>Now, let’s explore the relationship between <code>x</code> and <code>y</code> in the data we simulated above. Specifically, let’s ask R to calculate the distribution of <code>y</code> across levels of <code>x</code>. Here, “the distribution of <code>y</code>” means the proportion of 0’s and 1’s, and “across levels of <code>x</code>” means do the calculation for all rows where <code>x</code> equals 0 and separately for all rows where <code>x</code> equals 1.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="cut-and-moved.html#cb80-1" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
+<span id="cb80-2"><a href="cut-and-moved.html#cb80-2" tabindex="-1"></a>  <span class="co"># Use the freq_table function to calculate the distribution of y across </span></span>
+<span id="cb80-3"><a href="cut-and-moved.html#cb80-3" tabindex="-1"></a>  <span class="co"># levels of x</span></span>
+<span id="cb80-4"><a href="cut-and-moved.html#cb80-4" tabindex="-1"></a>  <span class="fu">freq_table</span>(x, y) <span class="sc">|&gt;</span> </span>
+<span id="cb80-5"><a href="cut-and-moved.html#cb80-5" tabindex="-1"></a>  <span class="co"># Keep a subset of the columns to make the results easier to read.</span></span>
+<span id="cb80-6"><a href="cut-and-moved.html#cb80-6" tabindex="-1"></a>  <span class="fu">select</span>(row_var<span class="sc">:</span>col_cat, percent_row)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
+##   row_var row_cat col_var col_cat percent_row
+##   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt;
+## 1 x       0       y       0                50
+## 2 x       0       y       1                50
+## 3 x       1       y       0                50
+## 4 x       1       y       1                50</code></pre>
+<p>In the results above, we can see that when <code>x</code> is 0 (<code>row_cat</code> = 0), then <code>y</code> is 1 (<code>col_cat</code> = 1) 50% of the time. Similarly, when <code>x</code> is 1 (<code>row_cat</code> = 1), then <code>y</code> is 1 (<code>col_cat</code> = 1) 50% of the time.</p>
+<p>In this case, does the distribution of <code>y</code> differ across levels of <code>x</code>? No. When <code>x</code> is 0, <code>y</code> equals 1 50% of the time, and when <code>x</code> is 1, <code>y</code> equals 1 50% of the time.</p>
+<p>In this case, does knowing the value of <code>x</code> tell us something about (or help us predict) the value y. No. The value of <code>y</code> is equally likely to be 1 or 0 no matter what the value of <code>x</code> is.</p>
+<p>So, is there an association between <code>x</code> and <code>y</code> in the simulated data above? No, there is no association between <code>x</code> and <code>y</code> in the simulated data above. Said another way, <code>x</code> and <code>y</code> and <strong>statistically independent</strong> of each other.</p>
+<p>Now, let’s simulate a second data frame where <code>x</code> and <code>y</code> are associated with each other.</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="cut-and-moved.html#cb82-1" tabindex="-1"></a><span class="co"># Set the seed for the random number generator so that we can reproduce our results</span></span>
+<span id="cb82-2"><a href="cut-and-moved.html#cb82-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb82-3"><a href="cut-and-moved.html#cb82-3" tabindex="-1"></a></span>
+<span id="cb82-4"><a href="cut-and-moved.html#cb82-4" tabindex="-1"></a><span class="co"># Create a simulated data frame with two variables</span></span>
+<span id="cb82-5"><a href="cut-and-moved.html#cb82-5" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb82-6"><a href="cut-and-moved.html#cb82-6" tabindex="-1"></a>  <span class="co"># Create one variable, x, that has 100 values of either 0 or 1.</span></span>
+<span id="cb82-7"><a href="cut-and-moved.html#cb82-7" tabindex="-1"></a>  <span class="co"># The probability of a value being 0 over the long run is 0.5 and the </span></span>
+<span id="cb82-8"><a href="cut-and-moved.html#cb82-8" tabindex="-1"></a>  <span class="co"># probability of a value being 1 over the long run is 0.5</span></span>
+<span id="cb82-9"><a href="cut-and-moved.html#cb82-9" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">100</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)),</span>
+<span id="cb82-10"><a href="cut-and-moved.html#cb82-10" tabindex="-1"></a>  <span class="co"># Create a second variable, y, that has 100 values of either 0 or 1.</span></span>
+<span id="cb82-11"><a href="cut-and-moved.html#cb82-11" tabindex="-1"></a>  <span class="co"># If x equals 0, then the probability of the y value being 0 over the long run is </span></span>
+<span id="cb82-12"><a href="cut-and-moved.html#cb82-12" tabindex="-1"></a>  <span class="co"># 0.2 and the probability of the y value being 1 over the long run is 0.8.</span></span>
+<span id="cb82-13"><a href="cut-and-moved.html#cb82-13" tabindex="-1"></a>  <span class="co"># If x equals 0, then the probability of the y value being 0 over the long run is </span></span>
+<span id="cb82-14"><a href="cut-and-moved.html#cb82-14" tabindex="-1"></a>  <span class="co"># 0.5 and the probability of the y value being 1 over the long run is 0.5.</span></span>
+<span id="cb82-15"><a href="cut-and-moved.html#cb82-15" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">if_else</span>(</span>
+<span id="cb82-16"><a href="cut-and-moved.html#cb82-16" tabindex="-1"></a>    x <span class="sc">==</span> <span class="dv">0</span>,</span>
+<span id="cb82-17"><a href="cut-and-moved.html#cb82-17" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">100</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>)),</span>
+<span id="cb82-18"><a href="cut-and-moved.html#cb82-18" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">100</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>))</span>
+<span id="cb82-19"><a href="cut-and-moved.html#cb82-19" tabindex="-1"></a>  )</span>
+<span id="cb82-20"><a href="cut-and-moved.html#cb82-20" tabindex="-1"></a>)</span></code></pre></div>
+<p>And let’s once again explore the relationship between <code>x</code> and <code>y</code> in the data we simulated above.</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="cut-and-moved.html#cb83-1" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
+<span id="cb83-2"><a href="cut-and-moved.html#cb83-2" tabindex="-1"></a>  <span class="co"># Use the freq_table function to calculate the distribution of y across </span></span>
+<span id="cb83-3"><a href="cut-and-moved.html#cb83-3" tabindex="-1"></a>  <span class="co"># levels of x</span></span>
+<span id="cb83-4"><a href="cut-and-moved.html#cb83-4" tabindex="-1"></a>  <span class="fu">freq_table</span>(x, y) <span class="sc">|&gt;</span> </span>
+<span id="cb83-5"><a href="cut-and-moved.html#cb83-5" tabindex="-1"></a>  <span class="co"># Keep a subset of the columns to make the results easier to read.</span></span>
+<span id="cb83-6"><a href="cut-and-moved.html#cb83-6" tabindex="-1"></a>  <span class="fu">select</span>(row_var<span class="sc">:</span>col_cat, percent_row)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
+##   row_var row_cat col_var col_cat percent_row
+##   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt;
+## 1 x       0       y       0              19.1
+## 2 x       0       y       1              80.9
+## 3 x       1       y       0              52.8
+## 4 x       1       y       1              47.2</code></pre>
+<p>In the results above, we can see that when <code>x</code> is 0 (<code>row_cat</code> = 0), then <code>y</code> is 1 (<code>col_cat</code> = 1) 81% of the time. Alternatively, when <code>x</code> is 1 (<code>row_cat</code> = 1), then <code>y</code> is 1 (<code>col_cat</code> = 1) 47% of the time.</p>
+<p>In this case, does the distribution of <code>y</code> differ across levels of <code>x</code>? Yes! When <code>x</code> is 0, <code>y</code> equals 1 81% of the time, and when <code>x</code> is 1, <code>y</code> equals 1 only 47% of the time.</p>
+<p>In this case, does knowing the value of <code>x</code> tell us something about (or help us predict) the value y. Yes! The value of <code>y</code> is more likely to be 1 when <code>x</code> is 0 than when <code>x</code> is 1.</p>
+<p>So, is there an association between <code>x</code> and <code>y</code> in the simulated data above? Yes! There is an association between <code>x</code> and <code>y</code> in the simulated data above. We can also say that there is a <strong>statistical dependence</strong> between <code>x</code> and <code>y</code>.</p>
+<p>At this point, we hope you are starting to develop an intuitive understanding of associations. Let’s try to simplify and formalize our definition of an association even further by writing it as an equation. We recognize that many people are scared of equations (including us sometimes), but this is an occasion where an equation might actually make it easier for us to understand the concept. Let’s give it a shot.</p>
+<!-- For Testing -->
+<!-- $$Pr[Y=1|X=1] \neq Pr[Y=1|X=0]$$ -->
+<p><span class="math display" id="eq:association">\[\begin{equation}
+  Pr[Y=1|X=1] \neq Pr[Y=1|X=0]
+   \tag{51.1}
+\end{equation}\]</span></p>
+<p>Now, let’s break equation <a href="cut-and-moved.html#eq:association">(51.1)</a> down into its component parts and see what it tells us.</p>
+<ul>
+<li><p><span class="math inline">\(Pr[]\)</span> is read as “the probability of”. The probability of is also frequently just written as <span class="math inline">\(P()\)</span></p></li>
+<li><p><span class="math inline">\(Y=1\)</span> is read as “Y equals 1.” Typically, Y equals 1 when the thing that Y represents happens.</p>
+<ul>
+<li><p><span class="math inline">\(Y=0\)</span> (not shown above) would be read as “Y equals 0,” and would typically mean that the thing Y represents did not happen.</p></li>
+<li><p>For example, if Y represents Alzheimer’s Disease, then <span class="math inline">\(Y=1\)</span> for each person who has Alzheimer’s Disease and <span class="math inline">\(Y=0\)</span> for each person who does not have Alzheimer’s Disease.</p></li>
+</ul></li>
+<li><p><span class="math inline">\(|\)</span> is read as “given that” or “if”.</p></li>
+<li><ul>
+<li><p><span class="math inline">\(X=1\)</span> is read as “X equals 1.” Typically, X equals 1 when the thing that X represents happens.</p></li>
+<li><p><span class="math inline">\(X=0\)</span> (not shown above) would be read as “X equals 0,” and would typically mean that the thing X represents did not happen.</p></li>
+<li><p>For example, if X represents APOEe4 allele, then <span class="math inline">\(X=1\)</span> for each person who has an APOEe4 allele and <span class="math inline">\(X=0\)</span> for each person who does not have an APOEe4 allele.</p></li>
+</ul></li>
+</ul>
+<p>So, how would we put all of this together and say it in words? Give it a try in your head before reading on.</p>
+<ul>
+<li>The probability that Y equals 1 given that X equals 1 is not equal to the probability that Y equals 1 given that X equals 0.</li>
+</ul>
+<p>Or, if we’re still talking about Alzheimer’s Disease and APOEe4 allele:</p>
+<ul>
+<li>The probability of Alzheimer’s Disease among people who carry at least one APOEe4 allele is not equal to the probability of Alzheimer’s Disease among people who do not carry any APOEe4 alleles.</li>
+</ul>
+<p>And what exactly does “probability” mean?</p>
+
+</div>
+</div>
+
+
+
+
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-Porta2008-ij" class="csl-entry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Porta M, ed. <em>A Dictionary of Epidemiology</em>. Oxford University Press; 2008.</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-
+<a href="incidence-rate-difference.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="introduction-to-random-error.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -899,7 +1036,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/brad-cannell/r4epi/edit/master/%s",
+"link": "https://github.com/brad-cannell/r4epi/edit/master/chapters/10_part_intro_epi/04_measures_of_association.Rmd",
 "text": "Edit"
 },
 "history": {

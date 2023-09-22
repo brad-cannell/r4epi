@@ -20,11 +20,1004 @@ Copy and paste:
 
 <!-- Add a banner -->
 
-As a reminder, we said that epidemiology is usually defined as something like, "the study of the occurrence and distribution of health-related states or events in specified populations, including the study of the determinants influencing such states, and the application of this knowledge to control the health problems" @Porta2008-ij in the [Introduction to Epidemiology] chapter. In the chapter about [measures of occurrence][Measures of Occurrence], we focused on some of the ways we can measure the _occurrence_ of those health-related states or events. In this chatper, we will start discussing ways we can measure the _distribution_ of those health-related states or events. 
+As a reminder, we said that epidemiology is usually defined as something like, "the study of the occurrence and distribution of health-related states or events in specified populations, including the study of the determinants influencing such states, and the application of this knowledge to control the health problems" @Porta2008-ij in the [Introduction to Epidemiology] chapter. In the chapter about [measures of occurrence][Measures of Occurrence], we focused on some of the ways we can measure the _occurrence_ of those health-related states or events. In this chapter, we will start discussing ways we can measure the _distribution_ of those health-related states or events. In other words, are those health-related states or events equally likely for everyone, or are they more for some people than others. However, we first need to review a couple of new topics that will help us later in our discussion about measures of association.
 
 ::: note
 🗒**Side Note:** Writing (and reading) "health-related states or events" over and over starts to get cumbersome after a while. Therefore, we will often just use "conditions" or "events" in the text below instead. Further, the methods we discuss below can just as easily be applied to better understanding characteristics of populations that would not typically be described as a "condition" or "event". For example, sex assigned at birth or ethnicity.
 :::
+
+## Exposures and outcomes
+
+Our discussion of associations will inevitably lead us to to compare two or more conditions in our population of interest. For example, we might want to compare diabetes and state of residence to better understand if diabetes is more common in some states than others. It is commonplace to refer to one of the conditions we are comparing as the **outcome** and the other condition(s) as the **exposure(s)**. For example, we might refer to diabetes as the outcome and state of residence as the exposure. By extension, the members of the population who are living with the exposure(s) are commonly referred to as the _exposed group_, or simply _the exposed_.
+
+In epidemiology, the terms exposure and outcome are used all of the time. Both terms can refer to pathogens, environmental conditions, behaviors, traits, social conditions, diseases or health conditions, and/or treatments or interventions. Table \@ref(tab:measures-of-association-exposures-and-outcomes-tab) below contains some examples.
+
+```{r measures-of-association-exposures-and-outcomes-tab, echo=FALSE}
+pathogen_ex <- "Tapeworm, Malaria, Ringworm, Streptococcus, and HPV"
+environmental_ex <- "Dust particles, Lead, Pesticides, and Raditation"
+behavior_ex <- "Smoking, Physical Activity, Sleep, and Sexual behaviors"
+trait_ex  <- "Genotype and Sex assigned at birth"
+social_ex <- "Discrimination, Neighborhood characteristics, and Culture"
+disease_ex <- "Diabetes, Heart disease, and Cancers"
+treatment_ex <- "Medications, Smoking cessation programs, and Laws and policies"
+
+exposures_and_outcomes_examples <- tribble(
+  ~Term,                         ~Examples,
+  "Pathogens",                   pathogen_ex,
+  "Environmental condtions",     behavior_ex,
+  "Behaviors",                   trait_ex,
+  "Social conditions",           social_ex,
+  "Diseases or condtions",       disease_ex,
+  "Treatments or interventions", treatment_ex
+)
+
+knitr::kable(
+  exposures_and_outcomes_examples,
+  caption = "Examples of exposures and outcomes."
+)
+```
+
+So, what distinguishes an exposure from an outcome? Generally speaking, _we_ do. When we are exploring the relationship between two variables in our data, it is customary to call the first variable an _exposure_ if we believe it is the cause of the second variable, and to call the second variable an _outcome_ if we believe it is caused by the first variable. We haven't formally defined causes and effects yet, and we won't until the part of the book about [causal inference][Introduction to Causal Inference], but our intuitive/colloquial understanding of cause and effect should be sufficient for now.
+
+With that in mind, virtually any of the examples from table \@ref(tab:measures-of-association-exposures-and-outcomes-tab) could reasonably be thought of as an exposure _or_ an outcome depending on the question we are trying to answer, and our beliefs about how causes and effects work in the world around us. For example, if we believe that unprotected sex is a cause of HPV infection, then we may want to measure the association between unprotected sex (an exposure) and HPV infection (an outcome). However, we could also believe that HPV infection is a cause of cervical cancer. In that case, we may want to measure the association between HPV infection (an exposure) and the existence of cervical cancer (an outcome). Notice that HPV infection is not inherently an exposure or an outcome. Rather, _we_ labeled it as an exposure or an outcome based on the question we were asking and our beliefs about its relationship to the variable we were comparing it to.  
+
+The paragraph above may have left you with the impression that measuring associations is the same thing as measuring causes and effects. **That is not the case!** In fact, you may already be familiar with the popular saying "association does not equal causation" or "correlation does not equal causation." These sayings are correct. There is virtually an infinite number of possible examples of statistical associations that have nothing to do with cause and effect relationships. Even in cases were there isn't necessarily a cause and effect relationship between two variables being studied, the terms exposure and outcome are still frequently used -- albeit somewhat arbitrarily -- in practice. In this book, we will also use the terms exposure and outcome broadly, and the terms do not necessarily imply a cause and effect relationship.
+
+## Contingency tables
+
+Many of the concepts and measures that will will explore in this chapter (e.g., incidence proportion differences, incidence proportion ratios, etc.) are easier to understand when we relate them to contingency tables, which are a commonly used tool in epidemiology. Contingency tables are also frequently called 2x2 tables (spoken as "two by two tables") or crosstabs. 
+
+```{r measures-of-association-crosstab-01, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/crosstab_01.png")
+```
+
+The figure above shows the classic 2x2 contingency table. The "2x2" part is meant to indicate that the table has two rows of data values (not including the column headers) and two columns of data values (not including the row headers), which is the most common contingency table configuration used in epidemiology. However, we can technically construct contingency tables with as many rows and columns as we would like. In the classic 2x2 configuration, the first row of values corresponds to people who were exposed to our first condition of interest and the second row of values corresponds to people who were not exposed to our first condition of interest (i.e., unexposed). Similarly, the first column of values corresponds to people who had the outcome we are interested in and the second column of values corresponds to people who did not have the outcome we are interested in. It is important to note that we can theoretically reconfigure the rows and columns of our contingency table anyway we would like, but this configuration is the configuration that the formulas you will find in nearly every epidemiology textbook will assume you are using.
+
+To illustrate how 2x2 contingency tables work, let's return to our simulated data from the [measures of occurrence chapter][Measures of Occurrence] that included information from 10 people gathered over a 12-month period. 
+
+```{r measures-of-association-pop-10-plot, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/03_measures_of_occurrence/pop_10_plot.png")
+```
+
+If we came along and did a study of this group of people in month 2, the prevalence of disease would equal the number of people with disease divided by the number of people in the sample. In this case, that would be 2 people (01 and 02) divided by 10. Now let's add another dimension to this figure. Specifically, let's say that persons 02, 04, 06, 08, and 10 were exposed to some exposure of interest (shaded purple in the figure below).
+
+```{r measures-of-association-pop-10-exposed, echo=FALSE}
+# Simulate data for 10 hypothetical people
+# From Lash TL, VanderWeel TJ, Haneuse S, Rothman KJ. Modern Epidemiology. fourth. Wolters Kluwer; 2021.
+people <- 1:10
+months <- -1:12
+pop_10 <- expand_grid(person = people, month = months)
+rows_per_person <- length(months)
+
+# Count from the beginning of each month.
+# So, person 2 is pre-follow-up at the beginning of time 1 (month -01), at risk 
+# at the beginning of time 2 (month 00), at risk at the beginning of time 3 
+# (month 01), diseased at the beginning of time 4 (month 02), etc.
+p01 <- rep("Diseased", rows_per_person)
+p02 <- c(rep("Pre-follow-up", 1), rep("At Risk", 2), rep("Diseased", 3), rep("Deceased", 8))
+p03 <- c(rep("Pre-follow-up", 1), rep("At Risk", 4), rep("Diseased", 9), rep("Deceased", 0))
+p04 <- c(rep("Pre-follow-up", 1), rep("At Risk", 5), rep("Diseased", 8), rep("Deceased", 0))
+p05 <- c(rep("Pre-follow-up", 1), rep("At Risk", 7), rep("Diseased", 6), rep("Deceased", 0))
+p06 <- c(rep("Pre-follow-up", 1), rep("At Risk", 8), rep("Diseased", 3), rep("Deceased", 2))
+p07 <- c(rep("Pre-follow-up", 1), rep("At Risk", 9), rep("Diseased", 0), rep("Deceased", 4))
+p08 <- c(rep("Pre-follow-up", 1), rep("At Risk", 5), rep("Diseased", 0), rep("Deceased", 8))
+p09 <- c(rep("Pre-follow-up", 1), rep("At Risk", 13), rep("Diseased", 0), rep("Deceased", 0))
+p10 <- c(rep("Pre-follow-up", 1), rep("At Risk", 13), rep("Diseased", 0), rep("Deceased", 0))
+status <- c(p01, p02, p03, p04, p05, p06, p07, p08, p09, p10)
+
+# Add status to pop_10
+pop_10$status <- status
+
+# Create factor versions of person and status
+pop_10 <- pop_10 |> 
+  mutate(
+    person_f = factor(person, labels = c(paste0(0, 1:9), "10")),
+    status_f = factor(status, levels = c("Pre-follow-up", "At Risk", "Diseased", "Deceased"))
+  )
+
+# Add exposure status
+pop_10_exposed <- pop_10 |> 
+  mutate(
+    exposed   = if_else(person %% 2 == 0, 1, 0),
+    exposed_f = factor(exposed, 0:1, c("No", "Yes"))
+  )
+
+# Add coordinates for line segments in the plot
+pop_10_exposed_wide <- pop_10_exposed |> 
+  group_by(person_f, status_f) |> 
+  mutate(
+    x    = min(month),
+    xend = max(month)
+  ) |> 
+  ungroup() |> 
+  # Keep distinct values only
+  distinct(person, status, .keep_all = TRUE) |> 
+  # Make the line ends touch
+  group_by(person) |> 
+  mutate(
+    xend_adjusted = lead(x),
+    xend_adjusted = if_else(is.na(xend_adjusted), xend, xend_adjusted)
+  ) |> 
+  relocate(xend_adjusted, .after = xend) |> 
+  ungroup()
+```
+
+```{r measures-of-association-pop-10-exposed-plot, echo=FALSE}
+# To color the facet strip panels
+stip_colors <- pop_10_exposed_wide |> 
+  # Keep one row for each person
+  distinct(person, .keep_all = TRUE) |> 
+  # Add color to use by exposed status
+  mutate(color = if_else(exposed == 1, "#817190", "#D9D9D9")) |> 
+  pull(color)
+strips <- ggh4x::strip_themed(background_y = ggh4x::elem_list_rect(fill = stip_colors))
+
+pop_10_exposed_plot <- ggplot(pop_10_exposed_wide) +
+  geom_segment(aes(x = x, xend = xend_adjusted, y = 1, yend = 1, color = status_f), size = 5) +
+  # Show all months
+  scale_x_continuous("Month Follow-up", breaks = -1:12) +
+  ggh4x::facet_wrap2(vars(person_f), nrow = 10, strip.position = "left", strip = strips) +
+  # Add a line marking the start of follow up
+  geom_vline(xintercept = 0, color = "blue") +
+  # Add vertical lines to mark the start of each month
+  geom_vline(xintercept = 1:12, color = "#f9f9f9") +
+  # Change fill colors
+  scale_color_manual("Status", values = c("gray", "orange", "red", "black", "#4682B4")) +
+  # Change y-axis label
+  ylab("Person") +
+  theme(
+    # Remove gray background
+    panel.background = element_blank(),
+    # Remove the "p" from the x axis
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    # Move legend
+    legend.position = "bottom",
+    # Change the color and style of the "months" axis 
+    axis.line.x = element_line(
+      color = "blue", arrow = grid::arrow(length = unit(0.1, "inches"), type = "closed")
+    ),
+    # Rotate the facet label to the right
+    strip.text.y.left = element_text(angle = 0)
+  )
+```
+
+```{r measures-of-association-pop-10-exposed-plot-save, echo=FALSE}
+# Save the plot above and reuse the image below.
+# This speeds up the time it takes to build the book.
+# Additionally, if we make changes to the figure in the future, we only need to
+# make them in one place.
+ggsave(
+  "img/10_part_intro_epi/04_measures_of_association/pop_10_exposed_plot.png",
+  pop_10_exposed_plot, 
+  width = 7.29, height = 4.51
+)
+```
+
+```{r measures-of-association-pop-10-exposed-plot-print, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/pop_10_exposed_plot.png")
+```
+
+Under these conditions, how would we complete a 2x2 contingency table about this population?
+
+```{r measures-of-association-crosstab-02, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/crosstab_02.png")
+```
+
+Let's fill it in together, starting at the top-left corner.
+
+- Cell `a` corresponds to people who were exposed and had the disease. Person 02, person 04, and person 06 were in the exposed group and had disease.
+- Cell `b` corresponds to people who were exposed and did _not_ have the disease. Person 08 and person 10 were in the exposed group and did not have disease.
+- Cell `c` corresponds to people who were _not_ exposed and had the disease. Person 01, person 03, and person 05 were not in the exposed group and had disease.
+- Cell `d` corresponds to people who were _not_ exposed and did _not_ have the disease. Person 07 and person 09 were not in the exposed group and did not have disease.
+
+```{r measures-of-association-crosstab-03, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/crosstab_03.png")
+```
+
+To calculate many of the measures we will discuss below, we will also need to fill in the marginal totals -- the row, column, and overall totals located on the margins of the table. Once we fill in the contingency table, we can easily calculate many measures of interest in epidemiology.
+
+```{r measures-of-association-crosstab-04, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/crosstab_04.png")
+```
+
+For example, in the figure below we add the simulated population's values back the contingency table and calculate the total for the first row. There were 5 people who were exposed and developed disease, and there were two people who were exposed and did not develop disease. Therefore, the total number of people who were exposed is 3 + 2 = 5. 
+
+```{r measures-of-association-crosstab-05, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/crosstab_05.png")
+```
+
+Before moving on, try to fill out the rest of the contingency table in your head. The answers are shown in the figure below. 
+
+```{r measures-of-association-crosstab-06, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/crosstab_06.png")
+```
+
+Now that we have developed an intuition for what contingency tables are and how to fill them in, let's learn how to create them in R.
+
+## Building contingency tables in R
+
+There are many different possible ways to create contingency tables in R. We prefer building them as a matrix object. We haven't talked much about matrix objects up the this point, and for the most part, we don't need to use them very often. However, they do provide a convenient structure for replicating contingency tables in R.
+
+```{r}
+# Load the packages needed for the code below.
+library(dplyr, warn.conflicts = FALSE)
+library(freqtables)
+```
+
+### Matrix dimensions
+
+In R, a matrix is a vector with 2 dimensions. What does that mean? Perhaps it's best to learn what it means with through the use of an example. Here is a character vector: 
+
+```{r}
+v <- c("a", "b", "c", "d")
+v
+```
+
+If we want to select element `a`, we can use bracket notation. The first element in the character vector, `v`, is `a`. So, we can select it with the code `v[1]`, which means, "return the first element of `v`". 
+
+```{r}
+v[1]
+```
+
+Next, let's create a _matrix_ with character values. Remember, all elements of a vector must be of the same type (character, numeric, etc.), and a matrix _is_ a special type of vector. So, all elements of a matrix must be of the same type. Below we will create a matrix object using almost the exact same code we used above. The only difference is that we pass the code used to create our character vector, `c("a", "b", "c", "d")`, to the `matrix()` function.
+
+```{r}
+# Create a matrix object called mat
+mat <- matrix(c("a", "b", "c", "d"))
+# Print the value stored in mat to the screen
+mat
+```
+
+Notice that this matrix has 4 rows and 1 column by default. This time, we need to add both coordinates (dimensions) to our bracket notation if we want to select the "a" element. We do so by typing the matrix name followed by square brackets that contain the row we want, a comma, and the column we want. So, `matrix_name[row, column]`.
+
+```{r}
+# Print the value stored in the first row and first column of mat to the screen
+# Note. In this case, mat[1] would return the same result, but that won't be 
+# true when we have more complex matrices
+mat[1, 1]
+```
+
+### Matrix to contingency tables
+
+Now, to make our matrix look and behave like a contingency table, we need our matrix to have 2 rows and 2 columns instead of 4 rows and 1 column. To make that happen, we will first adjust either the `ncol` or `nrow` argument to the `matrix()` function.
+
+```{r}
+# Create a matrix object called matrix_ct that has 2 columns instead of 1
+matrix_ct <- matrix(
+  c("a", "b", "c", "d"), # Enter values in this order
+  ncol = 2
+)
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+Or...
+
+```{r}
+# Create a matrix object called matrix_ct that has 2 rows instead of 4
+matrix_ct <- matrix(
+  c("a", "b", "c", "d"), # Enter values in this order
+  nrow = 2
+)
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+Unfortunately, neither of the solutions above get us exactly the result we are looking for. Can you spot what's wrong with them?
+
+Remember, we said above that the order of the cells in our contingency tables matters. The formulas we will find in nearly every epidemiology textbook will assume that our contingency tables are configured with `a` and `b` in the first row and `c` and `d` in the second row. However, the matrix above is configured such that `a` and `c` are in the first row and `b` and `d` are in the second row. That's because, the `byrow` argument to the `matrix()` function is set to `FALSE` by default. This means that R will fill in the matrix values starting at location [1, 1] and filling down columns. We want R to fill in the matrix values starting at location [1, 1] and filling across rows. We do that by changing the default `byrow = FALSE` to `byrow = TRUE`.
+
+```{r}
+# Create a matrix object called matrix_ct that has 2 rows instead of 4
+matrix_ct <- matrix(
+  c("a", "b", "c", "d"), # Enter values in this order
+  nrow = 2,
+  byrow = TRUE
+)
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+Now, we have a matrix object that looks and behaves like a standard 2x2 contingency table.
+
+### Add row and column names
+
+To make our matrix even easier to read and work with, let's go ahead and add row and column labels. We do so using the `dimnames()` function. The `dimnames()` function is a little bit different than most of the functions we have used so far in that we can use it to _get_ or _set_ values. Meaning, if we only pass an R object (i.e., vector, data frame, or matrix) to the `dimnames()` function, then it will _get_ -- or return -- the object's dimension labels to us. Alternatively, we can also use the `dimnames()` function to _set_ or _assign_ labels to the object's dimensions. Let's learn how to _get_ and _set_ labels below. 
+
+Above, we said that our matrix has a row dimension and column dimension. So, passing our matrix to the `dimnames()` function below will return the labels assigned to the rows and columns of the matrix. 
+
+```{r}
+# Print the current dimension labels of matrix_ct to the screen
+dimnames(matrix_ct)
+```
+
+Of course, we haven't set the labels of the rows and columns of `matrix_ct`, so R simply returns a `NULL` value (i.e., the lack of a value). Luckily, we can easily _set_ the dimension labels with the `dimnames()` function as well. 
+
+Before attempting to set our dimension labels, however, let's first take a look at how many dimensions the `matrix_ct` object contains.
+
+```{r}
+# Print the current number of dimensions in matrix_ct to the screen
+dim(matrix_ct)
+```
+
+It probably isn't immediately obvious, but R is telling us that `matrix_ct` has 2 rows (the first number) and 2 columns (the second number) in the result above. This should make sense if we take another look at `matrix_ct`.
+
+```{r}
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+We can see above that `matrix_ct` has 2 rows (`[1,]` and `[2,]`) and 2 columns (`[,1]` and `[,2]`). How should we label them? Well, remember that the value `"a"` corresponds to people who were exposed and had the outcome. So, we could reasonably label `[1,]` as `Yes` (i.e., exposed) and `[,1]` as `Yes` (i.e., had the outcome). Using the same logic, we could also reasonably label `[2,]` as `No` (i.e., unexposed) and `[,2]` as `No` (i.e., did not have the outcome).To do so, we create a list that contains the row and column labels, and then assign them to `matrix_ct`. 
+
+We create a list object in R with the `list()` function. We first pass a vector of values we want to assign to the rows of our contingency table to our list, and then pass a vector of values we want to assign to the columns of our contingency table to our list. 
+
+```{r}
+# Create a list object called my_dimnames that contains labels we want to 
+# assign to the rows and columns of our contingency table
+my_dimnames <- list(
+  c("Yes", "No"), # Row names
+  c("Yes", "No")  # Then column names
+)
+# Print the value stored in my_dimnames to the screen
+my_dimnames
+```
+
+We can then _set_ or _assign_ that list of labels to `matrix_ct` like this:
+
+```{r}
+# Assign the values stored in my_dimnames as the row and column labels of matrix_ct
+dimnames(matrix_ct) <- my_dimnames
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+That makes our contingency table a little easier for us to read and work with. However, there could still be some ambiguity as to what each `Yes` and each `No` correspond to. We can improve the labels by passing a _named_ vector to the `my_dimnames` list like this: 
+
+```{r}
+# Create a list object called my_dimnames that contains labels we want to 
+# assign to the rows and columns of our contingency table
+my_dimnames <- list(
+  Exposure = c("Yes", "No"), # Row names
+  Outcome  = c("Yes", "No")  # Then column names
+)
+# Print the value stored in my_dimnames to the screen
+my_dimnames
+```
+
+We can once again _set_ or _assign_ the values stored in `my_dimnames` as row and column labels in `matrix_ct`.
+
+```{r}
+# Assign the values stored in my_dimnames as the row and column labels of matrix_ct
+dimnames(matrix_ct) <- my_dimnames
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+See how the labels make our contingency table easier to read? Finally, we can put all the steps above together into one code chunk like this:
+
+```{r}
+# Assign row and column labels to matrix_ct
+dimnames(matrix_ct) <- list(
+  Exposure = c("Yes", "No"), # Row names
+  Outcome  = c("Yes", "No")  # Then column names
+)
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+### Add margins
+
+Finally, let's add marginal totals to our contingency table. Because we can't add letters together, let's use the numbers from the simulated population of people.
+
+```{r}
+# Create a contingency table called matrix_ct
+matrix_ct <- matrix(
+  c(a = 3, b = 2, c = 3, d = 2),
+  ncol = 2,
+  byrow = TRUE
+)
+
+# Assign row and column labels to matrix_ct
+dimnames(matrix_ct) <- list(
+  Exposure = c("Yes", "No"), # Row names
+  Outcome  = c("Yes", "No")  # Then column names
+)
+
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+Next, let's add the marginal totals to `matrix_ct`. The easiest way to do so is by passing our contingency table to the `addmargins()` function.
+
+```{r}
+# Create a contingency table called matrix_ct_margins
+# It is the matrix_ct with marginal totals added.
+matrix_ct_margins <- addmargins(matrix_ct)
+# Print the value stored in matrix_ct_margins to the screen
+matrix_ct_margins
+```
+
+And now we have a contingency table, stored as an R object, that we can use to calculate many measures of association we are interested in. But before doing so, we need to quickly review one additional concept -- probability. 
+
+## Probabilities
+
+<!-- In the future, we may want to move probability and conditional probability to earlier in the book -->
+
+As previously mentioned, statistics and statistical inference are critical tools in the practice of epidemiology, and probability theory is provides a foundation for statistics. Therefore, it is important for us to have a least a basic understanding of probability theory. Unfortunately, a complete review of probability theory is beyond the scope of this book. However, we will discuss a few of the most fundamental aspects of probability theory here and elsewhere in the book.
+
+When we talk about the _probability_ of an event in everyday speech, we are typically making a statement about how likely it is that the event has already occurred, or how likely it is that it will occur at some point in the future. For example, we may say that there is a 90% chance that a person has a certain disease, or that there is a 50-50 chance of surviving a particular condition, or that 9 out of 10 people who drop out of our study are experiencing adverse outcomes. As these examples illustrate, we can talk about probabilities in a number of different ways. However, it is mathematically easiest to work with probabilities that are recorded as fractions, which are then converted to decimals. So, we will typically write probabilities as a number between 0 and 1, where the more likely an event is to occur, the closer the probability is to 1. and the less likely an event is to occur, the closer the probability is to 0. 
+
+Additionally, it will be useful for us to distinguish between at least two conceptually different categories of probability.
+
+1. **Frequency probability** is the limit of the relative frequency of an event in a sequence of N random trials as N approaches infinity. @Porta2008-ij For example, if we flip a coin a really large number of times -- a nearly infinite number of times -- then how frequently does the coin come up heads? The proportion of heads (or tails) would constitute a frequency probability. Spoiler alert: It's approximately 50%. Central to the concept of frequency probability is the idea that a process is _repeated a large number of times_. Further, frequency probabilities may or may not have anything to do with the beliefs that humans have about how likely an event is to occur (at least in theory). Rather, frequency probabilities are simply the result of counting the occurrence of something a large number of times (at least in theory). This is the conceptualization of probability that plays a central role in the majority of the statistical tool and procedures we use in epidemiology.
+
+2. **Subjective probability** is a measure, ranging from 0 to 1, of the degree of _belief_ about the occurrence of an event. @Porta2008-ij For example, if we say there is a 50% probability of rain today, then we are making a subjective probability statement. We believe that it is just as likely to rain today as not. This statement can clearly not be a frequency probability. There is no way for us to repeat today a near infinite number of times and then count how times it rained. Today only occurs 1 time. Although this conceptualization of probability is widely considered less objective than frequency probabilities, it is probably the conceptualization that is most often implied when we humans discuss the probability of events in everyday conversation. 
+
+The gap between the frequency probabilities at the center of many, if not most, epidemiologic methods and the subject probabilities we express colloquially is the source of a great deal of confusion for many people. In this book, when we use the word "probability," we are generally referring to frequency probabilities. Further, we will attempt to explicitly state when we are using the word "probability" in the more subjective sense.
+
+### Frequency probabilities
+
+Let's start with an example. The approximate frequency of Alzheimer's Disease among Americans age 65+, by age group, is given in table \@ref(tab:measures-of-association-alzheimers). For instructional purposes, we will assume that having Alzheimer's Disease (AD+) and not having Alzheimer's Disease (AD-) are mutually exclusive (i.e., a person can't be in both categories at the same time) and exhaustive (i.e., there aren't other possible categories) categories. Further, we will assume that all people in this population are equally likely to be selected if we draw a sample. 
+
+```{r measures-of-association-alzheimers, echo=FALSE}
+alzheimers <- tribble(
+  ~`Age Group`, ~`Alzheimer's Disease`, ~`No Alzheimer's Disease`, ~ Total,
+  "65-74",      1.7,                    32.0,                      33.7,
+  "75-84",      2.1,                    14.1,                      16.2,
+  "85+",        2.0,                    4.0,                       6.0,
+  "Total",      5.8,                    50.1,                      55.9
+)
+
+knitr::kable(
+  alzheimers, 
+  caption = "Frequency of Alzheimer's Disease in America by Age Group",
+  align = "lccc"
+) |> 
+  kableExtra::add_footnote("all values in millions")
+```
+
+We can define the probability of having Alzheimer's Disease in our population of interest as:
+
+$$P(AD)=\frac{Number\, of\, people\, with\, AD}{Total\, number\, of\, people\, in\, the\, population}$$
+
+In this case, the probability of Alzheimer's Disease among American's age 65+ is:
+
+$$P(AD) = \frac{5.8}{55.9} = `r round(5.8/55.9, 2)`$$ 
+
+Equivalently, we can say that the _marginal probability_ (because one of the marginal totals from the table was used as the numerator) of Alzheimer's Disease among American's age 65+ is `r round(5.8/55.9, 2)`. 
+
+More generally, we can say that if some process is repeated a large number of times, $n$, and if some resulting event with the characteristic $Y$ occurs, $m$ times, the relative frequency of occurrence of $Y$, $\frac{m}{n}$ will be approximately equal to the probability of $Y$. @Daniel2013-qq
+
+$$P(Y)=\frac{m}{n}$$
+
+::: note
+🗒**Side Note:** Notice that probability is sometimes written at $Pr()$ and sometimes written as just $P()$.
+:::
+
+### Conditional probabilities
+
+The probabilities described above were all **marginal** or **unconditional** probabilities. Unconditional probabilities describe how likely an event occurrence is without incorporating information about other events that may affect the first event. For example, the unconditional probability of rain would be the probability of rain before knowing if there are clouds in the sky. Conversely, the **conditional probability** of an event describes how likely an event occurrence is given that some other event has already occurred. Going back to our rain example, the probability of rain would likely change if there were dark clouds looming in the sky. The probability of rain given that (i.e., conditional on) there are dark clouds in the sky is an example of a conditional probability.
+
+An equivalent, but slightly different way to think conditional probabilities is as calculating a probability after _filtering_ our data, or on a _subset_ of our data. For example, we may to calculate the probability of Alzheimer's Disease given that the randomly sampled person from our population of interest was in the 75-84 age group. This is a conditional probability and can be written as $P(AD = 1|Age\, group = 75-84)$. The vertical bar means "given". So, we can express this equation in words as "The probability of Alzheimer's Disease given that age group is 75 to 84." Because the 75-84 age group is our new popuation of interest -- and consequently our new denominator -- we can _filter_ our table to include the 75-84 age group only. The other rows of data are irrelevant. 
+
+```{r measures-of-association-alzheimers-filtered, echo=FALSE}
+alzheimers <- tribble(
+  ~`Age Group`, ~`Alzheimer's Disease`, ~`No Alzheimer's Disease`, ~ Total,
+  "65-74",      1.7,                    32.0,                      33.7,
+  "75-84",      2.1,                    14.1,                      16.2,
+  "85+",        2.0,                    4.0,                       6.0,
+  "Total",      5.8,                    50.1,                      55.9
+)
+
+knitr::kable(
+  alzheimers, 
+  caption = "Frequency of Alzheimer's Disease in America by Age Group",
+  align = "lccc"
+) |> 
+  kableExtra::add_footnote("all values in millions") |> 
+  kableExtra::row_spec(c(1, 3), background = "red", strikeout = TRUE)
+```
+
+Now, we can calculate our conditional probability of interest as:
+
+$$P(AD)=\frac{Number\, of\, people\, with\, AD}{Total\, number\, of\, people\, in\, the\, population\, age\, 75\, to\, 84}$$
+
+In this case, the probability of Alzheimer's Disease among American's age 65+, given that a person is between the ages of 75 and 84, is:
+
+$$P(AD = 1|Age\, group = 75-84) = \frac{2.1}{16.2} = `r round(2.1/16.2, 2)`$$
+
+Before we can give a more general definition of conditional probabilities, we need to first introduce one additional concept -- **joint probabilities**. A joint probability is the probability that two conditions exist at the same time. For example, what is the probability that a person picked at random from our population of interest will be in the 75 to 84 age group _AND_ have Alzheimer's Disease?
+
+The probability that a person picked at random from our population of interest will be in the 75 to 84 age group and have Alzheimer's Disease can be written symbolically as: 
+
+$$P(Age\, group = 75-84\, \cap AD = 1)$$
+
+The new symbol, $\cap$, in the equation above is read as "intersects" and means "and". If we take look at table \@ref(tab:measures-of-association-alzheimers-intersect), we can see that the numerator for out calculation will be 2.1 million. Because we asked about the probability of selection from our population of interest, the denominator will be 55.9 million -- the total size of our population. 
+
+```{r measures-of-association-alzheimers-intersect, echo=FALSE}
+alzheimers <- tribble(
+  ~`Age Group`, ~`Alzheimer's Disease`, ~`No Alzheimer's Disease`, ~ Total,
+  "65-74",      1.7,                    32.0,                      33.7,
+  "75-84",      2.1,                    14.1,                      16.2,
+  "85+",        2.0,                    4.0,                       6.0,
+  "Total",      5.8,                    50.1,                      55.9
+)
+
+knitr::kable(
+  alzheimers, 
+  caption = "Frequency of Alzheimer's Disease in America by Age Group",
+  align = "lccc"
+) |> 
+  kableExtra::add_footnote("all values in millions") |> 
+  kableExtra::column_spec(2, 
+    background = c("#FFFFFF", "#ae6042", "#FFFFFF", "#F8F8F8"), 
+    color = c("black", "white", "black", "black")
+  )
+```
+
+Therefore, the joint probability that a person picked at random from our population of interest will be in the 75 to 84 age group and have Alzheimer's Disease is:
+
+$$P(Age\, group = 75-84\, \cap AD = 1) = \frac{2.1}{55.9} = `r round(2.1/55.9, 2)`$$
+
+Now, that we know what joint probabilities are, we can more formally define conditional probabilities. That is, the conditional probability of $Y$ given $X$ is equal to the probability of $Y \cap X$ divided by the probability of $X$, provided that the probability of $X$ is not zero. @Daniel2013-qq
+
+$$P(Y|X)=\frac{P(Y \cap X)}{P(X)}$$
+
+## Association
+
+# Left off here...
+
+We are finally ready to get into measures of association. But, what is an association?
+
+
+
+```{r measures-of-association-association, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/association.png")
+```
+
+And sometimes, when trying to understand what something is, it can be helpful to understand what it is not. 
+
+In this case, the opposite of an association is statistical independence. 
+
+```{r measures-of-association-independence, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/independence.png")
+```
+
+These formulas represent the lack of an association on the risk difference, risk ratio, and odds ration scales respectively.
+
+And notice what these equations are equal to when there is no association.
+
+```{r measures-of-association-independence-02, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/independence_02.png")
+```
+
+These values are called Null values.
+
+> “The null value of a measure of association is the value that measure takes when there is no difference between the two groups being compared.” @Westreich2019-lg
+
+These formulas represent the lack of an association on the incidence proportion difference, incidence proportion ratio, and odds ratio scales respectively.
+
+```{r measures-of-association-independence-03, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/independence_03.png")
+```
+
+<!-- Add more context around the slides below -->
+
+```{r measures-of-association-incidence-proportion-difference-null, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/incidence_proportion_difference_null.png")
+```
+
+```{r measures-of-association-incidence-proportion-ratio-null, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/incidence_proportion_ratio_null.png")
+```
+
+```{r measures-of-association-odds-ratio-null, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/odds_ratio_null.png")
+```
+
+Association exists when the distribution of the thing we are measuring is different, on average, in two groups. Alternatively, we can say that Knowing something about X tells you something (or helps you predict) about Y. 
+
+<!-- Insert Alzheimer's stuff from hidden slides 13 and 14. Then delete them. -->
+
+### Terminology recap
+
+```{r measures-of-association-probability-terminology-recap, echo=FALSE}
+prob_def <- "If some process is repeated a large number of time, n, the relative frequency of occurrence of E, m/n, will be approximately equal to the probability of E."
+conditional_prob_def <- "The probability that some event occurs given that we know that some other event has already occurred."
+```
+
+| Our Term                | Definition               | Equation                            |
+|:------------------------|:------------------------:|:-----------------------------------:|
+| Probability             | `r prob_def`             | $P(E) = \frac{m}{n}$                |
+| Conditional probability | `r conditional_prob_def` | $P(Y|X) = \frac{P(Y \cap X)}{P(X)}$ |
+
+## Prediction
+
+Predictions, especially good ones, can obviously be useful on their own. We may know that people of a certain race/ethnicity are most likely to get a particular form of cancer. Knowing that may allow us to concentrate screening efforts more effectively. We may know that older adults who begin to have trouble managing their finances are more likely to develop dementia. We may be able to use that information as an early indicator of important health problems to come. 
+
+However, in epidemiology, we are very often not content with predictions alone. It is extremely common for our questions and studies to either directly ask causal questions or imply causal relationships between variables. The reason we are often more interested in causal associations than mere predictions can be found directly in our definition of epidemiology. We want to control health problems. Said another way, we want to know why ”bad” things happen so that we can stop them from happening and/or why “good” things happen so that we can make them happen more often.
+
+This idea is simultaneously so straightforward and so complex. As we will see throughout the semester. 
+
+Notice that in the cases above these predictions may be perfectly valid, but do they get us any closer to our ultimate goal of “controlling health problems?” We can’t change anyone’s race or ethnicity, can we? Even if we could, I’m hard-pressed to think of an example of a health outcome that is caused directly by a person’s race or ethnicity. Race and ethnicity are just a proxy for the true unmeasured cause. Likewise, do you really believe that if we hired an accountant to help an older person manage their finances that they would no longer develop dementia? Of course not.
+
+<!-- Break up these slides somehow -->
+
+```{r measures-of-association-measures-of-association-tree-01, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/measures_of_association_tree_01.png")
+```
+
+```{r measures-of-association-measures-of-association-tree-02, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/measures_of_association_tree_02.png")
+```
+
+```{r measures-of-association-measures-of-association-tree-03, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/measures_of_association_tree_03.png")
+```
+
+We will look at how to calculate some of the most commonly used of these next. 
+
+Example
+
+- Smoking and pill
+- Smoking and smoking cessation program
+- 1,000,000 smokers
+- 100,000 will die
+- Pill will save 50% who take it, 10% can afford it.
+  - IP = 0.50, 5,000 lives saved
+- Smoking cessation program will save 10%, but 100% get it.
+  - IP = 0.01, 10,000 lives saved
+
+## Terminology recap
+
+```{r measures-of-association-terminology-recap, echo=FALSE, eval=FALSE}
+null_vallue_def <- ""
+statistical_independence_def <- ""
+association_def <- ""
+incidence_prop_diff_def <- ""
+incidence_prop_diff_other_terms <- "Risk difference"
+incidence_prop_ratio_def <- ""
+incidence_prop_ratio_other_terms <- "Risk ratio"
+incidence_odds_def <- ""
+incidence_odds_other_terms <- "Odds ratio"
+
+measures_of_association_terminology_recap <- tribble(
+  ~Term,                             ~Definition,                  ~`Examples and Notes`,
+  "Null value",                      null_vallue_def,              "",
+  "Statistical independence",        statistical_independence_def, "",
+  "Association",                     association_def,              "",
+  "Incidence proportion difference", incidence_prop_diff_def,      incidence_prop_diff_other_terms,
+  "Incidence proportion ratio",      incidence_prop_ratio_def,     incidence_prop_ratio_other_terms,
+  "incidence odds ratio",            incidence_odds_def,           incidence_odds_other_terms
+)
+
+knitr::kable(measures_of_association_terminology_recap)
+```
+
+So, how do we calculate these measures of association?
+
+
+
+## Incidence proportion
+
+Remember that the incidence proportion is the proportion of the population who experiences a new occurrence of the condition of interest among those in the population who are at risk of experiencing a new occurrence the condition of interest during a given time frame.
+
+```{r measures-of-association-pop-10-plot-02, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/03_measures_of_occurrence/pop_10_plot.png")
+```
+
+$$\frac{Count\, of\, new\, occurrences}{Population\, at\, risk}$$
+
+$$\frac{5}{9}=0.56$$
+
+When we have two groups – e.g., exposed and unexposed – one way we can contrast outcomes in those groups is by calculating the ratio of the incidence proportion in the exposed to the incidence proportion in the unexposed. 
+
+```{r measures-of-association-pop-10-exposed-plot-print-02, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/pop_10_exposed_plot.png")
+```
+
+## Incidence proportion ratio
+
+<!-- What is a ratio? -->
+
+More commonly called relative risk or risk ratio <!-- Add to terminology table -->
+
+We like incidence proportion ratio because it is unambiguous and consistent with the previous terminology we have been using. 
+
+$$\frac{Incidence\, proportion\, in\, the\, exposed}{Incidence\, proportion\, in\, the\, unexposed}$$
+
+```{r measures-of-association-incidence-proportion-ratio-crosstab, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/incidence_proportion_ratio_crosstab.png")
+```
+
+```{r measures-of-association-pop-10-exposed-plot-print-03, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/pop_10_exposed_plot.png")
+```
+
+<!-- Below is from the lab warm-up -->
+
+# Incidence proportion ratio
+
+-   Relative risk
+-   Risk ratio
+
+$$\frac{Incidence\, proportion\, in\, the\, exposed}{Incidence\, proportion\, in\, the\, unexposed}$$
+
+$$\frac{\frac{a}{(a+b)}}{\frac{c}{(c+d)}}$$
+
+```{r}
+matrix_ct <- matrix(
+  c(a = 3, b = 2, c = 2, d = 2),
+  ncol = 2,
+  byrow = TRUE
+)
+
+matrix_ct <- addmargins(matrix_ct)
+
+dimnames(matrix_ct) <- list(
+  Exposure = c("Yes", "No", "col_sum"), # Row names
+  Disease  = c("Yes", "No", "row_sum")  # Then column names
+)
+
+matrix_ct
+```
+
+```{r}
+incidence_prop <- matrix_ct[, "Yes"] / matrix_ct[, "row_sum"]
+incidence_prop
+```
+
+```{r}
+matrix_ct <- cbind(matrix_ct, incidence_prop)
+matrix_ct
+```
+
+Calculate our incidence proportion ratio
+
+```{r}
+ipr <- matrix_ct["Yes", "incidence_prop"] / matrix_ct["No", "incidence_prop"]
+ipr
+```
+
+## Interpretation
+
+1.  Among the members of our population, those who were exposed had 1.2 times the incidence of disease compared to those who were not exposed over the 12 months of follow-up period.
+
+2.  Among the members of our population, those who were exposed had 1.2 times the risk of disease compared to those who were not exposed over the 12 months of follow-up period.
+
+# Incidence proportion difference
+
+More commonly called the risk difference
+
+We like incidence proportion ratio because it is unambiguous and consistent with the previous terminology we have been using. 
+
+```{r measures-of-association-incidence-proportion-difference-crosstab, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/incidence_proportion_difference_crosstab.png")
+```
+
+<!-- Above is from the lab warm-up -->
+
+# Incidence proportion difference
+
+-   Risk difference
+
+$${Incidence\, proportion\, in\, the\, exposed}-{Incidence\, proportion\, in\, the\, unexposed}$$
+
+$$\frac{a}{(a+b)}-\frac{c}{(c+d)}$$
+
+```{r}
+matrix_ct
+```
+
+Calculate our incidence proportion difference
+
+```{r}
+ipd <- matrix_ct["Yes", "incidence_prop"] - matrix_ct["No", "incidence_prop"]
+ipd
+```
+
+## Interpretation
+
+1.  Among the members of our population, those who were exposed had 0.1 additional cases of disease per person compared to those who were not exposed over the 12 months of follow-up period.
+
+```{r}
+ipd * 100
+```
+
+2.  Among the members of our population, those who were exposed had 10 additional cases of disease per 100 people compared to those who were not exposed over the 12 months of follow-up period.
+
+**Tip 1:** If you have the incidence proportion expressed as percentage, convert it to convenient fractions so that you can express it as the additional risk in a group of people who have the exposure.
+
+**Tip 2:** Focus your interpretation on the additional risk in the exposed group.
+
+Example: "There were 10 additional cases of disease per 100 people in the group that was exposed, compared to the group without exposure."
+
+**Tip 3:** Don't forget to specify the time interval when using incidence proportion.
+
+Example: "In the group that failed to adhere closely to the Mediterranean diet there were 120 excess deaths per 1,000 men during the two year period of observation compared to the group that did adhere to the Mediterranean diet."
+
+<!-- Below is from the lab warm-up -->
+
+# Incidence odds ratio
+
+-   Odds ratio
+
+```{r measures-of-association-incidence-odds-ratio-crosstab, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/04_measures_of_association/incidence_odds_ratio_crosstab.png")
+```
+
+$$\frac{Incidence\, odds\, in\, the\, exposed}{Incidence\, odds\, in\, the\, unexposed}$$
+
+$$\frac{\frac{a}{b}}{\frac{c}{d}}$$
+
+```{r}
+matrix_ct
+```
+
+Calculate odds
+
+```{r}
+incidence_odds <- matrix_ct[, "incidence_prop"] / (1 - matrix_ct[, "incidence_prop"])
+incidence_odds
+```
+
+```{r}
+incidence_odds <- matrix_ct[, "Yes"] / matrix_ct[, "No"]
+incidence_odds
+```
+
+```{r}
+matrix_ct <- cbind(matrix_ct, incidence_odds)
+matrix_ct
+```
+
+Calculate our incidence odds ratio
+
+```{r}
+ior <- matrix_ct["Yes", "incidence_odds"] / matrix_ct["No", "incidence_odds"]
+ior
+```
+
+## Interpretation
+
+1. Among the members of our population, those who were exposed had 1.5 times the odds of incident disease compared to those who were not exposed over the 12 months of follow-up period.
+
+<!-- Above is from the lab warm-up -->
+
+# Incidence rate ratio
+
+- Incidence density
+
+<!-- Make this better -->
+
+Calculate person time at risk
+
+```{r}
+# Have R calculate the total person-months at risk
+pop_10_exposed_wide |> 
+  # Keep only the rows with a status of At Risk
+  filter(status == "At Risk") |> 
+  # Calculate the time between follow-up months for each person
+  mutate(time_at_risk = xend_adjusted - x) |> 
+  # Total all of the individual person-months at risk by exposure status
+  group_by(exposed_f) |> 
+  summarise(time_at_risk = sum(time_at_risk))
+```
+
+```{r}
+matrix_ct <- matrix(
+  c(a = 3, b = 2, c = 2, d = 2),
+  ncol = 2,
+  byrow = TRUE
+)
+
+matrix_ct <- addmargins(matrix_ct)
+
+dimnames(matrix_ct) <- list(
+  Exposure = c("Yes", "No", "col_sum"), # Row names
+  Disease  = c("Yes", "No", "row_sum")  # Then column names
+)
+
+matrix_ct
+```
+
+
+```{r}
+# Create a contingency table as a matrix object
+matrix_ct_rates <- matrix(
+  c(a = 3, b = 2, c = 2, d = 2),
+  ncol = 2,
+  byrow = TRUE
+)
+
+# Add person months to the contingency table
+person_months   <- c(exposed = 32, unexposed = 32)
+matrix_ct_rates <- cbind(matrix_ct_rates, person_months)
+
+# Add column totals to the contingency table
+# Notice the "margin = 1" in the code below. That tells R to calculate the 
+# column totals only -- not the row totals
+matrix_ct_rates <- addmargins(matrix_ct_rates, margin = 1)
+
+# Add row and column labels to improve readability
+dimnames(matrix_ct_rates) <- list(
+  Exposure = c("Yes", "No", "col_sum"), # Row names
+  Disease  = c("Yes", "No", "person_months")  # Then column names
+)
+
+matrix_ct_rates
+```
+
+```{r}
+incidence_rate <- matrix_ct_rates[, "Yes"] / matrix_ct_rates[, "person_months"]
+incidence_rate
+```
+
+```{r}
+matrix_ct_rates <- cbind(matrix_ct_rates, incidence_rate)
+matrix_ct_rates
+```
+
+Calculate our incidence rate ratio
+
+```{r}
+irr <- matrix_ct_rates["Yes", "incidence_rate"] / matrix_ct_rates["No", "incidence_rate"]
+irr
+```
+
+## Interpretation
+
+1.  Among the members of our population, those who were exposed had 1.5 times the rate of disease compared to those who were not exposed over the 12 months of follow-up period.
+
+
+# Incidence rate difference
+
+```{r}
+matrix_ct_rates
+```
+
+Calculate our incidence risk difference
+
+```{r}
+ird <- matrix_ct_rates["Yes", "incidence_rate"] - matrix_ct_rates["No", "incidence_rate"]
+ird
+```
+
+## Interpretation
+
+1.  Among the members of our population, those who were exposed had 0.03 additional cases of disease per person-month compared to those who were not exposed over the 12 months of follow-up period.
+
+```{r}
+ird * 100
+```
+
+2.  Among the members of our population, those who were exposed had 3.1 additional cases of disease per 100 person-months compared to those who were not exposed over the 12 months of follow-up period.
+
+**Tip 1:** Remember that interpretations are now in person-time.
+
+**Tip 2:** Focus your interpretation on the additional risk in the exposed group.
+
+Example: "There were 10 additional cases of disease per 100 units of person-time in the group that was exposed, compared to the group without exposure."
+
+**Tip 3:** Don't forget to specify the time interval when using incidence proportion.
+
+Example: "In the group that failed to adhere closely to the Mediterranean diet there were 120 excess deaths per 100 person-years during the two year period of observation compared to the group that did adhere to the Mediterranean diet."
+
+
+
+
+
+
+
+
+
+
+
+
+# Cut and moved
+
+## Measures of association
 
 Remember, that our measurement and analysis goals can be broken down into description, prediction, and/or causally explanation of health-related states or events in populations of people.
 
@@ -51,8 +1044,6 @@ For example:
 - Are people older, on average, in Florida or Pennsylvania?
 
 - Is symptom onset quicker, on average, for Cholera or E. coli?
-
-One could also make the case that this starts to overlap with prediction. It sort of just depends on how the information is being used. But, when our goal is prediction, it is safe to say that associations will be of great interest to us. So, what are associations?
 
 > “[An <span class="u-orange-text">association</span> is a] <span class="u-orange-text">statistical dependence</span> between two or more events, characteristics, or other variables. An association is present if the <span class="u-orange-text">probability of occurrence</span> of an event or characteristic, or the quantity of a variable, varies with the occurrence of one or more other events, the presence of one or more other characteristics, or the quantity of one or more <span class="u-orange-text">other variables</span>." @Porta2008-ij
 
@@ -129,7 +1120,7 @@ df <- tibble(
 
 And let's once again explore the relationship between `x` and `y` in the data we simulated above.
 
-```{r measures-of-association-freq-x-y}
+```{r measures-of-association-freq-x-y-02}
 df |>
   # Use the freq_table function to calculate the distribution of y across 
   # levels of x
@@ -184,161 +1175,33 @@ Or, if we're still talking about Alzheimer's Disease and APOEe4 allele:
 And what exactly does "probability" mean?
 
 
-# Probability
 
-<!-- In the future, we may want to move probability and conditional probability to earlier in the book -->
 
-When we talk about the probability of something in everyday speech, we are typically making a statement about how likely it is that something will happen. In statistics (and epidemiology), we actually need to distinguish between two different kinds of probability. 
 
-1. **Frequency probability** is the limit of the relative frequency of an event in a sequence of N random trials as N approaches infinity. @Porta2008-ij For example, if we flip a coin a really large number of times -- a nearly infinite amount of times -- then how frequently would the coin come up heads? The frequency probability is that number of times. 
 
-2. **Subjective probability** is a measure, ranging from 0 to 1, of the degree of belief in a hypothesis or statement. @Porta2008-ij For example, if we say that we believe there is a 50% probability of rain today, then we are making a subjective probability statement. We believe that it is just as likely to rain today as not. 
 
-In epidemiology, when we talk about probability, we are typically talking about frequency probability. And we can write out an equation for frequency probability like this:
 
-$$P(Y)=\frac{Number\, of\, times\, Y\, occurs}{Total\, number\, of\, all\, possible\, outcomes}$$
 
-::: note
-🗒**Side Note:** Notice that probability is sometimes written at $Pr$ and sometimes written as just $P$.
-:::
 
-Thinking back to our Alzheimer’s example, how would we write out the probability of Alzheimer's Disease using this equation?
 
-$$P(Y)=\frac{Number\, of\, times\, Alzheimer's\, Disease\, occurs}{Total\, number\, of\, times\, Alzheimer's\, Disease\, could\, have\, occured}$$
 
-## Conditional probabilities
 
-<!-- Improve this section. Come up with an applied example. -->
 
-The probabilities described above were all **marginal** or **unconditional** probabilities. Unconditional probabilities describe how likely an event occurrence is without incorporating information about other events that may affect the first event. For example, the unconditional probability of rain would be the probability of rain before knowing if there are clouds in the sky. Conversely, the **conditional probability** of an event describes how likely an event occurrence is given that some other event has already occurred. Going back to our rain example, the probability of rain would likely change if there were dark clouds looming in the sky. The probability of rain given that (i.e., conditional on) there are dark clouds in the sky is an example of a conditional probability.
 
-We can write out an equation for conditional probabilities that looks like this:
 
-<!-- For Testing -->
-<!-- $$P(Y|X) = \frac{P(Y \cap X)}{P(X)}$$ -->
-\begin{equation}
-  P(Y|X) = \frac{P(Y \cap X)}{P(X)}
-   (\#eq:conditional-prob)
-\end{equation}
 
-The new symbol in the equation above that looks like an upside-down "U" is read as "intersects." 
 
-So we would read equation \@ref(eq:conditional-prob) in the following way.
 
-- $P(Y|X)$ is read as "the probability of Y given X".
 
-- $Y \cap X$ is read as "the probability of Y and X". 
 
-- $P(X)$ is read as "the probability of X". 
 
-So, how would we put all of this together and say it in words? Give it a try in your head before reading on.
 
-- The probability of Y given X is equal to the probability of Y and X divided by the probability of X.
 
-Visually, intersection looks like this:
 
-```{r measures-of-association-intersection, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/01_intro_epi/intersection.png")
-```
 
-Where the circle on the left represents the area where Y is true, the circle on the right represents the area where X is true, and the overlapping section in the middle represents the area where Y is true AND X is true.
 
-With all of this new terminology, we can return to our definition of association.
 
-```{r measures-of-association-association, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/01_intro_epi/association.png")
-```
-
-And sometimes, when trying to understand what something is, it can be helpful to understand what it is not. 
-
-In this case, the opposite of an association is statistical independence. 
-
-```{r measures-of-association-independence, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/01_intro_epi/independence.png")
-```
-
-These formulas represent the lack of an association on the risk difference, risk ratio, and odds ration scales respectively.
-
-And notice what these equations are equal to when there is no association.
-
-```{r measures-of-association-independence-02, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/01_intro_epi/independence_02.png")
-```
-
-These values are called Null values.
-
-> “The null value of a measure of association is the value that measure takes when there is no difference between the two groups being compared.” @Westreich2019-lg
-
-These formulas represent the lack of an association on the incidence proportion difference, incidence proportion ratio, and odds ratio scales respectively.
-
-```{r measures-of-association-independence-03, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/01_intro_epi/independence_03.png")
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r echo=FALSE}
+```{r measures-of-association-clean-up, echo=FALSE}
 # clean up
 rm(list = ls())
 ```

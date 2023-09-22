@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | R for Epidemiology</title>
+  <title>49 Incidence rate ratio | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | R for Epidemiology" />
+  <meta property="og:title" content="49 Incidence rate ratio | R for Epidemiology" />
   <meta property="og:type" content="book" />
   <meta property="og:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
   <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="github-repo" content="brad-cannell/r4epi" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | R for Epidemiology" />
+  <meta name="twitter:title" content="49 Incidence rate ratio | R for Epidemiology" />
   
   <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="twitter:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-
+<link rel="prev" href="incidence-odds-ratio.html"/>
+<link rel="next" href="incidence-rate-difference.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -856,19 +856,102 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="incidence-rate-ratio" class="section level1 hasAnchor" number="49">
+<h1><span class="header-section-number">49</span> Incidence rate ratio<a href="incidence-rate-ratio.html#incidence-rate-ratio" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<ul>
+<li>Incidence density</li>
+</ul>
+<!-- Make this better -->
+<p>Calculate person time at risk</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="incidence-rate-ratio.html#cb60-1" tabindex="-1"></a><span class="co"># Have R calculate the total person-months at risk</span></span>
+<span id="cb60-2"><a href="incidence-rate-ratio.html#cb60-2" tabindex="-1"></a>pop_10_exposed_wide <span class="sc">|&gt;</span> </span>
+<span id="cb60-3"><a href="incidence-rate-ratio.html#cb60-3" tabindex="-1"></a>  <span class="co"># Keep only the rows with a status of At Risk</span></span>
+<span id="cb60-4"><a href="incidence-rate-ratio.html#cb60-4" tabindex="-1"></a>  <span class="fu">filter</span>(status <span class="sc">==</span> <span class="st">&quot;At Risk&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb60-5"><a href="incidence-rate-ratio.html#cb60-5" tabindex="-1"></a>  <span class="co"># Calculate the time between follow-up months for each person</span></span>
+<span id="cb60-6"><a href="incidence-rate-ratio.html#cb60-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_at_risk =</span> xend_adjusted <span class="sc">-</span> x) <span class="sc">|&gt;</span> </span>
+<span id="cb60-7"><a href="incidence-rate-ratio.html#cb60-7" tabindex="-1"></a>  <span class="co"># Total all of the individual person-months at risk by exposure status</span></span>
+<span id="cb60-8"><a href="incidence-rate-ratio.html#cb60-8" tabindex="-1"></a>  <span class="fu">group_by</span>(exposed_f) <span class="sc">|&gt;</span> </span>
+<span id="cb60-9"><a href="incidence-rate-ratio.html#cb60-9" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">time_at_risk =</span> <span class="fu">sum</span>(time_at_risk))</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
+##   exposed_f time_at_risk
+##   &lt;fct&gt;            &lt;int&gt;
+## 1 No                  32
+## 2 Yes                 32</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="incidence-rate-ratio.html#cb62-1" tabindex="-1"></a>matrix_ct <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb62-2"><a href="incidence-rate-ratio.html#cb62-2" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">a =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">c =</span> <span class="dv">2</span>, <span class="at">d =</span> <span class="dv">2</span>),</span>
+<span id="cb62-3"><a href="incidence-rate-ratio.html#cb62-3" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb62-4"><a href="incidence-rate-ratio.html#cb62-4" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb62-5"><a href="incidence-rate-ratio.html#cb62-5" tabindex="-1"></a>)</span>
+<span id="cb62-6"><a href="incidence-rate-ratio.html#cb62-6" tabindex="-1"></a></span>
+<span id="cb62-7"><a href="incidence-rate-ratio.html#cb62-7" tabindex="-1"></a>matrix_ct <span class="ot">&lt;-</span> <span class="fu">addmargins</span>(matrix_ct)</span>
+<span id="cb62-8"><a href="incidence-rate-ratio.html#cb62-8" tabindex="-1"></a></span>
+<span id="cb62-9"><a href="incidence-rate-ratio.html#cb62-9" tabindex="-1"></a><span class="fu">dimnames</span>(matrix_ct) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb62-10"><a href="incidence-rate-ratio.html#cb62-10" tabindex="-1"></a>  <span class="at">Exposure =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;col_sum&quot;</span>), <span class="co"># Row names</span></span>
+<span id="cb62-11"><a href="incidence-rate-ratio.html#cb62-11" tabindex="-1"></a>  <span class="at">Disease  =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;row_sum&quot;</span>)  <span class="co"># Then column names</span></span>
+<span id="cb62-12"><a href="incidence-rate-ratio.html#cb62-12" tabindex="-1"></a>)</span>
+<span id="cb62-13"><a href="incidence-rate-ratio.html#cb62-13" tabindex="-1"></a></span>
+<span id="cb62-14"><a href="incidence-rate-ratio.html#cb62-14" tabindex="-1"></a>matrix_ct</span></code></pre></div>
+<pre><code>##          Disease
+## Exposure  Yes No row_sum
+##   Yes       3  2       5
+##   No        2  2       4
+##   col_sum   5  4       9</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="incidence-rate-ratio.html#cb64-1" tabindex="-1"></a><span class="co"># Create a contingency table as a matrix object</span></span>
+<span id="cb64-2"><a href="incidence-rate-ratio.html#cb64-2" tabindex="-1"></a>matrix_ct_rates <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb64-3"><a href="incidence-rate-ratio.html#cb64-3" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">a =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">c =</span> <span class="dv">2</span>, <span class="at">d =</span> <span class="dv">2</span>),</span>
+<span id="cb64-4"><a href="incidence-rate-ratio.html#cb64-4" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb64-5"><a href="incidence-rate-ratio.html#cb64-5" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb64-6"><a href="incidence-rate-ratio.html#cb64-6" tabindex="-1"></a>)</span>
+<span id="cb64-7"><a href="incidence-rate-ratio.html#cb64-7" tabindex="-1"></a></span>
+<span id="cb64-8"><a href="incidence-rate-ratio.html#cb64-8" tabindex="-1"></a><span class="co"># Add person months to the contingency table</span></span>
+<span id="cb64-9"><a href="incidence-rate-ratio.html#cb64-9" tabindex="-1"></a>person_months   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">exposed =</span> <span class="dv">32</span>, <span class="at">unexposed =</span> <span class="dv">32</span>)</span>
+<span id="cb64-10"><a href="incidence-rate-ratio.html#cb64-10" tabindex="-1"></a>matrix_ct_rates <span class="ot">&lt;-</span> <span class="fu">cbind</span>(matrix_ct_rates, person_months)</span>
+<span id="cb64-11"><a href="incidence-rate-ratio.html#cb64-11" tabindex="-1"></a></span>
+<span id="cb64-12"><a href="incidence-rate-ratio.html#cb64-12" tabindex="-1"></a><span class="co"># Add column totals to the contingency table</span></span>
+<span id="cb64-13"><a href="incidence-rate-ratio.html#cb64-13" tabindex="-1"></a><span class="co"># Notice the &quot;margin = 1&quot; in the code below. That tells R to calculate the </span></span>
+<span id="cb64-14"><a href="incidence-rate-ratio.html#cb64-14" tabindex="-1"></a><span class="co"># column totals only -- not the row totals</span></span>
+<span id="cb64-15"><a href="incidence-rate-ratio.html#cb64-15" tabindex="-1"></a>matrix_ct_rates <span class="ot">&lt;-</span> <span class="fu">addmargins</span>(matrix_ct_rates, <span class="at">margin =</span> <span class="dv">1</span>)</span>
+<span id="cb64-16"><a href="incidence-rate-ratio.html#cb64-16" tabindex="-1"></a></span>
+<span id="cb64-17"><a href="incidence-rate-ratio.html#cb64-17" tabindex="-1"></a><span class="co"># Add row and column labels to improve readability</span></span>
+<span id="cb64-18"><a href="incidence-rate-ratio.html#cb64-18" tabindex="-1"></a><span class="fu">dimnames</span>(matrix_ct_rates) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb64-19"><a href="incidence-rate-ratio.html#cb64-19" tabindex="-1"></a>  <span class="at">Exposure =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;col_sum&quot;</span>), <span class="co"># Row names</span></span>
+<span id="cb64-20"><a href="incidence-rate-ratio.html#cb64-20" tabindex="-1"></a>  <span class="at">Disease  =</span> <span class="fu">c</span>(<span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;person_months&quot;</span>)  <span class="co"># Then column names</span></span>
+<span id="cb64-21"><a href="incidence-rate-ratio.html#cb64-21" tabindex="-1"></a>)</span>
+<span id="cb64-22"><a href="incidence-rate-ratio.html#cb64-22" tabindex="-1"></a></span>
+<span id="cb64-23"><a href="incidence-rate-ratio.html#cb64-23" tabindex="-1"></a>matrix_ct_rates</span></code></pre></div>
+<pre><code>##          Disease
+## Exposure  Yes No person_months
+##   Yes       3  2            32
+##   No        2  2            32
+##   col_sum   5  4            64</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="incidence-rate-ratio.html#cb66-1" tabindex="-1"></a>incidence_rate <span class="ot">&lt;-</span> matrix_ct_rates[, <span class="st">&quot;Yes&quot;</span>] <span class="sc">/</span> matrix_ct_rates[, <span class="st">&quot;person_months&quot;</span>]</span>
+<span id="cb66-2"><a href="incidence-rate-ratio.html#cb66-2" tabindex="-1"></a>incidence_rate</span></code></pre></div>
+<pre><code>##      Yes       No  col_sum 
+## 0.093750 0.062500 0.078125</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="incidence-rate-ratio.html#cb68-1" tabindex="-1"></a>matrix_ct_rates <span class="ot">&lt;-</span> <span class="fu">cbind</span>(matrix_ct_rates, incidence_rate)</span>
+<span id="cb68-2"><a href="incidence-rate-ratio.html#cb68-2" tabindex="-1"></a>matrix_ct_rates</span></code></pre></div>
+<pre><code>##         Yes No person_months incidence_rate
+## Yes       3  2            32       0.093750
+## No        2  2            32       0.062500
+## col_sum   5  4            64       0.078125</code></pre>
+<p>Calculate our incidence rate ratio</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="incidence-rate-ratio.html#cb70-1" tabindex="-1"></a>irr <span class="ot">&lt;-</span> matrix_ct_rates[<span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;incidence_rate&quot;</span>] <span class="sc">/</span> matrix_ct_rates[<span class="st">&quot;No&quot;</span>, <span class="st">&quot;incidence_rate&quot;</span>]</span>
+<span id="cb70-2"><a href="incidence-rate-ratio.html#cb70-2" tabindex="-1"></a>irr</span></code></pre></div>
+<pre><code>## [1] 1.5</code></pre>
+<div id="interpretation-8" class="section level2 hasAnchor" number="49.1">
+<h2><span class="header-section-number">49.1</span> Interpretation<a href="incidence-rate-ratio.html#interpretation-8" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Among the members of our population, those who were exposed had 1.5 times the rate of disease compared to those who were not exposed over the 12 months of follow-up period.</li>
+</ol>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-
+<a href="incidence-odds-ratio.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="incidence-rate-difference.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -899,7 +982,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/brad-cannell/r4epi/edit/master/%s",
+"link": "https://github.com/brad-cannell/r4epi/edit/master/chapters/10_part_intro_epi/04_measures_of_association.Rmd",
 "text": "Edit"
 },
 "history": {
