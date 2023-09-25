@@ -20,7 +20,7 @@ Copy and paste:
 
 <!-- Add a banner -->
 
-As a reminder, we said that epidemiology is usually defined as something like, "the study of the occurrence and distribution of health-related states or events in specified populations, including the study of the determinants influencing such states, and the application of this knowledge to control the health problems" @Porta2008-ij in the [Introduction to Epidemiology] chapter. In the chapter about [measures of occurrence][Measures of Occurrence], we focused on some of the ways we can measure the _occurrence_ of those health-related states or events. In this chapter, we will start discussing ways we can measure the _distribution_ of those health-related states or events. In other words, are those health-related states or events equally likely for everyone, or are they more for some people than others. However, we first need to review a couple of new topics that will help us later in our discussion about measures of association.
+As a reminder, we said that epidemiology is usually defined as something like, "the study of the occurrence and distribution of health-related states or events in specified populations, including the study of the determinants influencing such states, and the application of this knowledge to control the health problems" @Porta2008-ij in the [Introduction to Epidemiology] chapter. In the chapter about [measures of occurrence][Measures of Occurrence], we focused on some of the ways we can measure the _occurrence_ of those health-related states or events. In this chapter, we will start discussing ways we can measure the _distribution_ of those health-related states or events. In other words, are those health-related states or events equally likely for everyone, or are they more for some people than others. However, we first need to review a couple of topics that will help us later in our discussion about measures of association.
 
 ::: note
 🗒**Side Note:** Writing (and reading) "health-related states or events" over and over starts to get cumbersome after a while. Therefore, we will often just use "conditions" or "events" in the text below instead. Further, the methods we discuss below can just as easily be applied to better understanding characteristics of populations that would not typically be described as a "condition" or "event". For example, sex assigned at birth or ethnicity.
@@ -81,7 +81,11 @@ knitr::include_graphics("img/10_part_intro_epi/03_measures_of_occurrence/pop_10_
 
 If we came along and did a study of this group of people in month 2, the prevalence of disease would equal the number of people with disease divided by the number of people in the sample. In this case, that would be 2 people (01 and 02) divided by 10. Now let's add another dimension to this figure. Specifically, let's say that persons 02, 04, 06, 08, and 10 were exposed to some exposure of interest (shaded purple in the figure below).
 
-```{r measures-of-association-pop-10-exposed, echo=FALSE}
+::: note
+🗒**Side Note:** The R code below creates the plot representing our simulated population of interest. You do **not** need to use or understand this code to understand the measures of association that are discussed at the end of the chapter. This code included purely for readers who are curious about how we created the plot. If that isn't you, please feel free to skip right over it.
+:::
+
+```{r measures-of-association-pop-10-exposed}
 # Simulate data for 10 hypothetical people
 # From Lash TL, VanderWeel TJ, Haneuse S, Rothman KJ. Modern Epidemiology. fourth. Wolters Kluwer; 2021.
 people <- 1:10
@@ -142,7 +146,7 @@ pop_10_exposed_wide <- pop_10_exposed |>
   ungroup()
 ```
 
-```{r measures-of-association-pop-10-exposed-plot, echo=FALSE}
+```{r measures-of-association-pop-10-exposed-plot}
 # To color the facet strip panels
 stip_colors <- pop_10_exposed_wide |> 
   # Keep one row for each person
@@ -564,492 +568,17 @@ Now, that we know what joint probabilities are, we can more formally define cond
 
 $$P(Y|X)=\frac{P(Y \cap X)}{P(X)}$$
 
-## Association
+If the equation above doesn't mean much to you, don't worry. Just remember that a probability quantifies the how often we expect something to occur in a single number that ranges between 0 and 1. A conditional probability is probability we assign to that event when we already know something else has occurred. Both of these terms will come up often in the chapters that follow.
 
-# Left off here...
+<!-- Add a terminology recap for probability? -->
 
-We are finally ready to get into measures of association. But, what is an association?
+## Associations
 
-
-
-```{r measures-of-association-association, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/association.png")
-```
-
-And sometimes, when trying to understand what something is, it can be helpful to understand what it is not. 
-
-In this case, the opposite of an association is statistical independence. 
-
-```{r measures-of-association-independence, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/independence.png")
-```
-
-These formulas represent the lack of an association on the risk difference, risk ratio, and odds ration scales respectively.
-
-And notice what these equations are equal to when there is no association.
-
-```{r measures-of-association-independence-02, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/independence_02.png")
-```
-
-These values are called Null values.
-
-> “The null value of a measure of association is the value that measure takes when there is no difference between the two groups being compared.” @Westreich2019-lg
-
-These formulas represent the lack of an association on the incidence proportion difference, incidence proportion ratio, and odds ratio scales respectively.
-
-```{r measures-of-association-independence-03, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/independence_03.png")
-```
-
-<!-- Add more context around the slides below -->
-
-```{r measures-of-association-incidence-proportion-difference-null, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/incidence_proportion_difference_null.png")
-```
-
-```{r measures-of-association-incidence-proportion-ratio-null, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/incidence_proportion_ratio_null.png")
-```
-
-```{r measures-of-association-odds-ratio-null, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/odds_ratio_null.png")
-```
-
-Association exists when the distribution of the thing we are measuring is different, on average, in two groups. Alternatively, we can say that Knowing something about X tells you something (or helps you predict) about Y. 
-
-<!-- Insert Alzheimer's stuff from hidden slides 13 and 14. Then delete them. -->
-
-### Terminology recap
-
-```{r measures-of-association-probability-terminology-recap, echo=FALSE}
-prob_def <- "If some process is repeated a large number of time, n, the relative frequency of occurrence of E, m/n, will be approximately equal to the probability of E."
-conditional_prob_def <- "The probability that some event occurs given that we know that some other event has already occurred."
-```
-
-| Our Term                | Definition               | Equation                            |
-|:------------------------|:------------------------:|:-----------------------------------:|
-| Probability             | `r prob_def`             | $P(E) = \frac{m}{n}$                |
-| Conditional probability | `r conditional_prob_def` | $P(Y|X) = \frac{P(Y \cap X)}{P(X)}$ |
-
-## Prediction
-
-Predictions, especially good ones, can obviously be useful on their own. We may know that people of a certain race/ethnicity are most likely to get a particular form of cancer. Knowing that may allow us to concentrate screening efforts more effectively. We may know that older adults who begin to have trouble managing their finances are more likely to develop dementia. We may be able to use that information as an early indicator of important health problems to come. 
-
-However, in epidemiology, we are very often not content with predictions alone. It is extremely common for our questions and studies to either directly ask causal questions or imply causal relationships between variables. The reason we are often more interested in causal associations than mere predictions can be found directly in our definition of epidemiology. We want to control health problems. Said another way, we want to know why ”bad” things happen so that we can stop them from happening and/or why “good” things happen so that we can make them happen more often.
-
-This idea is simultaneously so straightforward and so complex. As we will see throughout the semester. 
-
-Notice that in the cases above these predictions may be perfectly valid, but do they get us any closer to our ultimate goal of “controlling health problems?” We can’t change anyone’s race or ethnicity, can we? Even if we could, I’m hard-pressed to think of an example of a health outcome that is caused directly by a person’s race or ethnicity. Race and ethnicity are just a proxy for the true unmeasured cause. Likewise, do you really believe that if we hired an accountant to help an older person manage their finances that they would no longer develop dementia? Of course not.
-
-<!-- Break up these slides somehow -->
-
-```{r measures-of-association-measures-of-association-tree-01, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/measures_of_association_tree_01.png")
-```
-
-```{r measures-of-association-measures-of-association-tree-02, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/measures_of_association_tree_02.png")
-```
-
-```{r measures-of-association-measures-of-association-tree-03, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/measures_of_association_tree_03.png")
-```
-
-We will look at how to calculate some of the most commonly used of these next. 
-
-Example
-
-- Smoking and pill
-- Smoking and smoking cessation program
-- 1,000,000 smokers
-- 100,000 will die
-- Pill will save 50% who take it, 10% can afford it.
-  - IP = 0.50, 5,000 lives saved
-- Smoking cessation program will save 10%, but 100% get it.
-  - IP = 0.01, 10,000 lives saved
-
-## Terminology recap
-
-```{r measures-of-association-terminology-recap, echo=FALSE, eval=FALSE}
-null_vallue_def <- ""
-statistical_independence_def <- ""
-association_def <- ""
-incidence_prop_diff_def <- ""
-incidence_prop_diff_other_terms <- "Risk difference"
-incidence_prop_ratio_def <- ""
-incidence_prop_ratio_other_terms <- "Risk ratio"
-incidence_odds_def <- ""
-incidence_odds_other_terms <- "Odds ratio"
-
-measures_of_association_terminology_recap <- tribble(
-  ~Term,                             ~Definition,                  ~`Examples and Notes`,
-  "Null value",                      null_vallue_def,              "",
-  "Statistical independence",        statistical_independence_def, "",
-  "Association",                     association_def,              "",
-  "Incidence proportion difference", incidence_prop_diff_def,      incidence_prop_diff_other_terms,
-  "Incidence proportion ratio",      incidence_prop_ratio_def,     incidence_prop_ratio_other_terms,
-  "incidence odds ratio",            incidence_odds_def,           incidence_odds_other_terms
-)
-
-knitr::kable(measures_of_association_terminology_recap)
-```
-
-So, how do we calculate these measures of association?
-
-
-
-## Incidence proportion
-
-Remember that the incidence proportion is the proportion of the population who experiences a new occurrence of the condition of interest among those in the population who are at risk of experiencing a new occurrence the condition of interest during a given time frame.
-
-```{r measures-of-association-pop-10-plot-02, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/03_measures_of_occurrence/pop_10_plot.png")
-```
-
-$$\frac{Count\, of\, new\, occurrences}{Population\, at\, risk}$$
-
-$$\frac{5}{9}=0.56$$
-
-When we have two groups – e.g., exposed and unexposed – one way we can contrast outcomes in those groups is by calculating the ratio of the incidence proportion in the exposed to the incidence proportion in the unexposed. 
-
-```{r measures-of-association-pop-10-exposed-plot-print-02, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/pop_10_exposed_plot.png")
-```
-
-## Incidence proportion ratio
-
-<!-- What is a ratio? -->
-
-More commonly called relative risk or risk ratio <!-- Add to terminology table -->
-
-We like incidence proportion ratio because it is unambiguous and consistent with the previous terminology we have been using. 
-
-$$\frac{Incidence\, proportion\, in\, the\, exposed}{Incidence\, proportion\, in\, the\, unexposed}$$
-
-```{r measures-of-association-incidence-proportion-ratio-crosstab, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/incidence_proportion_ratio_crosstab.png")
-```
-
-```{r measures-of-association-pop-10-exposed-plot-print-03, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/pop_10_exposed_plot.png")
-```
-
-<!-- Below is from the lab warm-up -->
-
-# Incidence proportion ratio
-
--   Relative risk
--   Risk ratio
-
-$$\frac{Incidence\, proportion\, in\, the\, exposed}{Incidence\, proportion\, in\, the\, unexposed}$$
-
-$$\frac{\frac{a}{(a+b)}}{\frac{c}{(c+d)}}$$
-
-```{r}
-matrix_ct <- matrix(
-  c(a = 3, b = 2, c = 2, d = 2),
-  ncol = 2,
-  byrow = TRUE
-)
-
-matrix_ct <- addmargins(matrix_ct)
-
-dimnames(matrix_ct) <- list(
-  Exposure = c("Yes", "No", "col_sum"), # Row names
-  Disease  = c("Yes", "No", "row_sum")  # Then column names
-)
-
-matrix_ct
-```
-
-```{r}
-incidence_prop <- matrix_ct[, "Yes"] / matrix_ct[, "row_sum"]
-incidence_prop
-```
-
-```{r}
-matrix_ct <- cbind(matrix_ct, incidence_prop)
-matrix_ct
-```
-
-Calculate our incidence proportion ratio
-
-```{r}
-ipr <- matrix_ct["Yes", "incidence_prop"] / matrix_ct["No", "incidence_prop"]
-ipr
-```
-
-## Interpretation
-
-1.  Among the members of our population, those who were exposed had 1.2 times the incidence of disease compared to those who were not exposed over the 12 months of follow-up period.
-
-2.  Among the members of our population, those who were exposed had 1.2 times the risk of disease compared to those who were not exposed over the 12 months of follow-up period.
-
-# Incidence proportion difference
-
-More commonly called the risk difference
-
-We like incidence proportion ratio because it is unambiguous and consistent with the previous terminology we have been using. 
-
-```{r measures-of-association-incidence-proportion-difference-crosstab, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/incidence_proportion_difference_crosstab.png")
-```
-
-<!-- Above is from the lab warm-up -->
-
-# Incidence proportion difference
-
--   Risk difference
-
-$${Incidence\, proportion\, in\, the\, exposed}-{Incidence\, proportion\, in\, the\, unexposed}$$
-
-$$\frac{a}{(a+b)}-\frac{c}{(c+d)}$$
-
-```{r}
-matrix_ct
-```
-
-Calculate our incidence proportion difference
-
-```{r}
-ipd <- matrix_ct["Yes", "incidence_prop"] - matrix_ct["No", "incidence_prop"]
-ipd
-```
-
-## Interpretation
-
-1.  Among the members of our population, those who were exposed had 0.1 additional cases of disease per person compared to those who were not exposed over the 12 months of follow-up period.
-
-```{r}
-ipd * 100
-```
-
-2.  Among the members of our population, those who were exposed had 10 additional cases of disease per 100 people compared to those who were not exposed over the 12 months of follow-up period.
-
-**Tip 1:** If you have the incidence proportion expressed as percentage, convert it to convenient fractions so that you can express it as the additional risk in a group of people who have the exposure.
-
-**Tip 2:** Focus your interpretation on the additional risk in the exposed group.
-
-Example: "There were 10 additional cases of disease per 100 people in the group that was exposed, compared to the group without exposure."
-
-**Tip 3:** Don't forget to specify the time interval when using incidence proportion.
-
-Example: "In the group that failed to adhere closely to the Mediterranean diet there were 120 excess deaths per 1,000 men during the two year period of observation compared to the group that did adhere to the Mediterranean diet."
-
-<!-- Below is from the lab warm-up -->
-
-# Incidence odds ratio
-
--   Odds ratio
-
-```{r measures-of-association-incidence-odds-ratio-crosstab, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/incidence_odds_ratio_crosstab.png")
-```
-
-$$\frac{Incidence\, odds\, in\, the\, exposed}{Incidence\, odds\, in\, the\, unexposed}$$
-
-$$\frac{\frac{a}{b}}{\frac{c}{d}}$$
-
-```{r}
-matrix_ct
-```
-
-Calculate odds
-
-```{r}
-incidence_odds <- matrix_ct[, "incidence_prop"] / (1 - matrix_ct[, "incidence_prop"])
-incidence_odds
-```
-
-```{r}
-incidence_odds <- matrix_ct[, "Yes"] / matrix_ct[, "No"]
-incidence_odds
-```
-
-```{r}
-matrix_ct <- cbind(matrix_ct, incidence_odds)
-matrix_ct
-```
-
-Calculate our incidence odds ratio
-
-```{r}
-ior <- matrix_ct["Yes", "incidence_odds"] / matrix_ct["No", "incidence_odds"]
-ior
-```
-
-## Interpretation
-
-1. Among the members of our population, those who were exposed had 1.5 times the odds of incident disease compared to those who were not exposed over the 12 months of follow-up period.
-
-<!-- Above is from the lab warm-up -->
-
-# Incidence rate ratio
-
-- Incidence density
-
-<!-- Make this better -->
-
-Calculate person time at risk
-
-```{r}
-# Have R calculate the total person-months at risk
-pop_10_exposed_wide |> 
-  # Keep only the rows with a status of At Risk
-  filter(status == "At Risk") |> 
-  # Calculate the time between follow-up months for each person
-  mutate(time_at_risk = xend_adjusted - x) |> 
-  # Total all of the individual person-months at risk by exposure status
-  group_by(exposed_f) |> 
-  summarise(time_at_risk = sum(time_at_risk))
-```
-
-```{r}
-matrix_ct <- matrix(
-  c(a = 3, b = 2, c = 2, d = 2),
-  ncol = 2,
-  byrow = TRUE
-)
-
-matrix_ct <- addmargins(matrix_ct)
-
-dimnames(matrix_ct) <- list(
-  Exposure = c("Yes", "No", "col_sum"), # Row names
-  Disease  = c("Yes", "No", "row_sum")  # Then column names
-)
-
-matrix_ct
-```
-
-
-```{r}
-# Create a contingency table as a matrix object
-matrix_ct_rates <- matrix(
-  c(a = 3, b = 2, c = 2, d = 2),
-  ncol = 2,
-  byrow = TRUE
-)
-
-# Add person months to the contingency table
-person_months   <- c(exposed = 32, unexposed = 32)
-matrix_ct_rates <- cbind(matrix_ct_rates, person_months)
-
-# Add column totals to the contingency table
-# Notice the "margin = 1" in the code below. That tells R to calculate the 
-# column totals only -- not the row totals
-matrix_ct_rates <- addmargins(matrix_ct_rates, margin = 1)
-
-# Add row and column labels to improve readability
-dimnames(matrix_ct_rates) <- list(
-  Exposure = c("Yes", "No", "col_sum"), # Row names
-  Disease  = c("Yes", "No", "person_months")  # Then column names
-)
-
-matrix_ct_rates
-```
-
-```{r}
-incidence_rate <- matrix_ct_rates[, "Yes"] / matrix_ct_rates[, "person_months"]
-incidence_rate
-```
-
-```{r}
-matrix_ct_rates <- cbind(matrix_ct_rates, incidence_rate)
-matrix_ct_rates
-```
-
-Calculate our incidence rate ratio
-
-```{r}
-irr <- matrix_ct_rates["Yes", "incidence_rate"] / matrix_ct_rates["No", "incidence_rate"]
-irr
-```
-
-## Interpretation
-
-1.  Among the members of our population, those who were exposed had 1.5 times the rate of disease compared to those who were not exposed over the 12 months of follow-up period.
-
-
-# Incidence rate difference
-
-```{r}
-matrix_ct_rates
-```
-
-Calculate our incidence risk difference
-
-```{r}
-ird <- matrix_ct_rates["Yes", "incidence_rate"] - matrix_ct_rates["No", "incidence_rate"]
-ird
-```
-
-## Interpretation
-
-1.  Among the members of our population, those who were exposed had 0.03 additional cases of disease per person-month compared to those who were not exposed over the 12 months of follow-up period.
-
-```{r}
-ird * 100
-```
-
-2.  Among the members of our population, those who were exposed had 3.1 additional cases of disease per 100 person-months compared to those who were not exposed over the 12 months of follow-up period.
-
-**Tip 1:** Remember that interpretations are now in person-time.
-
-**Tip 2:** Focus your interpretation on the additional risk in the exposed group.
-
-Example: "There were 10 additional cases of disease per 100 units of person-time in the group that was exposed, compared to the group without exposure."
-
-**Tip 3:** Don't forget to specify the time interval when using incidence proportion.
-
-Example: "In the group that failed to adhere closely to the Mediterranean diet there were 120 excess deaths per 100 person-years during the two year period of observation compared to the group that did adhere to the Mediterranean diet."
-
-
-
-
-
-
-
-
-
-
-
-
-# Cut and moved
-
-## Measures of association
-
-Remember, that our measurement and analysis goals can be broken down into description, prediction, and/or causally explanation of health-related states or events in populations of people.
-
-```{r measures-of-association-description-prediction-causation, echo=FALSE}
-knitr::include_graphics("img/10_part_intro_epi/01_intro_epi/description_prediction_causation.png")
-```
-
-We said that when we describe health-related states or events, we are not necessarily looking for associations in the data between two or more variables. Sometimes, we are simply looking at the distribution of values in a single variable/measure.
-
-For example:
-
-- How many ventilators are available in Texas?
-
-- What is the average age of people living in Florida?
-
-- How much time elapses, on average, between exposure to a pathogen and occurrence of disease symptoms?
-
-However, there are also times when we want to compare the distribution of value in one variable within levels of another variable. Most people would consider these comparisons to be equivalent to measuring associations. 
-
-For example:
-
-- Are there more ventilators available in Texas or New York?
-
-- Are people older, on average, in Florida or Pennsylvania?
-
-- Is symptom onset quicker, on average, for Cholera or E. coli?
+We are almost ready to learn how to calculate measures of association. But first, let's quickly review what an association is (and is not). 
 
 > “[An <span class="u-orange-text">association</span> is a] <span class="u-orange-text">statistical dependence</span> between two or more events, characteristics, or other variables. An association is present if the <span class="u-orange-text">probability of occurrence</span> of an event or characteristic, or the quantity of a variable, varies with the occurrence of one or more other events, the presence of one or more other characteristics, or the quantity of one or more <span class="u-orange-text">other variables</span>." @Porta2008-ij
 
-Said another way, when the distribution (e.g., middle, spread, shape, proportion of people) of one variable is different on average across levels of a second variable, then there is an association between the first variable and the second variable. 
-
-Yet another way to describe an association is to simply say that there is an association between two variables when knowing the value of variable one tells us something about (or helps us predict) the value variable two. 
+Said another way, when the distribution (e.g., middle, spread, shape, proportion of people) of one variable is different, on average, across levels of a second variable, then there is an association between the first variable and the second variable. Yet another way to describe an association is to simply say that there is an association between two variables when knowing the value of variable one tells us something about (or helps us predict) the value of variable two.
 
 Let's simulate some data to help us understand what association looks like in action.
 
@@ -1087,13 +616,19 @@ df |>
 
 In the results above, we can see that when `x` is 0 (`row_cat` = 0), then `y` is 1 (`col_cat` = 1) 50% of the time. Similarly, when `x` is 1 (`row_cat` = 1), then `y` is 1 (`col_cat` = 1) 50% of the time. 
 
-In this case, does the distribution of `y` differ across levels of `x`? No. When `x` is 0, `y` equals 1 50% of the time, and when `x` is 1, `y` equals 1 50% of the time. 
+In this case, does the distribution of `y` differ across levels of `x`? 
 
-In this case, does knowing the value of `x` tell us something about (or help us predict) the value y. No. The value of `y` is equally likely to be 1 or 0 no matter what the value of `x` is. 
+No. When `x` is 0, `y` equals 1 50% of the time, and when `x` is 1, `y` equals 1 50% of the time. 
 
-So, is there an association between `x` and `y` in the simulated data above? No, there is no association between `x` and `y` in the simulated data above. Said another way, `x` and `y` and **statistically independent** of each other. 
+In this case, does knowing the value of `x` tell us something about (or help us predict) the value y. 
 
-Now, let's simulate a second data frame where `x` and `y` are associated with each other. 
+No. The value of `y` is equally likely to be 1 or 0 no matter what the value of `x` is. 
+
+So, is there an association between `x` and `y` in the simulated data above? 
+
+No, there is no association between `x` and `y` in the simulated data above. Said another way, `x` and `y` and **statistically independent** of each other. 
+
+Now, let's simulate a second data frame where `x` and `y` _are_ associated with each other. 
 
 ```{r measures-of-association-sim-x-y}
 # Set the seed for the random number generator so that we can reproduce our results
@@ -1131,13 +666,19 @@ df |>
 
 In the results above, we can see that when `x` is 0 (`row_cat` = 0), then `y` is 1 (`col_cat` = 1) 81% of the time. Alternatively, when `x` is 1 (`row_cat` = 1), then `y` is 1 (`col_cat` = 1) 47% of the time. 
 
-In this case, does the distribution of `y` differ across levels of `x`? Yes! When `x` is 0, `y` equals 1 81% of the time, and when `x` is 1, `y` equals 1 only 47% of the time. 
+In this case, does the distribution of `y` differ across levels of `x`? 
 
-In this case, does knowing the value of `x` tell us something about (or help us predict) the value y. Yes! The value of `y` is more likely to be 1 when `x` is 0 than when `x` is 1. 
+Yes! When `x` is 0, `y` equals 1 81% of the time, and when `x` is 1, `y` equals 1 only 47% of the time. 
 
-So, is there an association between `x` and `y` in the simulated data above? Yes! There is an association between `x` and `y` in the simulated data above. We can also say that there is a **statistical dependence** between `x` and `y`.
+In this case, does knowing the value of `x` tell us something about (or help us predict) the value y. 
 
-At this point, we hope you are starting to develop an intuitive understanding of associations. Let's try to simplify and formalize our definition of an association even further by writing it as an equation. We recognize that many people are scared of equations (including us sometimes), but this is an occasion where an equation might actually make it easier for us to understand the concept. Let's give it a shot. 
+Yes! The value of `y` is more likely to be 1 when `x` is 0 than when `x` is 1. 
+
+So, is there an association between `x` and `y` in the simulated data above? 
+
+Yes! There is an association between `x` and `y` in the simulated data above. We can also say that there is a **statistical dependence** between `x` and `y`.
+
+At this point, we hope you are starting to develop an intuitive understanding of associations. Let's try to simplify and formalize our definition of an association even further by writing it as an equation.
 
 <!-- For Testing -->
 <!-- $$Pr[Y=1|X=1] \neq Pr[Y=1|X=0]$$ -->
@@ -1148,58 +689,473 @@ At this point, we hope you are starting to develop an intuitive understanding of
 
 Now, let's break equation \@ref(eq:association) down into its component parts and see what it tells us.
 
-- $Pr[]$ is read as "the probability of". The probability of is also frequently just written as $P()$
+- $Pr[]$ is read as "the probability of". The probability of is also frequently just written as $P()$.
 
-- $Y=1$ is read as "Y equals 1." Typically, Y equals 1 when the thing that Y represents happens. 
+- $Y=1$ is read as "Y equals 1." Typically, $Y$ equals 1 when the thing that $Y$ represents happens. For example, if $Y$ represents Alzheimer's Disease, then $Y=1$ for each person who has Alzheimer's Disease and $Y=0$ for each person who does not have Alzheimer's Disease.
 
-  - $Y=0$ (not shown above) would be read as "Y equals 0," and would typically mean that the thing Y represents did not happen.
-
-  - For example, if Y represents Alzheimer's Disease, then $Y=1$ for each person who has Alzheimer's Disease and $Y=0$ for each person who does not have Alzheimer's Disease.
+- $X=1$ is read as "X equals 1." Typically, $X$ equals 1 when the thing that $X$ represents happens. For example, if $X$ represents APOEe4 allele, then $X=1$ for each person who has an APOEe4 allele and $X=0$ for each person who does not have an APOEe4 allele.
   
-- $|$ is read as "given that" or "if".
-
-- - $X=1$ is read as "X equals 1." Typically, X equals 1 when the thing that X represents happens. 
-
-  - $X=0$ (not shown above) would be read as "X equals 0," and would typically mean that the thing X represents did not happen.
-
-  - For example, if X represents APOEe4 allele, then $X=1$ for each person who has an APOEe4 allele and $X=0$ for each person who does not have an APOEe4 allele.
+- $|$ is read as "given that" or "if". For example, the probability that a person has Alzheimer's Disease, $Y=1$ if we know that they have an APOEe4 allele, $X=1$.
   
-So, how would we put all of this together and say it in words? Give it a try in your head before reading on.
+So, how would we put all of this together and say \@ref(eq:association) in words? Give it a try in your head before reading on.
 
-- The probability that Y equals 1 given that X equals 1 is not equal to the probability that Y equals 1 given that X equals 0.
+The probability that $Y$ equals 1 given that $X$ equals 1 is _not_ equal to the probability that $Y$ equals 1 given that $X$ equals 0.
 
-Or, if we're still talking about Alzheimer's Disease and APOEe4 allele:
+Or, if we're still talking about Alzheimer's Disease and APOEe4 allele: The probability of Alzheimer’s Disease among people who carry at least one APOEe4 allele is not equal to the probability of Alzheimer’s Disease among people who do not carry any APOEe4 alleles.
 
-- The probability of Alzheimer’s Disease among people who carry at least one APOEe4 allele is not equal to the probability of Alzheimer’s Disease among people who do not carry any APOEe4 alleles.
+And that is all there is to it. The distribution (e.g., middle, spread, shape, proportion of people) of one variable is different, on average, across levels of a second variable. Notice that this is an inherently numerical concept. Associations are simply a measure of the equivalence, or lack of equivalence, between two values. They give us no information about _why_ that equivalence does or does not exist. Therefore, when an association is present, people sometimes say that there is a **statistical dependence** between the variables.
 
-And what exactly does "probability" mean?
+### Statistical independence and null values
 
+When trying to understand what something is, it can sometimes be helpful to understand what it is not. In this case, the opposite of an association is **statistical independence**. 
 
+```{r measures-of-association-independence, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/independence.png")
+```
 
+These equations represent the lack of an association on the incidence proportion difference, incidence proportion ratio, and incidence odds ratio scales respectively. Notice the values of each when there is no association -- 0 for the incidence proportion difference, 1 for the incidence proportion ratio, and 1 for the incidence odds ratio. These values are called **null** values, and they play an important role in the measures of association we will learn to calculate soon.
 
+## Calculating measures of association in R
 
+Now that we understand exposures and outcomes, contingency tables, probabilities, and associations, it's finally time to start calculating some of the most common measures of association used in epidemiology. 
 
+### Incidence proportion ratios
 
+Remember that the [incidence proportion][Incidence proportion] is the proportion of the population who experiences a new occurrence of the condition of interest among those in the population who are at risk of experiencing a new occurrence the condition of interest during a given time frame.
 
+```{r measures-of-association-pop-10-plot-02, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/03_measures_of_occurrence/pop_10_plot.png")
+```
 
+If we take a look at the simulated population data above, we can calculate the incidence proportion to be:
 
+$$\frac{5}{9}=0.56$$
 
+```{r measures-of-association-pop-10-exposed-plot-print-02, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/pop_10_exposed_plot.png")
+```
 
+When we have two groups (e.g., exposed and unexposed), one way we can contrast outcomes in those groups is by calculating the ratio of the incidence proportion in the exposed to the incidence proportion in the unexposed. 
 
+$$\frac{Incidence\, proportion\, in\, the\, exposed}{Incidence\, proportion\, in\, the\, unexposed}$$
 
+This ratio of incidence proportions is called the incidence proportion ratio. It is also commonly called the _relative risk_ or _risk ratio_. We like using the term incidence proportion ratio because it is unambiguous and consistent with the previous terminology we have been using.
 
+```{r measures-of-association-incidence-proportion-ratio-crosstab, fig.caption="Calculating incidence proportion ratios", echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/incidence_proportion_ratio_crosstab.png")
+```
 
+Calculating an incidence proportion ratio from a contingency table is relatively straightforward. The figure above shows the equations we need to use to do so. It’s even easier when we can ask R to do the calculations for us. Next, let's plug the data from our simulated population into a contingency table in R and calculate the incidence proportion ratio.
 
+```{r}
+# Create a contingency table called matrix_ct
+matrix_ct <- matrix(
+  c(a = 3, b = 2, c = 2, d = 2),
+  ncol = 2,
+  byrow = TRUE
+)
 
+# Add marginal totals to matrix_ct
+matrix_ct <- addmargins(matrix_ct)
 
+# Assign row and column labels to matrix_ct
+dimnames(matrix_ct) <- list(
+  Exposure = c("Yes", "No", "col_sum"), # Row names
+  Disease  = c("Yes", "No", "row_sum")  # Then column names
+)
 
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
 
+Now that we have our contingency table, let's ask R to calculate the incidence proportions for us. We could ask R to calculate each individual incidence proportion we are interested in one at a time. For example, to calculate the incidence proportion among the exposed only, we can ask R to divide the value in `matrix_ct` that corresponds to row = `Yes` and column = `Yes` (cell a in figure \@ref(fig:measures-of-association-incidence-proportion-ratio-crosstab)) by the value in `matrix_ct` that corresponds to row = `Yes` and column = `row_sum` (cell a+b in figure \@ref(fig:measures-of-association-incidence-proportion-ratio-crosstab)).
 
+```{r}
+# Calculate the the incidence proportion among the exposed only
+matrix_ct["Yes", "Yes"] / matrix_ct["Yes", "row_sum"]
+```
 
+Alternatively, we can ask are to calculate all of the incidence proportions from our contingency table at once. To do that, we ask R to divide each of the values in the "Yes" column of the contingency table by each of the values in the "row_sum" column of the contingency table.
 
+```{r}
+# Calculate the incidence proportion by dividing each of the values in the "Yes"
+# column of the contingency table by each of the values in the "row_sum" column
+# of the contingency table. 
+# This is equivalent to calculating:
+# a / (a + b)
+# c / (c + d)
+# (a + c) / (a + b + c + d)
+incidence_prop <- matrix_ct[, "Yes"] / matrix_ct[, "row_sum"]
+# Print the value stored in incidence_prop to the screen
+incidence_prop
+```
 
+Next, let's ask R to add those values to the right side of our contingency table using the `cbind()`, which stands for column bind, function. This will make them easier to work with later.
 
+```{r}
+# Add the incidence proportions we calculated above to the right side of our 
+# contingency table
+matrix_ct <- cbind(matrix_ct, incidence_prop)
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
 
+Notice that the value of the `incidence_prop` column in the first row of the contingency table is $\frac{3}{5}=0.6$, the value of the `incidence_prop` column in the second row of the contingency table is $\frac{2}{4}=0.5$, and the value of the `incidence_prop` column in the third row of the contingency table is $\frac{5}{9}=0.56$, which matches the overall incidence proportion we calculated at the start of this section of the book.
+
+Now that we calculated each of the incidence proportions, let's ask R to calculate the incidence proportion ratio of interest to us. We already said that the incidence proportion ratio is calculated as:
+
+$$\frac{Incidence\, proportion\, in\, the\, exposed}{Incidence\, proportion\, in\, the\, unexposed}$$
+
+Looking at `matrix_ct`, we can see that the incidence proportion in the exposed is 0.6, which is located at row = `Yes` and column = `incidence_prop`. Similarly, the incidence proportion in the unexposed is 0.5, which is located at row = `No` and column = `incidence_prop`. Using that information, we can ask R to calculate the incidence proportion ratio using code that is really similar to the code we already saw above.
+
+```{r}
+# Calculate the incidence proportion ratio and store it as a numeric vector 
+# called ipr
+ipr <- matrix_ct["Yes", "incidence_prop"] / matrix_ct["No", "incidence_prop"]
+# Print the value stored in ipr to the screen
+ipr
+```
+
+#### Interpretation of the incidence proportion ratio
+
+And here are some ways that we can interpret the incidence proportion ratio we calculated above.
+
+1. Among the members of our population, those who were exposed had 1.2 times the incidence of disease compared to those who were not exposed over the 12 months of follow-up period.
+
+2. Among the members of our population, those who were exposed had 1.2 times the risk of disease compared to those who were not exposed over the 12 months of follow-up period.
+
+### Incidence proportion difference
+
+When we have two groups (e.g., exposed and unexposed), another way we can contrast outcomes in those groups is by calculating the difference between the incidence proportion in the exposed and the incidence proportion in the unexposed. 
+
+$${Incidence\, proportion\, in\, the\, exposed}-{Incidence\, proportion\, in\, the\, unexposed}$$
+
+This difference between the two incidence proportions is called the incidence proportion difference. It is also commonly called the _risk difference_. We like using the term incidence proportion difference because it is unambiguous and consistent with the previous terminology we have been using.
+
+```{r measures-of-association-incidence-proportion-difference-crosstab, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/incidence_proportion_difference_crosstab.png")
+```
+
+The figure above shows the equations we need to use to calculate an incidence proportion difference from a contingency table. Let's take a look at how we can use R to do these calculations. First, we create a contingency table as a matrix object.
+
+```{r}
+# Create a contingency table called matrix_ct
+matrix_ct <- matrix(
+  c(a = 3, b = 2, c = 2, d = 2),
+  ncol = 2,
+  byrow = TRUE
+)
+
+# Add marginal totals to matrix_ct
+matrix_ct <- addmargins(matrix_ct)
+
+# Assign row and column labels to matrix_ct
+dimnames(matrix_ct) <- list(
+  Exposure = c("Yes", "No", "col_sum"), # Row names
+  Disease  = c("Yes", "No", "row_sum")  # Then column names
+)
+
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+Next, we add the incidence proportions to the contingency table.
+
+```{r}
+# Add the incidence proportions to matrix_ct
+incidence_prop <- matrix_ct[, "Yes"] / matrix_ct[, "row_sum"]
+matrix_ct <- cbind(matrix_ct, incidence_prop)
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+Finally, we calculate the incidence proportion difference by subtracting the incidence proportion in the unexposed from the incidence proportion in the exposed as shown below.
+
+```{r}
+# Calculate the incidence proportion difference and store it as a numeric vector 
+# called ipd
+ipd <- matrix_ct["Yes", "incidence_prop"] - matrix_ct["No", "incidence_prop"]
+# Print the value stored in ipd to the screen
+ipd
+```
+
+#### Interpretation of the incidence proportion difference
+
+And here are some ways that we can interpret the incidence proportion difference we calculated above.
+
+1. Among the members of our population, those who were exposed had 0.1 additional cases of disease per person compared to those who were not exposed over the 12 months of follow-up period.
+
+```{r}
+# Multiply the ipd by 100 to make the units 100 people
+ipd * 100
+```
+
+2. Among the members of our population, those who were exposed had 10 additional cases of disease per 100 people compared to those who were not exposed over the 12 months of follow-up period.
+
+**Tip 1:** If you have the incidence proportion expressed as percentage, convert it to convenient fractions so that you can express it as the additional risk in a group of people who have the exposure.
+
+**Tip 2:** Focus your interpretation on the additional risk in the exposed group.
+
+Example: "There were 10 additional cases of disease per 100 people in the group that was exposed, compared to the group without exposure."
+
+**Tip 3:** Don't forget to specify the time interval when using incidence proportion.
+
+Example: "In the group that failed to adhere closely to the Mediterranean diet there were 120 excess deaths per 1,000 men during the two year period of observation compared to the group that did adhere to the Mediterranean diet."
+
+### Incidence odds ratio
+
+When we have two groups (e.g., exposed and unexposed), another way we can contrast outcomes in those groups is by calculating the ratio of the incidence odds in the exposed to the incidence odds in the unexposed. 
+
+$$\frac{Incidence\, odds\, in\, the\, exposed}{Incidence\, odds\, in\, the\, unexposed}$$
+
+This ratio between these two incidence odds is called the incidence odds ratio.
+
+```{r measures-of-association-incidence-odds-ratio-crosstab, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/05_measures_of_association/incidence_odds_ratio_crosstab.png")
+```
+
+The figure above shows the equations we need to use to calculate an incidence proportion difference from a contingency table. Let's take a look at how we can use R to do these calculations. First, we create a contingency table as a matrix object.
+
+```{r}
+# Create a contingency table called matrix_ct
+matrix_ct <- matrix(
+  c(a = 3, b = 2, c = 2, d = 2),
+  ncol = 2,
+  byrow = TRUE
+)
+
+# Add marginal totals to matrix_ct
+matrix_ct <- addmargins(matrix_ct)
+
+# Assign row and column labels to matrix_ct
+dimnames(matrix_ct) <- list(
+  Exposure = c("Yes", "No", "col_sum"), # Row names
+  Disease  = c("Yes", "No", "row_sum")  # Then column names
+)
+
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+Next, we add the incidence proportions to the contingency table.
+
+```{r}
+# Add the incidence proportions to matrix_ct
+incidence_prop <- matrix_ct[, "Yes"] / matrix_ct[, "row_sum"]
+matrix_ct <- cbind(matrix_ct, incidence_prop)
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+Then, we add the incidence odds to the contingency table.
+
+```{r}
+# Add the incidence odds to matrix_ct
+incidence_odds <- matrix_ct[, "incidence_prop"] / (1 - matrix_ct[, "incidence_prop"])
+matrix_ct <- cbind(matrix_ct, incidence_odds)
+# Print the value stored in matrix_ct to the screen
+matrix_ct
+```
+
+As an interesting aside, note that we can also calculate the incidence odds by the number of people in each row who experienced the outcome of interest by the number of people in each row who did not experience the outcome of interest. 
+
+```{r}
+incidence_odds <- matrix_ct[, "Yes"] / matrix_ct[, "No"]
+incidence_odds
+```
+
+Finally, we calculate the incidence odds ratio dividing the incidence odds in the exposed by the incidence odds in the unexposed as shown below.
+
+```{r}
+# Calculate the incidence odds ratio and store it as a numeric vector 
+# called ior
+ior <- matrix_ct["Yes", "incidence_odds"] / matrix_ct["No", "incidence_odds"]
+# Print the value stored in ior to the screen
+ior
+```
+
+#### Interpretation of the incidence odds ratio
+
+And here are some ways that we can interpret the incidence odds ratio we calculated above.
+
+1. Among the members of our population, those who were exposed had 1.5 times the odds of incident disease compared to those who were not exposed over the 12 months of follow-up period.
+
+2. People in our population of interest who were exposed had 1.5 times the odds of incident disease compared to those who were not exposed over the 12 month follow-up period.
+
+### Incidence rate ratio
+
+When we have two groups (e.g., exposed and unexposed), another way we can contrast outcomes in those groups is by calculating the ratio of the incidence rate in the exposed to the incidence rate in the unexposed.  
+
+$$\frac{Incidence\, rate\, in\, the\, exposed}{Incidence\, rate\, in\, the\, unexposed}$$
+
+This ratio of incidence rates is called the incidence rate ratio. Confusingly, it is also sometimes called the _relative risk_, _risk ratio_, or _rate ratio_. We like using the term incidence rate ratio because it is unambiguous and consistent with the previous terminology we have been using.
+
+Unlike the incidence proportion ratio, incidence proportion difference, and incidence odds ratio, we cannot calculate the incidence rate ratio directly from our standard contingency table. If you think back to the [measures of occurrence chapter][Incidence Rate], you may remember that the denominator for incidence rates is person-time at risk rather than individual people at risk. So, before we can calculate our incidence rate ratio, we will need to calculate person-time at risk and add it to our contingency table. 
+
+```{r}
+# Have R calculate the total person-months at risk
+pop_10_exposed_wide |> 
+  # Keep only the rows with a status of At Risk
+  filter(status == "At Risk") |> 
+  # Calculate the time between follow-up months for each person
+  mutate(time_at_risk = xend_adjusted - x) |> 
+  # Total all of the individual person-months at risk by exposure status
+  group_by(exposed_f) |> 
+  summarise(time_at_risk = sum(time_at_risk))
+```
+
+Next, let's once again create a contingency table as a matrix object. This time, however, let's also add person-moths.
+
+```{r}
+# Create a contingency table as a matrix object
+matrix_ct_rates <- matrix(
+  c(a = 3, b = 2, c = 2, d = 2),
+  ncol = 2,
+  byrow = TRUE
+)
+
+# Add person months to the contingency table
+person_months   <- c(exposed = 32, unexposed = 32)
+matrix_ct_rates <- cbind(matrix_ct_rates, person_months)
+
+# Add column totals to the contingency table
+# Notice the "margin = 1" in the code below. That tells R to calculate the 
+# column totals only -- not the row totals
+matrix_ct_rates <- addmargins(matrix_ct_rates, margin = 1)
+
+# Add row and column labels to improve readability
+dimnames(matrix_ct_rates) <- list(
+  Exposure = c("Yes", "No", "col_sum"), # Row names
+  Disease  = c("Yes", "No", "person_months")  # Then column names
+)
+
+# Print the value stored in matrix_ct_rates to the screen
+matrix_ct_rates
+```
+
+Next, we add the incidence rates to the contingency table.
+
+```{r}
+# Add the incidence rates to matrix_ct
+incidence_rate <- matrix_ct_rates[, "Yes"] / matrix_ct_rates[, "person_months"]
+matrix_ct_rates <- cbind(matrix_ct_rates, incidence_rate)
+# Print the value stored in matrix_ct_rates to the screen
+matrix_ct_rates
+```
+
+Finally, we calculate the incidence rate ratio dividing the incidence rate in the exposed by the incidence rate in the unexposed as shown below.
+
+```{r}
+# Calculate the incidence rate ratio and store it as a numeric vector 
+# called irr
+irr <- matrix_ct_rates["Yes", "incidence_rate"] / matrix_ct_rates["No", "incidence_rate"]
+# Print the value stored in irr to the screen
+irr
+```
+
+#### Interpretation of the incidence rate ratio
+
+And here are some ways that we can interpret the incidence rate ratio we calculated above.
+
+1. Among the members of our population, those who were exposed had 1.5 times the rate of disease compared to those who were not exposed over the 12 months of follow-up period.
+
+2. Among the members of our population, the rate of disease in the exposed was 1.5 times the rate of disease in the unexposed over the 12 months of follow-up period.
+
+### Incidence rate difference
+
+When we have two groups (e.g., exposed and unexposed), another way we can contrast outcomes in those groups is by calculating the difference between the incidence rate in the exposed and the incidence rate in the unexposed. 
+
+$${Incidence\, rate\, in\, the\, exposed}-{Incidence\, rate\, in\, the\, unexposed}$$
+
+This difference between the two incidence proportions is called the incidence rate difference. As with the incidence rate ratio, we cannot calculate the incidence rate difference directly from our standard contingency table because the denominator for incidence rates is person-time at risk rather than individual people at risk. So, before we can calculate our incidence rate ratio, we will need to calculate person-time at risk and add it to our contingency table. 
+
+```{r}
+# Have R calculate the total person-months at risk
+pop_10_exposed_wide |> 
+  # Keep only the rows with a status of At Risk
+  filter(status == "At Risk") |> 
+  # Calculate the time between follow-up months for each person
+  mutate(time_at_risk = xend_adjusted - x) |> 
+  # Total all of the individual person-months at risk by exposure status
+  group_by(exposed_f) |> 
+  summarise(time_at_risk = sum(time_at_risk))
+```
+
+Next, let's once again create a contingency table as a matrix object. This time, however, let's also add person-moths.
+
+```{r}
+# Create a contingency table as a matrix object
+matrix_ct_rates <- matrix(
+  c(a = 3, b = 2, c = 2, d = 2),
+  ncol = 2,
+  byrow = TRUE
+)
+
+# Add person months to the contingency table
+person_months   <- c(exposed = 32, unexposed = 32)
+matrix_ct_rates <- cbind(matrix_ct_rates, person_months)
+
+# Add column totals to the contingency table
+# Notice the "margin = 1" in the code below. That tells R to calculate the 
+# column totals only -- not the row totals
+matrix_ct_rates <- addmargins(matrix_ct_rates, margin = 1)
+
+# Add row and column labels to improve readability
+dimnames(matrix_ct_rates) <- list(
+  Exposure = c("Yes", "No", "col_sum"), # Row names
+  Disease  = c("Yes", "No", "person_months")  # Then column names
+)
+
+# Print the value stored in matrix_ct_rates to the screen
+matrix_ct_rates
+```
+
+Next, we add the incidence rates to the contingency table.
+
+```{r}
+# Add the incidence rates to matrix_ct
+incidence_rate <- matrix_ct_rates[, "Yes"] / matrix_ct_rates[, "person_months"]
+matrix_ct_rates <- cbind(matrix_ct_rates, incidence_rate)
+# Print the value stored in matrix_ct_rates to the screen
+matrix_ct_rates
+```
+
+Finally, we calculate the incidence rate difference by subtracting the incidence rate in the unexposed from the incidence rate in the exposed as shown below.
+
+```{r}
+# Calculate the incidence rate difference and store it as a numeric vector 
+# called ird
+ird <- matrix_ct_rates["Yes", "incidence_rate"] - matrix_ct_rates["No", "incidence_rate"]
+# Print the value stored in ird to the screen
+ird
+```
+
+#### Interpretation of the incidence rate difference
+
+And here are some ways that we can interpret the incidence rate difference we calculated above.
+
+1.  Among the members of our population, those who were exposed had 0.03 additional cases of disease per person-month compared to those who were not exposed over the 12 months of follow-up period.
+
+```{r}
+# Multiply the ird by 100 to make the units 100 people
+ird * 100
+```
+
+2.  Among the members of our population, those who were exposed had 3.1 additional cases of disease per 100 person-months compared to those who were not exposed over the 12 months of follow-up period.
+
+**Tip 1:** Remember that interpretations are now in person-time.
+
+**Tip 2:** Focus your interpretation on the additional risk in the exposed group.
+
+Example: "There were 10 additional cases of disease per 100 units of person-time in the group that was exposed, compared to the group without exposure."
+
+**Tip 3:** Don't forget to specify the time interval when using incidence proportion.
+
+Example: "In the group that failed to adhere closely to the Mediterranean diet there were 120 excess deaths per 100 person-years during the two year period of observation compared to the group that did adhere to the Mediterranean diet."
+
+## Summary
+
+In this chapter, we discussed some of the foundational concepts needed to estimate and interpret measures of association that are commonly used in epidemiology. The measures discussed in this chapter are not exhaustive, but they should give us a solid base upon which to study additional concepts that are crucial to the practice of epidemiology.
 
 ```{r measures-of-association-clean-up, echo=FALSE}
 # clean up
