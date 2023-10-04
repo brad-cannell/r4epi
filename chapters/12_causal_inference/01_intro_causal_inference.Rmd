@@ -6,7 +6,7 @@ Hidden comments placeholder
 ---------------------------
 
 To preview:
-bookdown::preview_chapter("chapters/13_causal_inference/01_intro_causal_inference.Rmd")
+bookdown::preview_chapter("chapters/12_causal_inference/01_intro_causal_inference.Rmd")
 
 Copy and paste:
 👆**Here's what we did above:**
@@ -19,7 +19,458 @@ Copy and paste:
 :::
 
 ```{r intro-causal-inference, echo=FALSE}
-# knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/figure.png")
+# knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/figure.png")
 ```
 
+Causal inference is one of our favorite topics. 
+
+Before getting into the specifics of causal inference we want to briefly remind you about some of the topics we talked about earlier in the book. 
+
+<!-- From here down, I didn't change any of the I's to We's or anything like that. Just get the content moved over and then revise. -->
+
+Remember that in epidemiology generally, and parts of this course specifically, it will behoove us to become comfortable with uncertainty. We talked about uncertainty in the sense that there are very few checklists that we can rely on, statistical uncertainty, and causal uncertainty. 
+
+In epidemiology, the questions we are called to answer are often causal questions. Did this cause that? If we stop this, can we stop that? On one hand, these questions are usually incredibly exciting and have the potential to lead to real, tangible changes in population health. On the other hand, our two primary tools, data and statistics, are not typically not sufficient to answer such questions in and of themselves. The conclusions that we are able to make are almost always loaded with caveats and assumptions. Therefore, when we make conclusions, we will have to be comfortable with the fact that they may be wholly or partially incorrect, there may be important exceptions, and/or we may have to revisit them again in the future when circumstances, or the information available to us, changes. Even when they are entirely correct, we will often not be able to prove as much with complete certainty. Said another way, our conclusions will rarely, if ever, be exactly correct or provable; however, sometimes they will still be useful for a given purpose. That is an unsettling thought for many people. But it is true nevertheless and we must accept it and become comfortable with it if we want to practice epidemiology. 
+
+Over the past few weeks, we’ve been learning about different types of measures we commonly use in epidemiology. Remember that the end result of those measurement and analysis activities are descriptions, predictions, and explanations of health-related phenomena. 
+
+## Prediction
+
+When our goal is prediction, I think it is safe to say that our analyses will focus on associations. And what are associations?
+
+Association exists when the distribution of the thing we are measuring is different, on average, in two groups. Alternatively, we can say that Knowing something about X tells you something (or helps you predict) about Y. 
+
+Predictions, especially good ones, can obviously be useful on their own. We may know that people of a certain race/ethnicity are most likely to get a particular form of cancer. Knowing that may allow us to concentrate screening efforts more effectively. We may know that older adults who begin to have trouble managing their finances are more likely to develop dementia. We may be able to use that information as an early indicator of important health problems to come. 
+
+However, in epidemiology, we are very often not content with predictions alone. It is extremely common for our questions and studies to either directly ask causal questions or imply causal relationships between variables. The reason we are often more interested in causal associations than mere predictions can be found directly in our definition of epidemiology. We want to control health problems. Said another way, we want to know why ”bad” things happen so that we can stop them from happening and/or why “good” things happen so that we can make them happen more often.
+
+This idea is simultaneously so straightforward and so complex. As we will see throughout the semester. 
+
+Notice that in the cases above these predictions may be perfectly valid, but do they get us any closer to our ultimate goal of “controlling health problems?” We can’t change anyone’s race or ethnicity, can we? Even if we could, I’m hard-pressed to think of an example of a health outcome that is caused directly by a person’s race or ethnicity. Race and ethnicity are just a proxy for the true unmeasured cause. Likewise, do you really believe that if we hired an accountant to help an older person manage their finances that they would no longer develop dementia? Of course not.
+
+## Causation
+
+<!-- I think a lot of this stuff is already in the introduction to epi chapter. -->
+
+As I said, one the one hand, this is such a simple idea. We obviously have an intuitive understanding of cause and effect. If we didn’t, it’s doubtful that we could have survived this long. 
+
+Let’s start with an assumption and a question for you.
+
+Remember, we discussed that things could happen at random for no reason, or they could be the result of some sort of unobservable (from the viewpoint of Western science) and uncontrollable source – what I’m calling predetermination. While either of those explanations could be true, neither are really very useful to our goals in epidemiology. 
+
+Typically, those goals revolve around seeking answers to the question above, “Ok, but why do they happen?” And, we typically want those answers for one or both of the following reasons:
+
+1. The first reason is to predict (formally or intuitively) if or when a similar thing will happen again. For example, “will I, or someone I care about, get in another car wreck tomorrow?” 
+
+2. The second reason is to try to control if or when a similar happens again. For example, “what can I do to prevent myself or someone I care about from getting in a car wreck tomorrow?” In epidemiology, the first reason we might simply call prediction and the second reason we often call an intervention. 
+
+The explanation (sometimes called a theory) that we are most interested in today is what we will refer to as causal inference. That is, thing 2 (effect) happened because thing 1 (cause) happened. And this is where it gets interesting. First of all, the statement above, “thing 2 (effect) happened because thing 1 (cause) happened,” implies that if thing 1 hadn’t happened then thing 2 also wouldn’t have happened. In this course, we will call that counterfactual theory. Of course, real life is complicated and logical next questions may be: “If I see thing 2 happen, how do I figure out what thing 1 was?”, and “how do I know thing 2 wouldn’t have happened if thing 1 hadn’t happened?”, and “does thing 2 always happen after thing 1 or just sometimes?”, and “if I can figure out what thing 1 was and I do believe that thing 2 is likely to happen after thing 1, then what can I do about it?” 
+
+For example, “How do I know I wouldn’t have gotten in a car wreck if I hadn’t run that red light? Maybe my steering system would have failed at the exact same moment and I still would have wrecked.” These are the kinds of questions we attempt to formalize (i.e., make measurable) and answer with the sufficient-component cause model and with causal diagrams. Together, counterfactuals, sufficient-component cause models, and causal diagrams may be grouped under the theory of causal inference. Understanding why they happen, how to predict them, and how to control them are the basic foundational questions to nearly all of epidemiology, and the desire to answer them is the cause (you see what I did there?) of all the concepts and methods we will learn in this course.
+
+Perhaps, you are starting to see why this causality stuff is so simple, yet so complex. One the one hand, cause and effect are one of the most intuitive concepts imaginable to most of us. On the other hand, how do you answer questions like the 4 I’ve written on this slide with a high degree of certainty? How about we come up with a checklist of criteria?
+
+## Hill's guidelines
+
+<!-- Make the table below directly in R when you get time. -->
+
+```{r intro-causal-inference-hills-criteria, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/hills_criteria.png")
+```
+
+Well, a perfectly natural human thing to do is to make a checklist and start to classify things based on that checklist. One famous example of such a checklist, which was never intended by the author to be a checklist, is Hill’s guidelines. Your assigned readings covered Hill’s guidelines and why these guidelines are absolutely not sufficient for distinguishing causal from non-causal associations. However, they still have historical significance in the sense that these criteria, along with a lot of observational data, resulted in consensus that smoking was an important cause of lung cancer. Not merely associated with lung cancer.
+
+I think it can also be instructive to review the ways in which each of these guidelines, as intuitive as they may seem, cannot be relied upon for drawing causal conclusions. Having said that, you do feel better about your results when they conform to some, or all, of these guidelines.
+
+So, if we can’t rely on criteria, what can we rely on? Well, another modern model of causation is Rothman’s model of sufficient and component causes. When using this model, we start with the outcome or effect in mind and work backwards to hypothesize what set of causes can bring about the outcome. 
+
+## Rothman's model of sufficient and component causes
+
+<!-- 
+Add the following elements to this section: 
+- History
+- Examples: light switch, broken hip, smoking - lung cancer and heart disease
+- Intuition: tendency to identify the final component cause as the unique cause
+- The causal pie model
+- Multicausality
+- Strength of causes 
+-->
+
+Starts from the effect and works backwards to a set of causes
+
+Answers the question: “Given a particular effect/outcome, what are the various events that might have been its cause?”
+
+<!-- The slides below has a ton of text on it that we need to write out. In fact, it would be nice if we could make all of these pies directly in R. -->
+
+```{r intro-causal-inference-rmscc-sufficient-causes, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/rmscc_sufficient_causes.png")
+```
+
+This proposed RMSCC gives a more realistic meaning to the statement “smoking causes lung cancer,” and helps us address questions like, “my uncle smoke for 50 years and didn’t get lung cancer. So, how can you say that smoking causes lung cancer?” Or, “My aunt got lung cancer last year, but she never smoked a cigarette in her life. How can you say that smoking causes lung cancer?”
+
+** Socrative 4 – what causes smoking?
+
+Smoking represents a component cause but is not sufficient to cause disease.
+
+Each component cause has a corresponding causal complement made up of the other factors that make up a sufficient causal set. In the case of smoking sufficient cause 3, U3 and the exposure to pollution represent a causal complement 
+
+Smoking is also not necessary. There are sufficient causes that do not include smoking.
+
+Let’s get some practice
+
+** Socrative 5, 6, 7
+
+```{r intro-causal-inference-rmscc-sufficient-causes-smoking, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/rmscc_sufficient_causes_smoking.png")
+```
+
+Here’s another example – three sufficient cause sets for cervical cancer. 
+
+Note that HPV infection is present in all of the sufficient causes. According to the model HPV infection is thus a necessary cause for cervical cancer.
+
+```{r intro-causal-inference-rmscc-sufficient-causes-cervical-cancer, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/rmscc_sufficient_causes_cervical_cancer.png")
+```
+
+- Useful for pedagogic reasons.
+  - Multicausality.
+  - Attributable fractions sum to greater than 1. <!-- Give an example -->
+- Application to actual data analysis is yet to be determined.
+- Limited to dichotomous exposures and outcomes.
+
+Although Rothman’s model of sufficient and component causes useful for causal theory and causal inference, there is significant debate about its usefulness in an applied setting.
+
+So, is there a framework that is useful to us in an applied setting?
+
+## Counterfactuals
+
+<!-- Less text. More visual -->
+
+As I said already, there isn’t complete consensus on the definition of causality, or even that it can be defined. However, most people who study causal inference seem to agree that if causality is a testable thing, then counterfactuals provide the best definition we currently have for that thing. Two ways of thinking about counterfactuals that I find appealing are: 
+
+1. What would happen to Y (outcome) had X (exposure) been different and everything else been the same?
+2. Do something, see what happens, get in a time machine, go back in time, do a different thing, see what happens. The difference between what happened the first time and what happened the second time is the causal effect.
+
+Of course, we can’t measure either of these directly. However, there are methods that are theoretically able to give us the same results we would get if we could do these things to populations if we are willing to make certain assumptions. One method is to use an idealized randomized experiment. What do I mean by idealized?
+
+## Idealized random experiments
+
+- When Feasible and ethically possible.
+  - No loss to follow-up.
+  - Full adherence to the assigned exposure/treatment.
+  - Double blind assignment.
+  - Reasonably “natural” conditions.
+  - Large enough sample to rule out random error.
+- Effect of exposure/treatment on outcome can be interpreted as the average causal effect.
+
+What is an idealized random experiment? It works because there are no common causes or common effects of exposure and outcome. The only thing that determines exposure group composition is the coin flip. Not race, SES, behavior, genetic predisposition, or anything else that could account for an association between exposure/treatment and outcome. So, the ability to estimate true counterfactual average causal effects is within humanities reach. It is theoretically possible to answer the causal questions that we often truly care about.
+
+** Socrative 8
+
+But, how feasible do these conditions sound in the real world? 
+
+## Observational studies
+
+In the real world, we often have to rely on data from observational studies to draw our conclusions. Why is that potentially a problem? It’s potentially a problem because the lack of random assignment opens the door to confounding and bias. These are statistical associations in our data that do not come from causal effects. Another issue that is not unique to observational studies, but is an issue nevertheless, is random error / chance / sampling variability. 
+
+So, the question becomes, ”is it possible to get the same conclusion from observational data that we would have gotten if we had carried out a randomized experiment?”
+
+- No random assignment.
+- Confounding.
+- Bias.
+  - Difference between the truth and the conclusions we should draw from our data.
+  - When we are using data to estimate the causal effect of X on Y, then any association between X and Y that is not due to the effect of X on Y is considered a systematic bias.
+  - Difference between structural sources of association and chance (random error, random variability).
+- Random error / chance / sampling variability.
+
+## DAGS
+
+The answer is, ”Yes!”…. If we are willing to make certain assumptions. 
+
+The field of statistics has produced many tools that we can use to quantify, and therefor estimate, the effect of random error / chance / sampling variability if we are willing to make certain assumptions. 
+
+Further, pioneers in the field of causal inference (e.g., Judea Pearl, Jamie Robbins, Sander Greenland, Miguel Hernan) have refined and tested tools that allow us to estimate bona fide average causal effects from observational data if we are willing to make certain assumptions. One of those tools -- the one we will focus on in this course – is called directed acyclic graphs, or DAGs for short. A very simple DAG is shown here. 
+
+<!-- Definitely need to update the figure below. Lots of text. Make this in R. -->
+
+```{r intro-causal-inference-simple-dag, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/simple_dag.png")
+```
+
+<!-- Note from PP: Move this slide (below) to the end after we talk about what DAGs are. -->
+
+Today, we will talk about some of the basic nuts and bolts of DAGs. In future modules, we will continue to learn more about their application.
+
+The last bullet is key. You’ve all heard that association or correlation does not equal causation, which is true. But, if you are willing to accept the assumptions baked into the qualitative causal model (the graph picture), and you follow the rules of D-separation in your analysis, then any statistical associations ARE casual effects. 
+
+The remaining controversy and uncertainty around DAGs comes for the “if you are willing to accept the assumptions” part of what I just said. The assumptions are not always reasonable and can’t always be tested directly. However, even in the absence of complete certainty, DAGs have shown themselves to be a useful tool in epidemiology over and over. 
+
+- Not magic, just a tool.
+- Works because it encodes mathematical information, given assumptions.
+- Association flows in both directions
+- No distinction between Causal / Preventive (listens to).
+- Made of nodes and edges (arrows).
+- Arrows must go in one direction (i.e., not double-headed).
+- Acyclic – Never get back to where you started if you follow arrows.
+- Arrows indicate causal effects.
+- Deleting arrows indicates a lack of a causal effect.
+- Simultaneously qualitative causal models and statistical models.
+
+<!-- Note from PP: Move this slide (above) to the end after we talk about what DAGs are. -->
+
+As I said before, DAGs are made from nodes and edges. You may see the DAGs where the nodes are literal dots, and you may see DAGs that use variable names directly as the nodes. It seems to me that the second form is more common in the epidemiology literature. 
+
+```{r intro-causal-inference-nodes-and-edges, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/nodes_and_edges.png")
+```
+
+You will sometimes hear the relationships between variables in a DAG describe in terms of family relationships. In this DAG, X is a parent of Y and a grandparent of Z. Equivalently, Y is a child of X , Z is a child of Y, and Z is a grandchild of X. 
+
+```{r intro-causal-inference-descendants, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/descendants.png")
+```
+
+Paths are any arrow-based route between two variables on the graph. In this DAG, there is a path from X to Y, from Y to Z, and from X  to Z that goes through Y. Paths are blocked or open according to D-separation rules, which we will discuss in just a moment.
+
+```{r intro-causal-inference-paths, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/paths.png")
+```
+
+Colliders are when two arrowhead “collide” into a node. 
+
+```{r intro-causal-inference-colliders-01, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/colliders_01.png")
+```
+
+Note that colliders are path specific. For example, Y is a collider on the X -> Y <- Z path, but it is not a collider on the X -> Y -> W path. 
+
+```{r intro-causal-inference-colliders-02, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/colliders_02.png")
+```
+
+Common causes are an important concept when using DAGs. In this DAG, Y is a common cause of X and Z. We know this because an arrow points from Y to X and from Y to Z.
+
+It’s important to note that statistical association can follow any path regardless of the direction of the arrows (in the absence of colliders). Causal effects only follow the direction of the arrows (assuming your assumptions are correct). So, in this case, we expect X to be associated with Z even though X does not cause Z. We can also say that Y confounds the relationship (or lack of relationship) between X and Z. 
+
+```{r intro-causal-inference-common-causes, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/common_causes.png")
+```
+
+and from Y to Z. Note that Z is a collider on the path X -> Z <- Y and on the path Y -> Z <- X.
+
+It’s important to note that statistical association can follow any path regardless of the direction of the arrows (in the absence of colliders). Causal effects only follow the direction of the arrows (assuming your assumptions are correct). So, in this case, we do not expect X to be associated with Y even though there is a path from X to Y. We can also say that Z blocks the association between X and Y.
+
+```{r intro-causal-inference-common-effects, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/common_effects.png")
+```
+
+### D Separation Rules
+
+More generally, we can use the rules of D-separation to estimate average causal effects from DAGs when all assumptions are met. Here they are in their totality. Let’s quickly look at each in isolation.
+
+1. If there are no variables being conditioned on, a path is blocked if and only if two arrowheads on the path collide at some variable on the path.
+2. Any path that contains a non-collider that has been conditioned on is blocked.
+3. A collider that has been conditioned on does not block a path. 
+4. A collider that has a descendant that has been conditioned on does not block a path.
+5. Two variables are D-separated if all paths between them are blocked.
+
+```{r intro-causal-inference-d-separation-01, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/d_separation_01.png")
+```
+
+The first path is open. The second path is closed.
+
+```{r intro-causal-inference-d-separation-02, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/d_separation_02.png")
+```
+
+The first path is open. The second path is closed.
+
+```{r intro-causal-inference-d-separation-03, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/d_separation_03.png")
+```
+
+The first path is closed The second path is open.
+
+```{r intro-causal-inference-d-separation-04, echo=FALSE}
+knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/d_separation_04.png")
+```
+
+Because we conditioned on W, the path X -> Y <- Z is open.
+
+As the course progresses, we will use the rules of D-separation to better understand, and potentially control for, bias and confounding.
+
+Now, let’s practice a little bit more.
+
+<!-- Below: from lab warm-up -->
+
+## Create DAGs in R
+
+Install and load Dagitty and ggdag
+
+We are learning about causal inference in this module, and we are learning how to use directed acyclic graphs (DAGs) as a tool that can help us reason through causal inference. It turns out that there is also an R package that can help us create and interpret DAGs -- `dagitty`. In the code below, we will introduce `dagitty` and walk through some of the package's basic functionality together.
+
+Here is a [link to a useful website](http://www.dagitty.net/) for learning more about `dagitty`.
+
+Here is a [link to a useful website](https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-ggdag.ht) for learning more about `ggdag`.
+
+Common effects are also an important concept when using DAGs. In this DAG, Z is a common effect of X and Y. We know this because an arrow points from X to Z 
+
+### Create a DAG in the web browser
+
+<!-- Add screenshots -->
+
+The easiest way to get started with using `dagitty` is arguably to draw our DAGs using `dagitty` in our web browser. You can do that by navigating to http://www.dagitty.net/dags.html.
+
+To start with a blank slate, click **Model**, then **New Model**.
+
+To add a node to the graph, click anywhere on the graph space and name your new node.
+
+To connect nodes, first click the **cause** node and then click the **effect** node.
+
+To save your DAG code, copy it from the **Model code** pane on the right side of the screen. Then, paste that code into an R code chunk. Just make sure you wrap the code you paste from the web browser in single quotes and place it inside the `daggity()` function.
+
+# Create a DAG with R code
+
+```{r}
+# Load the packages needed for the code below.
+library(dplyr, warn.conflicts = FALSE)
+library(dagitty)
+library(ggdag, warn.conflicts = FALSE)
+```
+
+## Chain
+
+<!-- What does bb mean in the code below? -->
+
+```{r intro-causal-inference-dagitty-chain}
+dag <- dagitty('dag {
+  bb = "0, 0, 1, 1"
+  x [pos = "-1, 0"]
+  y [pos = "0, 0"]
+  z [pos = "1, 0"]
+  x -> y
+  y -> z
+}')
+```
+
+```{r}
+ggdag(dag)
+```
+
+## Collider 
+
+```{r}
+dag <- dagitty('dag {
+  bb = "0, 0, 1, 1"
+  x [pos = "-1, 0"]
+  y [pos = "0, 0"]
+  z [pos = "1, 0"]
+  x -> y
+  z -> y
+}')
+```
+
+```{r}
+ggdag(dag)
+```
+
+```{r}
+dag <- dagitty('dag {
+  bb = "0, 0, 1, 1"
+  x [pos = "-1, 0"]
+  y [pos = "0, 0"]
+  z [pos = "1, 0"]
+  w [pos = "0, -1"]
+  x -> y
+  z -> y
+  y -> w
+}')
+```
+
+```{r}
+ggdag(dag)
+```
+
+## Common cause
+
+```{r}
+dag <- dagitty('dag {
+  bb = "0, 0, 1, 1"
+  x [pos = "-1, 0"]
+  y [pos = "0, 0"]
+  z [pos = "1, 0"]
+  y -> x
+  y -> z
+}')
+```
+
+```{r}
+ggdag(dag)
+```
+
+## Common effect
+
+```{r}
+dag <- dagitty('dag {
+  bb = "0, 0, 1, 1"
+  x [pos = "-1, 0"]
+  y [pos = "0, 0"]
+  z [pos = "-1, 1"]
+  x -> y
+  z -> y
+}')
+```
+
+```{r}
+ggdag(dag)
+```
+
+
+
+<!-- Above: from lab warm-up -->
+
+
+<!-- 
+Ask them: 
+- Create DAGS
+- Identify R code that makes a particular DAG
+- D-Separated or not
+-->
+
+
+
+
+
+
+
+## Comparing DAGs and RMSCC
+
+Answers two different questions.
+
+“The sufficient component cause model considers sets of actions, events, or states of nature which together inevitably bring about the outcome under consideration. The model gives an account of the causes of a particular effect. It addresses the question, ‘Given a particular effect, what are the various events which might have been its cause?’” @Hernan2020-uu
+
+“The potential outcomes or counterfactual model focuses on one particular cause or intervention and gives an account of the various effects of that cause. In contrast to the sufficient component cause framework, the potential outcomes framework addresses the question, ‘What would have occurred if a particular factor were intervened upon and thus set to a different level than it in fact was?’ Unlike the sufficient component cause framework, the counterfactual framework does not require a detailed knowledge of the mechanisms by which the factor affects the outcome.’ @Hernan2020-uu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Summary
+
+In this chapter, we discussed ...
+
+```{r measures-of-association-clean-up, echo=FALSE}
+# clean up
+rm(list = ls())
+```
 
