@@ -22,55 +22,66 @@ Copy and paste:
 # knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/figure.png")
 ```
 
-Causal inference is one of our favorite topics. 
+<!-- 
+Define: 
+Cause
+Causality
+Causal inference
+-->
 
-Before getting into the specifics of causal inference we want to briefly remind you about some of the topics we talked about earlier in the book. 
+<!-- Let's start with a simple question: What does it mean for something to cause something else? -->
 
-<!-- From here down, I didn't change any of the I's to We's or anything like that. Just get the content moved over and then revise. -->
+Causal inference is one of our favorite topics. Perhaps because it is so challenging (as we will see); yet, it is simultaneously at the very core of so much of our work as epidemiologists. Before getting into the specifics of causal inference, however, we want to briefly remind you about some of the topics we talked about earlier in the book. 
 
-Remember that in epidemiology generally, and parts of this course specifically, it will behoove us to become comfortable with uncertainty. We talked about uncertainty in the sense that there are very few checklists that we can rely on, statistical uncertainty, and causal uncertainty. 
+Remember that the practice of epidemiology requires us to become comfortable with uncertainty. In the [using R for epidemiology chapter][Using R for Epidemiology], we discussed statistical uncertainty, uncertainty in the research process, and epistemological uncertainty. We said that the questions we are called to answer are often causal questions (e.g., Does diet cause heart disease? If we stop people from smoking, will we prevent them from getting cancer?). On the one hand, these questions are usually incredibly exciting and have the potential to lead to real, tangible changes in population health. On the other hand, our two primary tools -- data and statistics -- are not sufficient to answer such questions in and of themselves. 
 
-In epidemiology, the questions we are called to answer are often causal questions. Did this cause that? If we stop this, can we stop that? On one hand, these questions are usually incredibly exciting and have the potential to lead to real, tangible changes in population health. On the other hand, our two primary tools, data and statistics, are not typically not sufficient to answer such questions in and of themselves. The conclusions that we are able to make are almost always loaded with caveats and assumptions. Therefore, when we make conclusions, we will have to be comfortable with the fact that they may be wholly or partially incorrect, there may be important exceptions, and/or we may have to revisit them again in the future when circumstances, or the information available to us, changes. Even when they are entirely correct, we will often not be able to prove as much with complete certainty. Said another way, our conclusions will rarely, if ever, be exactly correct or provable; however, sometimes they will still be useful for a given purpose. That is an unsettling thought for many people. But it is true nevertheless and we must accept it and become comfortable with it if we want to practice epidemiology. 
+In the preceding chapters, we’ve been learning about different types of measures we commonly use in epidemiology. We've also seen that the end result of those measurement and analysis activities are descriptions, predictions, and explanations of health-related phenomena. 
 
-Over the past few weeks, we’ve been learning about different types of measures we commonly use in epidemiology. Remember that the end result of those measurement and analysis activities are descriptions, predictions, and explanations of health-related phenomena. 
+```{r intro-causal-inference_description_prediction_causation, echo=FALSE}
+knitr::include_graphics("img/10_part_intro_epi/01_intro_epi/description_prediction_causation.png")
+```
 
-## Prediction
+Let's once again review these concepts. However, let's review them through the lens of Judea Pearl's ladder of causation this time.
 
-When our goal is prediction, I think it is safe to say that our analyses will focus on associations. And what are associations?
+## Judea Pearl's ladder of cuasation
 
-Association exists when the distribution of the thing we are measuring is different, on average, in two groups. Alternatively, we can say that Knowing something about X tells you something (or helps you predict) about Y. 
+<!-- Come back and add more detail to this. -->
+
+In their 2018 book, _The Book of Why_, Judea Pearl and Dana Mackenzie do a masterful job of bringing the basics of causal inference, a topic of significant complexity for most people, to the masses. @Pearl2018-im A ladder is one of the metaphors they use to outline the hierarchy of causal thinking we humans (and many other animals) use to navigate the world. Pearl's ladder of causation has three rungs -- seeing, doing, and imagining -- each representing a step up in the power of our conclusions, but also a step up in the complexity of the process required to make such conclusions. For readers who are curious, we highly recommend this book.
+
+## Making predictions
+
+<!-- Define prediction in a more rigorous way. -->
+
+When our goal is prediction, our analyses will focus on associations. As discussed in the [measures of association chapter][Measures of Association], association exists when the distribution of the thing we are measuring is different, on average, in two groups. Alternatively, we can say that Knowing something about X tells you something (or helps you predict) about Y. 
 
 Predictions, especially good ones, can obviously be useful on their own. We may know that people of a certain race/ethnicity are most likely to get a particular form of cancer. Knowing that may allow us to concentrate screening efforts more effectively. We may know that older adults who begin to have trouble managing their finances are more likely to develop dementia. We may be able to use that information as an early indicator of important health problems to come. 
 
-However, in epidemiology, we are very often not content with predictions alone. It is extremely common for our questions and studies to either directly ask causal questions or imply causal relationships between variables. The reason we are often more interested in causal associations than mere predictions can be found directly in our definition of epidemiology. We want to control health problems. Said another way, we want to know why ”bad” things happen so that we can stop them from happening and/or why “good” things happen so that we can make them happen more often.
+However, in epidemiology, we are often not content with predictions alone. It is extremely common for our questions, and subsequent studies, to either directly ask causal questions or imply causal relationships between our exposures and outcomes of interest. The reason we are often more interested in causal relationships than mere predictions can be found directly in our definition of epidemiology -- we want to control health problems. Said another way, we want to know _why_ -- not just _if_ -- ”bad” things happen so that we can stop them from happening and/or why “good” things happen so that we can make them happen more often. 
 
-This idea is simultaneously so straightforward and so complex. As we will see throughout the semester. 
+Notice that in the prediction examples we mentioned above (i.e., race/ethnicity predicts cancer, financial management predicts dementia) may be perfectly valid, but do they get us any closer to our ultimate goal of “controlling health problems?” We can’t change anyone's race or ethnicity, can we? Even if we could, do race/ethnicity -- social constructs -- directly cause cancer? Or do race and ethnicity serve as proxies for the true unmeasured causes of cancer that disproportionately affect people of certain races and ethnicity. In other words, if we suddenly decided to start labeling people as members of a different race, while everything else about them remains the same, would we expect an impact on their cancer risk? Likewise, do we really believe that older people will no longer develop dementia if we just hire accountants to help them manage their finances better? Of course not! Again, to accomplish our goal of controlling health problems, we will often need to understand _why_ things happen, not just _if_ they will happen. And when we ask _why_ questions, we are asking causal questions.
 
-Notice that in the cases above these predictions may be perfectly valid, but do they get us any closer to our ultimate goal of “controlling health problems?” We can’t change anyone’s race or ethnicity, can we? Even if we could, I’m hard-pressed to think of an example of a health outcome that is caused directly by a person’s race or ethnicity. Race and ethnicity are just a proxy for the true unmeasured cause. Likewise, do you really believe that if we hired an accountant to help an older person manage their finances that they would no longer develop dementia? Of course not.
+## Causal questions
 
-## Causation
+<!-- I think I want to delete all of this stuff. -->
 
-<!-- I think a lot of this stuff is already in the introduction to epi chapter. -->
+We humans seem to be born with some intuitive understanding of cause and effect. If we weren't, it seems unlikely that that we could have survived as long and achieved as much as we have as a species. <!-- Maybe drop this sentence -->
 
-As I said, one the one hand, this is such a simple idea. We obviously have an intuitive understanding of cause and effect. If we didn’t, it’s doubtful that we could have survived this long. 
+Let’s start with an assumption and a question.
 
-Let’s start with an assumption and a question for you.
+Things could happen at random for no reason, or they could be the result of some sort of unobservable (from the viewpoint of Western science anyway) and uncontrollable source – what some may call predetermination. While either of those explanations could be true, neither are very useful to our goals in epidemiology. As stated above, our goals often include understanding _why_ things happen so that we may try to control if or when a similar thing will happen again. For example, “what can I do to prevent myself or someone I care about from getting in a car wreck tomorrow?” 
 
-Remember, we discussed that things could happen at random for no reason, or they could be the result of some sort of unobservable (from the viewpoint of Western science) and uncontrollable source – what I’m calling predetermination. While either of those explanations could be true, neither are really very useful to our goals in epidemiology. 
-
-Typically, those goals revolve around seeking answers to the question above, “Ok, but why do they happen?” And, we typically want those answers for one or both of the following reasons:
-
-1. The first reason is to predict (formally or intuitively) if or when a similar thing will happen again. For example, “will I, or someone I care about, get in another car wreck tomorrow?” 
-
-2. The second reason is to try to control if or when a similar happens again. For example, “what can I do to prevent myself or someone I care about from getting in a car wreck tomorrow?” In epidemiology, the first reason we might simply call prediction and the second reason we often call an intervention. 
-
-The explanation (sometimes called a theory) that we are most interested in today is what we will refer to as causal inference. That is, thing 2 (effect) happened because thing 1 (cause) happened. And this is where it gets interesting. First of all, the statement above, “thing 2 (effect) happened because thing 1 (cause) happened,” implies that if thing 1 hadn’t happened then thing 2 also wouldn’t have happened. In this course, we will call that counterfactual theory. Of course, real life is complicated and logical next questions may be: “If I see thing 2 happen, how do I figure out what thing 1 was?”, and “how do I know thing 2 wouldn’t have happened if thing 1 hadn’t happened?”, and “does thing 2 always happen after thing 1 or just sometimes?”, and “if I can figure out what thing 1 was and I do believe that thing 2 is likely to happen after thing 1, then what can I do about it?” 
+The explanation (sometimes called a theory) that we are most interested in today is what we will refer to as causal inference. That is, thing 2 (effect) happened because thing 1 (cause) happened. And this is where it gets interesting. First of all, the statement above, “thing 2 (effect) happened because thing 1 (cause) happened,” implies that if thing 1 hadn’t happened then thing 2 also wouldn't have happened. Of course, real life is complicated and logical next questions may be: “If I see thing 2 happen, how do I figure out what thing 1 was?”, and “how do I know thing 2 wouldn’t have happened if thing 1 hadn’t happened?”, and “does thing 2 always happen after thing 1 or just sometimes?”, and “if I can figure out what thing 1 was, and I do believe that thing 2 is likely to happen after thing 1, then what can I do about it?” 
 
 For example, “How do I know I wouldn’t have gotten in a car wreck if I hadn’t run that red light? Maybe my steering system would have failed at the exact same moment and I still would have wrecked.” These are the kinds of questions we attempt to formalize (i.e., make measurable) and answer with the sufficient-component cause model and with causal diagrams. Together, counterfactuals, sufficient-component cause models, and causal diagrams may be grouped under the theory of causal inference. Understanding why they happen, how to predict them, and how to control them are the basic foundational questions to nearly all of epidemiology, and the desire to answer them is the cause (you see what I did there?) of all the concepts and methods we will learn in this course.
 
 Perhaps, you are starting to see why this causality stuff is so simple, yet so complex. One the one hand, cause and effect are one of the most intuitive concepts imaginable to most of us. On the other hand, how do you answer questions like the 4 I’ve written on this slide with a high degree of certainty? How about we come up with a checklist of criteria?
 
-## Hill's guidelines
+## Hill's considerations
+
+<!-- If we do keep Hill's considerations, which I'm not sure we should, let's give a paragraph on their history. -->
+
+Well, a perfectly natural human thing to do is to make a checklist and start to classify things based on that checklist. One famous example of such a checklist, which was never intended by the author to be a checklist, is Hill’s considerations Hill’s considerations have been extensively critiqued by others and these considerations are absolutely not sufficient for distinguishing causal from non-causal associations. @Lash2021-mb However, they still have historical significance in the sense that these criteria, along with a lot of observational data, resulted in consensus that smoking was an important cause of lung cancer. Not merely associated with lung cancer. We think it can also be instructive to review the ways in which each of these considerations, as intuitive as they may seem, cannot be relied upon for drawing causal conclusions. Having said that, you do feel better about your results when they conform to some, or all, of these considerations.
 
 <!-- Make the table below directly in R when you get time. -->
 
@@ -78,11 +89,9 @@ Perhaps, you are starting to see why this causality stuff is so simple, yet so c
 knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/hills_criteria.png")
 ```
 
-Well, a perfectly natural human thing to do is to make a checklist and start to classify things based on that checklist. One famous example of such a checklist, which was never intended by the author to be a checklist, is Hill’s guidelines. Your assigned readings covered Hill’s guidelines and why these guidelines are absolutely not sufficient for distinguishing causal from non-causal associations. However, they still have historical significance in the sense that these criteria, along with a lot of observational data, resulted in consensus that smoking was an important cause of lung cancer. Not merely associated with lung cancer.
+So, if we can’t rely on checklists, what can we rely on? Well, another modern model of causation is Rothman’s Model of Sufficient and Component Causes (SCC). When using this model, we start with the outcome, or effect, in mind and work backwards to hypothesize what set of causes can bring about the outcome. 
 
-I think it can also be instructive to review the ways in which each of these guidelines, as intuitive as they may seem, cannot be relied upon for drawing causal conclusions. Having said that, you do feel better about your results when they conform to some, or all, of these guidelines.
-
-So, if we can’t rely on criteria, what can we rely on? Well, another modern model of causation is Rothman’s model of sufficient and component causes. When using this model, we start with the outcome or effect in mind and work backwards to hypothesize what set of causes can bring about the outcome. 
+<!-- Add a much broader discussion of multicausality -->
 
 ## Rothman's model of sufficient and component causes
 
@@ -96,9 +105,7 @@ Add the following elements to this section:
 - Strength of causes 
 -->
 
-Starts from the effect and works backwards to a set of causes
-
-Answers the question: “Given a particular effect/outcome, what are the various events that might have been its cause?”
+Rothman’s Model of Sufficient and Component Causes starts from the effect and works backwards to a set of causes. It answers the question: “Given a particular effect/outcome, what are the various events that might have been its cause?”
 
 <!-- The slides below has a ton of text on it that we need to write out. In fact, it would be nice if we could make all of these pies directly in R. -->
 
@@ -106,54 +113,54 @@ Answers the question: “Given a particular effect/outcome, what are the various
 knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/rmscc_sufficient_causes.png")
 ```
 
-This proposed RMSCC gives a more realistic meaning to the statement “smoking causes lung cancer,” and helps us address questions like, “my uncle smoke for 50 years and didn’t get lung cancer. So, how can you say that smoking causes lung cancer?” Or, “My aunt got lung cancer last year, but she never smoked a cigarette in her life. How can you say that smoking causes lung cancer?”
-
-** Socrative 4 – what causes smoking?
-
-Smoking represents a component cause but is not sufficient to cause disease.
-
-Each component cause has a corresponding causal complement made up of the other factors that make up a sufficient causal set. In the case of smoking sufficient cause 3, U3 and the exposure to pollution represent a causal complement 
-
-Smoking is also not necessary. There are sufficient causes that do not include smoking.
-
-Let’s get some practice
-
-** Socrative 5, 6, 7
+This proposed SCC gives a more realistic meaning to the statement “smoking causes lung cancer,” and helps us address questions like, “my uncle smoke for 50 years and didn’t get lung cancer. So, how can you say that smoking causes lung cancer?” Or, “My aunt got lung cancer last year, but she never smoked a cigarette in her life. How can you say that smoking causes lung cancer?”
 
 ```{r intro-causal-inference-rmscc-sufficient-causes-smoking, echo=FALSE}
 knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/rmscc_sufficient_causes_smoking.png")
 ```
 
-Here’s another example – three sufficient cause sets for cervical cancer. 
+Smoking represents a component cause of lung cancer, but is neither a necessary cause of lung cancer, nor is it sufficient to cause lung cancer in the absence of other component causes.
 
-Note that HPV infection is present in all of the sufficient causes. According to the model HPV infection is thus a necessary cause for cervical cancer.
+<!-- This is explaining the figure above. We need to make this. all flow together better. -->
+
+Each component cause has a corresponding causal complement made up of the other factors that make up a sufficient causal set. In the case of smoking sufficient cause 3, U3 and the exposure to pollution represent a causal complement. 
+
+Smoking is also not necessary. There are sufficient causes that do not include smoking.
+
+Here’s another example – three sufficient cause sets for cervical cancer. 
 
 ```{r intro-causal-inference-rmscc-sufficient-causes-cervical-cancer, echo=FALSE}
 knitr::include_graphics("img/12_causal_inference/01_intro_causal_inference/rmscc_sufficient_causes_cervical_cancer.png")
 ```
 
+Note that HPV infection is present in all of the sufficient causes. According to the model HPV infection is thus a necessary cause for cervical cancer.
+
+<!-- 
+Put all of this into text 
 - Useful for pedagogic reasons.
   - Multicausality.
-  - Attributable fractions sum to greater than 1. <!-- Give an example -->
+  - Attributable fractions sum to greater than 1. **Give an example
 - Application to actual data analysis is yet to be determined.
 - Limited to dichotomous exposures and outcomes.
+-->
 
-Although Rothman’s model of sufficient and component causes useful for causal theory and causal inference, there is significant debate about its usefulness in an applied setting.
-
-So, is there a framework that is useful to us in an applied setting?
+Although Rothman’s model of sufficient and component causes is useful for causal theory and causal inference, there is significant debate about its usefulness in an applied setting. So, is there a framework that is useful to us in an applied setting?
 
 ## Counterfactuals
 
 <!-- Less text. More visual -->
 
-As I said already, there isn’t complete consensus on the definition of causality, or even that it can be defined. However, most people who study causal inference seem to agree that if causality is a testable thing, then counterfactuals provide the best definition we currently have for that thing. Two ways of thinking about counterfactuals that I find appealing are: 
+As we already discussed, there isn’t complete consensus on the definition of causality, or even that it can be defined. However, most people who study causal inference seem to agree that if causality is a testable thing, then counterfactuals provide the best definition we currently have for that thing. Two ways of thinking about counterfactuals that I find appealing are: 
 
 1. What would happen to Y (outcome) had X (exposure) been different and everything else been the same?
+
 2. Do something, see what happens, get in a time machine, go back in time, do a different thing, see what happens. The difference between what happened the first time and what happened the second time is the causal effect.
 
 Of course, we can’t measure either of these directly. However, there are methods that are theoretically able to give us the same results we would get if we could do these things to populations if we are willing to make certain assumptions. One method is to use an idealized randomized experiment. What do I mean by idealized?
 
 ## Idealized random experiments
+
+<!-- Flesh this out more, or maybe just delete it? -->
 
 - When Feasible and ethically possible.
   - No loss to follow-up.
@@ -165,31 +172,25 @@ Of course, we can’t measure either of these directly. However, there are metho
 
 What is an idealized random experiment? It works because there are no common causes or common effects of exposure and outcome. The only thing that determines exposure group composition is the coin flip. Not race, SES, behavior, genetic predisposition, or anything else that could account for an association between exposure/treatment and outcome. So, the ability to estimate true counterfactual average causal effects is within humanities reach. It is theoretically possible to answer the causal questions that we often truly care about.
 
-** Socrative 8
-
 But, how feasible do these conditions sound in the real world? 
 
 ## Observational studies
+
+<!-- Maybe just delete this stuff? -->
 
 In the real world, we often have to rely on data from observational studies to draw our conclusions. Why is that potentially a problem? It’s potentially a problem because the lack of random assignment opens the door to confounding and bias. These are statistical associations in our data that do not come from causal effects. Another issue that is not unique to observational studies, but is an issue nevertheless, is random error / chance / sampling variability. 
 
 So, the question becomes, ”is it possible to get the same conclusion from observational data that we would have gotten if we had carried out a randomized experiment?”
 
-- No random assignment.
-- Confounding.
-- Bias.
-  - Difference between the truth and the conclusions we should draw from our data.
-  - When we are using data to estimate the causal effect of X on Y, then any association between X and Y that is not due to the effect of X on Y is considered a systematic bias.
-  - Difference between structural sources of association and chance (random error, random variability).
-- Random error / chance / sampling variability.
-
 ## DAGS
+
+<!-- For now, I think I just want to include stuff about creating DAGs in the book. Trying to distill all of causal inference into a single chapter is biting off more than I can chew right now. -->
 
 The answer is, ”Yes!”…. If we are willing to make certain assumptions. 
 
 The field of statistics has produced many tools that we can use to quantify, and therefor estimate, the effect of random error / chance / sampling variability if we are willing to make certain assumptions. 
 
-Further, pioneers in the field of causal inference (e.g., Judea Pearl, Jamie Robbins, Sander Greenland, Miguel Hernan) have refined and tested tools that allow us to estimate bona fide average causal effects from observational data if we are willing to make certain assumptions. One of those tools -- the one we will focus on in this course – is called directed acyclic graphs, or DAGs for short. A very simple DAG is shown here. 
+Further, pioneers in the field of causal inference (e.g., Judea Pearl, Jamie Robbins, Sander Greenland, and Miguel Hernan) have refined and tested tools that allow us to estimate bona fide average causal effects from observational data if we are willing to make certain assumptions. One of those tools -- the one we will focus on in this chapter – is called directed acyclic graphs, or DAGs for short. A very simple DAG is shown here. 
 
 <!-- Definitely need to update the figure below. Lots of text. Make this in R. -->
 
