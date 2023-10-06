@@ -21,6 +21,155 @@ Copy and paste:
 # knitr::include_graphics("img/13_causal_inference/03_dags/figure.png")
 ```
 
+<!-- Moved this text over from the intro chapter. -->
+
+<!-- For now, I think I just want to include stuff about creating DAGs in the book. Trying to distill all of causal inference into a single chapter is biting off more than I can chew right now. -->
+
+The answer is, ”Yes!”…. If we are willing to make certain assumptions. 
+
+The field of statistics has produced many tools that we can use to quantify, and therefor estimate, the effect of random error / chance / sampling variability if we are willing to make certain assumptions. 
+
+Further, pioneers in the field of causal inference (e.g., Judea Pearl, Jamie Robbins, Sander Greenland, and Miguel Hernan) have refined and tested tools that allow us to estimate bona fide average causal effects from observational data if we are willing to make certain assumptions. One of those tools -- the one we will focus on in this chapter – is called directed acyclic graphs, or DAGs for short. A very simple DAG is shown here. 
+
+<!-- Definitely need to update the figure below. Lots of text. Make this in R. -->
+
+```{r intro-causal-inference-simple-dag, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/simple_dag.png")
+```
+
+<!-- Note from PP: Move this slide (below) to the end after we talk about what DAGs are. -->
+
+Today, we will talk about some of the basic nuts and bolts of DAGs. In future modules, we will continue to learn more about their application.
+
+The last bullet is key. You’ve all heard that association or correlation does not equal causation, which is true. But, if you are willing to accept the assumptions baked into the qualitative causal model (the graph picture), and you follow the rules of D-separation in your analysis, then any statistical associations ARE casual effects. 
+
+The remaining controversy and uncertainty around DAGs comes for the “if you are willing to accept the assumptions” part of what I just said. The assumptions are not always reasonable and can’t always be tested directly. However, even in the absence of complete certainty, DAGs have shown themselves to be a useful tool in epidemiology over and over. 
+
+- Not magic, just a tool.
+- Works because it encodes mathematical information, given assumptions.
+- Association flows in both directions
+- No distinction between Causal / Preventive (listens to).
+- Made of nodes and edges (arrows).
+- Arrows must go in one direction (i.e., not double-headed).
+- Acyclic – Never get back to where you started if you follow arrows.
+- Arrows indicate causal effects.
+- Deleting arrows indicates a lack of a causal effect.
+- Simultaneously qualitative causal models and statistical models.
+
+<!-- Note from PP: Move this slide (above) to the end after we talk about what DAGs are. -->
+
+As I said before, DAGs are made from nodes and edges. You may see the DAGs where the nodes are literal dots, and you may see DAGs that use variable names directly as the nodes. It seems to me that the second form is more common in the epidemiology literature. 
+
+```{r intro-causal-inference-nodes-and-edges, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/nodes_and_edges.png")
+```
+
+You will sometimes hear the relationships between variables in a DAG describe in terms of family relationships. In this DAG, X is a parent of Y and a grandparent of Z. Equivalently, Y is a child of X , Z is a child of Y, and Z is a grandchild of X. 
+
+```{r intro-causal-inference-descendants, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/descendants.png")
+```
+
+Paths are any arrow-based route between two variables on the graph. In this DAG, there is a path from X to Y, from Y to Z, and from X  to Z that goes through Y. Paths are blocked or open according to D-separation rules, which we will discuss in just a moment.
+
+```{r intro-causal-inference-paths, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/paths.png")
+```
+
+Colliders are when two arrowhead “collide” into a node. 
+
+```{r intro-causal-inference-colliders-01, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/colliders_01.png")
+```
+
+Note that colliders are path specific. For example, Y is a collider on the X -> Y <- Z path, but it is not a collider on the X -> Y -> W path. 
+
+```{r intro-causal-inference-colliders-02, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/colliders_02.png")
+```
+
+Common causes are an important concept when using DAGs. In this DAG, Y is a common cause of X and Z. We know this because an arrow points from Y to X and from Y to Z.
+
+It’s important to note that statistical association can follow any path regardless of the direction of the arrows (in the absence of colliders). Causal effects only follow the direction of the arrows (assuming your assumptions are correct). So, in this case, we expect X to be associated with Z even though X does not cause Z. We can also say that Y confounds the relationship (or lack of relationship) between X and Z. 
+
+```{r intro-causal-inference-common-causes, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/common_causes.png")
+```
+
+and from Y to Z. Note that Z is a collider on the path X -> Z <- Y and on the path Y -> Z <- X.
+
+It’s important to note that statistical association can follow any path regardless of the direction of the arrows (in the absence of colliders). Causal effects only follow the direction of the arrows (assuming your assumptions are correct). So, in this case, we do not expect X to be associated with Y even though there is a path from X to Y. We can also say that Z blocks the association between X and Y.
+
+```{r intro-causal-inference-common-effects, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/common_effects.png")
+```
+
+### D Separation Rules
+
+More generally, we can use the rules of D-separation to estimate average causal effects from DAGs when all assumptions are met. Here they are in their totality. Let’s quickly look at each in isolation.
+
+1. If there are no variables being conditioned on, a path is blocked if and only if two arrowheads on the path collide at some variable on the path.
+2. Any path that contains a non-collider that has been conditioned on is blocked.
+3. A collider that has been conditioned on does not block a path. 
+4. A collider that has a descendant that has been conditioned on does not block a path.
+5. Two variables are D-separated if all paths between them are blocked.
+
+```{r intro-causal-inference-d-separation-01, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/d_separation_01.png")
+```
+
+The first path is open. The second path is closed.
+
+```{r intro-causal-inference-d-separation-02, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/d_separation_02.png")
+```
+
+The first path is open. The second path is closed.
+
+```{r intro-causal-inference-d-separation-03, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/d_separation_03.png")
+```
+
+The first path is closed The second path is open.
+
+```{r intro-causal-inference-d-separation-04, echo=FALSE}
+knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/d_separation_04.png")
+```
+
+Because we conditioned on W, the path X -> Y <- Z is open.
+
+As the course progresses, we will use the rules of D-separation to better understand, and potentially control for, bias and confounding.
+
+Now, let’s practice a little bit more.
+
+<!-- Below: from lab warm-up -->
+
+## Create DAGs in R
+
+Install and load Dagitty and ggdag
+
+We are learning about causal inference in this module, and we are learning how to use directed acyclic graphs (DAGs) as a tool that can help us reason through causal inference. It turns out that there is also an R package that can help us create and interpret DAGs -- `dagitty`. In the code below, we will introduce `dagitty` and walk through some of the package's basic functionality together.
+
+Here is a [link to a useful website](http://www.dagitty.net/) for learning more about `dagitty`.
+
+Here is a [link to a useful website](https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-ggdag.ht) for learning more about `ggdag`.
+
+Common effects are also an important concept when using DAGs. In this DAG, Z is a common effect of X and Y. We know this because an arrow points from X to Z 
+
+### Create a DAG in the web browser
+
+<!-- Add screenshots -->
+
+The easiest way to get started with using `dagitty` is arguably to draw our DAGs using `dagitty` in our web browser. You can do that by navigating to http://www.dagitty.net/dags.html.
+
+To start with a blank slate, click **Model**, then **New Model**.
+
+To add a node to the graph, click anywhere on the graph space and name your new node.
+
+To connect nodes, first click the **cause** node and then click the **effect** node.
+
+To save your DAG code, copy it from the **Model code** pane on the right side of the screen. Then, paste that code into an R code chunk. Just make sure you wrap the code you paste from the web browser in single quotes and place it inside the `daggity()` function.
+
 ```{r}
 # Load the packages needed for the code below.
 library(dplyr, warn.conflicts = FALSE)
