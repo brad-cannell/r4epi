@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | R for Epidemiology</title>
+  <title>64 Introduction to Directed Acyclic Graphs | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | R for Epidemiology" />
+  <meta property="og:title" content="64 Introduction to Directed Acyclic Graphs | R for Epidemiology" />
   <meta property="og:type" content="book" />
   <meta property="og:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
   <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="github-repo" content="brad-cannell/r4epi" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | R for Epidemiology" />
+  <meta name="twitter:title" content="64 Introduction to Directed Acyclic Graphs | R for Epidemiology" />
   
   <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
   <meta name="twitter:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-
+<link rel="prev" href="sufficient-and-component-cause-diagrams.html"/>
+<link rel="next" href="confounding.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -925,19 +925,327 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="introduction-to-directed-acyclic-graphs" class="section level1 hasAnchor" number="64">
+<h1><span class="header-section-number">64</span> Introduction to Directed Acyclic Graphs<a href="introduction-to-directed-acyclic-graphs.html#introduction-to-directed-acyclic-graphs" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<!-- 
+Hidden comments placeholder
+---------------------------
+
+To preview:
+bookdown::preview_chapter("chapters/13_causal_inference/03_dags.Rmd")
+
+Copy and paste:
+👆**Here's what we did above:**
+-->
+<div class="under-construction">
+<p><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#000000;overflow:visible;position:relative;"><path d="M413.5 237.5c-28.2 4.8-58.2-3.6-80-25.4l-38.1-38.1C280.4 159 272 138.8 272 117.6V105.5L192.3 62c-5.3-2.9-8.6-8.6-8.3-14.7s3.9-11.5 9.5-14l47.2-21C259.1 4.2 279 0 299.2 0h18.1c36.7 0 72 14 98.7 39.1l44.6 42c24.2 22.8 33.2 55.7 26.6 86L503 183l8-8c9.4-9.4 24.6-9.4 33.9 0l24 24c9.4 9.4 9.4 24.6 0 33.9l-88 88c-9.4 9.4-24.6 9.4-33.9 0l-24-24c-9.4-9.4-9.4-24.6 0-33.9l8-8-17.5-17.5zM27.4 377.1L260.9 182.6c3.5 4.9 7.5 9.6 11.8 14l38.1 38.1c6 6 12.4 11.2 19.2 15.7L134.9 484.6c-14.5 17.4-36 27.4-58.6 27.4C34.1 512 0 477.8 0 435.7c0-22.6 10.1-44.1 27.4-58.6z"/></svg> This chapter is under heavy development and may still undergo significant changes.</p>
+</div>
+<!-- Moved this text over from the intro chapter. -->
+<!-- For now, I think I just want to include stuff about creating DAGs in the book. Trying to distill all of causal inference into a single chapter is biting off more than I can chew right now. -->
+<p>The field of statistics has produced many tools that we can use to quantify, and therefor estimate, the effect of random error if we are willing to make certain assumptions. Similarly, pioneers in the field of causal inference (e.g., Judea Pearl, Jamie Robbins, Sander Greenland, and Miguel Hernán) have refined and tested tools that allow us to estimate average causal effects from observational data if we are willing to make certain assumptions. One of those tools – the one we will focus on in this chapter – is called a <strong>directed acyclic graph</strong>, or <strong>DAG</strong> for short. A very simple DAG is shown here.</p>
+<p><img src="R-4-Epidemiology_files/figure-html/dags-first-simple-dag-1.png" width="672" /></p>
+<p>Putting it simply, DAGs are just graphs that help us tell a <em>story</em> about causes and effects. For example, perhaps the <code>x</code> node in the DAG above represents the position of a light switch and and the <code>y</code> node in the DAG above represents the status of a light bulb (on vs. off). Then, the causal story that DAG above would tell is that changing the position of the light switch <em>causes</em> the light bulb to turn on and off. Because it is a graph, the entire story of causes and effect is summarized into a compact visual representation. More importantly, it turns out that these graphs, powered by a mathematical language called <em>graph theory</em> contain mathematical information that will eventually allow us to make estimates of causal effects, if we are willing to accept some assumptions. In this chapter, we will discuss some of the basic nuts and bolts of DAGs; as well as how to create DAGs with R. In future chapters, we will progressively learn more about <em>using</em> DAGs as a tool for causal inference.</p>
+<div id="basic-dag-structures-and-vocabulary" class="section level2 hasAnchor" number="64.1">
+<h2><span class="header-section-number">64.1</span> Basic DAG structures and vocabulary<a href="introduction-to-directed-acyclic-graphs.html#basic-dag-structures-and-vocabulary" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>DAGs are made from <strong>nodes</strong> and <strong>edges</strong>. In figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-nodes-and-edges">64.1</a>, <code>x</code>, <code>y</code>, and <code>z</code> are nodes, and <code>A</code> and <code>B</code> are edges. You may see the DAGs where the nodes are literal dots, and you may see DAGs that use variable names as the nodes. Figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-nodes-and-edges">64.1</a> has an example of each. Nodes represent the variables we are modeling, and edges encode the <em>relationship</em> between the variables we are modeling.</p>
+<p>Two nodes are said to be <strong>adjacent</strong> to each other if there is an edge connecting them. For example, <code>x</code> and <code>y</code> are adjacent in figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-nodes-and-edges">64.1</a>, but <code>x</code> and <code>z</code> are not.</p>
+<p>Edges can be <strong>directed</strong> or <strong>undirected</strong>. Edges that are directed have an arrowhead on at least one end, and edges that are undirected do not. Edges <code>A</code> and <code>B</code> in figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-nodes-and-edges">64.1</a> are both directed because they both have an arrowhead on one end. The “start” or “out” side of a directed edge is the side that doesn’t have an arrowhead, and the “end” or “in” side does have an arrowhead. For example, edge <code>A</code> in figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-nodes-and-edges">64.1</a> starts at node <code>x</code> and ends at node <code>y</code>. If all of the edges in a graph are directed, then the graph is said to be a <strong>directed graph</strong>.</p>
+<p>Are the graphs in figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-nodes-and-edges">64.1</a> both directed graphs?</p>
+<p>Yes, the are both directed graphs because all of the edges are directed.</p>
+<p>When there are two nodes connected by a directed edge, the start of the edge is the <strong>cause</strong> and the end of the edge is the <strong>effect</strong>. So, the story figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-nodes-and-edges">64.1</a> tells is that <code>x</code> causes <code>y</code> and <code>y</code> causes <code>z</code>.</p>
+<div class="figure"><span style="display:block;" id="fig:dags-nodes-and-edges"></span>
+<img src="img/13_causal_inference/03_dags/nodes_and_edges.png" alt="Basic DAG Structures: Nodes and edges." width="900" />
+<p class="caption">
+Figure 64.1: Basic DAG Structures: Nodes and edges.
+</p>
+</div>
+<p>Relationships between nodes in a DAG are often described in terms of family relationships. The node a the start of a directed edge is called a <strong>parent</strong> of the node the directed edge ends at. Conversely, the node at the end of the directed edge is called a <strong>child</strong> of the node the directed edge started from. In <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-descendants">64.2</a>, <code>x</code> is a parent of <code>y</code> and a grandparent of <code>z</code>. Equivalently, <code>y</code> is a child of <code>x</code> , <code>z</code> is a child of <code>y</code>, and <code>z</code> is a grandchild of <code>x</code>.</p>
+<!-- Try to add these labels directly in R at some point. -->
+<div class="figure"><span style="display:block;" id="fig:dags-descendants"></span>
+<img src="img/13_causal_inference/03_dags/descendants.png" alt="Basic DAG Structures: Descendants." width="900" />
+<p class="caption">
+Figure 64.2: Basic DAG Structures: Descendants.
+</p>
+</div>
+<p>A <strong>directed path</strong> (often simply referred to as a path) is any arrow-based route between two variables on the graph. In <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-paths">64.3</a>, there is a path from <code>x</code> to <code>y</code>, from <code>y</code> to <code>z</code>, and from <code>x</code> to <code>z</code> that goes through <code>y</code>. Paths are either open or closed according to D-separation rules, which we will discuss soon.</p>
+<div class="figure"><span style="display:block;" id="fig:dags-paths"></span>
+<img src="R-4-Epidemiology_files/figure-html/dags-paths-1.png" alt="Basic DAG Structures: Paths." width="672" />
+<p class="caption">
+Figure 64.3: Basic DAG Structures: Paths.
+</p>
+</div>
+<p>When there is at least one directed path from a node that leads back to itself, then the graph is said to be <strong>cyclic</strong>. In figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-paths">64.3</a>, there is a path – from <code>x</code> to <code>y</code> to <code>z</code> to <code>x</code> – that begins and ends at <code>x</code>. Therefore, the graph in figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-paths">64.3</a> is cyclic. If there are no cyclic paths in a graph (as is the case in every other graph we’ve seen in this chapter), then the graph is said to be <strong>acyclic</strong>. When our graphs are directed and acyclic, then they are called <strong>directed acyclic graphs</strong> or <strong>DAG</strong>s.</p>
+<div class="figure"><span style="display:block;" id="fig:dags-cyclic"></span>
+<img src="R-4-Epidemiology_files/figure-html/dags-cyclic-1.png" alt="Basic DAG Structures: A cyclic graph." width="672" />
+<p class="caption">
+Figure 64.4: Basic DAG Structures: A cyclic graph.
+</p>
+</div>
+<p><strong>Colliders</strong> exist where two arrowheads “collide” into a node. For example, in <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-colliders-01">64.5</a>, the arrow from <code>x</code> to <code>y</code> and the arrow from <code>z</code> to <code>y</code> “collide” into each other at <code>y</code>.</p>
+<div class="figure"><span style="display:block;" id="fig:dags-colliders-01"></span>
+<img src="R-4-Epidemiology_files/figure-html/dags-colliders-01-1.png" alt="Basic DAG Structures: Colliders." width="672" />
+<p class="caption">
+Figure 64.5: Basic DAG Structures: Colliders.
+</p>
+</div>
+<p>Note that colliders are <em>path specific</em>. For example, <code>y</code> is a collider on the <code>x</code> -&gt; <code>y</code> &lt;- <code>z</code> path in figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-colliders-02">64.6</a>, but it is not a collider on the <code>x</code> -&gt; <code>y</code> -&gt; <code>W</code> path.</p>
+<div class="figure"><span style="display:block;" id="fig:dags-colliders-02"></span>
+<img src="R-4-Epidemiology_files/figure-html/dags-colliders-02-1.png" alt="Basic DAG Structures: A slightly more complex collider." width="672" />
+<p class="caption">
+Figure 64.6: Basic DAG Structures: A slightly more complex collider.
+</p>
+</div>
+<p><strong>Common causes</strong> are another important concept when using DAGs. In figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-common-causes">64.7</a>, <code>y</code> is a common cause of <code>x</code> and <code>z</code>. We know this because an arrow points from <code>y</code> to <code>x</code> and from <code>y</code> to <code>z</code>.</p>
+<p>It’s important to note that <em>statistical associations</em> can follow any path regardless of the direction of the arrows (in the absence of colliders). However, <em>causal effects</em> only follow the direction of the arrows (assuming our assumptions are correct). So, in this case, we expect <code>x</code> to be associated with <code>z</code> even though <code>x</code> does not cause <code>z</code>. We can also say that <code>y</code> confounds the relationship (or lack of relationship) between <code>x</code> and <code>z</code>. <strong>Confounding</strong> is one of the most critical concepts in all of epidemiology, and it has an entire <a href="confounding.html#confounding">chapter</a> devoted to it later in the book.</p>
+<div class="figure"><span style="display:block;" id="fig:dags-common-causes"></span>
+<img src="R-4-Epidemiology_files/figure-html/dags-common-causes-1.png" alt="Basic DAG Structures: Common causes." width="672" />
+<p class="caption">
+Figure 64.7: Basic DAG Structures: Common causes.
+</p>
+</div>
+<!-- Add common effects? -->
+</div>
+<div id="creating-dags-in-r" class="section level2 hasAnchor" number="64.2">
+<h2><span class="header-section-number">64.2</span> Creating DAGs in R<a href="introduction-to-directed-acyclic-graphs.html#creating-dags-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are a number of R packages we can use to create and analyze DAGs in R. <a href="https://www.dagitty.net/">DAGitty</a> is a popular tool for creating and DAGs. Notably, DAGitty has a graphical interface we can use to create, edit, and analyze DAGs directly in our web browser. We can access DAGitty in our browser by navigating to <a href="https://www.dagitty.net/" class="uri">https://www.dagitty.net/</a> and clicking on <code>Launch DAGitty online in your browser</code>, which is the far left box of figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-dagitty">64.8</a> below.</p>
+<div class="figure"><span style="display:block;" id="fig:dags-dagitty"></span>
+<img src="img/13_causal_inference/03_dags/dagitty_screenshot.png" alt="Screenshot of the DAGitty homepage." width="812" />
+<p class="caption">
+Figure 64.8: Screenshot of the DAGitty homepage.
+</p>
+</div>
+<p>You might have also noticed the <code>dagitty</code> R package in figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-dagitty">64.8</a>. It’s a great package that allows us to use DAGitty directly from within an R session, and I encourage interested readers to check it out. However, for the sake of efficiency, we will focus on using a different R package, built on top of <code>dagitty</code>, <code>ggplot2</code>, and <code>ggraph</code>, for the remainder of this chapter. That package is called <a href="https://github.com/r-causal/ggdag">ggdag</a>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1-1" tabindex="-1"></a><span class="co"># Load the packages we will need below</span></span>
+<span id="cb1-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1-3" tabindex="-1"></a><span class="fu">library</span>(ggdag, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
+</div>
+<div id="chains" class="section level2 hasAnchor" number="64.3">
+<h2><span class="header-section-number">64.3</span> Chains<a href="introduction-to-directed-acyclic-graphs.html#chains" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The first DAG structure we will learn how to create with <code>ggdag</code> called a <strong>chain</strong>. A chain consists of 3 nodes and two edges, with one edges going into the middle node and the other edge coming out of the middle node.<span class="citation"><sup><a href="#ref-Pearl2016-lu">1</a></sup></span> We have already seen several examples of chains above, for example, figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-paths">64.3</a>. Let’s look at the code we used to create figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-paths">64.3</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="introduction-to-directed-acyclic-graphs.html#cb2-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb2-2"><a href="introduction-to-directed-acyclic-graphs.html#cb2-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb2-3"><a href="introduction-to-directed-acyclic-graphs.html#cb2-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb2-4"><a href="introduction-to-directed-acyclic-graphs.html#cb2-4" tabindex="-1"></a>  z <span class="sc">~</span> y,</span>
+<span id="cb2-5"><a href="introduction-to-directed-acyclic-graphs.html#cb2-5" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
+<span id="cb2-6"><a href="introduction-to-directed-acyclic-graphs.html#cb2-6" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
+<span id="cb2-7"><a href="introduction-to-directed-acyclic-graphs.html#cb2-7" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
+<span id="cb2-8"><a href="introduction-to-directed-acyclic-graphs.html#cb2-8" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
+<span id="cb2-9"><a href="introduction-to-directed-acyclic-graphs.html#cb2-9" tabindex="-1"></a>  )</span>
+<span id="cb2-10"><a href="introduction-to-directed-acyclic-graphs.html#cb2-10" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="introduction-to-directed-acyclic-graphs.html#cb2-11" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="introduction-to-directed-acyclic-graphs.html#cb2-12" tabindex="-1"></a><span class="co"># Plot the dag called chain and print it to the screen</span></span>
+<span id="cb2-13"><a href="introduction-to-directed-acyclic-graphs.html#cb2-13" tabindex="-1"></a><span class="fu">ggdag</span>(chain) <span class="sc">+</span></span>
+<span id="cb2-14"><a href="introduction-to-directed-acyclic-graphs.html#cb2-14" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/dags-chain-01-1.png" width="672" /></p>
+<p>Now, let’s walk through building the code step-by-step to better understand how it works.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="introduction-to-directed-acyclic-graphs.html#cb3-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb3-2"><a href="introduction-to-directed-acyclic-graphs.html#cb3-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb3-3"><a href="introduction-to-directed-acyclic-graphs.html#cb3-3" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb3-4"><a href="introduction-to-directed-acyclic-graphs.html#cb3-4" tabindex="-1"></a>) </span>
+<span id="cb3-5"><a href="introduction-to-directed-acyclic-graphs.html#cb3-5" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="introduction-to-directed-acyclic-graphs.html#cb3-6" tabindex="-1"></a><span class="co"># Print the value stored in chain to the screen</span></span>
+<span id="cb3-7"><a href="introduction-to-directed-acyclic-graphs.html#cb3-7" tabindex="-1"></a>chain</span></code></pre></div>
+<pre><code>## dag {
+## x
+## y
+## x -&gt; y
+## }</code></pre>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used the <code>dagify()</code> function to create an object called <code>chain</code> that contains some code used by the DAGitty package to create DAGs.</p>
+<ul>
+<li><p>You can type <code>?dagify</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>dagify()</code> function is the <code>...</code> argument. The value(s) passed to the <code>...</code> argument should be formula(s). The formulas should have the form <em>effect ~ cause</em>. Where <em>effect</em> and <em>cause</em> are both nodes we want to be included in the DAG. In this cause, we passed the value <code>y ~ x</code>, which means “y is caused by x.” This value simultaneously tells the <code>dagify()</code> function two things. First, that the DAG needs to have a <code>y</code> node and an <code>x</code> node if it doesn’t already. Second, that there should be a directed edge in the DAG from <code>x</code> to <code>y</code>.</p></li>
+<li><p>Finally, the <code>dagify()</code> function converts our formula into <code>DAGitty</code> syntax, which <code>ggdag</code> uses under the hood.</p></li>
+</ul></li>
+<li><p>We can see the <code>DAGitty</code> syntax when we print the value stored in <code>chain</code> to the screen. However, we won’t actually need to manipulate this code in any way.</p></li>
+</ul>
+<p>Next, we can pass the <code>chain</code> object the the <code>ggdag()</code> function to print our DAG to the screen.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="introduction-to-directed-acyclic-graphs.html#cb5-1" tabindex="-1"></a><span class="co"># Set seed so that we can reproduce the plot</span></span>
+<span id="cb5-2"><a href="introduction-to-directed-acyclic-graphs.html#cb5-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb5-3"><a href="introduction-to-directed-acyclic-graphs.html#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="introduction-to-directed-acyclic-graphs.html#cb5-4" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
+<span id="cb5-5"><a href="introduction-to-directed-acyclic-graphs.html#cb5-5" tabindex="-1"></a><span class="fu">ggdag</span>(chain)</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/dags-chain-03-1.png" width="672" /></p>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used the <code>ggdag()</code> function to plot the <code>chain</code> object as a <code>ggplot2</code> plot and print it to the screen.</p>
+<ul>
+<li><p>You can type <code>?ggdag</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>ggdag()</code> function is the <code>.tdy_dag</code> argument. The value passed to the <code>.tdy_dag</code> should be a <code>tidy_dagitty</code> object or a <code>dagitty</code> object. We passed a <code>dagitty</code> object – <code>chain</code>.</p></li>
+</ul></li>
+<li><p>The DAG was converted to a <code>ggplot2</code> plot and printed to the screen. Notice the x and y axis values in the plot above. These values don’t have any substantive meaning. They are simply coordinates used to place the elements of the graph around the plotting area. By default, if we don’t tell the <code>dagify()</code> function which coordinates to use, then it will select coordinates at random. Therefore, if we want our DAG to look the same every time we run the code above, then we must either use the <code>set.seed()</code> function to produce the same random coordinates each time we run the code <em>or</em> we much specifically pass coordinates to the <code>dagify()</code> function.</p></li>
+</ul>
+<p>Let’s pass coordinates to the the <code>dagify()</code> function now so that we have greater control over the layout and reproducibility of our DAG.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="introduction-to-directed-acyclic-graphs.html#cb6-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb6-2"><a href="introduction-to-directed-acyclic-graphs.html#cb6-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb6-3"><a href="introduction-to-directed-acyclic-graphs.html#cb6-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb6-4"><a href="introduction-to-directed-acyclic-graphs.html#cb6-4" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
+<span id="cb6-5"><a href="introduction-to-directed-acyclic-graphs.html#cb6-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
+<span id="cb6-6"><a href="introduction-to-directed-acyclic-graphs.html#cb6-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>),</span>
+<span id="cb6-7"><a href="introduction-to-directed-acyclic-graphs.html#cb6-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
+<span id="cb6-8"><a href="introduction-to-directed-acyclic-graphs.html#cb6-8" tabindex="-1"></a>  ) </span>
+<span id="cb6-9"><a href="introduction-to-directed-acyclic-graphs.html#cb6-9" tabindex="-1"></a>) </span>
+<span id="cb6-10"><a href="introduction-to-directed-acyclic-graphs.html#cb6-10" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="introduction-to-directed-acyclic-graphs.html#cb6-11" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
+<span id="cb6-12"><a href="introduction-to-directed-acyclic-graphs.html#cb6-12" tabindex="-1"></a><span class="fu">ggdag</span>(chain)</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/dags-chain-04-1.png" width="672" /></p>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used the <code>dagify()</code> function to create an object called <code>chain</code> that contains some code used by the DAGitty package to create DAGs.</p>
+<ul>
+<li><p>We passed a list of coordinates to the <code>coords</code> argument.</p>
+<ul>
+<li><p>The list of coordinates must have an <code>x</code> element and a <code>y</code> element.</p></li>
+<li><p>The <code>x</code> element must contain a named vector of <code>x</code> coordinate values. The names correspond to node names and the values correspond the <code>x</code> coordinate value we want each node to have. For example, <code>x = c(x = 1, y = 2)</code> tells the <code>dagify()</code> function that we want the center of the <code>x</code> node to be placed on the plot at the spot where the x-axis is equal to 1. Similarly, it tells the <code>dagify()</code> function that we want the center of the <code>y</code> node to be placed on the plot at the spot where the x-axis is equal to 2. When we look at the DAG, we can see that the <code>x</code> node and <code>y</code> node were plotted in those locations. There is nothing magic about choosing the values <code>1</code> and <code>2</code>. We could have selected any value for <code>x</code> that is less than some other arbitrary value for <code>y</code> and the graph would still look the same. We just happen to think that integer values are easier to work with.</p></li>
+<li><p>The <code>y</code> element must contain a named vector of <code>y</code> coordinate values. The names correspond to node names and the values correspond the <code>y</code> coordinate value we want each node to have. For example, <code>y = c(x = 0, y = 0)</code> tells the <code>dagify()</code> function that we want the center of the <code>x</code> node and the center of the <code>y</code> node to both be placed on the plot at the spot where the y-axis is equal to 0. When we look at the DAG, we can see that the center of the <code>x</code> node and the <code>y</code> node both cross the y-axis at 0. There is nothing magic about choosing the value <code>0</code>. We just happen to think that integer values are easier to work with.</p></li>
+</ul></li>
+</ul></li>
+<li><p>We used the <code>ggdag()</code> function to plot the <code>chain</code> object as a <code>ggplot2</code> plot and print it to the screen.</p></li>
+</ul>
+<p>Now that we know how the coordinate system work, it no longer serves much of a purpose. The x- and y-axis values don’t have any function beyond placing nodes on the plotting area. So, let’s go ahead and remove them. The <code>ggdag</code> package includes a function called <code>theme_dag()</code> that will remove everything from the plot except the nodes and edges. Let’s use it now.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="introduction-to-directed-acyclic-graphs.html#cb7-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb7-2"><a href="introduction-to-directed-acyclic-graphs.html#cb7-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb7-3"><a href="introduction-to-directed-acyclic-graphs.html#cb7-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb7-4"><a href="introduction-to-directed-acyclic-graphs.html#cb7-4" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
+<span id="cb7-5"><a href="introduction-to-directed-acyclic-graphs.html#cb7-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
+<span id="cb7-6"><a href="introduction-to-directed-acyclic-graphs.html#cb7-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>),</span>
+<span id="cb7-7"><a href="introduction-to-directed-acyclic-graphs.html#cb7-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
+<span id="cb7-8"><a href="introduction-to-directed-acyclic-graphs.html#cb7-8" tabindex="-1"></a>  ) </span>
+<span id="cb7-9"><a href="introduction-to-directed-acyclic-graphs.html#cb7-9" tabindex="-1"></a>) </span>
+<span id="cb7-10"><a href="introduction-to-directed-acyclic-graphs.html#cb7-10" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="introduction-to-directed-acyclic-graphs.html#cb7-11" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
+<span id="cb7-12"><a href="introduction-to-directed-acyclic-graphs.html#cb7-12" tabindex="-1"></a><span class="fu">ggdag</span>(chain) <span class="sc">+</span> <span class="co"># Make sure to use a + sign, not a pipe</span></span>
+<span id="cb7-13"><a href="introduction-to-directed-acyclic-graphs.html#cb7-13" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/dags-chain-05-1.png" width="672" /></p>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used the <code>ggdag()</code> function to plot the <code>chain</code> object as a <code>ggplot2</code> plot and print it to the screen.</p></li>
+<li><p>This time we added the <code>theme_dag()</code> theme to our plot to make it easier to read. Notice that we used the <code>+</code> sign to add the theme, not a pipe operator.</p></li>
+</ul>
+<p>At this point, we have learned all of the basic functionality we need to know to create our chain DAG. We just need to add one more node and one more edge.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="introduction-to-directed-acyclic-graphs.html#cb8-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb8-2"><a href="introduction-to-directed-acyclic-graphs.html#cb8-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb8-3"><a href="introduction-to-directed-acyclic-graphs.html#cb8-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb8-4"><a href="introduction-to-directed-acyclic-graphs.html#cb8-4" tabindex="-1"></a>  z <span class="sc">~</span> y,</span>
+<span id="cb8-5"><a href="introduction-to-directed-acyclic-graphs.html#cb8-5" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
+<span id="cb8-6"><a href="introduction-to-directed-acyclic-graphs.html#cb8-6" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
+<span id="cb8-7"><a href="introduction-to-directed-acyclic-graphs.html#cb8-7" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
+<span id="cb8-8"><a href="introduction-to-directed-acyclic-graphs.html#cb8-8" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
+<span id="cb8-9"><a href="introduction-to-directed-acyclic-graphs.html#cb8-9" tabindex="-1"></a>  ) </span>
+<span id="cb8-10"><a href="introduction-to-directed-acyclic-graphs.html#cb8-10" tabindex="-1"></a>) </span>
+<span id="cb8-11"><a href="introduction-to-directed-acyclic-graphs.html#cb8-11" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="introduction-to-directed-acyclic-graphs.html#cb8-12" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
+<span id="cb8-13"><a href="introduction-to-directed-acyclic-graphs.html#cb8-13" tabindex="-1"></a><span class="fu">ggdag</span>(chain) <span class="sc">+</span> <span class="co"># Make sure to use a + sign, not a pipe</span></span>
+<span id="cb8-14"><a href="introduction-to-directed-acyclic-graphs.html#cb8-14" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/dags-chain-06-1.png" width="672" /></p>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used the <code>dagify()</code> function to create an object called <code>chain</code> that contains some code used by the DAGitty package to create DAGs.</p>
+<ul>
+<li><p>We added another formula, <code>z ~ y</code>, to the <code>...</code> argument, which means “z is caused by y.” This value simultaneously tells the <code>dagify()</code> function two things. First, that the DAG needs to have a <code>z</code> node and a <code>y</code> node if it doesn’t already. Second, that there should be a directed edge in the DAG from <code>y</code> to <code>z</code>.</p></li>
+<li><p>We added another set of coordinates to the <code>coords</code> argument. The told the <code>dagify()</code> function that we want the center of the <code>z</code> node to be placed on the plot at the spot where the x-axis is equal to 3 and the y-axis is equal to 0.</p></li>
+</ul></li>
+<li><p>We used the <code>ggdag()</code> function to plot the <code>chain</code> object as a <code>ggplot2</code> plot and print it to the screen.</p></li>
+</ul>
+</div>
+<div id="forks" class="section level2 hasAnchor" number="64.4">
+<h2><span class="header-section-number">64.4</span> Forks<a href="introduction-to-directed-acyclic-graphs.html#forks" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The next structure we will learn to create with <code>ggdag</code> is the <strong>fork</strong> structure. A fork consists of 3 nodes and two edges, with both edges coming out of the middle node.<span class="citation"><sup><a href="#ref-Pearl2016-lu">1</a></sup></span> We previously saw a fork when we discussed common causes and figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-common-causes">64.7</a>. Here is the code we used to create figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-common-causes">64.7</a>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="introduction-to-directed-acyclic-graphs.html#cb9-1" tabindex="-1"></a><span class="co"># Create the DAG called fork</span></span>
+<span id="cb9-2"><a href="introduction-to-directed-acyclic-graphs.html#cb9-2" tabindex="-1"></a>fork <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb9-3"><a href="introduction-to-directed-acyclic-graphs.html#cb9-3" tabindex="-1"></a>  x <span class="sc">~</span> y,</span>
+<span id="cb9-4"><a href="introduction-to-directed-acyclic-graphs.html#cb9-4" tabindex="-1"></a>  z <span class="sc">~</span> y,</span>
+<span id="cb9-5"><a href="introduction-to-directed-acyclic-graphs.html#cb9-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>(</span>
+<span id="cb9-6"><a href="introduction-to-directed-acyclic-graphs.html#cb9-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
+<span id="cb9-7"><a href="introduction-to-directed-acyclic-graphs.html#cb9-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
+<span id="cb9-8"><a href="introduction-to-directed-acyclic-graphs.html#cb9-8" tabindex="-1"></a>  )</span>
+<span id="cb9-9"><a href="introduction-to-directed-acyclic-graphs.html#cb9-9" tabindex="-1"></a>) </span>
+<span id="cb9-10"><a href="introduction-to-directed-acyclic-graphs.html#cb9-10" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="introduction-to-directed-acyclic-graphs.html#cb9-11" tabindex="-1"></a><span class="co"># Plot the fork dag and print it to the screen</span></span>
+<span id="cb9-12"><a href="introduction-to-directed-acyclic-graphs.html#cb9-12" tabindex="-1"></a><span class="fu">ggdag</span>(fork) <span class="sc">+</span></span>
+<span id="cb9-13"><a href="introduction-to-directed-acyclic-graphs.html#cb9-13" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/dags-forks-1.png" width="672" /></p>
+<p>The code above only differs from the chain code in the formulas we passed the <code>...</code> argument of the <code>dagify()</code> function. This time, the formulas we passed told the <code>dagify()</code> function that “x is caused by y” (<code>x ~ y</code>) and that “z is caused by y” (<code>z ~ y</code>). Everything else remained the same.</p>
+</div>
+<div id="colliders" class="section level2 hasAnchor" number="64.5">
+<h2><span class="header-section-number">64.5</span> Colliders<a href="introduction-to-directed-acyclic-graphs.html#colliders" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The third structure we will learn to create with <code>ggdag</code> is the <strong>collider</strong> structure. A collider consists of 3 nodes and two edges, with both edges directed into the middle node.<span class="citation"><sup><a href="#ref-Pearl2016-lu">1</a></sup></span> We previously saw a collider in <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-colliders-01">64.5</a>. Here is the code we used to create figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-colliders-01">64.5</a>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="introduction-to-directed-acyclic-graphs.html#cb10-1" tabindex="-1"></a><span class="co"># Create the DAG called collider</span></span>
+<span id="cb10-2"><a href="introduction-to-directed-acyclic-graphs.html#cb10-2" tabindex="-1"></a>collider <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb10-3"><a href="introduction-to-directed-acyclic-graphs.html#cb10-3" tabindex="-1"></a>  y <span class="sc">~</span> x,</span>
+<span id="cb10-4"><a href="introduction-to-directed-acyclic-graphs.html#cb10-4" tabindex="-1"></a>  y <span class="sc">~</span> z,</span>
+<span id="cb10-5"><a href="introduction-to-directed-acyclic-graphs.html#cb10-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>(</span>
+<span id="cb10-6"><a href="introduction-to-directed-acyclic-graphs.html#cb10-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
+<span id="cb10-7"><a href="introduction-to-directed-acyclic-graphs.html#cb10-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
+<span id="cb10-8"><a href="introduction-to-directed-acyclic-graphs.html#cb10-8" tabindex="-1"></a>  )</span>
+<span id="cb10-9"><a href="introduction-to-directed-acyclic-graphs.html#cb10-9" tabindex="-1"></a>)</span>
+<span id="cb10-10"><a href="introduction-to-directed-acyclic-graphs.html#cb10-10" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="introduction-to-directed-acyclic-graphs.html#cb10-11" tabindex="-1"></a><span class="co"># Plot the collider dag and print it to the screen</span></span>
+<span id="cb10-12"><a href="introduction-to-directed-acyclic-graphs.html#cb10-12" tabindex="-1"></a><span class="fu">ggdag</span>(collider) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="introduction-to-directed-acyclic-graphs.html#cb10-13" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<p><img src="R-4-Epidemiology_files/figure-html/dags-colliders-03-1.png" width="672" /></p>
+<p>Once again, the code above only differs from the chain code in the formulas we passed the <code>...</code> argument of the <code>dagify()</code> function. This time, the formulas we passed told the <code>dagify()</code> function that “y is caused by x” (<code>y ~ x</code>) and that “y is caused by z” (<code>y ~ z</code>). Everything else remained the same.</p>
+<p>With only these three structures – chains, forks, and colliders – we can create sophisticated DAGs with the potential to help us reason about almost any causal question we may want to ask. However, before we can use our DAGs, we must understand the rules of d-separation.</p>
+<!-- Maybe add a section about using code to find parent nodes? -->
+</div>
+<div id="d-separation-rules" class="section level2 hasAnchor" number="64.6">
+<h2><span class="header-section-number">64.6</span> d-Separation Rules<a href="introduction-to-directed-acyclic-graphs.html#d-separation-rules" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<!-- This needs a lot more explanation. Why do these rules exist? What does it mean to block or be open? What does conditioning mean? -->
+<p>Now that we understand the basic structures that make up DAGs, we can use the rules of d-separation to estimate average causal effects from DAGs when all assumptions are met. How do we do that? Well, the DAG will forms a model of the process that generate our study data. Again, a model is just simplified representation of some real-world entity or process. So, if we believe that our DAG is “close enough” to accurately representing how conditions in the real world work together to create our outcome of interest, then our DAG tells us how values for our outcome of interest are determined in the real-world. It also tells us which variables in our analysis to <strong>condition</strong> on to isolate the causal effect of one variable from within the entire system.</p>
+<p>There are many ways we can condition on a variable. We can do so through restriction, matching, stratification (including regression analysis), and through weighting methods. Some of these methods were discussed in previous chapters and some will be discussed in subsequent chapters. Why would we want to condition on a variable in our study design and/or analysis? Typically, we condition on variables to deconfound our estimate(s) of effect. We will discuss <a href="deconfounding.html#deconfounding">deconfounding</a> in greater detail in a subsequent chapter. For now, know that conditioning on a variable that appears in our DAG will often impact how we interpret our DAG and any subsequent analysis based on our DAG. And the rules of d-separation will help us with those interpretations. Here they are in their totality.</p>
+<ol style="list-style-type: decimal">
+<li><p>If there are no variables being conditioned on, a path is blocked if and only if two arrowheads on the path collide at some variable on the path.</p></li>
+<li><p>Any path that contains a non-collider that has been conditioned on is blocked.</p></li>
+<li><p>A collider that has been conditioned on does not block a path.</p></li>
+<li><p>A collider that has a descendant that has been conditioned on does not block a path.</p></li>
+<li><p>Two variables are D-separated if all paths between them are blocked.</p></li>
+</ol>
+<p>Next, let’s look at each rule in isolation.</p>
+<!-- Figure out how to manually declare adjustment variables in ggdag so that I can make the d-separation rule figures directly in R. -->
+<div id="rule-1" class="section level3 hasAnchor" number="64.6.1">
+<h3><span class="header-section-number">64.6.1</span> Rule 1<a href="introduction-to-directed-acyclic-graphs.html#rule-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="img/13_causal_inference/03_dags/d_separation_01.png" width="900" /></p>
+<p>In the figure above, the first path is open because <code>y</code> is not being conditioned on and <code>y</code> is not a collider. The second path is closed because <code>y</code> is a collider.</p>
+</div>
+<div id="rule-2" class="section level3 hasAnchor" number="64.6.2">
+<h3><span class="header-section-number">64.6.2</span> Rule 2<a href="introduction-to-directed-acyclic-graphs.html#rule-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="img/13_causal_inference/03_dags/d_separation_02.png" width="900" /></p>
+<p>In the figure above, the first path is open because <code>y</code> is not being conditioned on and <code>y</code> is not a collider. The second path is closed because <code>y</code> is <em>not</em> a collider and <em>is</em> being conditioned on.</p>
+</div>
+<div id="rule-3" class="section level3 hasAnchor" number="64.6.3">
+<h3><span class="header-section-number">64.6.3</span> Rule 3<a href="introduction-to-directed-acyclic-graphs.html#rule-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="img/13_causal_inference/03_dags/d_separation_03.png" width="900" /></p>
+<p>In the figure above, the first path is closed because <code>y</code> is a collider and it is not being conditioned on. The second path is open because <code>y</code> is a collider and <em>is</em> being conditioned on.</p>
+</div>
+<div id="rule-4" class="section level3 hasAnchor" number="64.6.4">
+<h3><span class="header-section-number">64.6.4</span> Rule 4<a href="introduction-to-directed-acyclic-graphs.html#rule-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="img/13_causal_inference/03_dags/d_separation_04.png" width="900" /></p>
+<p>In the figure above, the path <code>x</code> -&gt; <code>y</code> &lt;- <code>z</code> is open because <code>w</code> is a descendant of a collider and it is being conditioned on.</p>
+<p>As the book progresses, we will use the rules of d-separation to better understand, and potentially control for, bias and confounding.</p>
+</div>
+</div>
+<div id="summary-13" class="section level2 hasAnchor" number="64.7">
+<h2><span class="header-section-number">64.7</span> Summary<a href="introduction-to-directed-acyclic-graphs.html#summary-13" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this chapter, we learned the basic structures that DAGs are made of. We also learned how to create DAGs with R and <code>ggdag</code>. DAGs are a powerful tool for causal inference because they are simultaneously qualitative causal models (encoding our assumptions and beliefs) and statistical models (encoding mathematical information). We’ve all heard that association/correlation does not equal causation, which is true. But, if we are willing to accept the assumptions baked into the qualitative causal model (the graph picture), and follow the rules of d-separation in our study design and/or analysis, then any statistical associations ARE casual effects. The remaining controversy and uncertainty around DAGs comes from the “if you are willing to accept the assumptions” part of that last sentence. The assumptions are not always reasonable and often can’t be directly tested; however, even in the absence of complete certainty, DAGs have shown themselves to be a useful tool in epidemiology over and over.</p>
+<!-- Add some examples of useful real-world DAGS. -->
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-Pearl2016-lu" class="csl-entry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Pearl J, Glymour M, Jewell NP. <em>Causal Inference in Statistics: A Primer</em>. John Wiley &amp; Sons Ltd; 2016.</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-
+<a href="sufficient-and-component-cause-diagrams.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="confounding.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -968,7 +1276,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/brad-cannell/r4epi/edit/master/%s",
+"link": "https://github.com/brad-cannell/r4epi/edit/master/chapters/13_causal_inference/03_dags.Rmd",
 "text": "Edit"
 },
 "history": {

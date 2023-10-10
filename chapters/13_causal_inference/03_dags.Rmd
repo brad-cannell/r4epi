@@ -55,35 +55,35 @@ ggdag(simple_dag) +
   theme_dag()
 ```
 
-Putting it simply, DAGs are just graphs that help us tell a _story_ about causes and effects. For example, perhaps the `X` node in the DAG above represents the position of a light switch and and the `Y` node in the DAG above represents the status of a light bulb (on vs. off). Then, the causal story that DAG above would tell is that changing the position of the light switch _causes_ the light bulb to turn on and off. Because it is a graph, the entire story of causes and effect is summarized into a compact visual representation. More importantly, it turns out that these graphs, powered by a mathematical language called _graph theory_ contain mathematical information that will eventually allow us to make estimates of causal effects, if we are willing to accept some assumptions. In this chapter, we will discuss some of the basic nuts and bolts of DAGs; as well as how to create DAGs with R. In future chapters, we will progressively learn more about _using_ DAGs as a tool for causal inference. 
+Putting it simply, DAGs are just graphs that help us tell a _story_ about causes and effects. For example, perhaps the `x` node in the DAG above represents the position of a light switch and and the `y` node in the DAG above represents the status of a light bulb (on vs. off). Then, the causal story that DAG above would tell is that changing the position of the light switch _causes_ the light bulb to turn on and off. Because it is a graph, the entire story of causes and effect is summarized into a compact visual representation. More importantly, it turns out that these graphs, powered by a mathematical language called _graph theory_ contain mathematical information that will eventually allow us to make estimates of causal effects, if we are willing to accept some assumptions. In this chapter, we will discuss some of the basic nuts and bolts of DAGs; as well as how to create DAGs with R. In future chapters, we will progressively learn more about _using_ DAGs as a tool for causal inference. 
 
 ## Basic DAG structures and vocabulary
 
-DAGs are made from **nodes** and **edges**. In figure \@ref(fig:dags-nodes-and-edges), `X`, `Y`, and `Z` are nodes, and `A` and `B` are edges. You may see the DAGs where the nodes are literal dots, and you may see DAGs that use variable names as the nodes. Figure \@ref(fig:dags-nodes-and-edges) has an example of each. Nodes represent the variables we are modeling, and edges encode the _relationship_ between the variables we are modeling.
+DAGs are made from **nodes** and **edges**. In figure \@ref(fig:dags-nodes-and-edges), `x`, `y`, and `z` are nodes, and `A` and `B` are edges. You may see the DAGs where the nodes are literal dots, and you may see DAGs that use variable names as the nodes. Figure \@ref(fig:dags-nodes-and-edges) has an example of each. Nodes represent the variables we are modeling, and edges encode the _relationship_ between the variables we are modeling.
 
-Two nodes are said to be **adjacent** to each other if there is an edge connecting them. For example, `X` and `Y` are adjacent in figure \@ref(fig:dags-nodes-and-edges), but `X` and `Z` are not.
+Two nodes are said to be **adjacent** to each other if there is an edge connecting them. For example, `x` and `y` are adjacent in figure \@ref(fig:dags-nodes-and-edges), but `x` and `z` are not.
 
-Edges can be **directed** or **undirected**. Edges that are directed have an arrowhead on at least one end, and edges that are undirected do not. Edges `A` and `B` in figure \@ref(fig:dags-nodes-and-edges) are both directed because they both have an arrowhead on one end. The "start" or "out" side of a directed edge is the side that doesn't have an arrowhead, and the "end" or "in" side does have an arrowhead. For example, edge `A` in figure \@ref(fig:dags-nodes-and-edges) starts at node `X` and ends at node `Y`. If all of the edges in a graph are directed, then the graph is said to be a **directed graph**.
+Edges can be **directed** or **undirected**. Edges that are directed have an arrowhead on at least one end, and edges that are undirected do not. Edges `A` and `B` in figure \@ref(fig:dags-nodes-and-edges) are both directed because they both have an arrowhead on one end. The "start" or "out" side of a directed edge is the side that doesn't have an arrowhead, and the "end" or "in" side does have an arrowhead. For example, edge `A` in figure \@ref(fig:dags-nodes-and-edges) starts at node `x` and ends at node `y`. If all of the edges in a graph are directed, then the graph is said to be a **directed graph**.
 
 Are the graphs in figure \@ref(fig:dags-nodes-and-edges) both directed graphs?
 
 Yes, the are both directed graphs because all of the edges are directed. 
 
-When there are two nodes connected by a directed edge, the start of the edge is the **cause** and the end of the edge is the **effect**. So, the story figure \@ref(fig:dags-nodes-and-edges) tells is that `X` causes `Y` and `Y` causes `Z`. 
+When there are two nodes connected by a directed edge, the start of the edge is the **cause** and the end of the edge is the **effect**. So, the story figure \@ref(fig:dags-nodes-and-edges) tells is that `x` causes `y` and `y` causes `z`. 
 
 ```{r dags-nodes-and-edges, echo=FALSE, fig.cap="Basic DAG Structures: Nodes and edges."}
-knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/nodes_and_edges.png")
+knitr::include_graphics("img/13_causal_inference/03_dags/nodes_and_edges.png")
 ```
 
-Relationships between nodes in a DAG are often described in terms of family relationships. The node a the start of a directed edge is called a **parent** of the node the directed edge ends at. Conversely, the node at the end of the directed edge is called a **child** of the node the directed edge started from. In \@ref(fig:dags-descendants), `X` is a parent of `Y` and a grandparent of `Z`. Equivalently, `Y` is a child of `X` , `Z` is a child of `Y`, and `Z` is a grandchild of `X`. 
+Relationships between nodes in a DAG are often described in terms of family relationships. The node a the start of a directed edge is called a **parent** of the node the directed edge ends at. Conversely, the node at the end of the directed edge is called a **child** of the node the directed edge started from. In \@ref(fig:dags-descendants), `x` is a parent of `y` and a grandparent of `z`. Equivalently, `y` is a child of `x` , `z` is a child of `y`, and `z` is a grandchild of `x`. 
 
 <!-- Try to add these labels directly in R at some point. -->
 
 ```{r dags-descendants, echo=FALSE, fig.cap="Basic DAG Structures: Descendants."}
-knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/descendants.png")
+knitr::include_graphics("img/13_causal_inference/03_dags/descendants.png")
 ```
 
-A **directed path** (often simply referred to as a path) is any arrow-based route between two variables on the graph. In \@ref(fig:dags-paths), there is a path from `X` to `Y`, from `Y` to `Z`, and from `X` to `Z` that goes through `Y`. Paths are either open or closed according to D-separation rules, which we will discuss soon.
+A **directed path** (often simply referred to as a path) is any arrow-based route between two variables on the graph. In \@ref(fig:dags-paths), there is a path from `x` to `y`, from `y` to `z`, and from `x` to `z` that goes through `y`. Paths are either open or closed according to D-separation rules, which we will discuss soon.
 
 ```{r dags-paths, echo=FALSE, fig.cap="Basic DAG Structures: Paths."}
 # Create the DAG
@@ -101,7 +101,7 @@ ggdag() +
   theme_dag()
 ```
 
-When there is at least one directed path from a node that leads back to itself, then the graph is said to be **cyclic**. In figure \@ref(fig:dags-paths), there is a path -- from `X` to `Y` to `Z` to `X` -- that begins and ends at `X`. Therefore, the graph in figure \@ref(fig:dags-paths) is cyclic. If there are no cyclic paths in a graph (as is the case in every other graph we've seen in this chapter), then the graph is said to be **acyclic**. When our graphs are directed and acyclic, then they are called **directed acyclic graphs** or **DAG**s. 
+When there is at least one directed path from a node that leads back to itself, then the graph is said to be **cyclic**. In figure \@ref(fig:dags-paths), there is a path -- from `x` to `y` to `z` to `x` -- that begins and ends at `x`. Therefore, the graph in figure \@ref(fig:dags-paths) is cyclic. If there are no cyclic paths in a graph (as is the case in every other graph we've seen in this chapter), then the graph is said to be **acyclic**. When our graphs are directed and acyclic, then they are called **directed acyclic graphs** or **DAG**s. 
 
 ```{r dags-cyclic, echo=FALSE, fig.cap="Basic DAG Structures: A cyclic graph."}
 # Create the DAG
@@ -120,29 +120,29 @@ ggdag() +
   theme_dag()
 ```
 
-**Colliders** exist where two arrowheads “collide” into a node. For example, in \@ref(fig:dags-colliders-01), the arrow from `X` to `Y` and the arrow from `Z` to `Y` "collide" into each other at `Y`.
+**Colliders** exist where two arrowheads “collide” into a node. For example, in \@ref(fig:dags-colliders-01), the arrow from `x` to `y` and the arrow from `z` to `y` "collide" into each other at `y`.
 
 ```{r dags-colliders-01, echo=FALSE, fig.cap="Basic DAG Structures: Colliders."}
-# Create the DAG
-dagify(
+# Create the DAG collider_01
+collider_01 <- dagify(
   y ~ x,
   y ~ z,
   coords = list(
     x = c(x = 1, y = 2, z = 3),
     y = c(x = 0, y = 0, z = 0)
   )
-) |> 
+)
 
-# Plot the dag
-ggdag() +
+# Plot the dag collider_01 and print it to the screen
+ggdag(collider_01) +
   theme_dag()
 ```
 
-Note that colliders are _path specific_. For example, `Y` is a collider on the `X` -> `Y` <- `Z` path in figure \@ref(fig:dags-colliders-02), but it is not a collider on the `X` -> `Y` -> `W` path. 
+Note that colliders are _path specific_. For example, `y` is a collider on the `x` -> `y` <- `z` path in figure \@ref(fig:dags-colliders-02), but it is not a collider on the `x` -> `y` -> `W` path. 
 
 ```{r dags-colliders-02, echo=FALSE, fig.cap="Basic DAG Structures: A slightly more complex collider."}
-# Create the DAG
-dagify(
+# Create the DAG collider_02
+collider_02 <- dagify(
   y ~ x,
   y ~ z,
   w ~ y,
@@ -150,32 +150,34 @@ dagify(
     x = c(x = 1, y = 2, z = 3, w = 2),
     y = c(x = 0, y = 0, z = 0, w = 1)
   )
-) |> 
+)
 
-# Plot the dag
-ggdag() +
+# Plot the dag collider_02 and print it to the screen
+ggdag(collider_02) +
   theme_dag()
 ```
 
-**Common causes** are another important concept when using DAGs. In figure \@ref(fig:dags-common-causes), `Y` is a common cause of `X` and `Z`. We know this because an arrow points from `Y` to `X` and from `Y` to `Z`. 
+**Common causes** are another important concept when using DAGs. In figure \@ref(fig:dags-common-causes), `y` is a common cause of `x` and `z`. We know this because an arrow points from `y` to `x` and from `y` to `z`. 
 
-It’s important to note that _statistical associations_ can follow any path regardless of the direction of the arrows (in the absence of colliders). However, _causal effects_ only follow the direction of the arrows (assuming our assumptions are correct). So, in this case, we expect `X` to be associated with `Z` even though `X` does not cause `Z`. We can also say that `Y` confounds the relationship (or lack of relationship) between `X` and `Z`. **Confounding** is one of the most critical concepts in all of epidemiology, and it has an entire [chapter][Confounding] devoted to it later in the book. 
+It’s important to note that _statistical associations_ can follow any path regardless of the direction of the arrows (in the absence of colliders). However, _causal effects_ only follow the direction of the arrows (assuming our assumptions are correct). So, in this case, we expect `x` to be associated with `z` even though `x` does not cause `z`. We can also say that `y` confounds the relationship (or lack of relationship) between `x` and `z`. **Confounding** is one of the most critical concepts in all of epidemiology, and it has an entire [chapter][Confounding] devoted to it later in the book. 
 
 ```{r dags-common-causes, echo=FALSE, fig.cap="Basic DAG Structures: Common causes."}
-# Create the DAG
-dagify(
+# Create the DAG common_causes
+common_causes <- dagify(
   x ~ y,
   z ~ y,
   coords = list(
     x = c(x = 1, y = 2, z = 3),
     y = c(x = 0, y = 0, z = 0)
   )
-) |> 
+)
 
-# Plot the dag
-ggdag() +
+# Plot the dag common_causes and print it to the screen
+ggdag(common_causes) +
   theme_dag()
 ```
+
+<!-- Add common effects? -->
 
 ## Creating DAGs in R
 
@@ -210,7 +212,7 @@ chain <- dagify(
   )
 )
 
-# Plot the dag
+# Plot the dag called chain and print it to the screen
 ggdag(chain) +
   theme_dag()
 ```
@@ -316,7 +318,7 @@ ggdag(chain) + # Make sure to use a + sign, not a pipe
 
 At this point, we have learned all of the basic functionality we need to know to create our chain DAG. We just need to add one more node and one more edge. 
 
-```{r dags-chain-05}
+```{r dags-chain-06}
 # Create a DAG called chain
 chain <- dagify(
   y ~ x, # The form is effect ~ cause
@@ -347,9 +349,9 @@ ggdag(chain) + # Make sure to use a + sign, not a pipe
 
 The next structure we will learn to create with `ggdag` is the **fork** structure. A fork consists of 3 nodes and two edges, with both edges coming out of the middle node. @Pearl2016-lu We previously saw a fork when we discussed common causes and figure \@ref(fig:dags-common-causes). Here is the code we used to create figure \@ref(fig:dags-common-causes). 
 
-```{r}
-# Create the DAG called common_cause
-common_cause <- dagify(
+```{r dags-forks}
+# Create the DAG called fork
+fork <- dagify(
   x ~ y,
   z ~ y,
   coords = list(
@@ -358,18 +360,18 @@ common_cause <- dagify(
   )
 ) 
 
-# Plot the common_cause dag and print it to the screen
-ggdag(common_cause) +
+# Plot the fork dag and print it to the screen
+ggdag(fork) +
   theme_dag()
 ```
 
 The code above only differs from the chain code in the formulas we passed the `...` argument of the `dagify()` function. This time, the formulas we passed told the `dagify()` function that "x is caused by y" (`x ~ y`) and that "z is caused by y" (`z ~ y`). Everything else remained the same.
 
-## Collider 
+## Colliders
 
 The third structure we will learn to create with `ggdag` is the **collider** structure. A collider consists of 3 nodes and two edges, with both edges directed into the middle node. @Pearl2016-lu We previously saw a collider in \@ref(fig:dags-colliders-01). Here is the code we used to create figure \@ref(fig:dags-colliders-01). 
 
-```{r}
+```{r dags-colliders-03}
 # Create the DAG called collider
 collider <- dagify(
   y ~ x,
@@ -385,91 +387,75 @@ ggdag(collider) +
   theme_dag()
 ```
 
-The code above only differs from the chain code in the formulas we passed the `...` argument of the `dagify()` function. This time, the formulas we passed told the `dagify()` function that "y is caused by x" (`y ~ x`) and that "y is caused by z" (`y ~ z`). Everything else remained the same.
+Once again, the code above only differs from the chain code in the formulas we passed the `...` argument of the `dagify()` function. This time, the formulas we passed told the `dagify()` function that "y is caused by x" (`y ~ x`) and that "y is caused by z" (`y ~ z`). Everything else remained the same.
 
-With only these three structures -- chains, forks, and colliders -- we can create sophisticated DAGs with the potential to help us reason about almost any causal question we may want to ask. However, before we can use our DAGs, we must understand the d-separation rules.
+With only these three structures -- chains, forks, and colliders -- we can create sophisticated DAGs with the potential to help us reason about almost any causal question we may want to ask. However, before we can use our DAGs, we must understand the rules of d-separation.
+
+<!-- Maybe add a section about using code to find parent nodes? -->
 
 ## d-Separation Rules
 
-# 🔴 Left off here...
+<!-- This needs a lot more explanation. Why do these rules exist? What does it mean to block or be open? What does conditioning mean? -->
 
-Now that we understand the basic structures that make up DAGs, we can use the rules of D-separation to estimate average causal effects from DAGs when all assumptions are met. Here they are in their totality. Let’s quickly look at each in isolation.
+Now that we understand the basic structures that make up DAGs, we can use the rules of d-separation to estimate average causal effects from DAGs when all assumptions are met. How do we do that? Well, the DAG will forms a model of the process that generate our study data. Again, a model is just simplified representation of some real-world entity or process. So, if we believe that our DAG is "close enough" to accurately representing how conditions in the real world work together to create our outcome of interest, then our DAG tells us how values for our outcome of interest are determined in the real-world. It also tells us which variables in our analysis to **condition** on to isolate the causal effect of one variable from within the entire system. 
+
+There are many ways we can condition on a variable. We can do so through restriction, matching, stratification (including regression analysis), and through weighting methods. Some of these methods were discussed in previous chapters and some will be discussed in subsequent chapters. Why would we want to condition on a variable in our study design and/or analysis? Typically, we condition on variables to deconfound our estimate(s) of effect. We will discuss [deconfounding][Deconfounding] in greater detail in a subsequent chapter. For now, know that conditioning on a variable that appears in our DAG will often impact how we interpret our DAG and any subsequent analysis based on our DAG. And the rules of d-separation will help us with those interpretations. Here they are in their totality.
 
 1. If there are no variables being conditioned on, a path is blocked if and only if two arrowheads on the path collide at some variable on the path.
+
 2. Any path that contains a non-collider that has been conditioned on is blocked.
+
 3. A collider that has been conditioned on does not block a path. 
+
 4. A collider that has a descendant that has been conditioned on does not block a path.
+
 5. Two variables are D-separated if all paths between them are blocked.
 
+Next, let’s look at each rule in isolation.
+
+<!-- Figure out how to manually declare adjustment variables in ggdag so that I can make the d-separation rule figures directly in R. -->
+
+### Rule 1
+
 ```{r dags-d-separation-01, echo=FALSE}
-knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/d_separation_01.png")
+knitr::include_graphics("img/13_causal_inference/03_dags/d_separation_01.png")
 ```
 
-The first path is open. The second path is closed.
+In the figure above, the first path is open because `y` is not being conditioned on and `y` is not a collider. The second path is closed because `y` is a collider.
+
+### Rule 2
 
 ```{r dags-d-separation-02, echo=FALSE}
-knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/d_separation_02.png")
+knitr::include_graphics("img/13_causal_inference/03_dags/d_separation_02.png")
 ```
 
-The first path is open. The second path is closed.
+In the figure above, the first path is open because `y` is not being conditioned on and `y` is not a collider. The second path is closed because `y` is _not_ a collider and _is_ being conditioned on.
+
+### Rule 3
 
 ```{r dags-d-separation-03, echo=FALSE}
-knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/d_separation_03.png")
+knitr::include_graphics("img/13_causal_inference/03_dags/d_separation_03.png")
 ```
 
-The first path is closed The second path is open.
+In the figure above, the first path is closed because `y` is a collider and it is not being conditioned on. The second path is open because `y` is a collider and _is_ being conditioned on.
+
+### Rule 4
 
 ```{r dags-d-separation-04, echo=FALSE}
-knitr::include_graphics("img/13_causal_inference/01_intro_causal_inference/d_separation_04.png")
+knitr::include_graphics("img/13_causal_inference/03_dags/d_separation_04.png")
 ```
 
-Because we conditioned on W, the path X -> Y <- Z is open.
+In the figure above, the path `x` -> `y` <- `z` is open because `w` is a descendant of a collider and it is being conditioned on.
 
-As the course progresses, we will use the rules of D-separation to better understand, and potentially control for, bias and confounding.
-
-Now, let’s practice a little bit more.
-
-
-## Comparing DAGs and RMSCC
-
-Answers two different questions.
-
-“The sufficient component cause model considers sets of actions, events, or states of nature which together inevitably bring about the outcome under consideration. The model gives an account of the causes of a particular effect. It addresses the question, ‘Given a particular effect, what are the various events which might have been its cause?’” @Hernan2020-uu
-
-“The potential outcomes or counterfactual model focuses on one particular cause or intervention and gives an account of the various effects of that cause. In contrast to the sufficient component cause framework, the potential outcomes framework addresses the question, ‘What would have occurred if a particular factor were intervened upon and thus set to a different level than it in fact was?’ Unlike the sufficient component cause framework, the counterfactual framework does not require a detailed knowledge of the mechanisms by which the factor affects the outcome.’ @Hernan2020-uu
-
-
+As the book progresses, we will use the rules of d-separation to better understand, and potentially control for, bias and confounding.
 
 ## Summary
 
-Dags...
+In this chapter, we learned the basic structures that DAGs are made of. We also learned how to create DAGs with R and `ggdag`. DAGs are a powerful tool for causal inference because they are simultaneously qualitative causal models (encoding our assumptions and beliefs) and statistical models (encoding mathematical information). We’ve all heard that association/correlation does not equal causation, which is true. But, if we are willing to accept the assumptions baked into the qualitative causal model (the graph picture), and follow the rules of d-separation in our study design and/or analysis, then any statistical associations ARE casual effects. The remaining controversy and uncertainty around DAGs comes from the “if you are willing to accept the assumptions” part of that last sentence. The assumptions are not always reasonable and often can’t be directly tested; however, even in the absence of complete certainty, DAGs have shown themselves to be a useful tool in epidemiology over and over. 
+
+<!-- Add some examples of useful real-world DAGS. -->
 
 ```{r dags-clean-up, echo=FALSE}
 # clean up
 rm(list = ls())
 ```
-
-
-
-
-
-# 🔴 Use or delete
-
-<!-- Note from PP: Move this slide (below) to the end after we talk about what DAGs are. -->
-
-The last bullet is key. You’ve all heard that association or correlation does not equal causation, which is true. But, if you are willing to accept the assumptions baked into the qualitative causal model (the graph picture), and you follow the rules of D-separation in your analysis, then any statistical associations ARE casual effects. 
-
-The remaining controversy and uncertainty around DAGs comes for the “if you are willing to accept the assumptions” part of what I just said. The assumptions are not always reasonable and can’t always be tested directly. However, even in the absence of complete certainty, DAGs have shown themselves to be a useful tool in epidemiology over and over. 
-
-- Not magic, just a tool.
-- Works because it encodes mathematical information, given assumptions.
-- Association flows in both directions
-- No distinction between Causal / Preventive (listens to).
-- Made of nodes and edges (arrows).
-- Arrows must go in one direction (i.e., not double-headed).
-- Acyclic – Never get back to where you started if you follow arrows.
-- Arrows indicate causal effects.
-- Deleting arrows indicates a lack of a causal effect.
-- Simultaneously qualitative causal models and statistical models.
-
-<!-- Note from PP: Move this slide (above) to the end after we talk about what DAGs are. -->
