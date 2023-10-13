@@ -22,3 +22,626 @@ Copy and paste:
 ```{r confounding, echo=FALSE}
 # knitr::include_graphics("img/13_causal_inference/04_confounding/figure.png")
 ```
+
+Today we are going to talk about confounding bias in epidemiologic studies. I have bias in parentheses here because there is ongoing debate in the field as to whether or not confounding is a type of bias or something that should be considered different than bias. For our purposes, I don’t think it matters much. No matter what we call it, we need to understand it and deal with it.
+
+So, we previously discussed the central role that measurement, typically in the form of data, and data analysis, play in epidemiology. We said that the end result of our measurement and analysis activities typically result in descriptions, predictions, and/or explanations of health-related phenomena. 
+
+We also talked about our measures of interest being the result of a combination of the true value and some amount of error in our measurement of that true value.
+
+Then, we talked about breaking down the error in our measurements into two main categories: random error and systematic error.
+
+Then, we talked about breaking down the systematic errors in our measurement into three sources (acknowledging that there may be some overlap). They were: 
+Systematic differences between the population of people we are interested in and the sample of people we are getting measurements from 
+Systematic errors in the way we are taking measurements or collecting data
+Systematic errors in our estimate of of causal effects due to non-causal (also called spurious) associations. 
+
+Last week, we discussed the first two sources of bias. This week, we will discuss the third source of bias – confounding bias, or simply, confounding.
+
+** Socrative 1
+
+Before discussing more formal definitions of confounding, let’s make sure that we have an intuitive understanding about what confounding is. One classic example used to help people understand confounding is about the relationship between ice cream sales and violent crime. 
+
+Remember that one of our definitions for association was, “knowing something about X tells you something about Y, or helps you better predict Y.”
+
+Well, if we go collect a bunch of data on ice cream sales and murder, we will find an association. As ice cream sales increase so do murders, on average.
+
+Data: 
+Ice cream sales (pints per capita)
+Murders (number)
+Unadjusted correlation – As ice cream sales increase so do murders, on average.
+
+What are we to make of this? Is there a real relationship between ice cream sales and murder? 
+
+Yes. If we know what yesterday’s ice cream sales were, we can really make a better prediction about the number of murders that occurred yesterday, on average.
+
+And the rest of the example goes like this. As the temperature outside rises, people eat more ice cream and murders occur more frequently.
+
+Given this new information, do we still feel as though there a real relationship between ice cream sales and murder? 
+
+Yes. If we know what yesterday’s ice cream sales were, we can really make a better prediction about the number of murders that occurred yesterday, on average.
+
+But, is that real relationship causal? No.
+
+Remember one of our definitions of causality. Had X (in this case, ice cream sales) been different and everything else been the same.
+
+Said another way, murders don’t occur more frequently because of ice cream sales. If we increased the price of ice cream to lower sales, would we expect the occurrence of murder to also decline? Most people would say no, of course not.
+
+But, is there anything in our data that can answer that question for us? No. We just all ”know” this somehow. In the world of causal inference, this is known as “expert” knowledge.
+
+As the temperature outside rises:
+- People eat more ice cream – perhaps to cool off.
+- Murders are more likely to occur – perhaps because of increases in drug and alcohol use, increases in social mixing, increased irritability due to heat.
+
+Causation: Had X (ice cream sales) been different and everything else been the same.
+- If we increased the price of ice cream to lower sales, would we expect the occurrence of murder to also decline?
+
+<!-- Here down is from the lab warm-up -->
+
+## Ice cream and murder rate simulation
+
+```{r confounding-load-packages}
+# Load the packages we will need below
+library(dplyr, warn.conflicts = FALSE) # The "warn.conflicts" part is optional
+library(ggdag, warn.conflicts = FALSE)
+library(ggplot2)
+library(broom)
+library(freqtables)
+library(meantables)
+```
+
+We just discussed a classic example of confounding -- ice cream sales and murder. Let's take a look at some simulated data designed to recreate this scenario. 
+
+First, we will create temperature. We will make it normally distributed with a mean of 50 and a standard deviation of 12.
+
+```{r confounding-temp-data}
+# Random number seed so that we can reproduce our results
+set.seed(123)
+
+# Sample size
+n <- 10000
+
+# Create z - temperature
+df_ice_cream <- tibble(temperature = rnorm(n, 50, 12))
+```
+
+And here is what our temperature data looks like in a histogram.
+
+```{r confounding-temp-hist}
+hist(df_ice_cream$temperature)
+```
+
+Now, let's create ice cream sales. In the code below, the values of ice_cream are only determined by our random number generator and the value of temperature. They are totally oblivious to the values of murder. In fact, the murder variable doesn't even exist yet.
+
+```{r confounding-ice-cream-sales-data}
+# Set the random number seed so that we can reproduce our results
+set.seed(234)
+
+# Set the standard deviation to 100
+sd <- 100
+
+# Create a data frame with ice cream sales that are associated with
+# temperature
+df_ice_cream <- df_ice_cream %>% 
+  mutate(
+    ice_cream = case_when(
+      temperature < 20 ~ rnorm(n, 100, sd),
+      temperature < 40 ~ rnorm(n, 300, sd),
+      temperature < 60 ~ rnorm(n, 500, sd),
+      temperature < 80 ~ rnorm(n, 800, sd),
+      temperature < 100 ~ rnorm(n, 1000, sd),
+      temperature > 100 ~ rnorm(n, 1200, sd),
+    )
+  )
+```
+
+And here is what our ice cream sales data looks like in a histogram.
+
+```{r confounding-ice-cream-sales-hist}
+hist(df_ice_cream$ice_cream)
+```
+
+Finally, let's create the murder variable. In the code below, the values of murder are only determined by our random number generator and the value of temperature. They are totally oblivious to the values of ice cream sales.
+
+```{r confounding-murder-data}
+# Set the random number seed so that we can reproduce our results
+set.seed(456)
+
+# Set the standard deviation to 100
+sd <- 5
+
+# Create a data frame with murder rates that are associated with
+# temperature
+df_ice_cream <- df_ice_cream %>% 
+  mutate(
+    murder = case_when(
+      temperature < 20 ~ rnorm(n, 20, sd),
+      temperature < 40 ~ rnorm(n, 30, sd),
+      temperature < 60 ~ rnorm(n, 40, sd),
+      temperature < 80 ~ rnorm(n, 50, sd),
+      temperature < 100 ~ rnorm(n, 60, sd),
+      temperature > 100 ~ rnorm(n, 70, sd),
+    )
+  )
+
+# Change negative murder rates to 0
+df_ice_cream <- mutate(df_ice_cream, murder = if_else(murder < 0, 0, murder))
+```
+
+And here is what our murder data looks like in a histogram.
+
+```{r confounding-murder-hist}
+hist(df_ice_cream$murder)
+```
+
+We know that there is no causal relationship between ice_cream and murder because we created them both. 
+
+* The value of ice_cream is only determined by temperature, not by murders.
+
+* The value of murder is only determined by temperature, not by ice cream sales.
+
+Therefore, we might naively expect there to be *NO* correlation between ice cream sales and murder.
+
+```{r confounding-plot-ice-cream-and-murder}
+ggplot(df_ice_cream, aes(ice_cream, murder)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE) + 
+  theme_classic()
+```
+
+However, there is an obvious correlation between in the data when we view it as a scatter plot. As ice cream sales rise, so do the number of murders, on average.
+
+```{r confounding-ice-cream-and-murder-cor-test}
+cor.test(df_ice_cream$ice_cream, df_ice_cream$murder)
+```
+
+Further, our Pearson's correlation coefficient (0.67) indicates that ice cream sales and murder are highly positively correlated in our population.
+
+Again, the association between ice cream sales and murder is a real, valid association. It just doesn't represent a causal effect. Rather, it's purely due to the fact that ice cream sales and murder share a common cause -- temperature.
+
+<!-- Here up is from the lab warm-up -->
+
+And, we can represent that expert knowledge graphically with a DAG. 
+
+```{r confounding-ice-cream-and-murder-dag-01, echo=FALSE, fig.cap="Two ice cream and murder DAGs."}
+# Create a DAG called ic_cause_murder_dag
+ic_cause_murder_dag <- dagify(
+  m ~ ic, # The form is effect ~ cause
+  m ~ t,
+  ic ~ t,
+  # Optionally add labels to make the DAG easier to read
+  labels = c(
+    "ic" = "Ice Cream",
+    "t" = "Temperature",
+    "m" = "Murder"
+  ),
+  # Optionally add coordinates to control the placement of the nodes on the DAG
+  coords = list( 
+    x = c(ic = 1, t = 2, m = 3),
+    y = c(ic = 0, t = 1, m = 0)
+  )
+)
+
+# Set seed to reproduce label locations
+set.seed(4)
+
+# Plot the dag called ic_cause_murder_dag and print it to the screen
+ggdag(ic_cause_murder_dag, text = FALSE, use_labels = "label") +
+  theme_dag()
+```
+
+```{r confounding-ice-cream-and-murder-dag-02, echo=FALSE, fig.cap="Two ice cream and murder DAGs."}
+# Create a DAG called ic_no_cause_murder_dag
+ic_no_cause_murder_dag <- dagify(
+  m ~ t, # The form is effect ~ cause
+  ic ~ t,
+  # Optionally add labels to make the DAG easier to read
+  labels = c(
+    "ic" = "Ice Cream",
+    "t" = "Temperature",
+    "m" = "Murder"
+  ),
+  # Optionally add coordinates to control the placement of the nodes on the DAG
+  coords = list( 
+    x = c(ic = 1, t = 2, m = 3),
+    y = c(ic = 0, t = 1, m = 0)
+  )
+)
+
+# Set seed to reproduce label locations
+set.seed(4)
+
+# Plot the dag called ic_no_cause_murder_dag and print it to the screen
+ggdag(ic_no_cause_murder_dag, text = FALSE, use_labels = "label") +
+  theme_dag()
+```
+
+In this case, does the DAG on the left or the DAG on the right better represent our assumptions from the previous slide?
+
+The DAG on the right. According to the DAG on the right, ice cream sales do not have a direct causal effect on murder. However, we expect there to be a statistical association between ice cream sales and murder that is due to a common cause of ice cream sales and murder – temperature. Said another way, there is confounding of the null effect of ice cream sales on murder.
+
+At an intuitive level, one of these three explanations of confounding may be helpful to you.
+
+Mixing of effects
+- Our estimate of the causal effect of ice cream sales on murder was the result of mixing together the effect of temperature and the (null) effect of ice cream sales. 
+
+Giving credit to the wrong variable
+- Saying that our estimate was caused by one variable when, in reality, it was fully or partially caused by another variable. Temperature causes murders to increase, but we gave all the “credit” to ice cream sales.
+
+Influence of another variable
+- The influence of a third variable distorts an association between exposure and outcome. The true association between ice cream sales and murder is null, but the influence of temperature distorts that association.
+
+Confounding and causal questions
+
+Description: Murders per day.
+Is that descriptive measure confounded (biased)?
+
+Prediction: Correlation between ice cream sales and murder.
+Is that predictive measure confounded (biased)?
+
+Explanation: Buying ice cream causes people to murder each other.
+Is that explanation confounded (biased)?
+
+Earlier I mentioned that there is ongoing discussion in the field about whether or not confounding should be considered a type of bias or something different than bias. I’m not going to attempt to settle that here, but I think it is worth explicitly calling out the fact that confounding is a least special among the biases. Let’s walk through this simple thought experiment.
+
+Assuming no other bias, and a large enough sample size to make random error ignorable:
+
+1. If we estimate the number of murders per day, do we expect to get a confounded (biased) estimate of murders per day? No.
+2. If we estimate the correlation between ice cream sales and murder and use it to predict future murder rates, do we expect the correlation coefficient to be a confounded (biased) estimate of the association between ice cream sales and murder? No.
+3. If we estimate the correlation between ice cream sales and murder and use it to explain why murder rates increase, do we expect the correlation coefficient to be a confounded (biased) estimate of the causal effect of ice cream sales on murder? Yes.
+
+So, confounding has a special place among the biases, and I think this is because it’s the only bias that requires a causal question to have meaning. What I mean by that is that selection bias or poorly calibrated measurement tools can still create a difference between the truth and your results no matter what the goal of your study is – description, prediction, or causation. For example, estimating murders per day by sampling only affluent suburban neighborhoods would likely lead to a biased descriptive measure of murders anywhere other than affluent suburban neighborhoods. 
+
+However, as we saw above, confounding bias requires a causal question to have any real meaning. The mathematical relationship between ice cream sales and violent crime is no more or less interesting than the mathematical relationship, 2 + 2 = 4, in the absence of causal question about the relationship between ice cream sales at violent crime. It’s just a mathematical relationship. As the numbers in column A increase, the numbers in column B tend to also tend to increase. As the numbers in column A decrease, the numbers in column B tend to also decrease, and we can summarize that tendency using a mathematical equation known as a correlation coefficient, for example. 
+
+Now that we have an intuitive understanding about what confounding is, what impacts do we expect it to have?
+
+Positive (Away from the null)
+- Confounder produces observed (unadjusted) estimate of the association between exposure and outcome that is an overestimate of the true (adjusted) association.
+
+For example…
+
+```{r confounding-bias-away, echo=FALSE, fig.cap="Bias away from the null (Positive)."}
+# Notes from slides:
+# We might want to show this with data, but maybe move it to the end? Like, help them understand what confounding is, how to calculate an adjusted (unconfounded) estimate, and then show them bias towards and away from the null.
+# I think I have a paper where confounding actually biases away from the null.
+# Do I care about the terms positive and negative? They may be established, but I don’t find them helpful. Towards and away are a lot more clear in my opinion.
+knitr::include_graphics("img/13_causal_inference/04_confounding/bias_away.png")
+```
+
+Confounding may also result in estimates that are biased toward the null.
+
+Negative Confounding (Toward the null)
+- Confounder produces observed (unadjusted) estimate of the association between exposure and outcome that is an underestimate of true (adjusted) association.
+
+```{r confounding-bias-toward, echo=FALSE, fig.cap="Bias toward the null (Negative)."}
+# Notes from slides:
+# We might want to show this with data, but maybe move it to the end? Like, help them understand what confounding is, how to calculate an adjusted (unconfounded) estimate, and then show them bias towards and away from the null.
+# I think I have a paper where confounding actually biases away from the null.
+# Do I care about the terms positive and negative? They may be established, but I don’t find them helpful. Towards and away are a lot more clear in my opinion.
+knitr::include_graphics("img/13_causal_inference/04_confounding/bias_toward.png")
+```
+
+## How do we detect confounding
+
+At this point, we (hopefully) have an intuitive understanding of what confounding is and how it can affect our conclusions. But, how do we know when it exists in our causal effect estimates?
+
+Over the years, methodologist have created different criteria that are intended to tell us if confounding is present. The three we are going to talk about are:
+
+These were also discussed in the Hernan videos, and I think he does a really good job. So, I highly recommend watching those videos if you haven’t already.
+
+1. Change in estimate criteria
+
+2. Traditional criteria
+
+3. Structural criteria
+
+### Change in estimate criteria
+
+- Calculate an effect measure (OR, RR, etc.) without adjusting for the potential confounder.
+- Calculate an effect measure (OR, RR, etc.) with adjustment for the potential confounder.
+- If the the difference between those two measures is greater than or equal to some threshold (usually 10%) then the variable is a confounder.
+
+Borrowing from the Hernan videos…
+
+We expect an association between X and Y even though there is no causal effect of X on Y. If we condition on Z, we expect the association to disappear. This change in the association could easily be 10% or greater. For example OR = 1.2 to OR = 1.0.
+
+In this case, both methods lead us to the same conclusion.
+
+```{r confounding-change-in-estimate-dag-01, echo=FALSE, fig.cap="Do yellow fingers cause lung cancer?"}
+# Set seed to reproduce label locations
+set.seed(1)
+
+# Create a DAG called change_in_estiate_dag_01
+change_in_estiate_dag_01 <- dagify(
+  yf ~ s, # The form is effect ~ cause
+  lc ~ s,
+  # Optionally add labels to make the DAG easier to read
+  labels = c(
+    "yf" = "Yellow Fingers",
+    "s" = "Smoking",
+    "lc" = "Lung Cancer"
+  ),
+  # Optionally add coordinates to control the placement of the nodes on the DAG
+  coords = list( 
+    x = c(yf = 1, s = 2, lc = 3),
+    y = c(yf = 0, s = 1, lc = 0)
+  )
+)
+
+# Plot the dag called change_in_estiate_dag_01
+ggdag(change_in_estiate_dag_01, text = FALSE, use_labels = "label") +
+  theme_dag() +
+  ggplot2::labs(caption = "Source: Causal Diagrams: Draw Your Assumptions Before Your Conclusions (Hernán, 2017)")
+```
+
+What about this case, though?
+
+By D-separation, there is no association between X and Z. The null association is an unbiased estimate of the causal effect of Z on X. There is no confounding and therefore, no confounders. However, if we adjust for Y, then the association measure changes. This change in the association could easily be 10% or greater.
+
+The change in estimate criteria would incorrectly lead us to conclude that Y is a confounder. If we use this method, we will label variables as confounders that do not actually help reduce confounding, and possibly even introduce selection bias.
+
+Therefore, we can say that the change in estimate criteria is not sufficient to eliminate confounding. 
+
+** Socrative 2.
+
+```{r confounding-change-in-estimate-dag-02, echo=FALSE, fig.cap="Does environmental factor cause and lung cancer?"}
+# Create a DAG called change_in_estiate_dag_02
+change_in_estiate_dag_02 <- dagify(
+  lc ~ ef, # The form is effect ~ cause
+  lc ~ gf,
+  # Optionally add labels to make the DAG easier to read
+  labels = c(
+    "ef" = "Environmental Factor",
+    "gf" = "Genetic Factor",
+    "lc" = "Lung Cancer"
+  ),
+  # Optionally add coordinates to control the placement of the nodes on the DAG
+  coords = list( 
+    x = c(ef = 1, gf = 2, lc = 3),
+    y = c(ef = 0, gf = 1, lc = 0)
+  )
+)
+
+# Set seed to reproduce label locations
+set.seed(1)
+
+# Plot the dag called change_in_estiate_dag_02
+ggdag(change_in_estiate_dag_02, text = FALSE, use_labels = "label") +
+  theme_dag() +
+  ggplot2::labs(caption = "Source: Causal Diagrams: Draw Your Assumptions Before Your Conclusions (Hernán, 2017)")
+```
+
+### Traditional criteria
+
+When I was in grad school, I was taught some version of these traditional criteria. There are multiple versions of these criteria. They are all pretty similar. We are going to look at the versions from Szklo and Nieto and the version from Hernan.
+
+Here is the way Szklo and Nieto define those criteria. One issue with Szklo and Nieto version is that it tells us to incorporate information about causal relationships into the criteria for decision making, but gives us no guidance on how to do that. 
+
+Therefore, I think comparing Hernan’s version of traditional criteria for confounding with structural criteria for confounding is more useful.
+
+Szklo, M., & Nieto, F. J. (2019), 5.2.1
+1. The confounding variable is causally associated with the outcome.
+2. The confounding variable is noncausally or causally associated with the exposure.
+3. The confounding variable is not in the causal pathway between exposure and outcome.
+
+Hernan (2017)
+L is a confounder of A and Y if:
+1. L is associated with A.
+2. L is associated with Y conditional on A (within levels of A). <!-- The “within levels of A” part is always a little confusing. Find a way to make that more clear/intuitive. -->
+3. L is not on a causal pathway from A to Y.
+
+<!-- Add the Book of Why? -->
+
+```{r confounding-traditional-criteria-dag-01, echo=FALSE, fig.cap="Is heart disease a confounder?"}
+# Create a DAG called traditional_criteria_dag_01
+traditional_criteria_dag_01 <- dagify(
+  s ~ a, # The form is effect ~ cause
+  a ~ hd,
+  s ~ hd,
+  # Optionally add labels to make the DAG easier to read
+  labels = c(
+    "s" = "Stroke",
+    "a" = "Aspirin",
+    "hd" = "Heart Disease"
+  ),
+  # Optionally add coordinates to control the placement of the nodes on the DAG
+  coords = list( 
+    x = c(a = 1, hd = 2, s = 3),
+    y = c(a = 0, hd = 1, s = 0)
+  )
+)
+
+# Set seed to reproduce label locations
+set.seed(1)
+
+# Plot the dag called traditional_criteria_dag_01
+ggdag(traditional_criteria_dag_01, text = FALSE, use_labels = "label") +
+  theme_dag() +
+  ggplot2::labs(caption = "Source: Causal Diagrams: Draw Your Assumptions Before Your Conclusions (Hernán, 2017)")
+```
+
+<!-- Create an example with simulated data? -->
+
+Is Z associate with X? Yes.
+Is Z associated with Y conditional on X? Yes.
+Is Z in the causal pathway from X to Y? No.
+
+In this case, both methods lead us to the same conclusion. And, as Hernan explains in the videos, we can find lots of examples where the traditional criteria and structural criteria lead us to the same conclusion, but not always…
+
+```{r confounding-traditional-criteria-dag-02, echo=FALSE, fig.cap="Is positive pap test a confounder?"}
+# Create a DAG called traditional_criteria_dag_02
+traditional_criteria_dag_02 <- dagify(
+  cc ~ pa, # The form is effect ~ cause
+  pa ~ u1,
+  pp ~ u1,
+  pp ~ u2,
+  cc ~ u2,
+  # Optionally add coordinates to control the placement of the nodes on the DAG
+  coords = list( 
+    x = c(pa = 1, u1 = 1, pp = 2, u2 = 3, cc = 3),
+    y = c(pa = 0, u1 = 2, pp = 1, u2 = 2, cc = 0)
+  )
+)
+
+# Set seed to reproduce label locations
+set.seed(4)
+
+# Plot the dag called traditional_criteria_dag_02
+ggdag(traditional_criteria_dag_02, text = FALSE) +
+  # Manually add labels so that they don't cover up the arrows
+  expand_limits(y = 2.2) +
+  geom_label(label = "Physical Activity", x = 1.25, y = 0.15) +
+  geom_label(label = "Cervical Cancer", x = 2.75, y = 0.15) +
+  geom_label(label = "Health Conscious \n Personality", x = 1.25, y = 2.25) +
+  geom_label(label = "Positive PAP \n Test", x = 2, y = 1.35) +
+  geom_label(label = "pre-cancerous \n Lesion", x = 2.75, y = 2.25) +
+  # Comment out theme_dag() to adjust label positions
+  theme_dag() +
+  ggplot2::labs(caption = "Source: Causal Diagrams: Draw Your Assumptions Before Your Conclusions (Hernán, 2017)")
+```
+
+Is Z associate with X? Yes.
+Is Z associated with Y conditional on X? Yes.
+Is Z in the causal pathway from X to Y? No.
+
+So, traditional criteria tell us that Z is a confounder, but what do the rules of D-separation tell us?
+
+The traditional criteria would incorrectly lead us to conclude that Z is a confounder. If we use this method, we will label variables as confounders that do not actually help reduce confounding, and possibly even introduce bias.
+
+** Socrative 3.
+
+Therefore, we can say that the traditional criteria is not sufficient to eliminate confounding. 
+
+So, what are we left with.
+
+** Socrative 4.
+
+### Structural criteria
+
+Current epidemiologic theory tells us that the use of DAGs and structural criteria are the best method currently available to us for identifying and eliminating (where possible) confounding in observational studies.
+
+Let’s walk through this slowly with a little bit of review.
+
+Path: Any arrow-based route between two variables on the graph. Some paths follow the direction of the arrows and some do not.
+
+Some paths follow the direction of the arrows and some do not.
+
+Backdoor path: A backdoor path between X and Y is a path that connects X and Y without using any of the arrows that leave from X.
+
+```{r confounding-structural-criteria-dag-01, echo=FALSE, fig.cap="Backdoor paths."}
+# Create a DAG called structural_criteria_dag_01
+structural_criteria_dag_01 <- dagify(
+  y ~ x, # The form is effect ~ cause
+  y ~ z,
+  x ~ z,
+  # Optionally add coordinates to control the placement of the nodes on the DAG
+  coords = list( 
+    x = c(x = 1, z = 2, y = 3),
+    y = c(x = 0, z = 1, y = 0)
+  )
+)
+
+# Plot the dag called structural_criteria_dag_01
+p <- ggdag(structural_criteria_dag_01)
+
+# Create red lines to indicate the backdoor path using geom_segment
+# Get the current line coordinates
+# tidy_dagitty(structural_criteria_dag_01)
+
+# Add new line segments over the top of the existing edges
+adjust <- 0.067 # Find adjustment factor through trial and error
+p + 
+  # geom_segment(aes(x = 2, xend = 1, y = 1, yend = 0, color = "red"))
+  geom_segment(
+    aes(x = (2 - adjust), xend = (1 + adjust), y = (1 - adjust), yend = (0 + adjust), color = "red"),
+    arrow = arrow(length = unit(0.2,"cm"), type = "closed")
+  ) +
+  # geom_segment(aes(x = 2, xend = 3, y = 1, yend = 0, color = "red"))
+  geom_segment(
+    aes(x = (2 + adjust), xend = (3 - adjust), y = (1 - adjust), yend = (0 + adjust), color = "red"),
+    arrow = arrow(length = unit(0.2,"cm"), type = "closed")
+  ) +
+  theme_dag() +
+  theme(legend.position = "none")
+```
+
+Note: This is NOT the only possible type of backdoor path. See the rules of D-separation.
+
+** Socrative 6.
+
+**Backdoor path criterion**: We can identify the causal effect of X on Y if we have sufficient data to block all backdoor paths between X and Y.
+
+Emphasis on confounding rather than confounder.
+
+Confounding is a verb, not a noun.
+
+We may call Jill a runner, but that doesn’t imply that she runs 24/7. It just implies that she runs in certain contexts that we deem relevant at the time we call her a runner. In a similar way, SES is not a “confounder.” However, SES may confound causal relationships in certain contexts that we deem relevant when discussing a given topic. <!-- I’m not sure if I love the Runner analogy. I might be able to do better. -->
+
+<!-- Figure out how to make Z look adjusted on this plot. -->
+
+```{r confounding-structural-criteria-dag-01, echo=FALSE, fig.cap="Blocking ackdoor paths."}
+# Create a DAG called structural_criteria_dag_01
+structural_criteria_dag_01 <- dagify(
+  y ~ x, # The form is effect ~ cause
+  y ~ z,
+  x ~ z,
+  # Optionally add coordinates to control the placement of the nodes on the DAG
+  coords = list( 
+    x = c(x = 1, z = 2, y = 3),
+    y = c(x = 0, z = 1, y = 0)
+  )
+)
+
+# Plot the dag called structural_criteria_dag_01
+p <- ggdag(structural_criteria_dag_01)
+
+# Create red lines to indicate the backdoor path using geom_segment
+# Get the current line coordinates
+# tidy_dagitty(structural_criteria_dag_01)
+
+# Add new line segments over the top of the existing edges
+adjust <- 0.067 # Find adjustment factor through trial and error
+p + 
+  # geom_segment(aes(x = 2, xend = 1, y = 1, yend = 0, color = "red"))
+  geom_segment(
+    aes(x = (2 - adjust), xend = (1 + adjust), y = (1 - adjust), yend = (0 + adjust), color = "red"),
+    arrow = arrow(length = unit(0.2,"cm"), type = "closed")
+  ) +
+  # geom_segment(aes(x = 2, xend = 3, y = 1, yend = 0, color = "red"))
+  geom_segment(
+    aes(x = (2 + adjust), xend = (3 - adjust), y = (1 - adjust), yend = (0 + adjust), color = "red"),
+    arrow = arrow(length = unit(0.2,"cm"), type = "closed")
+  ) +
+  theme_dag() +
+  theme(legend.position = "none")
+```
+
+## Confounding
+
+And there are really three equivalent ways we can ask about confounding.
+
+1. Is there confounding for the effect of X on Y?
+
+2. Are there any common causes of X on Y?
+
+3. Are there any open backdoor paths between X and Y?
+
+We can use DAGs, along with the **d-separation rules**, to answer those questions.
+
+<!-- Add link to the d-separation rules in the DAGs chapter. -->
+
+
+
+
+
+
+
+## Summary
+
+In this chapter... next we will learn about what to do about confounding.
+
+```{r confounding-clean-up, echo=FALSE}
+# clean up
+rm(list = ls())
+```
