@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>34 Writing Functions | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="34 Writing Functions | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-10-19" />
+<meta name="date" content="2024-05-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,14 +56,15 @@
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
 <script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RREBTQ0D9"></script>
 <script>
@@ -87,7 +88,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -150,6 +151,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -1141,14 +1146,14 @@ Copy and paste:
 <h3><span class="header-section-number">34.2.1</span> The function() function<a href="writing-functions.html#the-function-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>It all starts with the <code>function()</code> function. This is how you tell R that you are about to write your own function.</p>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-749"></span>
-<img src="img/07_part_repeated_operations/02_functions/function.png" alt="The function() function." width="900" />
+<img src="img/07_part_repeated_operations/02_functions/function.png" alt="The function() function."  />
 <p class="caption">
 Figure 34.1: The function() function.
 </p>
 </div>
 <p>If you think back to the chapter on <a href="speaking-rs-language.html#functions">Speaking R’s language</a>, we talked about the analogy that is sometimes drawn between functions and factories.</p>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-750"></span>
-<img src="img/01_part_getting_started/04_speaking_r/factory1.png" alt="A factory making bicycles." width="900" />
+<img src="img/01_part_getting_started/04_speaking_r/factory1.png" alt="A factory making bicycles."  />
 <p class="caption">
 Figure 34.2: A factory making bicycles.
 </p>
@@ -1160,21 +1165,21 @@ Figure 34.2: A factory making bicycles.
 ##    ^</code></pre>
 <p>In order to build our bicycles, we need to add some workers and equipment to our empty factory building. The R function equivalent to the workers and equipment is the <strong>function body.</strong></p>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-752"></span>
-<img src="img/07_part_repeated_operations/02_functions/body.png" alt="The function body." width="900" />
+<img src="img/07_part_repeated_operations/02_functions/body.png" alt="The function body."  />
 <p class="caption">
 Figure 34.3: The function body.
 </p>
 </div>
 <p>And just like the factory needs doors to contain our workers and equipment and keep them safe (I’m admittedly reaching a little on this one, but just go with it), our function body needs to be wrapped with curly braces.</p>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-753"></span>
-<img src="img/07_part_repeated_operations/02_functions/braces.png" alt="Curly braces around the function body." width="900" />
+<img src="img/07_part_repeated_operations/02_functions/braces.png" alt="Curly braces around the function body."  />
 <p class="caption">
 Figure 34.4: Curly braces around the function body.
 </p>
 </div>
 <p>We already talked about how the values we pass to <strong>arguments</strong> are raw material inputs that go into the factory.</p>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-754"></span>
-<img src="img/07_part_repeated_operations/02_functions/arguments.png" alt="The function argument(s)." width="900" />
+<img src="img/07_part_repeated_operations/02_functions/arguments.png" alt="The function argument(s)."  />
 <p class="caption">
 Figure 34.5: The function argument(s).
 </p>
@@ -1182,7 +1187,7 @@ Figure 34.5: The function argument(s).
 <p>In the bicycle factory example, the raw materials were steel and rubber. In the function displayed above, the raw materials are variables.</p>
 <p>If we want to be able to call our function (i.e., use it) later, then we have to have some way to refer to it. Therefore, we will assign our function a name.</p>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-755"></span>
-<img src="img/07_part_repeated_operations/02_functions/name.png" alt="The named function." width="900" />
+<img src="img/07_part_repeated_operations/02_functions/name.png" alt="The named function."  />
 <p class="caption">
 Figure 34.6: The named function.
 </p>
@@ -1403,7 +1408,7 @@ Figure 34.6: The named function.
 <span id="cb1080-3"><a href="writing-functions.html#cb1080-3" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(result), <span class="cn">FALSE</span>, result)</span>
 <span id="cb1080-4"><a href="writing-functions.html#cb1080-4" tabindex="-1"></a>  result</span>
 <span id="cb1080-5"><a href="writing-functions.html#cb1080-5" tabindex="-1"></a>}</span></code></pre></div>
-<pre><code>## Error: repeated formal argument &#39;first_name&#39; on line 1</code></pre>
+<pre><code>## Error: repeated formal argument &#39;first_name&#39; (&lt;text&gt;:1:34)</code></pre>
 <p>Uh, oh! We got an error. This error is telling us that each function argument must have a unique name. Let’s try again:</p>
 <div class="sourceCode" id="cb1082"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1082-1"><a href="writing-functions.html#cb1082-1" tabindex="-1"></a>is_match <span class="ot">&lt;-</span> <span class="cf">function</span>(first_name_1, first_name_2) {</span>
 <span id="cb1082-2"><a href="writing-functions.html#cb1082-2" tabindex="-1"></a>  result <span class="ot">&lt;-</span> first_name_1 <span class="sc">==</span> first_name_2</span>
@@ -1893,7 +1898,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

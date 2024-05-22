@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>30 Conditional Operations | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="30 Conditional Operations | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-10-19" />
+<meta name="date" content="2024-05-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,14 +56,15 @@
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
 <script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RREBTQ0D9"></script>
 <script>
@@ -87,7 +88,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -150,6 +151,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -981,12 +986,12 @@ div.csl-indent {
 - Missing data - see script.
 -->
 <p>There will often be times that we want to modify the values in one column of our data based on the values in one or more other columns in our data. For example, maybe we want to create a column that contains the region of the country someone is from, based on another column that contains the state they are from.</p>
-<p><img src="img/05_part_data_management/06_conditional_processing/values.png" width="900" /></p>
+<p><img src="img/05_part_data_management/06_conditional_processing/values.png" /><!-- --></p>
 <p>We don’t really have a way to do this with the tools we currently have in our toolbox. We can manually type out all the region values, but that isn’t very scalable. Wouldn’t it be nice if we could just give R some rules, or conditions (e.g., TX is in the South, CA is in the West), and have R fill in the region values for us? Well, that’s exactly what we are going to learn how to do in this chapter.</p>
-<p><img src="img/05_part_data_management/06_conditional_processing/conditions.png" width="900" /></p>
+<p><img src="img/05_part_data_management/06_conditional_processing/conditions.png" /><!-- --></p>
 <p>These kinds of operations are called conditional operations because we type in a set of conditions, R evaluates those conditions, and then executes a different process or procedure based on whether or not the condition is met.</p>
 <p>As a silly example, let’s say that we want our daughters to wear a raincoat if it’s raining outside, but we don’t want them to wear a raincoat if it is not raining outside. So, we give them a conditional request: “If it’s raining outside, then make sure to wear your raincoat, please. Otherwise, please don’t wear your raincoat.”</p>
-<p><img src="img/05_part_data_management/06_conditional_processing/rain.png" width="900" /></p>
+<p><img src="img/05_part_data_management/06_conditional_processing/rain.png" /><!-- --></p>
 <p>In this hypothetical scenario, they say, “yes, dad,” and then go to the window to see if it’s raining. Then, they choose their next action (i.e., raincoat wearing) depending on whether the condition (raining) is met or not.</p>
 <p>Just like we have to ask our daughters to put on a raincoat using conditional logic, we sometimes have to ask R to execute commands using conditional logic. Additionally, we have to do so in a way that R understands. For example, we can use <code>dplyr</code>’s <code>if_else()</code> function to ask R to execute commands conditionally. Let’s go ahead and take a look at an example now:</p>
 <div class="sourceCode" id="cb776"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb776-1"><a href="conditional-operations.html#cb776-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
@@ -1086,12 +1091,12 @@ div.csl-indent {
 <div id="operands-and-operators" class="section level2 hasAnchor" number="30.1">
 <h2><span class="header-section-number">30.1</span> Operands and operators<a href="conditional-operations.html#operands-and-operators" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Let’s start by taking a look at some commonly used operands:</p>
-<p><img src="img/05_part_data_management/06_conditional_processing/operands.png" width="900" /></p>
+<p><img src="img/05_part_data_management/06_conditional_processing/operands.png" /><!-- --></p>
 <p>As we can see in the table above, operands are the <em>values</em> we want to check, or test. Operands can be variables or they can be individual values (also called constants). The example above (<code>weather == "rain"</code>) contained two operands; the variable <code>weather</code> and the character constant <code>"rain"</code>. The operator we used in this case was the equality operator (<code>==</code>). Next, let’s take a look at some other commonly used operators.</p>
-<p><img src="img/05_part_data_management/06_conditional_processing/comparison-numeric.png" width="900" /></p>
-<p><img src="img/05_part_data_management/06_conditional_processing/comparison-character.png" width="900" /></p>
-<p><img src="img/05_part_data_management/06_conditional_processing/arithmetic.png" width="900" /></p>
-<p><img src="img/05_part_data_management/06_conditional_processing/logical.png" width="900" /></p>
+<p><img src="img/05_part_data_management/06_conditional_processing/comparison-numeric.png" /><!-- --></p>
+<p><img src="img/05_part_data_management/06_conditional_processing/comparison-character.png" /><!-- --></p>
+<p><img src="img/05_part_data_management/06_conditional_processing/arithmetic.png" /><!-- --></p>
+<p><img src="img/05_part_data_management/06_conditional_processing/logical.png" /><!-- --></p>
 <p>We think that most of the operators above will be familiar, or a least intuitive, for most of you. However, we do want to provide a little bit of commentary for a few of them.</p>
 <ul>
 <li><p>We haven’t seen the <code>%in%</code> operator before, but we will wait to discuss it below.</p></li>
@@ -1213,7 +1218,7 @@ div.csl-indent {
 <div id="testing-a-sequence-of-conditions" class="section level2 hasAnchor" number="30.3">
 <h2><span class="header-section-number">30.3</span> Testing a sequence of conditions<a href="conditional-operations.html#testing-a-sequence-of-conditions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Let’s say that we wanted to create a new column in our <code>blood_pressure</code> data frame that contains each person’s blood pressure category according to the following scale:</p>
-<p><img src="img/05_part_data_management/06_conditional_processing/bp.png" width="900" /></p>
+<p><img src="img/05_part_data_management/06_conditional_processing/bp.png" /><!-- --></p>
 <p>This is the perfect opportunity to use <code>dplyr</code>’s <code>case_when()</code> function. Take a look:</p>
 <div class="sourceCode" id="cb804"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb804-1"><a href="conditional-operations.html#cb804-1" tabindex="-1"></a>blood_pressure <span class="sc">%&gt;%</span> </span>
 <span id="cb804-2"><a href="conditional-operations.html#cb804-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -1740,7 +1745,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

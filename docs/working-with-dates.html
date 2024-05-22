@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>28 Working with Dates | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="28 Working with Dates | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-10-19" />
+<meta name="date" content="2024-05-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,14 +56,15 @@
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
 <script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RREBTQ0D9"></script>
 <script>
@@ -87,7 +88,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -150,6 +151,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -996,7 +1001,7 @@ Lubridate
 <div class="sourceCode" id="cb608"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb608-1"><a href="working-with-dates.html#cb608-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 <div class="sourceCode" id="cb609"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb609-1"><a href="working-with-dates.html#cb609-1" tabindex="-1"></a>birth_dates <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;data/birth_dates.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Rows: 10 Columns: 6
-## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr  (4): name_first, name_last, dob_typical, dob_long
 ## dttm (1): dob_actual
@@ -1041,7 +1046,7 @@ Lubridate
 <p class="note">
 🗒<strong>Side Note:</strong> Why January 1st, 1970, 00:00:00 UTC? Well, it’s not really important to know the answer for the purposes of this book, or for programming in R, but Kristina Hill (a former student) figured out the answer for those of you who are curious. New Year’s Day in 1970 was an easy date for early Unix developers to use as a uniform date for the start of time. So, January 1st, 1970 at 00:00:00 UTC is referred to as the “Unix epoch”, and it’s a popular epoch used by many (but not all) software platforms. The use of any epoch date is mostly arbitrary, and this one leads to some interesting situations (like the <a href="https://en.wikipedia.org/wiki/Year_2038_problem">Year 2038 Problem</a> and <a href="https://www.theguardian.com/technology/2016/feb/12/setting-the-date-to-1-january-1970-will-brick-your-iphone-ipad-or-ipod-touch#:~:text=6%20years%20old-,Setting%20the%20date%20to%201%20January%201970%20will,iPhone%2C%20iPad%20or%20iPod%20touch&amp;text=Manually%20setting%20the%20date%20of,up%20if%20it&#39;s%20switched%20off">this little issue that Apple had a few years ago (yikes!)</a>. Generally speaking, though, this is in no way likely to impact your day-to-day programming in R, or your life at all (unless you happen to also be a software developer in a platform that uses this epoch date).
 </p>
-<p><img src="img/05_part_data_management/04_working_with_dates/timeline.png" width="900" /></p>
+<p><img src="img/05_part_data_management/04_working_with_dates/timeline.png" /><!-- --></p>
 <p>For example, let’s use base R’s <code>as.Date()</code> function to create a date value from the string “2000-01-01”.</p>
 <div class="sourceCode" id="cb613"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb613-1"><a href="working-with-dates.html#cb613-1" tabindex="-1"></a><span class="fu">as.Date</span>(<span class="st">&quot;2000-01-01&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;2000-01-01&quot;</code></pre>
@@ -1107,129 +1112,68 @@ Lubridate
 <p>Converting character strings to dates can be slightly more complicated than converting date-times to dates. This is because we have to explicitly tell R which characters in the character string correspond to each date component. For example, let’s say we have a date value of <code>04-05-06</code>. Is that April 5th, 2006? Is it April 5th, 1906? Or perhaps it’s May 6th, 2004?</p>
 <p>We need to use a series of special symbols to tell R which characters in the character string correspond to each date component. I’ll list some of the most common ones first and then show you how to use them. The examples below assume that date each symbol is being applied to is <code>2000-01-15</code>.</p>
 <table>
+<colgroup>
+<col width="7%" />
+<col width="83%" />
+<col width="9%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-Symbol
-</th>
-<th style="text-align:left;">
-Description
-</th>
-<th style="text-align:left;">
-Example
-</th>
+<tr class="header">
+<th align="left">Symbol</th>
+<th align="left">Description</th>
+<th align="left">Example</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-%a
-</td>
-<td style="text-align:left;">
-Abbreviated weekday name
-</td>
-<td style="text-align:left;">
-Sat
-</td>
+<tr class="odd">
+<td align="left">%a</td>
+<td align="left">Abbreviated weekday name</td>
+<td align="left">Sat</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-%A
-</td>
-<td style="text-align:left;">
-Full weekday name
-</td>
-<td style="text-align:left;">
-Saturday
-</td>
+<tr class="even">
+<td align="left">%A</td>
+<td align="left">Full weekday name</td>
+<td align="left">Saturday</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-%b
-</td>
-<td style="text-align:left;">
-Abbreviated month name
-</td>
-<td style="text-align:left;">
-Jan
-</td>
+<tr class="odd">
+<td align="left">%b</td>
+<td align="left">Abbreviated month name</td>
+<td align="left">Jan</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-%B
-</td>
-<td style="text-align:left;">
-Full month name
-</td>
-<td style="text-align:left;">
-January
-</td>
+<tr class="even">
+<td align="left">%B</td>
+<td align="left">Full month name</td>
+<td align="left">January</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-%d
-</td>
-<td style="text-align:left;">
-Day of the month as a number (01–31)
-</td>
-<td style="text-align:left;">
-15
-</td>
+<tr class="odd">
+<td align="left">%d</td>
+<td align="left">Day of the month as a number (01–31)</td>
+<td align="left">15</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-%m
-</td>
-<td style="text-align:left;">
-Month as a number
-</td>
-<td style="text-align:left;">
-01
-</td>
+<tr class="even">
+<td align="left">%m</td>
+<td align="left">Month as a number</td>
+<td align="left">01</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-%u
-</td>
-<td style="text-align:left;">
-Weekday as a number (1–7, Monday is 1)
-</td>
-<td style="text-align:left;">
-6
-</td>
+<tr class="odd">
+<td align="left">%u</td>
+<td align="left">Weekday as a number (1–7, Monday is 1)</td>
+<td align="left">6</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-%U
-</td>
-<td style="text-align:left;">
-Week of the year as a number (00–53) using Sunday as the first day 1 of the week
-</td>
-<td style="text-align:left;">
-02
-</td>
+<tr class="even">
+<td align="left">%U</td>
+<td align="left">Week of the year as a number (00–53) using Sunday as the first day 1 of the week</td>
+<td align="left">02</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-%y
-</td>
-<td style="text-align:left;">
-Year without century (00-99)
-</td>
-<td style="text-align:left;">
-00
-</td>
+<tr class="odd">
+<td align="left">%y</td>
+<td align="left">Year without century (00-99)</td>
+<td align="left">00</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-%Y
-</td>
-<td style="text-align:left;">
-Year with century
-</td>
-<td style="text-align:left;">
-2000
-</td>
+<tr class="even">
+<td align="left">%Y</td>
+<td align="left">Year with century</td>
+<td align="left">2000</td>
 </tr>
 </tbody>
 </table>
@@ -1383,17 +1327,17 @@ Year with century
 <div id="todays-date" class="section level3 hasAnchor" number="28.6.1">
 <h3><span class="header-section-number">28.6.1</span> Today’s date<a href="working-with-dates.html#todays-date" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb643"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb643-1"><a href="working-with-dates.html#cb643-1" tabindex="-1"></a><span class="fu">Sys.Date</span>()</span></code></pre></div>
-<pre><code>## [1] &quot;2023-10-19&quot;</code></pre>
+<pre><code>## [1] &quot;2024-05-22&quot;</code></pre>
 <div class="sourceCode" id="cb645"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb645-1"><a href="working-with-dates.html#cb645-1" tabindex="-1"></a>lubridate<span class="sc">::</span><span class="fu">today</span>()</span></code></pre></div>
-<pre><code>## [1] &quot;2023-10-19&quot;</code></pre>
+<pre><code>## [1] &quot;2024-05-22&quot;</code></pre>
 <p>These functions can be useful for calculating any length of time up to today. For example, your age today is just the length of time that spans between your birth date and today.</p>
 </div>
 <div id="todays-date-time" class="section level3 hasAnchor" number="28.6.2">
 <h3><span class="header-section-number">28.6.2</span> Today’s date-time<a href="working-with-dates.html#todays-date-time" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb647"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb647-1"><a href="working-with-dates.html#cb647-1" tabindex="-1"></a><span class="fu">Sys.time</span>()</span></code></pre></div>
-<pre><code>## [1] &quot;2023-10-19 12:25:42 CDT&quot;</code></pre>
+<pre><code>## [1] &quot;2024-05-22 15:10:09 CDT&quot;</code></pre>
 <div class="sourceCode" id="cb649"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb649-1"><a href="working-with-dates.html#cb649-1" tabindex="-1"></a>lubridate<span class="sc">::</span><span class="fu">now</span>()</span></code></pre></div>
-<pre><code>## [1] &quot;2023-10-19 12:25:42 CDT&quot;</code></pre>
+<pre><code>## [1] &quot;2024-05-22 15:10:09 CDT&quot;</code></pre>
 <p>Because these functions also return the current time, they can be useful for timing how long it takes your R code to run. As we’ve said many times, there is typically multiple ways to accomplish a given task in R. Sometimes, the difference between any to ways to accomplish the task is basically just a matter of preference. However, sometimes one way can be much faster than another way. All the examples we’ve seen so far in this book take a trivial amount of time to run – usually less than a second. However, I have written R programs that took several minutes to several hours to complete. For example, complex data simulations and multiple imputation procedures can both take a long time to run. In such cases, I will sometimes check to see if there any significant performance differences between two different approaches to accomplishing the coding task.</p>
 <p>As a silly example to show you how this works, let’s generate 1,000,000 random numbers.</p>
 <div class="sourceCode" id="cb651"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb651-1"><a href="working-with-dates.html#cb651-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">703</span>)</span>
@@ -1409,7 +1353,7 @@ Year with century
 <div class="sourceCode" id="cb654"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb654-1"><a href="working-with-dates.html#cb654-1" tabindex="-1"></a><span class="co"># Save the stop time</span></span>
 <span id="cb654-2"><a href="working-with-dates.html#cb654-2" tabindex="-1"></a>stop   <span class="ot">&lt;-</span> lubridate<span class="sc">::</span><span class="fu">now</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb655"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb655-1"><a href="working-with-dates.html#cb655-1" tabindex="-1"></a>stop <span class="sc">-</span> start</span></code></pre></div>
-<pre><code>## Time difference of 0.005945921 secs</code></pre>
+<pre><code>## Time difference of 0.003294945 secs</code></pre>
 <p>So, finding the mean this way took less than a second. Let’s see how long using the <code>mean()</code> function takes:</p>
 <div class="sourceCode" id="cb657"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb657-1"><a href="working-with-dates.html#cb657-1" tabindex="-1"></a><span class="co"># Save the start time</span></span>
 <span id="cb657-2"><a href="working-with-dates.html#cb657-2" tabindex="-1"></a>start  <span class="ot">&lt;-</span> lubridate<span class="sc">::</span><span class="fu">now</span>()</span>
@@ -1418,13 +1362,14 @@ Year with century
 <div class="sourceCode" id="cb659"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb659-1"><a href="working-with-dates.html#cb659-1" tabindex="-1"></a><span class="co"># Save the stop time</span></span>
 <span id="cb659-2"><a href="working-with-dates.html#cb659-2" tabindex="-1"></a>stop   <span class="ot">&lt;-</span> lubridate<span class="sc">::</span><span class="fu">now</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb660"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb660-1"><a href="working-with-dates.html#cb660-1" tabindex="-1"></a>stop <span class="sc">-</span> start</span></code></pre></div>
-<pre><code>## Time difference of 0.004300833 secs</code></pre>
+<pre><code>## Time difference of 0.002985954 secs</code></pre>
 <p>Although both methods above took less than a second to complete the calculations we were interested in, the second method (i.e., using the <code>mean()</code> function) took only about a third as as much time as the first. Again, it obviously doesn’t matter in this scenario, but doing these kinds of checks can be useful when calculations take much longer. For example, that time savings we saw above would be pretty important if we were comparing two methods to accomplish a task where the longer method took an hour to complete and the shorter method took a third as much time (About 20 minutes).</p>
 </div>
 <div id="character-vector-of-full-month-names" class="section level3 hasAnchor" number="28.6.3">
 <h3><span class="header-section-number">28.6.3</span> Character vector of full month names<a href="working-with-dates.html#character-vector-of-full-month-names" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb662"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb662-1"><a href="working-with-dates.html#cb662-1" tabindex="-1"></a>month.name</span></code></pre></div>
-<pre><code>##  [1] &quot;January&quot;   &quot;February&quot;  &quot;March&quot;     &quot;April&quot;     &quot;May&quot;       &quot;June&quot;      &quot;July&quot;      &quot;August&quot;    &quot;September&quot; &quot;October&quot;   &quot;November&quot;  &quot;December&quot;</code></pre>
+<pre><code>##  [1] &quot;January&quot;   &quot;February&quot;  &quot;March&quot;     &quot;April&quot;     &quot;May&quot;       &quot;June&quot;      &quot;July&quot;      &quot;August&quot;    &quot;September&quot; &quot;October&quot;   &quot;November&quot; 
+## [12] &quot;December&quot;</code></pre>
 </div>
 <div id="character-vector-of-abbreviated-month-names" class="section level3 hasAnchor" number="28.6.4">
 <h3><span class="header-section-number">28.6.4</span> Character vector of abbreviated month names<a href="working-with-dates.html#character-vector-of-abbreviated-month-names" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -1440,8 +1385,8 @@ Year with century
 <span id="cb666-3"><a href="working-with-dates.html#cb666-3" tabindex="-1"></a>  <span class="at">to   =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-15&quot;</span>),</span>
 <span id="cb666-4"><a href="working-with-dates.html#cb666-4" tabindex="-1"></a>  <span class="at">by   =</span> <span class="st">&quot;days&quot;</span></span>
 <span id="cb666-5"><a href="working-with-dates.html#cb666-5" tabindex="-1"></a>)</span></code></pre></div>
-<pre><code>##  [1] &quot;2020-01-01&quot; &quot;2020-01-02&quot; &quot;2020-01-03&quot; &quot;2020-01-04&quot; &quot;2020-01-05&quot; &quot;2020-01-06&quot; &quot;2020-01-07&quot; &quot;2020-01-08&quot; &quot;2020-01-09&quot; &quot;2020-01-10&quot; &quot;2020-01-11&quot;
-## [12] &quot;2020-01-12&quot; &quot;2020-01-13&quot; &quot;2020-01-14&quot; &quot;2020-01-15&quot;</code></pre>
+<pre><code>##  [1] &quot;2020-01-01&quot; &quot;2020-01-02&quot; &quot;2020-01-03&quot; &quot;2020-01-04&quot; &quot;2020-01-05&quot; &quot;2020-01-06&quot; &quot;2020-01-07&quot; &quot;2020-01-08&quot; &quot;2020-01-09&quot; &quot;2020-01-10&quot;
+## [11] &quot;2020-01-11&quot; &quot;2020-01-12&quot; &quot;2020-01-13&quot; &quot;2020-01-14&quot; &quot;2020-01-15&quot;</code></pre>
 </div>
 </div>
 <div id="calculating-date-intervals" class="section level2 hasAnchor" number="28.7">
@@ -1822,7 +1767,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

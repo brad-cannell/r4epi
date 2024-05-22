@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>19 Numerical Descriptions of Categorical Variables | R for Epidemiology</title>
+  <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="19 Numerical Descriptions of Categorical Variables | R for Epidemiology" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
+  <meta property="og:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="github-repo" content="brad-cannell/r4epi" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="19 Numerical Descriptions of Categorical Variables | R for Epidemiology" />
+  
+  <meta name="twitter:description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
+  <meta name="twitter:image" content="https://brad-cannell.github.io/r4epi/r4epi_icon.png" />
+
+<meta name="author" content="Brad Cannell" />
+
+
+<meta name="date" content="2023-09-15" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introduction-to-descriptive-analysis.html"/>
+<link rel="next" href="measures-of-central-tendency.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.23/datatables.js"></script>
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0RREBTQ0D9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0RREBTQ0D9');
+</script>
+<!-- R4Epi Favicons -->
+<!-- https://bookdown.org/yihui/rmarkdown-cookbook/favicon.html -->
+<!-- Also using Favicon Generator (https://realfavicongenerator.net) -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R for Epidemiology</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#goals"><i class="fa fa-check"></i>Goals</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#text-conventions-used-in-this-book"><i class="fa fa-check"></i>Text conventions used in this book</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#other-reading"><i class="fa fa-check"></i>Other reading</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#contributing-to-r4epi"><i class="fa fa-check"></i>Contributing to R4Epi</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#typos"><i class="fa fa-check"></i>Typos</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#issues"><i class="fa fa-check"></i>Issues</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html"><i class="fa fa-check"></i>About the Authors</a>
+<ul>
+<li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html#brad-cannell"><i class="fa fa-check"></i>Brad Cannell</a></li>
+<li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html#melvin-livingston"><i class="fa fa-check"></i>Melvin Livingston</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html"><i class="fa fa-check"></i><b>1</b> Installing R and RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-mac"><i class="fa fa-check"></i><b>1.1</b> Download and install on a Mac</a></li>
+<li class="chapter" data-level="1.2" data-path="installing-r-and-rstudio.html"><a href="installing-r-and-rstudio.html#download-and-install-on-a-pc"><i class="fa fa-check"></i><b>1.2</b> Download and install on a PC</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="what-is-r.html"><a href="what-is-r.html"><i class="fa fa-check"></i><b>2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="what-is-r.html"><a href="what-is-r.html#what-is-data"><i class="fa fa-check"></i><b>2.1</b> What is data?</a></li>
+<li class="chapter" data-level="2.2" data-path="what-is-r.html"><a href="what-is-r.html#what-is-r-1"><i class="fa fa-check"></i><b>2.2</b> What is R?</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="what-is-r.html"><a href="what-is-r.html#transferring-data"><i class="fa fa-check"></i><b>2.2.1</b> Transferring data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="what-is-r.html"><a href="what-is-r.html#managing-data"><i class="fa fa-check"></i><b>2.2.2</b> Managing data</a></li>
+<li class="chapter" data-level="2.2.3" data-path="what-is-r.html"><a href="what-is-r.html#analyzing-data"><i class="fa fa-check"></i><b>2.2.3</b> Analyzing data</a></li>
+<li class="chapter" data-level="2.2.4" data-path="what-is-r.html"><a href="what-is-r.html#presenting-data"><i class="fa fa-check"></i><b>2.2.4</b> Presenting data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html"><i class="fa fa-check"></i><b>3</b> Navigating the RStudio Interface</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-console"><i class="fa fa-check"></i><b>3.1</b> The console</a></li>
+<li class="chapter" data-level="3.2" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-environment-pane"><i class="fa fa-check"></i><b>3.2</b> The environment pane</a></li>
+<li class="chapter" data-level="3.3" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-files-pane"><i class="fa fa-check"></i><b>3.3</b> The files pane</a></li>
+<li class="chapter" data-level="3.4" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#the-source-pane"><i class="fa fa-check"></i><b>3.4</b> The source pane</a></li>
+<li class="chapter" data-level="3.5" data-path="navigating-the-rstudio-interface.html"><a href="navigating-the-rstudio-interface.html#rstudio-preferences"><i class="fa fa-check"></i><b>3.5</b> RStudio preferences</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html"><i class="fa fa-check"></i><b>4</b> Speaking R’s Language</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#r-is-a-language"><i class="fa fa-check"></i><b>4.1</b> R is a <em>language</em></a></li>
+<li class="chapter" data-level="4.2" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#the-r-interpreter"><i class="fa fa-check"></i><b>4.2</b> The R interpreter</a></li>
+<li class="chapter" data-level="4.3" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#errors"><i class="fa fa-check"></i><b>4.3</b> Errors</a></li>
+<li class="chapter" data-level="4.4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#functions"><i class="fa fa-check"></i><b>4.4</b> Functions</a></li>
+<li class="chapter" data-level="4.5" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#objects"><i class="fa fa-check"></i><b>4.5</b> Objects</a></li>
+<li class="chapter" data-level="4.6" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#comments"><i class="fa fa-check"></i><b>4.6</b> Comments</a></li>
+<li class="chapter" data-level="4.7" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#packages"><i class="fa fa-check"></i><b>4.7</b> Packages</a></li>
+<li class="chapter" data-level="4.8" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#programming-style"><i class="fa fa-check"></i><b>4.8</b> Programming style</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lets-get-programming.html"><a href="lets-get-programming.html"><i class="fa fa-check"></i><b>5</b> Let’s Get Programming</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#simulating-data"><i class="fa fa-check"></i><b>5.1</b> Simulating data</a></li>
+<li class="chapter" data-level="5.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vectors"><i class="fa fa-check"></i><b>5.2</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#vector-types"><i class="fa fa-check"></i><b>5.2.1</b> Vector types</a></li>
+<li class="chapter" data-level="5.2.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#double-vectors"><i class="fa fa-check"></i><b>5.2.2</b> Double vectors</a></li>
+<li class="chapter" data-level="5.2.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#integer-vectors"><i class="fa fa-check"></i><b>5.2.3</b> Integer vectors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#logical-vectors"><i class="fa fa-check"></i><b>5.2.4</b> Logical vectors</a></li>
+<li class="chapter" data-level="5.2.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#factor-vectors"><i class="fa fa-check"></i><b>5.2.5</b> Factor vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#data-frames"><i class="fa fa-check"></i><b>5.3</b> Data frames</a></li>
+<li class="chapter" data-level="5.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#tibbles"><i class="fa fa-check"></i><b>5.4</b> Tibbles</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-as_tibble-function"><i class="fa fa-check"></i><b>5.4.1</b> The as_tibble function</a></li>
+<li class="chapter" data-level="5.4.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-tibble-function"><i class="fa fa-check"></i><b>5.4.2</b> The tibble function</a></li>
+<li class="chapter" data-level="5.4.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-tribble-function"><i class="fa fa-check"></i><b>5.4.3</b> The tribble function</a></li>
+<li class="chapter" data-level="5.4.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#why-use-tibbles"><i class="fa fa-check"></i><b>5.4.4</b> Why use tibbles</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#missing-data"><i class="fa fa-check"></i><b>5.5</b> Missing data</a></li>
+<li class="chapter" data-level="5.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#our-first-analysis"><i class="fa fa-check"></i><b>5.6</b> Our first analysis</a>
+<ul>
+<li class="chapter" data-level="5.6.1" data-path="lets-get-programming.html"><a href="lets-get-programming.html#manual-calculation-of-the-mean"><i class="fa fa-check"></i><b>5.6.1</b> Manual calculation of the mean</a></li>
+<li class="chapter" data-level="5.6.2" data-path="lets-get-programming.html"><a href="lets-get-programming.html#dollar-sign-notation"><i class="fa fa-check"></i><b>5.6.2</b> Dollar sign notation</a></li>
+<li class="chapter" data-level="5.6.3" data-path="lets-get-programming.html"><a href="lets-get-programming.html#bracket-notation"><i class="fa fa-check"></i><b>5.6.3</b> Bracket notation</a></li>
+<li class="chapter" data-level="5.6.4" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-sum-function"><i class="fa fa-check"></i><b>5.6.4</b> The sum function</a></li>
+<li class="chapter" data-level="5.6.5" data-path="lets-get-programming.html"><a href="lets-get-programming.html#nesting-functions"><i class="fa fa-check"></i><b>5.6.5</b> Nesting functions</a></li>
+<li class="chapter" data-level="5.6.6" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-length-function"><i class="fa fa-check"></i><b>5.6.6</b> The length function</a></li>
+<li class="chapter" data-level="5.6.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#the-mean-function"><i class="fa fa-check"></i><b>5.6.7</b> The mean function</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="lets-get-programming.html"><a href="lets-get-programming.html#some-common-errors"><i class="fa fa-check"></i><b>5.7</b> Some common errors</a></li>
+<li class="chapter" data-level="5.8" data-path="lets-get-programming.html"><a href="lets-get-programming.html#summary"><i class="fa fa-check"></i><b>5.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="asking-questions.html"><a href="asking-questions.html"><i class="fa fa-check"></i><b>6</b> Asking Questions</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="asking-questions.html"><a href="asking-questions.html#when-should-we-seek-help"><i class="fa fa-check"></i><b>6.1</b> When should we seek help?</a></li>
+<li class="chapter" data-level="6.2" data-path="asking-questions.html"><a href="asking-questions.html#where-should-we-seek-help"><i class="fa fa-check"></i><b>6.2</b> Where should we seek help?</a></li>
+<li class="chapter" data-level="6.3" data-path="asking-questions.html"><a href="asking-questions.html#how-should-we-seek-help"><i class="fa fa-check"></i><b>6.3</b> How should we seek help?</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="asking-questions.html"><a href="asking-questions.html#creating-a-post-on-stack-overflow"><i class="fa fa-check"></i><b>6.3.1</b> Creating a post on Stack Overflow</a></li>
+<li class="chapter" data-level="6.3.2" data-path="asking-questions.html"><a href="asking-questions.html#creating-better-posts-and-asking-better-questions"><i class="fa fa-check"></i><b>6.3.2</b> Creating better posts and asking better questions</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="asking-questions.html"><a href="asking-questions.html#helping-others"><i class="fa fa-check"></i><b>6.4</b> Helping others</a></li>
+<li class="chapter" data-level="6.5" data-path="asking-questions.html"><a href="asking-questions.html#summary-1"><i class="fa fa-check"></i><b>6.5</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Coding Tools and Best Practices</b></span></li>
+<li class="chapter" data-level="7" data-path="r-scripts.html"><a href="r-scripts.html"><i class="fa fa-check"></i><b>7</b> R Scripts</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="r-scripts.html"><a href="r-scripts.html#creating-r-scripts"><i class="fa fa-check"></i><b>7.1</b> Creating R scripts</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="quarto-files.html"><a href="quarto-files.html"><i class="fa fa-check"></i><b>8</b> Quarto Files</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="quarto-files.html"><a href="quarto-files.html#what-is-quarto"><i class="fa fa-check"></i><b>8.1</b> What is Quarto?</a></li>
+<li class="chapter" data-level="8.2" data-path="quarto-files.html"><a href="quarto-files.html#why-use-quarto"><i class="fa fa-check"></i><b>8.2</b> Why use Quarto?</a></li>
+<li class="chapter" data-level="8.3" data-path="quarto-files.html"><a href="quarto-files.html#create-a-quarto-file"><i class="fa fa-check"></i><b>8.3</b> Create a Quarto file</a></li>
+<li class="chapter" data-level="8.4" data-path="quarto-files.html"><a href="quarto-files.html#yaml-headers"><i class="fa fa-check"></i><b>8.4</b> YAML headers</a></li>
+<li class="chapter" data-level="8.5" data-path="quarto-files.html"><a href="quarto-files.html#r-code-chunks"><i class="fa fa-check"></i><b>8.5</b> R code chunks</a></li>
+<li class="chapter" data-level="8.6" data-path="quarto-files.html"><a href="quarto-files.html#markdown"><i class="fa fa-check"></i><b>8.6</b> Markdown</a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="quarto-files.html"><a href="quarto-files.html#markdown-headings"><i class="fa fa-check"></i><b>8.6.1</b> Markdown headings</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="quarto-files.html"><a href="quarto-files.html#summary-2"><i class="fa fa-check"></i><b>8.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="r-projects.html"><a href="r-projects.html"><i class="fa fa-check"></i><b>9</b> R Projects</a></li>
+<li class="chapter" data-level="10" data-path="coding-best-practices.html"><a href="coding-best-practices.html"><i class="fa fa-check"></i><b>10</b> Coding Best Practices</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#general-principles"><i class="fa fa-check"></i><b>10.1</b> General principles</a></li>
+<li class="chapter" data-level="10.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#code-comments"><i class="fa fa-check"></i><b>10.2</b> Code comments</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#defining-key-variables"><i class="fa fa-check"></i><b>10.2.1</b> Defining key variables</a></li>
+<li class="chapter" data-level="10.2.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#what-this-code-is-trying-to-accomplish"><i class="fa fa-check"></i><b>10.2.2</b> What this code is trying to accomplish</a></li>
+<li class="chapter" data-level="10.2.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#why-i-chose-this-particular-strategy"><i class="fa fa-check"></i><b>10.2.3</b> Why I chose this particular strategy</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#style-guidelines"><i class="fa fa-check"></i><b>10.3</b> Style guidelines</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="coding-best-practices.html"><a href="coding-best-practices.html#comments-1"><i class="fa fa-check"></i><b>10.3.1</b> Comments</a></li>
+<li class="chapter" data-level="10.3.2" data-path="coding-best-practices.html"><a href="coding-best-practices.html#object-variable-names"><i class="fa fa-check"></i><b>10.3.2</b> Object (variable) names</a></li>
+<li class="chapter" data-level="10.3.3" data-path="coding-best-practices.html"><a href="coding-best-practices.html#use-names-that-are-informative"><i class="fa fa-check"></i><b>10.3.3</b> Use names that are informative</a></li>
+<li class="chapter" data-level="10.3.4" data-path="coding-best-practices.html"><a href="coding-best-practices.html#file-names"><i class="fa fa-check"></i><b>10.3.4</b> File Names</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="using-pipes.html"><a href="using-pipes.html"><i class="fa fa-check"></i><b>11</b> Using Pipes</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="using-pipes.html"><a href="using-pipes.html#what-are-pipes"><i class="fa fa-check"></i><b>11.1</b> What are pipes?</a></li>
+<li class="chapter" data-level="11.2" data-path="using-pipes.html"><a href="using-pipes.html#how-do-pipes-work"><i class="fa fa-check"></i><b>11.2</b> How do pipes work?</a>
+<ul>
+<li class="chapter" data-level="11.2.1" data-path="using-pipes.html"><a href="using-pipes.html#keyboard-shortcut"><i class="fa fa-check"></i><b>11.2.1</b> Keyboard shortcut</a></li>
+<li class="chapter" data-level="11.2.2" data-path="using-pipes.html"><a href="using-pipes.html#pipe-style"><i class="fa fa-check"></i><b>11.2.2</b> Pipe style</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="using-pipes.html"><a href="using-pipes.html#final-thought-on-pipes"><i class="fa fa-check"></i><b>11.3</b> Final thought on pipes</a></li>
+</ul></li>
+<li class="part"><span><b>III Data Transfer</b></span></li>
+<li class="chapter" data-level="12" data-path="introduction-to-data-transfer.html"><a href="introduction-to-data-transfer.html"><i class="fa fa-check"></i><b>12</b> Introduction to Data Transfer</a></li>
+<li class="chapter" data-level="13" data-path="file-paths.html"><a href="file-paths.html"><i class="fa fa-check"></i><b>13</b> File Paths</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="file-paths.html"><a href="file-paths.html#finding-file-paths"><i class="fa fa-check"></i><b>13.1</b> Finding file paths</a></li>
+<li class="chapter" data-level="13.2" data-path="file-paths.html"><a href="file-paths.html#relative-file-paths"><i class="fa fa-check"></i><b>13.2</b> Relative file paths</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html"><i class="fa fa-check"></i><b>14</b> Importing Plain Text Files</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#packages-for-importing-data"><i class="fa fa-check"></i><b>14.1</b> Packages for importing data</a></li>
+<li class="chapter" data-level="14.2" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#importing-space-delimited-files"><i class="fa fa-check"></i><b>14.2</b> Importing space delimited files</a>
+<ul>
+<li class="chapter" data-level="14.2.1" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#specifying-missing-data-values"><i class="fa fa-check"></i><b>14.2.1</b> Specifying missing data values</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#importing-tab-delimited-files"><i class="fa fa-check"></i><b>14.3</b> Importing tab delimited files</a></li>
+<li class="chapter" data-level="14.4" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#importing-fixed-width-format-files"><i class="fa fa-check"></i><b>14.4</b> Importing fixed width format files</a>
+<ul>
+<li class="chapter" data-level="14.4.1" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#vector-of-column-widths"><i class="fa fa-check"></i><b>14.4.1</b> Vector of column widths</a></li>
+<li class="chapter" data-level="14.4.2" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#paired-vector-of-start-and-end-positions"><i class="fa fa-check"></i><b>14.4.2</b> Paired vector of start and end positions</a></li>
+<li class="chapter" data-level="14.4.3" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#using-named-arguments"><i class="fa fa-check"></i><b>14.4.3</b> Using named arguments</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#importing-comma-separated-values-files"><i class="fa fa-check"></i><b>14.5</b> Importing comma separated values files</a></li>
+<li class="chapter" data-level="14.6" data-path="importing-plain-text-files.html"><a href="importing-plain-text-files.html#additional-arguments"><i class="fa fa-check"></i><b>14.6</b> Additional arguments</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="importing-binary-files.html"><a href="importing-binary-files.html"><i class="fa fa-check"></i><b>15</b> Importing Binary Files</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="importing-binary-files.html"><a href="importing-binary-files.html#packages-for-importing-data-1"><i class="fa fa-check"></i><b>15.1</b> Packages for importing data</a></li>
+<li class="chapter" data-level="15.2" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-microsoft-excel-spreadsheets"><i class="fa fa-check"></i><b>15.2</b> Importing Microsoft Excel spreadsheets</a></li>
+<li class="chapter" data-level="15.3" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-data-from-other-statistical-analysis-software"><i class="fa fa-check"></i><b>15.3</b> Importing data from other statistical analysis software</a></li>
+<li class="chapter" data-level="15.4" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-sas-data-sets"><i class="fa fa-check"></i><b>15.4</b> Importing SAS data sets</a></li>
+<li class="chapter" data-level="15.5" data-path="importing-binary-files.html"><a href="importing-binary-files.html#importing-stata-data-sets"><i class="fa fa-check"></i><b>15.5</b> Importing Stata data sets</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="rstudios-data-import-tool.html"><a href="rstudios-data-import-tool.html"><i class="fa fa-check"></i><b>16</b> RStudio’s Data Import Tool</a></li>
+<li class="chapter" data-level="17" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>17</b> Exporting Data</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="exporting-data.html"><a href="exporting-data.html#plain-text-files"><i class="fa fa-check"></i><b>17.1</b> Plain text files</a></li>
+<li class="chapter" data-level="17.2" data-path="exporting-data.html"><a href="exporting-data.html#r-binary-files"><i class="fa fa-check"></i><b>17.2</b> R binary files</a></li>
+</ul></li>
+<li class="part"><span><b>IV Descriptive Analysis</b></span></li>
+<li class="chapter" data-level="18" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html"><i class="fa fa-check"></i><b>18</b> Introduction to Descriptive Analysis</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-is-descriptive-analysis-and-why-would-we-do-it"><i class="fa fa-check"></i><b>18.1</b> What is descriptive analysis and why would we do it?</a></li>
+<li class="chapter" data-level="18.2" data-path="introduction-to-descriptive-analysis.html"><a href="introduction-to-descriptive-analysis.html#what-kind-of-descriptive-analysis-should-we-perform"><i class="fa fa-check"></i><b>18.2</b> What kind of descriptive analysis should we perform?</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html"><i class="fa fa-check"></i><b>19</b> Numerical Descriptions of Categorical Variables</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#factors"><i class="fa fa-check"></i><b>19.1</b> Factors</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#coerce-a-numeric-variable"><i class="fa fa-check"></i><b>19.1.1</b> Coerce a numeric variable</a></li>
+<li class="chapter" data-level="19.1.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#coerce-a-character-variable"><i class="fa fa-check"></i><b>19.1.2</b> Coerce a character variable</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#height-and-weight-data"><i class="fa fa-check"></i><b>19.2</b> Height and Weight Data</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#view-the-data"><i class="fa fa-check"></i><b>19.2.1</b> View the data</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-frequencies"><i class="fa fa-check"></i><b>19.3</b> Calculating frequencies</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-base-r-table-function"><i class="fa fa-check"></i><b>19.3.1</b> The base R table function</a></li>
+<li class="chapter" data-level="19.3.2" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-gmodels-crosstable-function"><i class="fa fa-check"></i><b>19.3.2</b> The gmodels CrossTable function</a></li>
+<li class="chapter" data-level="19.3.3" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#the-tidyverse-way"><i class="fa fa-check"></i><b>19.3.3</b> The tidyverse way</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#calculating-percentages"><i class="fa fa-check"></i><b>19.4</b> Calculating percentages</a></li>
+<li class="chapter" data-level="19.5" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#cat-missing-data"><i class="fa fa-check"></i><b>19.5</b> Missing data</a></li>
+<li class="chapter" data-level="19.6" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#formatting-results"><i class="fa fa-check"></i><b>19.6</b> Formatting results</a></li>
+<li class="chapter" data-level="19.7" data-path="numerical-descriptions-of-categorical-variables.html"><a href="numerical-descriptions-of-categorical-variables.html#using-freqtables"><i class="fa fa-check"></i><b>19.7</b> Using freqtables</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html"><i class="fa fa-check"></i><b>20</b> Measures of Central Tendency</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mean"><i class="fa fa-check"></i><b>20.1</b> Calculate the mean</a></li>
+<li class="chapter" data-level="20.2" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-median"><i class="fa fa-check"></i><b>20.2</b> Calculate the median</a></li>
+<li class="chapter" data-level="20.3" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#calculate-the-mode"><i class="fa fa-check"></i><b>20.3</b> Calculate the mode</a></li>
+<li class="chapter" data-level="20.4" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#compare-mean-median-and-mode"><i class="fa fa-check"></i><b>20.4</b> Compare mean, median, and mode</a></li>
+<li class="chapter" data-level="20.5" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#data-checking"><i class="fa fa-check"></i><b>20.5</b> Data checking</a></li>
+<li class="chapter" data-level="20.6" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#properties-of-mean-median-and-mode"><i class="fa fa-check"></i><b>20.6</b> Properties of mean, median, and mode</a></li>
+<li class="chapter" data-level="20.7" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#na-rm"><i class="fa fa-check"></i><b>20.7</b> Missing data</a></li>
+<li class="chapter" data-level="20.8" data-path="measures-of-central-tendency.html"><a href="measures-of-central-tendency.html#using-meantables"><i class="fa fa-check"></i><b>20.8</b> Using meantables</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html"><i class="fa fa-check"></i><b>21</b> Measures of Dispersion</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="measures-of-dispersion.html"><a href="measures-of-dispersion.html#comparing-distributions"><i class="fa fa-check"></i><b>21.1</b> Comparing distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><i class="fa fa-check"></i><b>22</b> Describing the Relationship Between a Continuous Outcome and a Continuous Predictor</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html#pearson-correlation-coefficient"><i class="fa fa-check"></i><b>22.1</b> Pearson Correlation Coefficient</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html#calculating-r"><i class="fa fa-check"></i><b>22.1.1</b> Calculating r</a></li>
+<li class="chapter" data-level="22.1.2" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-continuous-predictor.html#correlation-intuition"><i class="fa fa-check"></i><b>22.1.2</b> Correlation intuition</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><i class="fa fa-check"></i><b>23</b> Describing the Relationship Between a Continuous Outcome and a Categorical Predictor</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html#single-predictor-and-single-outcome"><i class="fa fa-check"></i><b>23.1</b> Single predictor and single outcome</a></li>
+<li class="chapter" data-level="23.2" data-path="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-continuous-outcome-and-a-categorical-predictor.html#multiple-predictors"><i class="fa fa-check"></i><b>23.2</b> Multiple predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"><i class="fa fa-check"></i><b>24</b> Describing the Relationship Between a Categorical Outcome and a Categorical Predictor</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html"><a href="describing-the-relationship-between-a-categorical-outcome-and-a-categorical-predictor.html#comparing-two-variables"><i class="fa fa-check"></i><b>24.1</b> Comparing two variables</a></li>
+</ul></li>
+<li class="part"><span><b>V Data Management</b></span></li>
+<li class="chapter" data-level="25" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html"><i class="fa fa-check"></i><b>25</b> Introduction to Data Management</a>
+<ul>
+<li class="chapter" data-level="25.1" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#multiple-paradigms-for-data-management-in-r"><i class="fa fa-check"></i><b>25.1</b> Multiple paradigms for data management in R</a></li>
+<li class="chapter" data-level="25.2" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#the-dplyr-package"><i class="fa fa-check"></i><b>25.2</b> The dplyr package</a>
+<ul>
+<li class="chapter" data-level="25.2.1" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#the-dplyr-verbs"><i class="fa fa-check"></i><b>25.2.1</b> The dplyr verbs</a></li>
+<li class="chapter" data-level="25.2.2" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#the-.data-argument"><i class="fa fa-check"></i><b>25.2.2</b> The .data argument</a></li>
+<li class="chapter" data-level="25.2.3" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#the-argument"><i class="fa fa-check"></i><b>25.2.3</b> The … argument</a></li>
+<li class="chapter" data-level="25.2.4" data-path="introduction-to-data-management.html"><a href="introduction-to-data-management.html#non-standard-evaluation"><i class="fa fa-check"></i><b>25.2.4</b> Non-standard evaluation</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html"><i class="fa fa-check"></i><b>26</b> Creating and Modifying Columns</a>
+<ul>
+<li class="chapter" data-level="26.1" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#creating-data-frames"><i class="fa fa-check"></i><b>26.1</b> Creating data frames</a></li>
+<li class="chapter" data-level="26.2" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#dollar-sign-notation-1"><i class="fa fa-check"></i><b>26.2</b> Dollar sign notation</a></li>
+<li class="chapter" data-level="26.3" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#bracket-notation-1"><i class="fa fa-check"></i><b>26.3</b> Bracket notation</a></li>
+<li class="chapter" data-level="26.4" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#modify-individual-values"><i class="fa fa-check"></i><b>26.4</b> Modify individual values</a></li>
+<li class="chapter" data-level="26.5" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#the-mutate-function"><i class="fa fa-check"></i><b>26.5</b> The mutate() function</a>
+<ul>
+<li class="chapter" data-level="26.5.1" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#adding-or-modifying-a-single-column"><i class="fa fa-check"></i><b>26.5.1</b> Adding or modifying a single column</a></li>
+<li class="chapter" data-level="26.5.2" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#recycling-rules"><i class="fa fa-check"></i><b>26.5.2</b> Recycling rules</a></li>
+<li class="chapter" data-level="26.5.3" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#using-existing-variables-in-name-value-pairs"><i class="fa fa-check"></i><b>26.5.3</b> Using existing variables in name-value pairs</a></li>
+<li class="chapter" data-level="26.5.4" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#adding-or-modifying-multiple-columns"><i class="fa fa-check"></i><b>26.5.4</b> Adding or modifying multiple columns</a></li>
+<li class="chapter" data-level="26.5.5" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#rowwise-mutations"><i class="fa fa-check"></i><b>26.5.5</b> Rowwise mutations</a></li>
+<li class="chapter" data-level="26.5.6" data-path="creating-and-modifying-columns.html"><a href="creating-and-modifying-columns.html#group_by-mutations"><i class="fa fa-check"></i><b>26.5.6</b> Group_by mutations</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="27" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html"><i class="fa fa-check"></i><b>27</b> Subsetting Data Frames</a>
+<ul>
+<li class="chapter" data-level="27.1" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#the-select-function"><i class="fa fa-check"></i><b>27.1</b> The select() function</a></li>
+<li class="chapter" data-level="27.2" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#the-rename-function"><i class="fa fa-check"></i><b>27.2</b> The rename() function</a></li>
+<li class="chapter" data-level="27.3" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#the-filter-function"><i class="fa fa-check"></i><b>27.3</b> The filter() function</a>
+<ul>
+<li class="chapter" data-level="27.3.1" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#subgroup-analysis"><i class="fa fa-check"></i><b>27.3.1</b> Subgroup analysis</a></li>
+<li class="chapter" data-level="27.3.2" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#complete-case-analysis"><i class="fa fa-check"></i><b>27.3.2</b> Complete case analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="27.4" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#deduplication"><i class="fa fa-check"></i><b>27.4</b> Deduplication</a>
+<ul>
+<li class="chapter" data-level="27.4.1" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#the-distinct-function"><i class="fa fa-check"></i><b>27.4.1</b> The distinct() function</a></li>
+<li class="chapter" data-level="27.4.2" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#complete-duplicate-row-add-tag"><i class="fa fa-check"></i><b>27.4.2</b> Complete duplicate row add tag</a></li>
+<li class="chapter" data-level="27.4.3" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#partial-duplicate-rows"><i class="fa fa-check"></i><b>27.4.3</b> Partial duplicate rows</a></li>
+<li class="chapter" data-level="27.4.4" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#partial-duplicate-rows---add-tag"><i class="fa fa-check"></i><b>27.4.4</b> Partial duplicate rows - add tag</a></li>
+<li class="chapter" data-level="27.4.5" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#count-the-number-of-duplicates"><i class="fa fa-check"></i><b>27.4.5</b> Count the number of duplicates</a></li>
+<li class="chapter" data-level="27.4.6" data-path="subsetting-data-frames.html"><a href="subsetting-data-frames.html#what-to-do-about-duplicates"><i class="fa fa-check"></i><b>27.4.6</b> What to do about duplicates</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="28" data-path="working-with-dates.html"><a href="working-with-dates.html"><i class="fa fa-check"></i><b>28</b> Working with Dates</a>
+<ul>
+<li class="chapter" data-level="28.1" data-path="working-with-dates.html"><a href="working-with-dates.html#date-vector-types"><i class="fa fa-check"></i><b>28.1</b> Date vector types</a></li>
+<li class="chapter" data-level="28.2" data-path="working-with-dates.html"><a href="working-with-dates.html#dates-under-the-hood"><i class="fa fa-check"></i><b>28.2</b> Dates under the hood</a></li>
+<li class="chapter" data-level="28.3" data-path="working-with-dates.html"><a href="working-with-dates.html#coercing-date-times-to-dates"><i class="fa fa-check"></i><b>28.3</b> Coercing date-times to dates</a></li>
+<li class="chapter" data-level="28.4" data-path="working-with-dates.html"><a href="working-with-dates.html#coercing-character-strings-to-dates"><i class="fa fa-check"></i><b>28.4</b> Coercing character strings to dates</a></li>
+<li class="chapter" data-level="28.5" data-path="working-with-dates.html"><a href="working-with-dates.html#change-the-appearance-of-dates-with-format"><i class="fa fa-check"></i><b>28.5</b> Change the appearance of dates with format()</a></li>
+<li class="chapter" data-level="28.6" data-path="working-with-dates.html"><a href="working-with-dates.html#some-useful-built-in-dates"><i class="fa fa-check"></i><b>28.6</b> Some useful built-in dates</a>
+<ul>
+<li class="chapter" data-level="28.6.1" data-path="working-with-dates.html"><a href="working-with-dates.html#todays-date"><i class="fa fa-check"></i><b>28.6.1</b> Today’s date</a></li>
+<li class="chapter" data-level="28.6.2" data-path="working-with-dates.html"><a href="working-with-dates.html#todays-date-time"><i class="fa fa-check"></i><b>28.6.2</b> Today’s date-time</a></li>
+<li class="chapter" data-level="28.6.3" data-path="working-with-dates.html"><a href="working-with-dates.html#character-vector-of-full-month-names"><i class="fa fa-check"></i><b>28.6.3</b> Character vector of full month names</a></li>
+<li class="chapter" data-level="28.6.4" data-path="working-with-dates.html"><a href="working-with-dates.html#character-vector-of-abbreviated-month-names"><i class="fa fa-check"></i><b>28.6.4</b> Character vector of abbreviated month names</a></li>
+<li class="chapter" data-level="28.6.5" data-path="working-with-dates.html"><a href="working-with-dates.html#creating-a-vector-containing-a-sequence-of-dates"><i class="fa fa-check"></i><b>28.6.5</b> Creating a vector containing a sequence of dates</a></li>
+</ul></li>
+<li class="chapter" data-level="28.7" data-path="working-with-dates.html"><a href="working-with-dates.html#calculating-date-intervals"><i class="fa fa-check"></i><b>28.7</b> Calculating date intervals</a>
+<ul>
+<li class="chapter" data-level="28.7.1" data-path="working-with-dates.html"><a href="working-with-dates.html#calculate-age-as-the-difference-in-time-between-dob-and-today"><i class="fa fa-check"></i><b>28.7.1</b> Calculate age as the difference in time between dob and today</a></li>
+<li class="chapter" data-level="28.7.2" data-path="working-with-dates.html"><a href="working-with-dates.html#rounding-time-intervals"><i class="fa fa-check"></i><b>28.7.2</b> Rounding time intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="28.8" data-path="working-with-dates.html"><a href="working-with-dates.html#extracting-out-date-parts"><i class="fa fa-check"></i><b>28.8</b> Extracting out date parts</a></li>
+<li class="chapter" data-level="28.9" data-path="working-with-dates.html"><a href="working-with-dates.html#sorting-dates"><i class="fa fa-check"></i><b>28.9</b> Sorting dates</a></li>
+</ul></li>
+<li class="chapter" data-level="29" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html"><i class="fa fa-check"></i><b>29</b> Working with Character Strings</a>
+<ul>
+<li class="chapter" data-level="29.1" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#coerce-to-lowercase"><i class="fa fa-check"></i><b>29.1</b> Coerce to lowercase</a>
+<ul>
+<li class="chapter" data-level="29.1.1" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#lowercase"><i class="fa fa-check"></i><b>29.1.1</b> Lowercase</a></li>
+<li class="chapter" data-level="29.1.2" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#upper-case"><i class="fa fa-check"></i><b>29.1.2</b> Upper case</a></li>
+<li class="chapter" data-level="29.1.3" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#title-case"><i class="fa fa-check"></i><b>29.1.3</b> Title case</a></li>
+<li class="chapter" data-level="29.1.4" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#sentence-case"><i class="fa fa-check"></i><b>29.1.4</b> Sentence case</a></li>
+</ul></li>
+<li class="chapter" data-level="29.2" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#trim-white-space"><i class="fa fa-check"></i><b>29.2</b> Trim white space</a></li>
+<li class="chapter" data-level="29.3" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#regular-expressions"><i class="fa fa-check"></i><b>29.3</b> Regular expressions</a>
+<ul>
+<li class="chapter" data-level="29.3.1" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#remove-the-comma"><i class="fa fa-check"></i><b>29.3.1</b> Remove the comma</a></li>
+<li class="chapter" data-level="29.3.2" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#remove-middle-initial"><i class="fa fa-check"></i><b>29.3.2</b> Remove middle initial</a></li>
+<li class="chapter" data-level="29.3.3" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#remove-double-spaces"><i class="fa fa-check"></i><b>29.3.3</b> Remove double spaces</a></li>
+</ul></li>
+<li class="chapter" data-level="29.4" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#separate-values-into-component-parts"><i class="fa fa-check"></i><b>29.4</b> Separate values into component parts</a></li>
+<li class="chapter" data-level="29.5" data-path="working-with-character-strings.html"><a href="working-with-character-strings.html#dummy-variables"><i class="fa fa-check"></i><b>29.5</b> Dummy variables</a></li>
+</ul></li>
+<li class="chapter" data-level="30" data-path="conditional-operations.html"><a href="conditional-operations.html"><i class="fa fa-check"></i><b>30</b> Conditional Operations</a>
+<ul>
+<li class="chapter" data-level="30.1" data-path="conditional-operations.html"><a href="conditional-operations.html#operands-and-operators"><i class="fa fa-check"></i><b>30.1</b> Operands and operators</a></li>
+<li class="chapter" data-level="30.2" data-path="conditional-operations.html"><a href="conditional-operations.html#testing-multiple-conditions-simultaneously"><i class="fa fa-check"></i><b>30.2</b> Testing multiple conditions simultaneously</a></li>
+<li class="chapter" data-level="30.3" data-path="conditional-operations.html"><a href="conditional-operations.html#testing-a-sequence-of-conditions"><i class="fa fa-check"></i><b>30.3</b> Testing a sequence of conditions</a></li>
+<li class="chapter" data-level="30.4" data-path="conditional-operations.html"><a href="conditional-operations.html#recoding-variables"><i class="fa fa-check"></i><b>30.4</b> Recoding variables</a></li>
+<li class="chapter" data-level="30.5" data-path="conditional-operations.html"><a href="conditional-operations.html#case_when-is-lazy"><i class="fa fa-check"></i><b>30.5</b> case_when() is lazy</a></li>
+<li class="chapter" data-level="30.6" data-path="conditional-operations.html"><a href="conditional-operations.html#recode-missing"><i class="fa fa-check"></i><b>30.6</b> Recode missing</a></li>
+</ul></li>
+<li class="chapter" data-level="31" data-path="working-with-multiple-data-frames.html"><a href="working-with-multiple-data-frames.html"><i class="fa fa-check"></i><b>31</b> Working with Multiple Data Frames</a>
+<ul>
+<li class="chapter" data-level="31.1" data-path="working-with-multiple-data-frames.html"><a href="working-with-multiple-data-frames.html#combining-data-frames-vertically-adding-rows"><i class="fa fa-check"></i><b>31.1</b> Combining data frames vertically: Adding rows</a>
+<ul>
+<li class="chapter" data-level="31.1.1" data-path="working-with-multiple-data-frames.html"><a href="working-with-multiple-data-frames.html#combining-more-than-2-data-frames"><i class="fa fa-check"></i><b>31.1.1</b> Combining more than 2 data frames</a></li>
+<li class="chapter" data-level="31.1.2" data-path="working-with-multiple-data-frames.html"><a href="working-with-multiple-data-frames.html#adding-rows-with-differing-columns"><i class="fa fa-check"></i><b>31.1.2</b> Adding rows with differing columns</a></li>
+<li class="chapter" data-level="31.1.3" data-path="working-with-multiple-data-frames.html"><a href="working-with-multiple-data-frames.html#differing-column-positions"><i class="fa fa-check"></i><b>31.1.3</b> Differing column positions</a></li>
+<li class="chapter" data-level="31.1.4" data-path="working-with-multiple-data-frames.html"><a href="working-with-multiple-data-frames.html#differing-column-names"><i class="fa fa-check"></i><b>31.1.4</b> Differing column names</a></li>
+</ul></li>
+<li class="chapter" data-level="31.2" data-path="working-with-multiple-data-frames.html"><a href="working-with-multiple-data-frames.html#combining-data-frames-horizontally-adding-columns"><i class="fa fa-check"></i><b>31.2</b> Combining data frames horizontally: Adding columns</a>
+<ul>
+<li class="chapter" data-level="31.2.1" data-path="working-with-multiple-data-frames.html"><a href="working-with-multiple-data-frames.html#combining-data-frames-horizontally-by-position"><i class="fa fa-check"></i><b>31.2.1</b> Combining data frames horizontally by position</a></li>
+<li class="chapter" data-level="31.2.2" data-path="working-with-multiple-data-frames.html"><a href="working-with-multiple-data-frames.html#combining-data-frames-horizontally-by-key-values"><i class="fa fa-check"></i><b>31.2.2</b> Combining data frames horizontally by key values</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="32" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html"><i class="fa fa-check"></i><b>32</b> Restructuring Data frames</a>
+<ul>
+<li class="chapter" data-level="32.1" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#the-tidyr-package"><i class="fa fa-check"></i><b>32.1</b> The tidyr package</a></li>
+<li class="chapter" data-level="32.2" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#pivoting-longer"><i class="fa fa-check"></i><b>32.2</b> Pivoting longer</a>
+<ul>
+<li class="chapter" data-level="32.2.1" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#the-names_to-argument"><i class="fa fa-check"></i><b>32.2.1</b> The names_to argument</a></li>
+<li class="chapter" data-level="32.2.2" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#the-names_prefix-argument"><i class="fa fa-check"></i><b>32.2.2</b> The names_prefix argument</a></li>
+<li class="chapter" data-level="32.2.3" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#the-values_to-argument"><i class="fa fa-check"></i><b>32.2.3</b> The values_to argument</a></li>
+<li class="chapter" data-level="32.2.4" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#the-names_transform-argument"><i class="fa fa-check"></i><b>32.2.4</b> The names_transform argument</a></li>
+<li class="chapter" data-level="32.2.5" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#pivoting-multiple-sets-of-columns"><i class="fa fa-check"></i><b>32.2.5</b> Pivoting multiple sets of columns</a></li>
+<li class="chapter" data-level="32.2.6" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#the-names_sep-argument"><i class="fa fa-check"></i><b>32.2.6</b> The names_sep argument</a></li>
+<li class="chapter" data-level="32.2.7" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#the-.value-special-value"><i class="fa fa-check"></i><b>32.2.7</b> The .value special value</a></li>
+<li class="chapter" data-level="32.2.8" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#why-person-period"><i class="fa fa-check"></i><b>32.2.8</b> Why person-period?</a></li>
+</ul></li>
+<li class="chapter" data-level="32.3" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#pivoting-wider"><i class="fa fa-check"></i><b>32.3</b> Pivoting wider</a>
+<ul>
+<li class="chapter" data-level="32.3.1" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#why-person-level"><i class="fa fa-check"></i><b>32.3.1</b> Why person-level?</a></li>
+</ul></li>
+<li class="chapter" data-level="32.4" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#pivoting-summary-statistics"><i class="fa fa-check"></i><b>32.4</b> Pivoting summary statistics</a>
+<ul>
+<li class="chapter" data-level="32.4.1" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#pivoting-summary-statistics-wide-to-long"><i class="fa fa-check"></i><b>32.4.1</b> Pivoting summary statistics wide to long</a></li>
+<li class="chapter" data-level="32.4.2" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#pivoting-summary-statistics-long-to-wide"><i class="fa fa-check"></i><b>32.4.2</b> Pivoting summary statistics long to wide</a></li>
+</ul></li>
+<li class="chapter" data-level="32.5" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#tidy-data"><i class="fa fa-check"></i><b>32.5</b> Tidy data</a>
+<ul>
+<li class="chapter" data-level="32.5.1" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#each-variable-must-have-its-own-column"><i class="fa fa-check"></i><b>32.5.1</b> Each variable must have its own column</a></li>
+<li class="chapter" data-level="32.5.2" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#each-observation-must-have-its-own-row"><i class="fa fa-check"></i><b>32.5.2</b> Each observation must have its own row</a></li>
+<li class="chapter" data-level="32.5.3" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#each-value-must-have-its-own-cell"><i class="fa fa-check"></i><b>32.5.3</b> Each value must have its own cell</a></li>
+</ul></li>
+<li class="chapter" data-level="32.6" data-path="restructuring-data-frames.html"><a href="restructuring-data-frames.html#the-complete-function"><i class="fa fa-check"></i><b>32.6</b> The complete() function</a></li>
+</ul></li>
+<li class="part"><span><b>VI Repeated Operations</b></span></li>
+<li class="chapter" data-level="33" data-path="introduction-to-repeated-operations.html"><a href="introduction-to-repeated-operations.html"><i class="fa fa-check"></i><b>33</b> Introduction to Repeated Operations</a>
+<ul>
+<li class="chapter" data-level="33.1" data-path="introduction-to-repeated-operations.html"><a href="introduction-to-repeated-operations.html#multiple-methods-for-repeated-operations-in-r"><i class="fa fa-check"></i><b>33.1</b> Multiple methods for repeated operations in R</a></li>
+<li class="chapter" data-level="33.2" data-path="introduction-to-repeated-operations.html"><a href="introduction-to-repeated-operations.html#tidy-evaluation"><i class="fa fa-check"></i><b>33.2</b> Tidy evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="34" data-path="writing-functions.html"><a href="writing-functions.html"><i class="fa fa-check"></i><b>34</b> Writing Functions</a>
+<ul>
+<li class="chapter" data-level="34.1" data-path="writing-functions.html"><a href="writing-functions.html#when-to-write-functions"><i class="fa fa-check"></i><b>34.1</b> When to write functions</a></li>
+<li class="chapter" data-level="34.2" data-path="writing-functions.html"><a href="writing-functions.html#how-to-write-functions"><i class="fa fa-check"></i><b>34.2</b> How to write functions</a>
+<ul>
+<li class="chapter" data-level="34.2.1" data-path="writing-functions.html"><a href="writing-functions.html#the-function-function"><i class="fa fa-check"></i><b>34.2.1</b> The function() function</a></li>
+<li class="chapter" data-level="34.2.2" data-path="writing-functions.html"><a href="writing-functions.html#the-function-writing-process"><i class="fa fa-check"></i><b>34.2.2</b> The function writing process</a></li>
+</ul></li>
+<li class="chapter" data-level="34.3" data-path="writing-functions.html"><a href="writing-functions.html#giving-your-function-arguments-default-values"><i class="fa fa-check"></i><b>34.3</b> Giving your function arguments default values</a></li>
+<li class="chapter" data-level="34.4" data-path="writing-functions.html"><a href="writing-functions.html#the-values-your-functions-return"><i class="fa fa-check"></i><b>34.4</b> The values your functions return</a></li>
+<li class="chapter" data-level="34.5" data-path="writing-functions.html"><a href="writing-functions.html#lexical-scoping-and-functions"><i class="fa fa-check"></i><b>34.5</b> Lexical scoping and functions</a></li>
+<li class="chapter" data-level="34.6" data-path="writing-functions.html"><a href="writing-functions.html#tidy-evaluation-1"><i class="fa fa-check"></i><b>34.6</b> Tidy evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="35" data-path="column-wise-operations-in-dplyr.html"><a href="column-wise-operations-in-dplyr.html"><i class="fa fa-check"></i><b>35</b> Column-wise Operations in dplyr</a>
+<ul>
+<li class="chapter" data-level="35.1" data-path="column-wise-operations-in-dplyr.html"><a href="column-wise-operations-in-dplyr.html#the-across-function"><i class="fa fa-check"></i><b>35.1</b> The across() function</a></li>
+<li class="chapter" data-level="35.2" data-path="column-wise-operations-in-dplyr.html"><a href="column-wise-operations-in-dplyr.html#across-with-mutate"><i class="fa fa-check"></i><b>35.2</b> Across with mutate</a></li>
+<li class="chapter" data-level="35.3" data-path="column-wise-operations-in-dplyr.html"><a href="column-wise-operations-in-dplyr.html#across-with-summarise"><i class="fa fa-check"></i><b>35.3</b> Across with summarise</a></li>
+<li class="chapter" data-level="35.4" data-path="column-wise-operations-in-dplyr.html"><a href="column-wise-operations-in-dplyr.html#across-with-filter"><i class="fa fa-check"></i><b>35.4</b> Across with filter</a></li>
+<li class="chapter" data-level="35.5" data-path="column-wise-operations-in-dplyr.html"><a href="column-wise-operations-in-dplyr.html#summary-3"><i class="fa fa-check"></i><b>35.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="36" data-path="writing-for-loops.html"><a href="writing-for-loops.html"><i class="fa fa-check"></i><b>36</b> Writing For Loops</a>
+<ul>
+<li class="chapter" data-level="36.1" data-path="writing-for-loops.html"><a href="writing-for-loops.html#how-to-write-for-loops"><i class="fa fa-check"></i><b>36.1</b> How to write for loops</a>
+<ul>
+<li class="chapter" data-level="36.1.1" data-path="writing-for-loops.html"><a href="writing-for-loops.html#the-for-loop-body"><i class="fa fa-check"></i><b>36.1.1</b> The for loop body</a></li>
+<li class="chapter" data-level="36.1.2" data-path="writing-for-loops.html"><a href="writing-for-loops.html#the-for-function"><i class="fa fa-check"></i><b>36.1.2</b> The for() function</a></li>
+</ul></li>
+<li class="chapter" data-level="36.2" data-path="writing-for-loops.html"><a href="writing-for-loops.html#using-for-loops-for-data-transfer"><i class="fa fa-check"></i><b>36.2</b> Using for loops for data transfer</a></li>
+<li class="chapter" data-level="36.3" data-path="writing-for-loops.html"><a href="writing-for-loops.html#using-for-loops-for-data-management"><i class="fa fa-check"></i><b>36.3</b> Using for loops for data management</a></li>
+<li class="chapter" data-level="36.4" data-path="writing-for-loops.html"><a href="writing-for-loops.html#using-for-loops-for-analysis"><i class="fa fa-check"></i><b>36.4</b> Using for loops for analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="37" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html"><i class="fa fa-check"></i><b>37</b> Using the purrr Package</a>
+<ul>
+<li class="chapter" data-level="37.1" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#comparing-for-loops-and-the-map-functions"><i class="fa fa-check"></i><b>37.1</b> Comparing for loops and the map functions</a></li>
+<li class="chapter" data-level="37.2" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#using-purrr-for-data-transfer"><i class="fa fa-check"></i><b>37.2</b> Using purrr for data transfer</a>
+<ul>
+<li class="chapter" data-level="37.2.1" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#example-1-importing-multiple-sheets-from-an-excel-workbook"><i class="fa fa-check"></i><b>37.2.1</b> Example 1: Importing multiple sheets from an Excel workbook</a></li>
+<li class="chapter" data-level="37.2.2" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#why-walk-instead-of-map"><i class="fa fa-check"></i><b>37.2.2</b> Why walk instead of map?</a></li>
+<li class="chapter" data-level="37.2.3" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#why-we-didnt-assign-the-return-value-of-walk-to-an-object"><i class="fa fa-check"></i><b>37.2.3</b> why we didn’t assign the return value of <code>walk()</code> to an object?</a></li>
+</ul></li>
+<li class="chapter" data-level="37.3" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#using-purrr-for-data-management"><i class="fa fa-check"></i><b>37.3</b> Using purrr for data management</a>
+<ul>
+<li class="chapter" data-level="37.3.1" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#example-1-adding-na-at-multiple-positions"><i class="fa fa-check"></i><b>37.3.1</b> Example 1: Adding NA at multiple positions</a></li>
+<li class="chapter" data-level="37.3.2" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#example-2.-detecting-matching-values-by-position"><i class="fa fa-check"></i><b>37.3.2</b> Example 2. Detecting matching values by position</a></li>
+</ul></li>
+<li class="chapter" data-level="37.4" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#using-purrr-for-analysis"><i class="fa fa-check"></i><b>37.4</b> Using purrr for analysis</a>
+<ul>
+<li class="chapter" data-level="37.4.1" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#example-1-continuous-statistics"><i class="fa fa-check"></i><b>37.4.1</b> Example 1: Continuous statistics</a></li>
+<li class="chapter" data-level="37.4.2" data-path="using-the-purrr-package.html"><a href="using-the-purrr-package.html#example-2-categorical-statistics"><i class="fa fa-check"></i><b>37.4.2</b> Example 2: Categorical statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VII Collaboration</b></span></li>
+<li class="chapter" data-level="38" data-path="introduction-to-git-and-github.html"><a href="introduction-to-git-and-github.html"><i class="fa fa-check"></i><b>38</b> Introduction to git and GitHub</a>
+<ul>
+<li class="chapter" data-level="38.1" data-path="introduction-to-git-and-github.html"><a href="introduction-to-git-and-github.html#versioning"><i class="fa fa-check"></i><b>38.1</b> Versioning</a></li>
+<li class="chapter" data-level="38.2" data-path="introduction-to-git-and-github.html"><a href="introduction-to-git-and-github.html#preservation"><i class="fa fa-check"></i><b>38.2</b> Preservation</a></li>
+<li class="chapter" data-level="38.3" data-path="introduction-to-git-and-github.html"><a href="introduction-to-git-and-github.html#reproducibility"><i class="fa fa-check"></i><b>38.3</b> Reproducibility</a></li>
+<li class="chapter" data-level="38.4" data-path="introduction-to-git-and-github.html"><a href="introduction-to-git-and-github.html#collaboration"><i class="fa fa-check"></i><b>38.4</b> Collaboration</a></li>
+<li class="chapter" data-level="38.5" data-path="introduction-to-git-and-github.html"><a href="introduction-to-git-and-github.html#summary-4"><i class="fa fa-check"></i><b>38.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="39" data-path="using-git-and-github.html"><a href="using-git-and-github.html"><i class="fa fa-check"></i><b>39</b> Using git and GitHub</a>
+<ul>
+<li class="chapter" data-level="39.1" data-path="using-git-and-github.html"><a href="using-git-and-github.html#install-git"><i class="fa fa-check"></i><b>39.1</b> Install git</a></li>
+<li class="chapter" data-level="39.2" data-path="using-git-and-github.html"><a href="using-git-and-github.html#sign-up-for-a-github-account"><i class="fa fa-check"></i><b>39.2</b> Sign up for a GitHub account</a></li>
+<li class="chapter" data-level="39.3" data-path="using-git-and-github.html"><a href="using-git-and-github.html#install-gitkraken"><i class="fa fa-check"></i><b>39.3</b> Install GitKraken</a></li>
+<li class="chapter" data-level="39.4" data-path="using-git-and-github.html"><a href="using-git-and-github.html#example-1-contribute-to-r4epi"><i class="fa fa-check"></i><b>39.4</b> Example 1: Contribute to R4Epi</a></li>
+<li class="chapter" data-level="39.5" data-path="using-git-and-github.html"><a href="using-git-and-github.html#example-2-create-a-repository-for-a-research-project"><i class="fa fa-check"></i><b>39.5</b> Example 2: Create a repository for a research project</a>
+<ul>
+<li class="chapter" data-level="" data-path="using-git-and-github.html"><a href="using-git-and-github.html#step-1-create-a-repository-on-github"><i class="fa fa-check"></i>Step 1: Create a repository on GitHub</a></li>
+<li class="chapter" data-level="" data-path="using-git-and-github.html"><a href="using-git-and-github.html#step-2-clone-the-repository-to-your-computer"><i class="fa fa-check"></i>Step 2: Clone the repository to your computer</a></li>
+<li class="chapter" data-level="" data-path="using-git-and-github.html"><a href="using-git-and-github.html#step-3-add-an-r-project-file-to-the-repository"><i class="fa fa-check"></i>Step 3: Add an R project file to the repository</a></li>
+<li class="chapter" data-level="" data-path="using-git-and-github.html"><a href="using-git-and-github.html#step-4-update-and-commit-gitignore"><i class="fa fa-check"></i>Step 4: Update and commit gitignore</a></li>
+<li class="chapter" data-level="" data-path="using-git-and-github.html"><a href="using-git-and-github.html#step-5-keep-adding-and-committing-files"><i class="fa fa-check"></i>Step 5: Keep adding and committing files</a></li>
+</ul></li>
+<li class="chapter" data-level="39.6" data-path="using-git-and-github.html"><a href="using-git-and-github.html#committing-and-pushing"><i class="fa fa-check"></i><b>39.6</b> Committing and pushing</a></li>
+<li class="chapter" data-level="39.7" data-path="using-git-and-github.html"><a href="using-git-and-github.html#example-3-contribute-to-a-research-project"><i class="fa fa-check"></i><b>39.7</b> Example 3: Contribute to a research project</a>
+<ul>
+<li class="chapter" data-level="39.7.1" data-path="using-git-and-github.html"><a href="using-git-and-github.html#forking-a-repository"><i class="fa fa-check"></i><b>39.7.1</b> Forking a repository</a></li>
+<li class="chapter" data-level="39.7.2" data-path="using-git-and-github.html"><a href="using-git-and-github.html#creating-a-pull-request"><i class="fa fa-check"></i><b>39.7.2</b> Creating a pull request</a></li>
+</ul></li>
+<li class="chapter" data-level="39.8" data-path="using-git-and-github.html"><a href="using-git-and-github.html#summary-5"><i class="fa fa-check"></i><b>39.8</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>VIII Presenting Results</b></span></li>
+<li class="chapter" data-level="40" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html"><i class="fa fa-check"></i><b>40</b> Creating tables with R and Microsoft Word</a>
+<ul>
+<li class="chapter" data-level="40.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#table-1"><i class="fa fa-check"></i><b>40.1</b> Table 1</a></li>
+<li class="chapter" data-level="40.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#opioid-drug-use"><i class="fa fa-check"></i><b>40.2</b> Opioid drug use</a></li>
+<li class="chapter" data-level="40.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#table-columns"><i class="fa fa-check"></i><b>40.3</b> Table columns</a></li>
+<li class="chapter" data-level="40.4" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#table-rows"><i class="fa fa-check"></i><b>40.4</b> Table rows</a></li>
+<li class="chapter" data-level="40.5" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#make-the-table-skeleton"><i class="fa fa-check"></i><b>40.5</b> Make the table skeleton</a></li>
+<li class="chapter" data-level="40.6" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-column-headers"><i class="fa fa-check"></i><b>40.6</b> Fill in column headers</a>
+<ul>
+<li class="chapter" data-level="40.6.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#group-sample-sizes"><i class="fa fa-check"></i><b>40.6.1</b> Group sample sizes</a></li>
+<li class="chapter" data-level="40.6.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-column-headers"><i class="fa fa-check"></i><b>40.6.2</b> Formatting column headers</a></li>
+</ul></li>
+<li class="chapter" data-level="40.7" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-row-headers"><i class="fa fa-check"></i><b>40.7</b> Fill in row headers</a>
+<ul>
+<li class="chapter" data-level="40.7.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#label-statistics"><i class="fa fa-check"></i><b>40.7.1</b> Label statistics</a></li>
+<li class="chapter" data-level="40.7.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-row-headers"><i class="fa fa-check"></i><b>40.7.2</b> Formatting row headers</a></li>
+</ul></li>
+<li class="chapter" data-level="40.8" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-data-values"><i class="fa fa-check"></i><b>40.8</b> Fill in data values</a>
+<ul>
+<li class="chapter" data-level="40.8.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#manually-type-values"><i class="fa fa-check"></i><b>40.8.1</b> Manually type values</a></li>
+<li class="chapter" data-level="40.8.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#copy-and-paste-values"><i class="fa fa-check"></i><b>40.8.2</b> Copy and paste values</a></li>
+<li class="chapter" data-level="40.8.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#knit-a-word-document"><i class="fa fa-check"></i><b>40.8.3</b> Knit a Word document</a></li>
+<li class="chapter" data-level="40.8.4" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#flextable-and-officer"><i class="fa fa-check"></i><b>40.8.4</b> flextable and officer</a></li>
+<li class="chapter" data-level="40.8.5" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#significant-digits"><i class="fa fa-check"></i><b>40.8.5</b> Significant digits</a></li>
+<li class="chapter" data-level="40.8.6" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-data-values"><i class="fa fa-check"></i><b>40.8.6</b> Formatting data values</a></li>
+</ul></li>
+<li class="chapter" data-level="40.9" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-title"><i class="fa fa-check"></i><b>40.9</b> Fill in title</a></li>
+<li class="chapter" data-level="40.10" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#fill-in-footnotes"><i class="fa fa-check"></i><b>40.10</b> Fill in footnotes</a>
+<ul>
+<li class="chapter" data-level="40.10.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#formatting-footnotes"><i class="fa fa-check"></i><b>40.10.1</b> Formatting footnotes</a></li>
+</ul></li>
+<li class="chapter" data-level="40.11" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#final-formatting"><i class="fa fa-check"></i><b>40.11</b> Final formatting</a>
+<ul>
+<li class="chapter" data-level="40.11.1" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#adjust-column-widths"><i class="fa fa-check"></i><b>40.11.1</b> Adjust column widths</a></li>
+<li class="chapter" data-level="40.11.2" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#merge-cells"><i class="fa fa-check"></i><b>40.11.2</b> Merge cells</a></li>
+<li class="chapter" data-level="40.11.3" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#remove-cell-borders"><i class="fa fa-check"></i><b>40.11.3</b> Remove cell borders</a></li>
+</ul></li>
+<li class="chapter" data-level="40.12" data-path="creating-tables-with-r-and-microsoft-word.html"><a href="creating-tables-with-r-and-microsoft-word.html#summary-6"><i class="fa fa-check"></i><b>40.12</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>IX Introduction to Epidemiology</b></span></li>
+<li class="chapter" data-level="41" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html"><i class="fa fa-check"></i><b>41</b> Introduction to Epidemiology</a>
+<ul>
+<li class="chapter" data-level="41.1" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#measurement"><i class="fa fa-check"></i><b>41.1</b> Measurement</a>
+<ul>
+<li class="chapter" data-level="41.1.1" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#descriptive-measures"><i class="fa fa-check"></i><b>41.1.1</b> Descriptive measures</a></li>
+</ul></li>
+<li class="chapter" data-level="41.2" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#uncertainty"><i class="fa fa-check"></i><b>41.2</b> Uncertainty</a>
+<ul>
+<li class="chapter" data-level="41.2.1" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#statistical-uncertainty"><i class="fa fa-check"></i><b>41.2.1</b> Statistical uncertainty</a></li>
+<li class="chapter" data-level="41.2.2" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#uncertainty-in-the-research-process"><i class="fa fa-check"></i><b>41.2.2</b> Uncertainty in the research process</a></li>
+<li class="chapter" data-level="41.2.3" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#epistemological-uncertainty"><i class="fa fa-check"></i><b>41.2.3</b> Epistemological uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="41.3" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#study-design"><i class="fa fa-check"></i><b>41.3</b> Study design</a></li>
+<li class="chapter" data-level="41.4" data-path="introduction-to-epidemiology.html"><a href="introduction-to-epidemiology.html#summary-7"><i class="fa fa-check"></i><b>41.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="42" data-path="populations.html"><a href="populations.html"><i class="fa fa-check"></i><b>42</b> Populations</a>
+<ul>
+<li class="chapter" data-level="42.1" data-path="populations.html"><a href="populations.html#open-and-closed-populations"><i class="fa fa-check"></i><b>42.1</b> Open and closed populations</a></li>
+<li class="chapter" data-level="42.2" data-path="populations.html"><a href="populations.html#other-ways-to-define-populations"><i class="fa fa-check"></i><b>42.2</b> Other ways to define populations</a></li>
+<li class="chapter" data-level="42.3" data-path="populations.html"><a href="populations.html#samples"><i class="fa fa-check"></i><b>42.3</b> Samples</a></li>
+<li class="chapter" data-level="42.4" data-path="populations.html"><a href="populations.html#cohorts"><i class="fa fa-check"></i><b>42.4</b> Cohorts</a></li>
+<li class="chapter" data-level="42.5" data-path="populations.html"><a href="populations.html#summary-8"><i class="fa fa-check"></i><b>42.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="43" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html"><i class="fa fa-check"></i><b>43</b> Measures of Occurrence</a>
+<ul>
+<li class="chapter" data-level="43.1" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#terminology"><i class="fa fa-check"></i><b>43.1</b> Terminology</a>
+<ul>
+<li class="chapter" data-level="43.1.1" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#prevalence-and-incidence"><i class="fa fa-check"></i><b>43.1.1</b> Prevalence and incidence</a></li>
+<li class="chapter" data-level="43.1.2" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#point-prevalence-and-period-prevalence"><i class="fa fa-check"></i><b>43.1.2</b> Point prevalence and period prevalence</a></li>
+</ul></li>
+<li class="chapter" data-level="43.2" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#quantifying-prevalence"><i class="fa fa-check"></i><b>43.2</b> Quantifying prevalence</a>
+<ul>
+<li class="chapter" data-level="43.2.1" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#prevalence-counts"><i class="fa fa-check"></i><b>43.2.1</b> Prevalence counts</a></li>
+<li class="chapter" data-level="43.2.2" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#prevalence-proportion"><i class="fa fa-check"></i><b>43.2.2</b> Prevalence proportion</a></li>
+<li class="chapter" data-level="43.2.3" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#prevalence-odds"><i class="fa fa-check"></i><b>43.2.3</b> Prevalence Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="43.3" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#quantifying-incidence"><i class="fa fa-check"></i><b>43.3</b> Quantifying incidence</a>
+<ul>
+<li class="chapter" data-level="43.3.1" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#incidence-count"><i class="fa fa-check"></i><b>43.3.1</b> Incidence Count</a></li>
+<li class="chapter" data-level="43.3.2" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#incidence-proportion"><i class="fa fa-check"></i><b>43.3.2</b> Incidence proportion</a></li>
+<li class="chapter" data-level="43.3.3" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#incidence-odds"><i class="fa fa-check"></i><b>43.3.3</b> Incidence Odds</a></li>
+<li class="chapter" data-level="43.3.4" data-path="measures-of-occurrence.html"><a href="measures-of-occurrence.html#incidence-rate"><i class="fa fa-check"></i><b>43.3.4</b> Incidence Rate</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>X Appendix</b></span></li>
+<li class="chapter" data-level="" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i>Appendix A: Glossary</a></li>
+<li class="chapter" data-level="" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html"><i class="fa fa-check"></i>Appendix: Alternative table formats</a>
+<ul>
+<li class="chapter" data-level="43.4" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#smaller-data-frame"><i class="fa fa-check"></i><b>43.4</b> Smaller data frame</a>
+<ul>
+<li class="chapter" data-level="43.4.1" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#default-method-for-printing-the-data-frame-to-the-screen"><i class="fa fa-check"></i><b>43.4.1</b> Default method for printing the data frame to the screen</a></li>
+<li class="chapter" data-level="43.4.2" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#using-the-kable-function"><i class="fa fa-check"></i><b>43.4.2</b> Using the kable function</a></li>
+<li class="chapter" data-level="43.4.3" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#using-the-datatable-function"><i class="fa fa-check"></i><b>43.4.3</b> Using the datatable function</a></li>
+</ul></li>
+<li class="chapter" data-level="43.5" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#larger-data-frame"><i class="fa fa-check"></i><b>43.5</b> Larger data frame</a>
+<ul>
+<li class="chapter" data-level="43.5.1" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#default-method-for-printing-the-data-frame-to-the-screen-1"><i class="fa fa-check"></i><b>43.5.1</b> Default method for printing the data frame to the screen</a></li>
+<li class="chapter" data-level="43.5.2" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#using-the-kable-function-1"><i class="fa fa-check"></i><b>43.5.2</b> Using the kable function</a></li>
+<li class="chapter" data-level="43.5.3" data-path="appendix-alternative-table-formats.html"><a href="appendix-alternative-table-formats.html#using-the-datatable-function-1"><i class="fa fa-check"></i><b>43.5.3</b> Using the datatable function</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R for Epidemiology</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="numerical-descriptions-of-categorical-variables" class="section level1 hasAnchor" number="19">
+<h1><span class="header-section-number">19</span> Numerical Descriptions of Categorical Variables<a href="numerical-descriptions-of-categorical-variables.html#numerical-descriptions-of-categorical-variables" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>We’ll begin our discussion of descriptive statistics in the categorical half of our flow chart. Specifically, we’ll start by numerically describing categorical variables. As a reminder, categorical variables are variables whose values fit into categories.</p>
+<p><img src="img/04_part_descriptive_analysis/flowchart_cat_numerical.png" width="900" /></p>
+<p>Some examples of categorical variables commonly seen in public health data are: sex, race or ethnicity, and level of educational attainment.</p>
+<p><img src="img/04_part_descriptive_analysis/categorical_variables_01.jpeg" width="960" /></p>
+<p>Notice that there is no inherent numeric value to any of these categories. Having said that, we can, and often will, assign a numeric value to each category using R.</p>
+<p><img src="img/04_part_descriptive_analysis/categorical_variables_02.jpeg" width="960" /></p>
+<p>The two most common numerical descriptions of categorical variables are probably the <strong>frequency count</strong> (you will often hear this referred to as simply the <strong>frequency</strong>, the <strong>count</strong>, or the <strong>n</strong>) and the <strong>proportion</strong> or <strong>percentage</strong> (the percentage is just the proportion multiplied by 100).</p>
+<p><img src="img/04_part_descriptive_analysis/categorical_variables_03.jpeg" width="960" /></p>
+<p>The count is simply the number of observations, in this case people, which fall into each possible category.</p>
+<p>The proportion is just the count divided by the total number of observations. In this example, 2 people out of 5 people (.40 or 40%) are in the Asian race category.</p>
+<p>The remainder of this chapter is devoted to learning how to calculate frequency counts and percentages using R.</p>
+<div id="factors" class="section level2 hasAnchor" number="19.1">
+<h2><span class="header-section-number">19.1</span> Factors<a href="numerical-descriptions-of-categorical-variables.html#factors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We first learned about factors in the <a href="lets-get-programming.html#lets-get-programming">Let’s Get Programming</a> chapter. Before moving on to calculating frequency counts and percentages, we will discuss factors in slightly greater depth here. As a reminder, factors can be useful for representing categorical data in R. To demonstrate, let’s simulate a simple little data frame.</p>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="numerical-descriptions-of-categorical-variables.html#cb251-1" tabindex="-1"></a><span class="co"># Load dplyr for tibble()</span></span>
+<span id="cb251-2"><a href="numerical-descriptions-of-categorical-variables.html#cb251-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="numerical-descriptions-of-categorical-variables.html#cb252-1" tabindex="-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb252-2"><a href="numerical-descriptions-of-categorical-variables.html#cb252-2" tabindex="-1"></a>  <span class="at">id  =</span> <span class="fu">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>),</span>
+<span id="cb252-3"><a href="numerical-descriptions-of-categorical-variables.html#cb252-3" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">67</span>, <span class="dv">52</span>, <span class="dv">56</span>),</span>
+<span id="cb252-4"><a href="numerical-descriptions-of-categorical-variables.html#cb252-4" tabindex="-1"></a>  <span class="at">edu =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>)</span>
+<span id="cb252-5"><a href="numerical-descriptions-of-categorical-variables.html#cb252-5" tabindex="-1"></a>)</span></code></pre></div>
+<p>👆 <strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created a data frame that is meant to simulate some demographic information about 4 hypothetical study participants.</p></li>
+<li><p>The first variable (<code>id</code>) is the participant’s study id.</p></li>
+<li><p>The second variable (<code>age</code>) is the participant’s age at enrollment in the study.</p></li>
+<li><p>The third variable (<code>edu</code>) is the highest level of formal education the participant completed. Where:</p>
+<ul>
+<li><p>1 = Less than high school</p></li>
+<li><p>2 = High school graduate</p></li>
+<li><p>3 = Some college</p></li>
+<li><p>4 = College graduate</p></li>
+</ul></li>
+</ul>
+<p>Each participant in our data frame has a value for <code>edu</code> – 1, 2, 3, or 4. The value they have for that variable corresponds to the highest level of formal education they have completed, which is split up into categories that we defined. We can see which category each person is in by viewing the data.</p>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="numerical-descriptions-of-categorical-variables.html#cb253-1" tabindex="-1"></a>demo</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 3
+##   id      age   edu
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 001      30     3
+## 2 002      67     1
+## 3 003      52     4
+## 4 004      56     2</code></pre>
+<p>We can see that person <code>001</code> is in category <code>3</code>, person <code>002</code> is in category <code>1</code>, and so on. This compact representation of the categories is convenient for data entry and data manipulation, but it also has an obvious limitation – what do these numbers mean? I defined what these values mean for you above, but if you didn’t have that information, or some kind of prior knowledge about the process that was used to gather this data, then you would likely have no idea what these numbers mean.</p>
+<p>Now, we could have solved that problem by making education a character vector from the beginning. For example:</p>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="numerical-descriptions-of-categorical-variables.html#cb255-1" tabindex="-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb255-2"><a href="numerical-descriptions-of-categorical-variables.html#cb255-2" tabindex="-1"></a>  <span class="at">id       =</span> <span class="fu">c</span>(<span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>),</span>
+<span id="cb255-3"><a href="numerical-descriptions-of-categorical-variables.html#cb255-3" tabindex="-1"></a>  <span class="at">age      =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">67</span>, <span class="dv">52</span>, <span class="dv">56</span>),</span>
+<span id="cb255-4"><a href="numerical-descriptions-of-categorical-variables.html#cb255-4" tabindex="-1"></a>  <span class="at">edu      =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>),</span>
+<span id="cb255-5"><a href="numerical-descriptions-of-categorical-variables.html#cb255-5" tabindex="-1"></a>  <span class="at">edu_char =</span> <span class="fu">c</span>(</span>
+<span id="cb255-6"><a href="numerical-descriptions-of-categorical-variables.html#cb255-6" tabindex="-1"></a>    <span class="st">&quot;Some college&quot;</span>, <span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;College graduate&quot;</span>, </span>
+<span id="cb255-7"><a href="numerical-descriptions-of-categorical-variables.html#cb255-7" tabindex="-1"></a>    <span class="st">&quot;High school graduate&quot;</span></span>
+<span id="cb255-8"><a href="numerical-descriptions-of-categorical-variables.html#cb255-8" tabindex="-1"></a>  )</span>
+<span id="cb255-9"><a href="numerical-descriptions-of-categorical-variables.html#cb255-9" tabindex="-1"></a>)</span>
+<span id="cb255-10"><a href="numerical-descriptions-of-categorical-variables.html#cb255-10" tabindex="-1"></a></span>
+<span id="cb255-11"><a href="numerical-descriptions-of-categorical-variables.html#cb255-11" tabindex="-1"></a>demo</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 4
+##   id      age   edu edu_char             
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                
+## 1 001      30     3 Some college         
+## 2 002      67     1 Less than high school
+## 3 003      52     4 College graduate     
+## 4 004      56     2 High school graduate</code></pre>
+<p>But, this strategy also has a few limitations.</p>
+<p>👎 First, entering data this way requires more typing. Not such a big deal in this case because we only have 4 participants. But, imagine typing out the categories as character strings 10, 20, or 100 times. 😫</p>
+<p>👎 Second, R summarizes character vectors alphabetically by default, which may not be the ideal way to order some categorical variables.</p>
+<p>👎 Third, creating categorical variables in our data frame as character vectors limits us to inputting only <em>observed</em> values for that variable. However, there are cases when other categories are possible and just didn’t apply to anyone in our data. That information may be useful to know.</p>
+<p>At this point, I’m going to show you how to coerce a variable to a factor in your data frame. Then, I will return to showing you how using factors can overcome some of the limitations outlined above.</p>
+<div id="coerce-a-numeric-variable" class="section level3 hasAnchor" number="19.1.1">
+<h3><span class="header-section-number">19.1.1</span> Coerce a numeric variable<a href="numerical-descriptions-of-categorical-variables.html#coerce-a-numeric-variable" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The code below shows one method for coercing a numeric vector into a factor.</p>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="numerical-descriptions-of-categorical-variables.html#cb257-1" tabindex="-1"></a><span class="co"># Load dplyr for pipes and mutate()</span></span>
+<span id="cb257-2"><a href="numerical-descriptions-of-categorical-variables.html#cb257-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="numerical-descriptions-of-categorical-variables.html#cb258-1" tabindex="-1"></a>demo <span class="ot">&lt;-</span> demo <span class="sc">%&gt;%</span> </span>
+<span id="cb258-2"><a href="numerical-descriptions-of-categorical-variables.html#cb258-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb258-3"><a href="numerical-descriptions-of-categorical-variables.html#cb258-3" tabindex="-1"></a>    <span class="at">edu_f =</span> <span class="fu">factor</span>(</span>
+<span id="cb258-4"><a href="numerical-descriptions-of-categorical-variables.html#cb258-4" tabindex="-1"></a>      <span class="at">x      =</span> edu,</span>
+<span id="cb258-5"><a href="numerical-descriptions-of-categorical-variables.html#cb258-5" tabindex="-1"></a>      <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
+<span id="cb258-6"><a href="numerical-descriptions-of-categorical-variables.html#cb258-6" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb258-7"><a href="numerical-descriptions-of-categorical-variables.html#cb258-7" tabindex="-1"></a>        <span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school graduate&quot;</span>, <span class="st">&quot;Some college&quot;</span>, </span>
+<span id="cb258-8"><a href="numerical-descriptions-of-categorical-variables.html#cb258-8" tabindex="-1"></a>        <span class="st">&quot;College graduate&quot;</span></span>
+<span id="cb258-9"><a href="numerical-descriptions-of-categorical-variables.html#cb258-9" tabindex="-1"></a>      )</span>
+<span id="cb258-10"><a href="numerical-descriptions-of-categorical-variables.html#cb258-10" tabindex="-1"></a>    )</span>
+<span id="cb258-11"><a href="numerical-descriptions-of-categorical-variables.html#cb258-11" tabindex="-1"></a>  )</span>
+<span id="cb258-12"><a href="numerical-descriptions-of-categorical-variables.html#cb258-12" tabindex="-1"></a></span>
+<span id="cb258-13"><a href="numerical-descriptions-of-categorical-variables.html#cb258-13" tabindex="-1"></a>demo</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 5
+##   id      age   edu edu_char              edu_f                
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                 &lt;fct&gt;                
+## 1 001      30     3 Some college          Some college         
+## 2 002      67     1 Less than high school Less than high school
+## 3 003      52     4 College graduate      College graduate     
+## 4 004      56     2 High school graduate  High school graduate</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>dplyr</code>’s <code>mutate()</code> function to create a new variable (<code>edu_f</code>) in the data frame called <code>demo</code>. The purpose of the <code>mutate()</code> function is to add new variables to data frames. We will discuss <code>mutate()</code> in greater detail in the <a href="creating-and-modifying-columns.html#creating-and-modifying-columns">later in the book</a>.</p>
+<ul>
+<li><p>You can type <code>?mutate</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>We assigned this new data frame the name <code>demo</code> using the assignment operator (<code>&lt;-</code>).</p></li>
+<li><p>Because we assigned it the name <code>demo</code>, our previous data frame named <code>demo</code> (i.e., the one that didn’t include <code>edu_f</code>) no longer exists in our global environment. If we had wanted to keep that data frame in our global environment, we would have needed to assign our new data frame a different name (e.g., <code>demo_w_factor</code>).</p></li>
+</ul></li>
+<li><p>The first argument to the <code>mutate()</code> function is the <code>.data</code> argument. The value passed to the <code>.data</code> argument should be a data frame that is currently in our global environment. We passed the data frame <code>demo</code> to the <code>.data</code> argument using the pipe operator (<code>%&gt;%</code>), which is why <code>demo</code> isn’t written inside <code>mutate</code>’s parentheses.</p></li>
+<li><p>The second argument to the <code>mutate()</code> function is the <code>...</code> argument. The value passed to the <code>...</code> argument should be a name value pair. That means, a variable name, followed by an equal sign, followed by the values to be assigned to that variable name (<code>name = value</code>).</p>
+<ul>
+<li><p>The name we passed to the <code>...</code> argument was <code>edu_f</code>. This value tells R what to name the new variable we are creating.</p>
+<ul>
+<li><p>If we had used the name <code>edu</code> instead, then the previous values in the <code>edu</code> variable would have been replaced with the new values. That is sometimes what you want to happen. However, when it comes to creating factors, I typically keep the numeric version of the variable in my data frame (e.g., <code>edu</code>) and <em>add a new</em> factor variable. I just often find that it can be useful to have both versions of the variable hanging around during the analysis process.</p></li>
+<li><p>I also use the <code>_f</code> naming convention in my code. That means that when I create a new factor variable I name it the same thing the original variable was named with the addition of <code>_f</code> (for factor) at the end.</p></li>
+</ul></li>
+<li><p>In this case, the value that will be assigned to the name <code>edu_f</code> will be the values returned by the <code>factor()</code> function. This is an example of nesting functions.</p></li>
+</ul></li>
+<li><p>We used the <code>factor()</code> function to create a factor vector.</p>
+<ul>
+<li><p>You can type <code>?factor</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>factor()</code> function is the <code>x</code> argument. The value passed to the <code>x</code> argument should be a vector of data. We passed the <code>edu</code> vector to the <code>x</code> argument.</p></li>
+<li><p>The second argument to the <code>factor()</code> function is the <code>levels</code> argument. This argument tells R the unique values that the new factor variable can take. We used the shorthand <code>1:4</code> to tell R that <code>edu_f</code> can take the unique values 1, 2, 3, or 4.</p></li>
+<li><p>The third argument to the <code>factor()</code> function is the <code>labels</code> argument. The value passed to the <code>labels</code> argument should be a character vector of labels (i.e., descriptive text) for each value in the <code>levels</code> argument. The order of the labels in the character vector we pass to the <code>labels</code> argument should match the order of the values passed to the <code>levels</code> argument. For example, the ordering of <code>levels</code> and <code>labels</code> above tells R that <code>1</code> should be labeled with “Less than high school”, <code>2</code> should be labeled with “High school graduate”, etc.</p></li>
+</ul></li>
+</ul>
+<p>When we printed the data frame above, the values in <code>edu_f</code> <em>looked</em> the same as the character strings displayed in <code>edu_char</code>. Notice, however, that the variable type displayed below <code>edu_char</code> in the data frame above is <code>&lt;chr&gt;</code> for character. Alternatively, the variable type displayed below <code>edu_f</code> is <code>&lt;fctr&gt;</code>. Although, labels are used to make factors <em>look</em> like character vectors, they are still integer vectors under the hood. For example:</p>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="numerical-descriptions-of-categorical-variables.html#cb260-1" tabindex="-1"></a><span class="fu">as.numeric</span>(demo<span class="sc">$</span>edu_char)</span></code></pre></div>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre><code>## [1] NA NA NA NA</code></pre>
+<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb263-1"><a href="numerical-descriptions-of-categorical-variables.html#cb263-1" tabindex="-1"></a><span class="fu">as.numeric</span>(demo<span class="sc">$</span>edu_f)</span></code></pre></div>
+<pre><code>## [1] 3 1 4 2</code></pre>
+<p>There are two main reasons that you may want to use factors instead of character vectors at times:</p>
+<p>👍 First, R summarizes character vectors alphabetically by default, which may not be the ideal way to order some categorical variables. However, we can explicitly set the order of factor levels. This will be useful to us later when we analyze categorical variables. Here is a glimpse of things to come:</p>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="numerical-descriptions-of-categorical-variables.html#cb265-1" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_char)</span></code></pre></div>
+<pre><code>## 
+##      College graduate  High school graduate Less than high school          Some college 
+##                     1                     1                     1                     1</code></pre>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="numerical-descriptions-of-categorical-variables.html#cb267-1" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_f)</span></code></pre></div>
+<pre><code>## 
+## Less than high school  High school graduate          Some college      College graduate 
+##                     1                     1                     1                     1</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>You can type <code>?base::table</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>We used the <code>table()</code> function to get a count of the number of times each unique value of <code>edu_char</code> appears in our data frame. In this case, each value appears one time. Notice that the results are returned to us in alphabetical order.</p></li>
+<li><p>Next, we used the <code>table()</code> function to get a count of the number of times each unique value of <code>edu_f</code> appears in our data frame. Again, each value appears one time. Notice, however, that this time the results are returned to us in the order that we passed to the <code>levels</code> argument of the <code>factor()</code> function above.</p></li>
+</ul>
+<p>👍 Second, creating categorical variables in our data frame as character vectors limits us to inputting only <em>observed</em> values for that variable. However, there are cases when other categories are possible and just didn’t apply to anyone in our data. That information may be useful to know. Factors allow us to tell R that other values are possible, even when they are <em>unobserved</em> in our data. For example, let’s add a fifth possible category to our education variable – graduate school.</p>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="numerical-descriptions-of-categorical-variables.html#cb269-1" tabindex="-1"></a>demo <span class="ot">&lt;-</span> demo <span class="sc">%&gt;%</span> </span>
+<span id="cb269-2"><a href="numerical-descriptions-of-categorical-variables.html#cb269-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb269-3"><a href="numerical-descriptions-of-categorical-variables.html#cb269-3" tabindex="-1"></a>    <span class="at">edu_5cat_f =</span> <span class="fu">factor</span>(</span>
+<span id="cb269-4"><a href="numerical-descriptions-of-categorical-variables.html#cb269-4" tabindex="-1"></a>      <span class="at">x      =</span> edu,</span>
+<span id="cb269-5"><a href="numerical-descriptions-of-categorical-variables.html#cb269-5" tabindex="-1"></a>      <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
+<span id="cb269-6"><a href="numerical-descriptions-of-categorical-variables.html#cb269-6" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb269-7"><a href="numerical-descriptions-of-categorical-variables.html#cb269-7" tabindex="-1"></a>        <span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school graduate&quot;</span>, <span class="st">&quot;Some college&quot;</span>, </span>
+<span id="cb269-8"><a href="numerical-descriptions-of-categorical-variables.html#cb269-8" tabindex="-1"></a>        <span class="st">&quot;College graduate&quot;</span>, <span class="st">&quot;Graduate school&quot;</span></span>
+<span id="cb269-9"><a href="numerical-descriptions-of-categorical-variables.html#cb269-9" tabindex="-1"></a>      )</span>
+<span id="cb269-10"><a href="numerical-descriptions-of-categorical-variables.html#cb269-10" tabindex="-1"></a>    )</span>
+<span id="cb269-11"><a href="numerical-descriptions-of-categorical-variables.html#cb269-11" tabindex="-1"></a>  )</span>
+<span id="cb269-12"><a href="numerical-descriptions-of-categorical-variables.html#cb269-12" tabindex="-1"></a></span>
+<span id="cb269-13"><a href="numerical-descriptions-of-categorical-variables.html#cb269-13" tabindex="-1"></a>demo</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 6
+##   id      age   edu edu_char              edu_f                 edu_5cat_f           
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                 &lt;fct&gt;                 &lt;fct&gt;                
+## 1 001      30     3 Some college          Some college          Some college         
+## 2 002      67     1 Less than high school Less than high school Less than high school
+## 3 003      52     4 College graduate      College graduate      College graduate     
+## 4 004      56     2 High school graduate  High school graduate  High school graduate</code></pre>
+<p>Now, let’s use the <code>table()</code> function once again to count the number of times each unique level of <code>edu_char</code> appears in the data frame and the number of times each unique level of <code>edu_5cat_f</code> appears in the data frame:</p>
+<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb271-1"><a href="numerical-descriptions-of-categorical-variables.html#cb271-1" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_char)</span></code></pre></div>
+<pre><code>## 
+##      College graduate  High school graduate Less than high school          Some college 
+##                     1                     1                     1                     1</code></pre>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="numerical-descriptions-of-categorical-variables.html#cb273-1" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_5cat_f)</span></code></pre></div>
+<pre><code>## 
+## Less than high school  High school graduate          Some college      College graduate       Graduate school 
+##                     1                     1                     1                     1                     0</code></pre>
+<p>Notice that R now tells us that the value <code>Graduate school</code> was possible but was observed zero times in the data.</p>
+</div>
+<div id="coerce-a-character-variable" class="section level3 hasAnchor" number="19.1.2">
+<h3><span class="header-section-number">19.1.2</span> Coerce a character variable<a href="numerical-descriptions-of-categorical-variables.html#coerce-a-character-variable" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>It is also possible to coerce character vectors to factors. For example, we can coerce <code>edu_char</code> to a factor like so:</p>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="numerical-descriptions-of-categorical-variables.html#cb275-1" tabindex="-1"></a>demo <span class="ot">&lt;-</span> demo <span class="sc">%&gt;%</span> </span>
+<span id="cb275-2"><a href="numerical-descriptions-of-categorical-variables.html#cb275-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb275-3"><a href="numerical-descriptions-of-categorical-variables.html#cb275-3" tabindex="-1"></a>    <span class="at">edu_f_from_char =</span> <span class="fu">factor</span>(</span>
+<span id="cb275-4"><a href="numerical-descriptions-of-categorical-variables.html#cb275-4" tabindex="-1"></a>      <span class="at">x      =</span> edu_char,</span>
+<span id="cb275-5"><a href="numerical-descriptions-of-categorical-variables.html#cb275-5" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb275-6"><a href="numerical-descriptions-of-categorical-variables.html#cb275-6" tabindex="-1"></a>        <span class="st">&quot;Less than high school&quot;</span>, <span class="st">&quot;High school graduate&quot;</span>, <span class="st">&quot;Some college&quot;</span>, </span>
+<span id="cb275-7"><a href="numerical-descriptions-of-categorical-variables.html#cb275-7" tabindex="-1"></a>        <span class="st">&quot;College graduate&quot;</span>, <span class="st">&quot;Graduate school&quot;</span></span>
+<span id="cb275-8"><a href="numerical-descriptions-of-categorical-variables.html#cb275-8" tabindex="-1"></a>      )</span>
+<span id="cb275-9"><a href="numerical-descriptions-of-categorical-variables.html#cb275-9" tabindex="-1"></a>    )</span>
+<span id="cb275-10"><a href="numerical-descriptions-of-categorical-variables.html#cb275-10" tabindex="-1"></a>  )</span>
+<span id="cb275-11"><a href="numerical-descriptions-of-categorical-variables.html#cb275-11" tabindex="-1"></a></span>
+<span id="cb275-12"><a href="numerical-descriptions-of-categorical-variables.html#cb275-12" tabindex="-1"></a>demo</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 7
+##   id      age   edu edu_char              edu_f                 edu_5cat_f            edu_f_from_char      
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                 &lt;fct&gt;                 &lt;fct&gt;                 &lt;fct&gt;                
+## 1 001      30     3 Some college          Some college          Some college          Some college         
+## 2 002      67     1 Less than high school Less than high school Less than high school Less than high school
+## 3 003      52     4 College graduate      College graduate      College graduate      College graduate     
+## 4 004      56     2 High school graduate  High school graduate  High school graduate  High school graduate</code></pre>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="numerical-descriptions-of-categorical-variables.html#cb277-1" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>edu_f_from_char)</span></code></pre></div>
+<pre><code>## 
+## Less than high school  High school graduate          Some college      College graduate       Graduate school 
+##                     1                     1                     1                     1                     0</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We coerced a character vector (<code>edu_char</code>) to a factor using the <code>factor()</code> function.</p></li>
+<li><p>Because the levels <em>are</em> character strings, there was no need to pass any values to the <code>labels</code> argument this time. Keep in mind, though, that the order of the values passed to the <code>levels</code> argument matters. It will be the order that the factor levels will be displayed in your analyses.</p></li>
+</ul>
+<p>Now that we know how to use factors, let’s return to our discussion of describing categorical variables.</p>
+</div>
+</div>
+<div id="height-and-weight-data" class="section level2 hasAnchor" number="19.2">
+<h2><span class="header-section-number">19.2</span> Height and Weight Data<a href="numerical-descriptions-of-categorical-variables.html#height-and-weight-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Below, we’re going to learn to do descriptive analysis in R by experimenting with some simulated data that contains several people’s sex, height, and weight. You can follow along with this lesson by copying and pasting the code chunks below in your R session.</p>
+<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb279-1"><a href="numerical-descriptions-of-categorical-variables.html#cb279-1" tabindex="-1"></a><span class="co"># Load the dplyr package. We will need several of dplyr&#39;s functions in the </span></span>
+<span id="cb279-2"><a href="numerical-descriptions-of-categorical-variables.html#cb279-2" tabindex="-1"></a><span class="co"># code below.</span></span>
+<span id="cb279-3"><a href="numerical-descriptions-of-categorical-variables.html#cb279-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="numerical-descriptions-of-categorical-variables.html#cb280-1" tabindex="-1"></a><span class="co"># Simulate some data</span></span>
+<span id="cb280-2"><a href="numerical-descriptions-of-categorical-variables.html#cb280-2" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb280-3"><a href="numerical-descriptions-of-categorical-variables.html#cb280-3" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(</span>
+<span id="cb280-4"><a href="numerical-descriptions-of-categorical-variables.html#cb280-4" tabindex="-1"></a>    <span class="st">&quot;001&quot;</span>, <span class="st">&quot;002&quot;</span>, <span class="st">&quot;003&quot;</span>, <span class="st">&quot;004&quot;</span>, <span class="st">&quot;005&quot;</span>, <span class="st">&quot;006&quot;</span>, <span class="st">&quot;007&quot;</span>, <span class="st">&quot;008&quot;</span>, <span class="st">&quot;009&quot;</span>, <span class="st">&quot;010&quot;</span>, <span class="st">&quot;011&quot;</span>, </span>
+<span id="cb280-5"><a href="numerical-descriptions-of-categorical-variables.html#cb280-5" tabindex="-1"></a>    <span class="st">&quot;012&quot;</span>, <span class="st">&quot;013&quot;</span>, <span class="st">&quot;014&quot;</span>, <span class="st">&quot;015&quot;</span>, <span class="st">&quot;016&quot;</span>, <span class="st">&quot;017&quot;</span>, <span class="st">&quot;018&quot;</span>, <span class="st">&quot;019&quot;</span>, <span class="st">&quot;020&quot;</span></span>
+<span id="cb280-6"><a href="numerical-descriptions-of-categorical-variables.html#cb280-6" tabindex="-1"></a>  ),</span>
+<span id="cb280-7"><a href="numerical-descriptions-of-categorical-variables.html#cb280-7" tabindex="-1"></a>  <span class="at">sex =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb280-8"><a href="numerical-descriptions-of-categorical-variables.html#cb280-8" tabindex="-1"></a>  <span class="at">sex_f =</span> <span class="fu">factor</span>(sex, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>)),</span>
+<span id="cb280-9"><a href="numerical-descriptions-of-categorical-variables.html#cb280-9" tabindex="-1"></a>  <span class="at">ht_in =</span> <span class="fu">c</span>(</span>
+<span id="cb280-10"><a href="numerical-descriptions-of-categorical-variables.html#cb280-10" tabindex="-1"></a>    <span class="dv">71</span>, <span class="dv">69</span>, <span class="dv">64</span>, <span class="dv">65</span>, <span class="dv">73</span>, <span class="dv">69</span>, <span class="dv">68</span>, <span class="dv">73</span>, <span class="dv">71</span>, <span class="dv">66</span>, <span class="dv">71</span>, <span class="dv">69</span>, <span class="dv">66</span>, <span class="dv">68</span>, <span class="dv">75</span>, <span class="dv">69</span>, <span class="dv">66</span>, <span class="dv">65</span>, <span class="dv">65</span>, </span>
+<span id="cb280-11"><a href="numerical-descriptions-of-categorical-variables.html#cb280-11" tabindex="-1"></a>    <span class="dv">65</span></span>
+<span id="cb280-12"><a href="numerical-descriptions-of-categorical-variables.html#cb280-12" tabindex="-1"></a>  ),</span>
+<span id="cb280-13"><a href="numerical-descriptions-of-categorical-variables.html#cb280-13" tabindex="-1"></a>  <span class="at">wt_lbs =</span> <span class="fu">c</span>(</span>
+<span id="cb280-14"><a href="numerical-descriptions-of-categorical-variables.html#cb280-14" tabindex="-1"></a>    <span class="dv">190</span>, <span class="dv">176</span>, <span class="dv">130</span>, <span class="dv">154</span>, <span class="dv">173</span>, <span class="dv">182</span>, <span class="dv">140</span>, <span class="dv">185</span>, <span class="dv">157</span>, <span class="dv">155</span>, <span class="dv">213</span>, <span class="dv">151</span>, <span class="dv">147</span>, <span class="dv">196</span>, <span class="dv">212</span>, </span>
+<span id="cb280-15"><a href="numerical-descriptions-of-categorical-variables.html#cb280-15" tabindex="-1"></a>    <span class="dv">190</span>, <span class="dv">194</span>, <span class="dv">176</span>, <span class="dv">176</span>, <span class="dv">102</span></span>
+<span id="cb280-16"><a href="numerical-descriptions-of-categorical-variables.html#cb280-16" tabindex="-1"></a>  )</span>
+<span id="cb280-17"><a href="numerical-descriptions-of-categorical-variables.html#cb280-17" tabindex="-1"></a>)</span></code></pre></div>
+<div id="view-the-data" class="section level3 hasAnchor" number="19.2.1">
+<h3><span class="header-section-number">19.2.1</span> View the data<a href="numerical-descriptions-of-categorical-variables.html#view-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s start our analysis by taking a quick look at our data…</p>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="numerical-descriptions-of-categorical-variables.html#cb281-1" tabindex="-1"></a>height_and_weight_20</span></code></pre></div>
+<pre><code>## # A tibble: 20 × 5
+##    id      sex sex_f  ht_in wt_lbs
+##    &lt;chr&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 001       1 Male      71    190
+##  2 002       1 Male      69    176
+##  3 003       2 Female    64    130
+##  4 004       2 Female    65    154
+##  5 005       1 Male      73    173
+##  6 006       1 Male      69    182
+##  7 007       2 Female    68    140
+##  8 008       1 Male      73    185
+##  9 009       2 Female    71    157
+## 10 010       1 Male      66    155
+## 11 011       1 Male      71    213
+## 12 012       2 Female    69    151
+## 13 013       2 Female    66    147
+## 14 014       2 Female    68    196
+## 15 015       1 Male      75    212
+## 16 016       2 Female    69    190
+## 17 017       2 Female    66    194
+## 18 018       2 Female    65    176
+## 19 019       2 Female    65    176
+## 20 020       2 Female    65    102</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>Simulated some data that we can use to practice categorical data analysis.</p></li>
+<li><p>We viewed the data and found that it has 5 variables (columns) and 20 observations (rows).</p></li>
+<li><p>Also notice that you can use the “Next” button at the bottom right corner of the printed data frame to view rows 11 through 20 if you are viewing this data in RStudio.</p></li>
+</ul>
+<p><img src="img/04_part_descriptive_analysis/next_button.png" width="995" /></p>
+</div>
+</div>
+<div id="calculating-frequencies" class="section level2 hasAnchor" number="19.3">
+<h2><span class="header-section-number">19.3</span> Calculating frequencies<a href="numerical-descriptions-of-categorical-variables.html#calculating-frequencies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now that we’re able to easily view our data, let’s return to the original purpose of this demonstration – calculating frequencies and proportions. At this point, I suspect that few of you would have any trouble telling me that the frequency of females in this data is 12 and the frequency of males in this data is 8. It’s pretty easy to just count the number of females and males in this small data set with only 20 rows. Further, if I asked you what proportion of this sample is female, most of you would still be able to easily tell me <code>12/20 = 0.6</code>, or 60%. But, what if we had 100 observations or 1,000,000 observations? You’d get sick of counting pretty quickly. Fortunately, you don’t have to! Let R do it for you! As is almost always the case with R, there are multiple ways we can calculate the statistics that we’re interested in.</p>
+<div id="the-base-r-table-function" class="section level3 hasAnchor" number="19.3.1">
+<h3><span class="header-section-number">19.3.1</span> The base R table function<a href="numerical-descriptions-of-categorical-variables.html#the-base-r-table-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>As we already saw above, we can use the base R <code>table()</code> function like this:</p>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="numerical-descriptions-of-categorical-variables.html#cb283-1" tabindex="-1"></a><span class="fu">table</span>(height_and_weight_20<span class="sc">$</span>sex)</span></code></pre></div>
+<pre><code>## 
+##  1  2 
+##  8 12</code></pre>
+<p>Additionally, we can use the <code>CrossTable()</code> function from the <code>gmodels</code> package, which gives us a little more information by default.</p>
+</div>
+<div id="the-gmodels-crosstable-function" class="section level3 hasAnchor" number="19.3.2">
+<h3><span class="header-section-number">19.3.2</span> The gmodels CrossTable function<a href="numerical-descriptions-of-categorical-variables.html#the-gmodels-crosstable-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="numerical-descriptions-of-categorical-variables.html#cb285-1" tabindex="-1"></a><span class="co"># Like all packages, you will have to install gmodels (install.packages(&quot;gmodels&quot;)) before you can use the CrossTable() function. </span></span>
+<span id="cb285-2"><a href="numerical-descriptions-of-categorical-variables.html#cb285-2" tabindex="-1"></a>gmodels<span class="sc">::</span><span class="fu">CrossTable</span>(height_and_weight_20<span class="sc">$</span>sex)</span></code></pre></div>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## |         N / Table Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  20 
+## 
+##  
+##           |         1 |         2 | 
+##           |-----------|-----------|
+##           |         8 |        12 | 
+##           |     0.400 |     0.600 | 
+##           |-----------|-----------|
+## 
+## 
+## 
+## </code></pre>
+</div>
+<div id="the-tidyverse-way" class="section level3 hasAnchor" number="19.3.3">
+<h3><span class="header-section-number">19.3.3</span> The tidyverse way<a href="numerical-descriptions-of-categorical-variables.html#the-tidyverse-way" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The final way I’m going to discuss here is the <code>tidyverse</code> way, which is my preference. We will have to write a little additional code, but the end result will be more flexible, more readable, and will return our statistics to us in a data frame that we can save and use for further analysis. Let’s walk through this step by step…</p>
+<p class="note">
+🗒<strong>Side Note:</strong> You should already be familiar with the pipe operator (<code>%&gt;%</code>), but if it doesn’t look familiar to you, you can learn more about it in <a href="using-pipes.html#using-pipes">Using pipes</a>. Don’t forget, if you are using RStudio, you can use the keyboard shortcut <code>shift + command + m</code> (Mac) or <code>shift + control + m</code> (Windows) to insert the pipe operator.
+</p>
+<p>First, we don’t want to view the individual values in our data frame. Instead, we want to condense those values into summary statistics. This is a job for the <a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a> function.</p>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="numerical-descriptions-of-categorical-variables.html#cb287-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb287-2"><a href="numerical-descriptions-of-categorical-variables.html#cb287-2" tabindex="-1"></a>  <span class="fu">summarise</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 0</code></pre>
+<p>As you can see, <code>summarise()</code> doesn’t do anything interesting on its own. We need to tell it what kind of summary information we want. We can use the <a href="https://dplyr.tidyverse.org/reference/n.html">n()</a> function to count rows. By default, it will count all the rows in the data frame. For example:</p>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb289-1"><a href="numerical-descriptions-of-categorical-variables.html#cb289-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb289-2"><a href="numerical-descriptions-of-categorical-variables.html#cb289-2" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 1
+##   `n()`
+##   &lt;int&gt;
+## 1    20</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We passed our entire data frame to the <code>summarise()</code> function and asked it to count the number of rows in the data frame.</p></li>
+<li><p>The result we get is a new data frame with 1 column (named <code>n()</code>) and one row with the value 20 (the number of rows in the original data frame).</p></li>
+</ul>
+<p>This is a great start. However, we really want to count the number of rows that have the value “Female” for sex_f, and then separately count the number of rows that have the value “Male” for sex_f. Said another way, we want to break our data frame up into smaller data frames – one for each value of <code>sex_f</code> – and then count the rows. This is exactly what <code>dplyr</code>’s <a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a> function does.</p>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="numerical-descriptions-of-categorical-variables.html#cb291-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span></span>
+<span id="cb291-2"><a href="numerical-descriptions-of-categorical-variables.html#cb291-2" tabindex="-1"></a>  <span class="fu">group_by</span>(sex_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb291-3"><a href="numerical-descriptions-of-categorical-variables.html#cb291-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
+##   sex_f  `n()`
+##   &lt;fct&gt;  &lt;int&gt;
+## 1 Male       8
+## 2 Female    12</code></pre>
+<p>And, that’s what we want.</p>
+<p class="note">
+🗒<strong>Side Note:</strong> <code>dplyr</code>’s <code>group_by()</code> function operationalizes the <strong>Split - Apply - Combine</strong> strategy for data analysis. That sounds sort of fancy, but all it really means is that we split our data frame up into smaller data frames, apply our calculation separately to each smaller data frame, and then combine those individual results back together as a single result. So, in the example above, the <code>height_and_weight_20</code> data frame was split into two separate little data frames (i.e., one for females and one for males), then the <code>summarise()</code> and <code>n()</code> functions counted the number of rows in each of the two smaller data frames (i.e., 12 and 8 respectively), and finally combined those individual results into a single data frame, which was printed to the screen for us to view.
+</p>
+<p>However, it will be awkward to work with a variable named <code>n()</code> (i.e., with parentheses) in the future. Let’s go ahead and assign it a different name. We can assign it any valid name we want. Some names that might make sense are <code>n</code>, <code>frequency</code>, or <code>count</code>. I’m going to go ahead and just name it <code>n</code> without the parentheses.</p>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="numerical-descriptions-of-categorical-variables.html#cb293-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span></span>
+<span id="cb293-2"><a href="numerical-descriptions-of-categorical-variables.html#cb293-2" tabindex="-1"></a>  <span class="fu">group_by</span>(sex_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb293-3"><a href="numerical-descriptions-of-categorical-variables.html#cb293-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
+##   sex_f      n
+##   &lt;fct&gt;  &lt;int&gt;
+## 1 Male       8
+## 2 Female    12</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>We added <code>n =</code> to our summarise function (<code>summarise(n = n())</code>) so that our count column in the resulting data frame would be named <code>n</code> instead of <code>n()</code>.</li>
+</ul>
+<p>Finally, estimating categorical frequencies like this is such a common operation that <code>dplyr</code> has a shortcut for it – <code>count()</code>. We can use the <a href="https://dplyr.tidyverse.org/reference/tally.html">count()</a> function to get the same result that we got above.</p>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="numerical-descriptions-of-categorical-variables.html#cb295-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb295-2"><a href="numerical-descriptions-of-categorical-variables.html#cb295-2" tabindex="-1"></a>  <span class="fu">count</span>(sex_f)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 2
+##   sex_f      n
+##   &lt;fct&gt;  &lt;int&gt;
+## 1 Male       8
+## 2 Female    12</code></pre>
+</div>
+</div>
+<div id="calculating-percentages" class="section level2 hasAnchor" number="19.4">
+<h2><span class="header-section-number">19.4</span> Calculating percentages<a href="numerical-descriptions-of-categorical-variables.html#calculating-percentages" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In addition to frequencies, we will often be interested in calculating percentages for categorical variables. As always, there are many ways to accomplish this task in R. From here on out, I’m going to primarily use <code>tidyverse</code> functions.</p>
+<p>In this case, the proportion of people in our data who are female can be calculated as the number who are female (12) divided by the total number of people in the data (20). Because we already know that there are 20 people in the data, we could calculate proportions like this:</p>
+<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb297-1"><a href="numerical-descriptions-of-categorical-variables.html#cb297-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb297-2"><a href="numerical-descriptions-of-categorical-variables.html#cb297-2" tabindex="-1"></a>  <span class="fu">count</span>(sex_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb297-3"><a href="numerical-descriptions-of-categorical-variables.html#cb297-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="dv">20</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   sex_f      n  prop
+##   &lt;fct&gt;  &lt;int&gt; &lt;dbl&gt;
+## 1 Male       8   0.4
+## 2 Female    12   0.6</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>Because the <code>count()</code> function returns a data frame just like any other data frame, we can manipulate it in the same ways we can manipulate any other data frame.</p></li>
+<li><p>So, we used <code>dplyr</code>’s <code>mutate()</code> function to create a new variable in the data frame named <code>prop</code>. Again, we could have given it any valid name.</p></li>
+<li><p>Then we set the value of <code>prop</code> to be equal to the value of <code>n</code> divided by 20.</p></li>
+</ul>
+<p>This works, but it would be better to have R calculate the total number of observations for the denominator (20) than for us to manually type it in. In this case, we can do that with the <code>sum()</code> function.</p>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="numerical-descriptions-of-categorical-variables.html#cb299-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb299-2"><a href="numerical-descriptions-of-categorical-variables.html#cb299-2" tabindex="-1"></a>  <span class="fu">count</span>(sex_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb299-3"><a href="numerical-descriptions-of-categorical-variables.html#cb299-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   sex_f      n  prop
+##   &lt;fct&gt;  &lt;int&gt; &lt;dbl&gt;
+## 1 Male       8   0.4
+## 2 Female    12   0.6</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>Instead of manually typing in the total count for our denominator (20), we had R calculate it for us using the <code>sum()</code> function. The <code>sum()</code> function added together all the values of the variable <code>n</code> (i.e., 12 + 8 = 20).</li>
+</ul>
+<p>Finally, we just need to multiply our proportion by 100 to convert it to a percentage.</p>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="numerical-descriptions-of-categorical-variables.html#cb301-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb301-2"><a href="numerical-descriptions-of-categorical-variables.html#cb301-2" tabindex="-1"></a>  <span class="fu">count</span>(sex_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb301-3"><a href="numerical-descriptions-of-categorical-variables.html#cb301-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   sex_f      n percent
+##   &lt;fct&gt;  &lt;int&gt;   &lt;dbl&gt;
+## 1 Male       8      40
+## 2 Female    12      60</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>Changed the name of the variable we are creating from <code>prop</code> to <code>percent</code>. But, we could have given it any valid name.</p></li>
+<li><p>Multiplied the proportion by 100 to convert it to a percentage.</p></li>
+</ul>
+</div>
+<div id="cat-missing-data" class="section level2 hasAnchor" number="19.5">
+<h2><span class="header-section-number">19.5</span> Missing data<a href="numerical-descriptions-of-categorical-variables.html#cat-missing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the real world, you will frequently encounter data that has missing values. Let’s quickly take a look at an example by adding some missing values to our data frame.</p>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="numerical-descriptions-of-categorical-variables.html#cb303-1" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb303-2"><a href="numerical-descriptions-of-categorical-variables.html#cb303-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sex_f =</span> <span class="fu">replace</span>(sex, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">9</span>), <span class="cn">NA</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb303-3"><a href="numerical-descriptions-of-categorical-variables.html#cb303-3" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 20 × 5
+##    id      sex sex_f ht_in wt_lbs
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 001       1     1    71    190
+##  2 002       1    NA    69    176
+##  3 003       2     2    64    130
+##  4 004       2     2    65    154
+##  5 005       1     1    73    173
+##  6 006       1     1    69    182
+##  7 007       2     2    68    140
+##  8 008       1     1    73    185
+##  9 009       2    NA    71    157
+## 10 010       1     1    66    155
+## 11 011       1     1    71    213
+## 12 012       2     2    69    151
+## 13 013       2     2    66    147
+## 14 014       2     2    68    196
+## 15 015       1     1    75    212
+## 16 016       2     2    69    190
+## 17 017       2     2    66    194
+## 18 018       2     2    65    176
+## 19 019       2     2    65    176
+## 20 020       2     2    65    102</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>Replaced the 2nd and 9th value of <code>sex_f</code> with <code>NA</code> (missing) using the <code>replace()</code> function.</li>
+</ul>
+<p>Now let’s see how our code from above handles this</p>
+<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="numerical-descriptions-of-categorical-variables.html#cb305-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb305-2"><a href="numerical-descriptions-of-categorical-variables.html#cb305-2" tabindex="-1"></a>  <span class="fu">count</span>(sex_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb305-3"><a href="numerical-descriptions-of-categorical-variables.html#cb305-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 3
+##   sex_f     n percent
+##   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1     1     7      35
+## 2     2    11      55
+## 3    NA     2      10</code></pre>
+<p>As you can see, we are now treating missing as if it were a category of sex_f. Sometimes this will be the result you want. However, often you will want the n and percent of <em>non-missing</em> values for your categorical variable. This is sometimes referred to as a <strong>complete case analysis</strong>. There’s a couple of different ways we can handle this. I will simply filter out rows with a missing value for sex_f with <code>dplyr</code>’s <a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a> function.</p>
+<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="numerical-descriptions-of-categorical-variables.html#cb307-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb307-2"><a href="numerical-descriptions-of-categorical-variables.html#cb307-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sex_f)) <span class="sc">%&gt;%</span> </span>
+<span id="cb307-3"><a href="numerical-descriptions-of-categorical-variables.html#cb307-3" tabindex="-1"></a>  <span class="fu">count</span>(sex_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb307-4"><a href="numerical-descriptions-of-categorical-variables.html#cb307-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   sex_f     n percent
+##   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1     1     7    38.9
+## 2     2    11    61.1</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>filter()</code> to keep only the rows that have a <em>non-missing</em> value for sex_f. </p>
+<ul>
+<li><p>In the R language, we use the <code>is.na()</code> function to tell the R interpreter to identify NA (missing) values in a vector. We <em>cannot</em> use something like <code>sex_f == NA</code> to identify NA values, which is sometimes confusing for people who are coming to R from other statistical languages.</p></li>
+<li><p>In the R language, <code>!</code> is the NOT operator. It sort of means “do the opposite.”</p></li>
+<li><p>So, <code>filter()</code> tells R which rows of a data frame to <em>keep</em>, and <code>is.na(sex_f)</code> tells R to find rows with an NA value for the variable <code>sex_f</code>. Together, <code>filter(is.na(sex_f))</code> would tell R to <em>keep</em> rows with an NA value for the variable <code>sex_f</code>. Adding the NOT operator <code>!</code> tells R to do the opposite – <em>keep</em> rows that do <em>NOT</em> have an NA value for the variable <code>sex_f</code>.</p></li>
+</ul></li>
+<li><p>We used our code from above to calculate the n and percent of non-missing values of sex_f. </p></li>
+</ul>
+</div>
+<div id="formatting-results" class="section level2 hasAnchor" number="19.6">
+<h2><span class="header-section-number">19.6</span> Formatting results<a href="numerical-descriptions-of-categorical-variables.html#formatting-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Notice that now our percentages are being displayed with 5 digits to the right of the decimal. If we wanted to present our findings somewhere (e.g., a journal article or a report for our employer) we would almost never want to display this many digits. Let’s get R to round these numbers for us.</p>
+<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="numerical-descriptions-of-categorical-variables.html#cb309-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb309-2"><a href="numerical-descriptions-of-categorical-variables.html#cb309-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sex_f)) <span class="sc">%&gt;%</span> </span>
+<span id="cb309-3"><a href="numerical-descriptions-of-categorical-variables.html#cb309-3" tabindex="-1"></a>  <span class="fu">count</span>(sex_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb309-4"><a href="numerical-descriptions-of-categorical-variables.html#cb309-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> (n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   sex_f     n percent
+##   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1     1     7    38.9
+## 2     2    11    61.1</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We passed the calculated percentage values <code>(n / sum(n) * 100)</code> to the <code>round()</code> function to round our percentages to 2 decimal places.</p>
+<ul>
+<li><p>Notice that we had to wrap <code>n / sum(n) * 100</code> in parentheses in order to pass it to the <code>round()</code> function with a pipe.</p></li>
+<li><p>We could have alternatively written our R code this way: <code>mutate(percent = round(n / sum(n) * 100, 2))</code>.</p></li>
+</ul></li>
+</ul>
+</div>
+<div id="using-freqtables" class="section level2 hasAnchor" number="19.7">
+<h2><span class="header-section-number">19.7</span> Using freqtables<a href="numerical-descriptions-of-categorical-variables.html#using-freqtables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the sections above, we learned how to use <code>dplyr</code> functions to calculate the frequency and percentage of observations that take on each value of a categorical variable. However, there can be a fair amount of code writing involved when using those methods. The more we have to repeatedly type code, the more tedious and error-prone it becomes. This is an idea we will return to many times in this book. Luckily, the R programming language allows us to write our own functions, which solves both of those problems.</p>
+<p>Later in this book, I will show you <a href="writing-functions.html#writing-functions">how to write your own functions</a>. For the time being, I’m going to suggest that you install and use a package I created called <a href="https://github.com/brad-cannell/freqtables">freqtables</a>. The <code>freqtables</code> package is basically an enhanced version of the code we wrote in the sections above. I designed it to help us quickly make tables of descriptive statistics (i.e., counts, percentages, confidence intervals) for categorical variables, and it’s specifically designed to work in a <code>dplyr</code> pipeline.</p>
+<p>Like all packages, you need to first install it…</p>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="numerical-descriptions-of-categorical-variables.html#cb311-1" tabindex="-1"></a><span class="co"># You may be asked if you want to update other packages on your computer that</span></span>
+<span id="cb311-2"><a href="numerical-descriptions-of-categorical-variables.html#cb311-2" tabindex="-1"></a><span class="co"># freqtables uses. Go ahead and do so.</span></span>
+<span id="cb311-3"><a href="numerical-descriptions-of-categorical-variables.html#cb311-3" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;freqtables&quot;</span>)</span></code></pre></div>
+<p>And then load it…</p>
+<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb312-1"><a href="numerical-descriptions-of-categorical-variables.html#cb312-1" tabindex="-1"></a><span class="co"># After installing freqtables on your computer, you can load it just like you</span></span>
+<span id="cb312-2"><a href="numerical-descriptions-of-categorical-variables.html#cb312-2" tabindex="-1"></a><span class="co"># would any other package.</span></span>
+<span id="cb312-3"><a href="numerical-descriptions-of-categorical-variables.html#cb312-3" tabindex="-1"></a><span class="fu">library</span>(freqtables)</span></code></pre></div>
+<p>Now, let’s use the <code>freq_table()</code> function from <code>freqtables</code> package to rerun our analysis from above.</p>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="numerical-descriptions-of-categorical-variables.html#cb313-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span></span>
+<span id="cb313-2"><a href="numerical-descriptions-of-categorical-variables.html#cb313-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sex_f)) <span class="sc">%&gt;%</span></span>
+<span id="cb313-3"><a href="numerical-descriptions-of-categorical-variables.html#cb313-3" tabindex="-1"></a>  <span class="fu">freq_table</span>(sex_f)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 9
+##   var   cat       n n_total percent    se t_crit   lcl   ucl
+##   &lt;chr&gt; &lt;chr&gt; &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 sex_f 1         7      18    38.9  11.8   2.11  18.2  64.5
+## 2 sex_f 2        11      18    61.1  11.8   2.11  35.5  81.8</code></pre>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>filter()</code> to keep only the rows that have a <em>non-missing</em> value for sex and passed the data frame on to the <code>freq_table()</code> function using a pipe.</p></li>
+<li><p>We told the <code>freq_table()</code> function to create a univariate frequency table for the variable <code>sex_f</code>. A “univariate frequency table” just means a table (data frame) of useful statistics about a single categorical variable.</p></li>
+<li><p>The univariate frequency table above includes:</p>
+<ul>
+<li><p><code>var</code>: The name of the categorical variable (column) we are analyzing.</p></li>
+<li><p><code>cat</code>: Each of the different categories the variable <code>var</code> contains – in this case “Male” and “Female”.</p></li>
+<li><p><code>n</code>: The number of rows where <code>var</code> equals the value in <code>cat</code>. In this case, there are 7 rows where the value of <code>sex_f</code> is Male, and 11 rows where the value of <code>sex_f</code> is Female.</p></li>
+<li><p><code>n_total</code>: The sum of all the <code>n</code> values. This is also to total number of rows in the data frame currently being analyzed.</p></li>
+<li><p><code>percent</code>: The percent of rows where <code>var</code> equals the value in <code>cat</code>.</p></li>
+<li><p><code>se</code>: The standard error of the percent. This value is not terribly useful on its own; however, it’s necessary for calculating the 95% confidence intervals.</p></li>
+<li><p><code>t_crit</code>: The critical value from the t distribution. This value is not terribly useful on its own; however, it’s necessary for calculating the 95% confidence intervals.</p></li>
+<li><p><code>lcl</code>: The lower (95%, by default) confidence limit for the percentage <code>percent</code>.</p></li>
+<li><p><code>ucl</code>: The upper (95%, by default) confidence limit for the percentage <code>percent</code>.</p></li>
+</ul></li>
+</ul>
+<p>We will continue using the <code>freqtables</code> package at various points throughout the book. I will also show you some other cool things we can do with <code>freqtables</code>. For now, all you need to know how to do is use the <code>freq_table()</code> function to calculate frequencies and percentages for single categorical variables.</p>
+<p>🏆 Congratulations! You now know how to use R to do some basic descriptive analysis of individual categorical variables.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction-to-descriptive-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="measures-of-central-tendency.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/brad-cannell/r4epi/edit/master/chapters/04_part_descriptive_analysis/02_categorical_variables.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

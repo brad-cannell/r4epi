@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>15 Importing Binary Files | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="15 Importing Binary Files | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-10-19" />
+<meta name="date" content="2024-05-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,14 +56,15 @@
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
 <script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RREBTQ0D9"></script>
 <script>
@@ -87,7 +88,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -150,6 +151,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -991,7 +996,7 @@ Copy and paste:
 -->
 <p>In the last chapter we learned that there are many different file types that one can use to store data. We also learned how to use the <code>readr</code> package to import several different variations of <strong>plain text files</strong> into R.</p>
 <p>In this chapter, we will focus on data stored in <strong>binary files</strong>. Again, you can think of binary files as being more complex than plain text files and accessing the information in binary files requires the use of special software. Some examples of binary files that I have frequently seen used in epidemiology include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets. Below, we will learn how to import all three file types into R.</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/files.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/files.png" /><!-- --></p>
 <div id="packages-for-importing-data-1" class="section level2 hasAnchor" number="15.1">
 <h2><span class="header-section-number">15.1</span> Packages for importing data<a href="importing-binary-files.html#packages-for-importing-data-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Technically, base R does not contain any functions that can be used to import the binary file types discussed above. However, the <code>foreign</code> package contains functions that may be used to import SAS data sets and Stata data sets, and is installed by default when you install R on your computer. Having said that, we aren’t going to use the <code>foreign</code> package in this chapter. Instead, we’re going to use the following packages to import data in the examples below. If you haven’t done so already, I suggest that you go ahead and install these packages now.</p>
@@ -1006,7 +1011,7 @@ Copy and paste:
 <h2><span class="header-section-number">15.2</span> Importing Microsoft Excel spreadsheets<a href="importing-binary-files.html#importing-microsoft-excel-spreadsheets" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>I’m probably sent data in Microsoft Excel files more than any other file format. Fortunately, the <code>readxl</code> package makes it really easy to import Excel spreadsheets into R. And, because that package is maintained by the same people who create the <code>readr</code> package that you have already seen, I think it’s likely that the <code>readxl</code> package will feel somewhat familiar right from the start.</p>
 <p>I would be surprised if any of you had never seen an Excel spreadsheet before – they are pretty ubiquitous in the modern world – but I’ll go ahead and show a screenshot of our height and weight data in Excel for the sake of completeness.</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/excel.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/excel.png" /><!-- --></p>
 <p>All we have to do to import this spreadsheet into R as a data frame is passing the path to the excel file to the <code>path</code> argument of the <code>read_excel()</code> function.</p>
 <p><a href="https://github.com/brad-cannell/r4epi/blob/master/data/excel.xlsx">You may click here to download this file to your computer.</a></p>
 <div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="importing-binary-files.html#cb225-1" tabindex="-1"></a>excel <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/excel.xlsx&quot;</span>)</span></code></pre></div>
@@ -1026,10 +1031,10 @@ Copy and paste:
 ⚠️<strong>Warning:</strong> Make sure to always include the file extension in your file paths. For example, using “/excel” instead of “/excel.xlsx” above (i.e., no .xlsx) would have resulted in an error telling you that the filed does not exist.
 </p>
 <p>Fortunately for us, just passing the Excel file to the <code>read_excel()</code> function like this will usually “just work.” But, let’s go ahead and simulate another situation that is slightly more complex. Once again, we’ve received data from a team that is using Microsoft Excel to capture some study data.</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/excel_complex.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/excel_complex.png" /><!-- --></p>
 <p>As you can see, this data looks very similar to the csv file we previously imported. However, it looks like the study team has done a little more formatting this time. Additionally, they’ve added a couple of columns we haven’t seen before – date of birth and annual household income.</p>
 <p>As a final little wrinkle, the data for this study is actually the second sheet in this Excel file (also called a workbook). The study team used the first sheet in the workbook as a data dictionary that looks like this:</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/data_dictionary.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/data_dictionary.png" /><!-- --></p>
 <p>Once again, we will have to deal with some of the formatting that was done in Excel before we can analyze our data in R.</p>
 <p><a href="https://github.com/brad-cannell/r4epi/blob/master/data/excel_complex.xlsx">You may click here to download this file to your computer.</a></p>
 <p>We’ll start by taking a look at the result we get when we try to pass this file to the <code>read_excel()</code> function without changing any of <code>read_excel()</code>’s default values.</p>
@@ -1114,26 +1119,26 @@ Copy and paste:
 </ul>
 <p>In addition to SAS data sets, data that has been altered in SAS can also be saved as a SAS transport file. Some of the national, population-based public health surveys (e.g., BRFSS and NHANES) make their data publicly available in this format.</p>
 <p>You can <a href="https://www.cdc.gov/brfss/annual_data/annual_2018.html">download the 2018 BRFSS data as a SAS Transport file here</a>. About halfway down the webpage, there is a link that says, “2018 BRFSS Data (SAS Transport Format)”.</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/download_brfss.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/download_brfss.png" /><!-- --></p>
 <p>Clicking that link should download the data to your computer. Notice that the SAS Transport file is actually stored <em>inside</em> a zip file. You can unzip the file first if you would like, but you don’t even have to do that. Amazingly, you can pass the path to the zipped .xpt file directly to the <code>read_xpt()</code> function like so:</p>
 <div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="importing-binary-files.html#cb238-1" tabindex="-1"></a>brfss_2018 <span class="ot">&lt;-</span> <span class="fu">read_xpt</span>(<span class="st">&quot;data/LLCP2018XPT.zip&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="importing-binary-files.html#cb239-1" tabindex="-1"></a><span class="fu">head</span>(brfss_2018)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 275
-##   `_STATE` FMONTH IDATE IMONTH IDAY  IYEAR DISPCODE SEQNO `_PSU` CTELENM1 PVTRESD1 COLGHOUS STATERE1 CELLFON4 LADULT NUMADULT NUMMEN NUMWOMEN SAFETIME CTELNUM1
-##      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-## 1        1      1 0105… 01     05    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      0        1       NA       NA
-## 2        1      1 0112… 01     12    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      0        1       NA       NA
-## 3        1      1 0108… 01     08    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      0        1       NA       NA
-## 4        1      1 0103… 01     03    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      1        0       NA       NA
-## 5        1      1 0112… 01     12    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        2      1        1       NA       NA
-## 6        1      1 0111… 01     11    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      0        1       NA       NA
-## # ℹ 255 more variables: CELLFON5 &lt;dbl&gt;, CADULT &lt;dbl&gt;, PVTRESD3 &lt;dbl&gt;, CCLGHOUS &lt;dbl&gt;, CSTATE1 &lt;dbl&gt;, LANDLINE &lt;dbl&gt;, HHADULT &lt;dbl&gt;, GENHLTH &lt;dbl&gt;,
-## #   PHYSHLTH &lt;dbl&gt;, MENTHLTH &lt;dbl&gt;, POORHLTH &lt;dbl&gt;, HLTHPLN1 &lt;dbl&gt;, PERSDOC2 &lt;dbl&gt;, MEDCOST &lt;dbl&gt;, CHECKUP1 &lt;dbl&gt;, EXERANY2 &lt;dbl&gt;, SLEPTIM1 &lt;dbl&gt;,
-## #   CVDINFR4 &lt;dbl&gt;, CVDCRHD4 &lt;dbl&gt;, CVDSTRK3 &lt;dbl&gt;, ASTHMA3 &lt;dbl&gt;, ASTHNOW &lt;dbl&gt;, CHCSCNCR &lt;dbl&gt;, CHCOCNCR &lt;dbl&gt;, CHCCOPD1 &lt;dbl&gt;, HAVARTH3 &lt;dbl&gt;,
-## #   ADDEPEV2 &lt;dbl&gt;, CHCKDNY1 &lt;dbl&gt;, DIABETE3 &lt;dbl&gt;, DIABAGE2 &lt;dbl&gt;, LASTDEN4 &lt;dbl&gt;, RMVTETH4 &lt;dbl&gt;, SEX1 &lt;dbl&gt;, MARITAL &lt;dbl&gt;, EDUCA &lt;dbl&gt;, RENTHOM1 &lt;dbl&gt;,
-## #   NUMHHOL3 &lt;dbl&gt;, NUMPHON3 &lt;dbl&gt;, CPDEMO1B &lt;dbl&gt;, VETERAN3 &lt;dbl&gt;, EMPLOY1 &lt;dbl&gt;, CHILDREN &lt;dbl&gt;, INCOME2 &lt;dbl&gt;, WEIGHT2 &lt;dbl&gt;, HEIGHT3 &lt;dbl&gt;,
-## #   PREGNANT &lt;dbl&gt;, DEAF &lt;dbl&gt;, BLIND &lt;dbl&gt;, DECIDE &lt;dbl&gt;, DIFFWALK &lt;dbl&gt;, DIFFDRES &lt;dbl&gt;, DIFFALON &lt;dbl&gt;, SMOKE100 &lt;dbl&gt;, SMOKDAY2 &lt;dbl&gt;, STOPSMK2 &lt;dbl&gt;,
-## #   LASTSMK2 &lt;dbl&gt;, USENOW3 &lt;dbl&gt;, ALCDAY5 &lt;dbl&gt;, AVEDRNK2 &lt;dbl&gt;, DRNK3GE5 &lt;dbl&gt;, MAXDRNKS &lt;dbl&gt;, FLUSHOT6 &lt;dbl&gt;, FLSHTMY2 &lt;dbl&gt;, IMFVPLAC &lt;dbl&gt;, …</code></pre>
+##   `_STATE` FMONTH IDATE    IMONTH IDAY  IYEAR DISPCODE SEQNO `_PSU` CTELENM1 PVTRESD1 COLGHOUS STATERE1 CELLFON4 LADULT NUMADULT NUMMEN NUMWOMEN
+##      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+## 1        1      1 01052018 01     05    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      0        1
+## 2        1      1 01122018 01     12    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      0        1
+## 3        1      1 01082018 01     08    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      0        1
+## 4        1      1 01032018 01     03    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      1        0
+## 5        1      1 01122018 01     12    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        2      1        1
+## 6        1      1 01112018 01     11    2018      1100 2018… 2.02e9        1        1       NA        1        2     NA        1      0        1
+## # ℹ 257 more variables: SAFETIME &lt;dbl&gt;, CTELNUM1 &lt;dbl&gt;, CELLFON5 &lt;dbl&gt;, CADULT &lt;dbl&gt;, PVTRESD3 &lt;dbl&gt;, CCLGHOUS &lt;dbl&gt;, CSTATE1 &lt;dbl&gt;,
+## #   LANDLINE &lt;dbl&gt;, HHADULT &lt;dbl&gt;, GENHLTH &lt;dbl&gt;, PHYSHLTH &lt;dbl&gt;, MENTHLTH &lt;dbl&gt;, POORHLTH &lt;dbl&gt;, HLTHPLN1 &lt;dbl&gt;, PERSDOC2 &lt;dbl&gt;,
+## #   MEDCOST &lt;dbl&gt;, CHECKUP1 &lt;dbl&gt;, EXERANY2 &lt;dbl&gt;, SLEPTIM1 &lt;dbl&gt;, CVDINFR4 &lt;dbl&gt;, CVDCRHD4 &lt;dbl&gt;, CVDSTRK3 &lt;dbl&gt;, ASTHMA3 &lt;dbl&gt;,
+## #   ASTHNOW &lt;dbl&gt;, CHCSCNCR &lt;dbl&gt;, CHCOCNCR &lt;dbl&gt;, CHCCOPD1 &lt;dbl&gt;, HAVARTH3 &lt;dbl&gt;, ADDEPEV2 &lt;dbl&gt;, CHCKDNY1 &lt;dbl&gt;, DIABETE3 &lt;dbl&gt;,
+## #   DIABAGE2 &lt;dbl&gt;, LASTDEN4 &lt;dbl&gt;, RMVTETH4 &lt;dbl&gt;, SEX1 &lt;dbl&gt;, MARITAL &lt;dbl&gt;, EDUCA &lt;dbl&gt;, RENTHOM1 &lt;dbl&gt;, NUMHHOL3 &lt;dbl&gt;, NUMPHON3 &lt;dbl&gt;,
+## #   CPDEMO1B &lt;dbl&gt;, VETERAN3 &lt;dbl&gt;, EMPLOY1 &lt;dbl&gt;, CHILDREN &lt;dbl&gt;, INCOME2 &lt;dbl&gt;, WEIGHT2 &lt;dbl&gt;, HEIGHT3 &lt;dbl&gt;, PREGNANT &lt;dbl&gt;, DEAF &lt;dbl&gt;,
+## #   BLIND &lt;dbl&gt;, DECIDE &lt;dbl&gt;, DIFFWALK &lt;dbl&gt;, DIFFDRES &lt;dbl&gt;, DIFFALON &lt;dbl&gt;, SMOKE100 &lt;dbl&gt;, SMOKDAY2 &lt;dbl&gt;, STOPSMK2 &lt;dbl&gt;, …</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>haven</code>’s <code>read_xpt()</code> function to import a zipped SAS Transport File. That data was imported as a data frame and we assigned that data frame to the R object called <code>brfss_2018</code>.</p></li>
@@ -1141,25 +1146,25 @@ Copy and paste:
 </ul>
 <p>But, this demonstration actually gets even cooler. Instead of downloading the SAS Transport file to our computer before importing it, we can actually sometimes import files, including SAS Transport files, directly from the internet.</p>
 <p>For example, you can <a href="https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=Demographics&amp;CycleBeginYear=2017">download the 2017-2018 NHANES demographic data as a SAS Transport file here</a></p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/nhanes_link.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/nhanes_link.png" /><!-- --></p>
 <p>If you right-click on the link that says, “DEMO_I Data [XPT - 3.3 MB]”, you will see an option to copy the link address.</p>
-<p><img src="img/03_part_data_transfer/04_importing_binary_files/copy_link_address.png" width="900" /></p>
+<p><img src="img/03_part_data_transfer/04_importing_binary_files/copy_link_address.png" /><!-- --></p>
 <p>Click “Copy Link Address” and then navigate back to RStudio. Now, all you have to do is paste that link address where you would normally type a file path into the <code>read_xpt()</code> function. When you run the code chunk, the <code>read_xpt()</code> function will import the NHANES data directly from the internet (assuming you are connected to the internet). 😲</p>
 <div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="importing-binary-files.html#cb241-1" tabindex="-1"></a>nhanes_demo <span class="ot">&lt;-</span> <span class="fu">read_xpt</span>(<span class="st">&quot;https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DEMO_J.XPT&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="importing-binary-files.html#cb242-1" tabindex="-1"></a><span class="fu">head</span>(nhanes_demo)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 46
-##    SEQN SDDSRVYR RIDSTATR RIAGENDR RIDAGEYR RIDAGEMN RIDRETH1 RIDRETH3 RIDEXMON RIDEXAGM DMQMILIZ DMQADFC DMDBORN4 DMDCITZN DMDYRSUS DMDEDUC3 DMDEDUC2 DMDMARTL
-##   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-## 1 93703       10        2        2        2       NA        5        6        2       27       NA      NA        1        1       NA       NA       NA       NA
-## 2 93704       10        2        1        2       NA        3        3        1       33       NA      NA        1        1       NA       NA       NA       NA
-## 3 93705       10        2        2       66       NA        4        4        2       NA        2      NA        1        1       NA       NA        2        3
-## 4 93706       10        2        1       18       NA        5        6        2      222        2      NA        1        1       NA       15       NA       NA
-## 5 93707       10        2        1       13       NA        5        7        2      158       NA      NA        1        1       NA        6       NA       NA
-## 6 93708       10        2        2       66       NA        5        6        2       NA        2      NA        2        1        7       NA        1        1
-## # ℹ 28 more variables: RIDEXPRG &lt;dbl&gt;, SIALANG &lt;dbl&gt;, SIAPROXY &lt;dbl&gt;, SIAINTRP &lt;dbl&gt;, FIALANG &lt;dbl&gt;, FIAPROXY &lt;dbl&gt;, FIAINTRP &lt;dbl&gt;, MIALANG &lt;dbl&gt;,
-## #   MIAPROXY &lt;dbl&gt;, MIAINTRP &lt;dbl&gt;, AIALANGA &lt;dbl&gt;, DMDHHSIZ &lt;dbl&gt;, DMDFMSIZ &lt;dbl&gt;, DMDHHSZA &lt;dbl&gt;, DMDHHSZB &lt;dbl&gt;, DMDHHSZE &lt;dbl&gt;, DMDHRGND &lt;dbl&gt;,
-## #   DMDHRAGZ &lt;dbl&gt;, DMDHREDZ &lt;dbl&gt;, DMDHRMAZ &lt;dbl&gt;, DMDHSEDZ &lt;dbl&gt;, WTINT2YR &lt;dbl&gt;, WTMEC2YR &lt;dbl&gt;, SDMVPSU &lt;dbl&gt;, SDMVSTRA &lt;dbl&gt;, INDHHIN2 &lt;dbl&gt;,
-## #   INDFMIN2 &lt;dbl&gt;, INDFMPIR &lt;dbl&gt;</code></pre>
+##    SEQN SDDSRVYR RIDSTATR RIAGENDR RIDAGEYR RIDAGEMN RIDRETH1 RIDRETH3 RIDEXMON RIDEXAGM DMQMILIZ DMQADFC DMDBORN4 DMDCITZN DMDYRSUS DMDEDUC3
+##   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 93703       10        2        2        2       NA        5        6        2       27       NA      NA        1        1       NA       NA
+## 2 93704       10        2        1        2       NA        3        3        1       33       NA      NA        1        1       NA       NA
+## 3 93705       10        2        2       66       NA        4        4        2       NA        2      NA        1        1       NA       NA
+## 4 93706       10        2        1       18       NA        5        6        2      222        2      NA        1        1       NA       15
+## 5 93707       10        2        1       13       NA        5        7        2      158       NA      NA        1        1       NA        6
+## 6 93708       10        2        2       66       NA        5        6        2       NA        2      NA        2        1        7       NA
+## # ℹ 30 more variables: DMDEDUC2 &lt;dbl&gt;, DMDMARTL &lt;dbl&gt;, RIDEXPRG &lt;dbl&gt;, SIALANG &lt;dbl&gt;, SIAPROXY &lt;dbl&gt;, SIAINTRP &lt;dbl&gt;, FIALANG &lt;dbl&gt;,
+## #   FIAPROXY &lt;dbl&gt;, FIAINTRP &lt;dbl&gt;, MIALANG &lt;dbl&gt;, MIAPROXY &lt;dbl&gt;, MIAINTRP &lt;dbl&gt;, AIALANGA &lt;dbl&gt;, DMDHHSIZ &lt;dbl&gt;, DMDFMSIZ &lt;dbl&gt;,
+## #   DMDHHSZA &lt;dbl&gt;, DMDHHSZB &lt;dbl&gt;, DMDHHSZE &lt;dbl&gt;, DMDHRGND &lt;dbl&gt;, DMDHRAGZ &lt;dbl&gt;, DMDHREDZ &lt;dbl&gt;, DMDHRMAZ &lt;dbl&gt;, DMDHSEDZ &lt;dbl&gt;,
+## #   WTINT2YR &lt;dbl&gt;, WTMEC2YR &lt;dbl&gt;, SDMVPSU &lt;dbl&gt;, SDMVSTRA &lt;dbl&gt;, INDHHIN2 &lt;dbl&gt;, INDFMIN2 &lt;dbl&gt;, INDFMPIR &lt;dbl&gt;</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>haven</code>’s <code>read_xpt()</code> function to import a SAS Transport File directly from the NHANES website. That data was imported as a data frame and we assigned that data frame to the R object called <code>nhanes_demo</code>.</p></li>
@@ -1254,7 +1259,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

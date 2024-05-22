@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>65 Confounding | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="65 Confounding | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-10-19" />
+<meta name="date" content="2024-05-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,14 +56,15 @@
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
 <script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RREBTQ0D9"></script>
 <script>
@@ -87,7 +88,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -150,6 +151,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -1022,74 +1027,74 @@ Unadjusted correlation – As ice cream sales increase so do murders, on average
 <!-- Here down is from the lab warm-up -->
 <div id="ice-cream-and-murder-rate-simulation" class="section level2 hasAnchor" number="65.1">
 <h2><span class="header-section-number">65.1</span> Ice cream and murder rate simulation<a href="confounding.html#ice-cream-and-murder-rate-simulation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb1959"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1959-1"><a href="confounding.html#cb1959-1" tabindex="-1"></a><span class="co"># Load the packages we will need below</span></span>
-<span id="cb1959-2"><a href="confounding.html#cb1959-2" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>) <span class="co"># The &quot;warn.conflicts&quot; part is optional</span></span>
-<span id="cb1959-3"><a href="confounding.html#cb1959-3" tabindex="-1"></a><span class="fu">library</span>(ggdag, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1959-4"><a href="confounding.html#cb1959-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1959-5"><a href="confounding.html#cb1959-5" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb1959-6"><a href="confounding.html#cb1959-6" tabindex="-1"></a><span class="fu">library</span>(freqtables)</span>
-<span id="cb1959-7"><a href="confounding.html#cb1959-7" tabindex="-1"></a><span class="fu">library</span>(meantables)</span></code></pre></div>
+<div class="sourceCode" id="cb1960"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1960-1"><a href="confounding.html#cb1960-1" tabindex="-1"></a><span class="co"># Load the packages we will need below</span></span>
+<span id="cb1960-2"><a href="confounding.html#cb1960-2" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>) <span class="co"># The &quot;warn.conflicts&quot; part is optional</span></span>
+<span id="cb1960-3"><a href="confounding.html#cb1960-3" tabindex="-1"></a><span class="fu">library</span>(ggdag, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1960-4"><a href="confounding.html#cb1960-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1960-5"><a href="confounding.html#cb1960-5" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1960-6"><a href="confounding.html#cb1960-6" tabindex="-1"></a><span class="fu">library</span>(freqtables)</span>
+<span id="cb1960-7"><a href="confounding.html#cb1960-7" tabindex="-1"></a><span class="fu">library</span>(meantables)</span></code></pre></div>
 <p>We just discussed a classic example of confounding – ice cream sales and murder. Let’s take a look at some simulated data designed to recreate this scenario.</p>
 <p>First, we will create temperature. We will make it normally distributed with a mean of 50 and a standard deviation of 12.</p>
-<div class="sourceCode" id="cb1960"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1960-1"><a href="confounding.html#cb1960-1" tabindex="-1"></a><span class="co"># Random number seed so that we can reproduce our results</span></span>
-<span id="cb1960-2"><a href="confounding.html#cb1960-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb1960-3"><a href="confounding.html#cb1960-3" tabindex="-1"></a></span>
-<span id="cb1960-4"><a href="confounding.html#cb1960-4" tabindex="-1"></a><span class="co"># Sample size</span></span>
-<span id="cb1960-5"><a href="confounding.html#cb1960-5" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb1960-6"><a href="confounding.html#cb1960-6" tabindex="-1"></a></span>
-<span id="cb1960-7"><a href="confounding.html#cb1960-7" tabindex="-1"></a><span class="co"># Create z - temperature</span></span>
-<span id="cb1960-8"><a href="confounding.html#cb1960-8" tabindex="-1"></a>df_ice_cream <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">temperature =</span> <span class="fu">rnorm</span>(n, <span class="dv">50</span>, <span class="dv">12</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb1961"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1961-1"><a href="confounding.html#cb1961-1" tabindex="-1"></a><span class="co"># Random number seed so that we can reproduce our results</span></span>
+<span id="cb1961-2"><a href="confounding.html#cb1961-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1961-3"><a href="confounding.html#cb1961-3" tabindex="-1"></a></span>
+<span id="cb1961-4"><a href="confounding.html#cb1961-4" tabindex="-1"></a><span class="co"># Sample size</span></span>
+<span id="cb1961-5"><a href="confounding.html#cb1961-5" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb1961-6"><a href="confounding.html#cb1961-6" tabindex="-1"></a></span>
+<span id="cb1961-7"><a href="confounding.html#cb1961-7" tabindex="-1"></a><span class="co"># Create z - temperature</span></span>
+<span id="cb1961-8"><a href="confounding.html#cb1961-8" tabindex="-1"></a>df_ice_cream <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">temperature =</span> <span class="fu">rnorm</span>(n, <span class="dv">50</span>, <span class="dv">12</span>))</span></code></pre></div>
 <p>And here is what our temperature data looks like in a histogram.</p>
-<div class="sourceCode" id="cb1961"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1961-1"><a href="confounding.html#cb1961-1" tabindex="-1"></a><span class="fu">hist</span>(df_ice_cream<span class="sc">$</span>temperature)</span></code></pre></div>
+<div class="sourceCode" id="cb1962"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1962-1"><a href="confounding.html#cb1962-1" tabindex="-1"></a><span class="fu">hist</span>(df_ice_cream<span class="sc">$</span>temperature)</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/confounding-temp-hist-1.png" width="672" /></p>
 <p>Now, let’s create ice cream sales. In the code below, the values of ice_cream are only determined by our random number generator and the value of temperature. They are totally oblivious to the values of murder. In fact, the murder variable doesn’t even exist yet.</p>
-<div class="sourceCode" id="cb1962"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1962-1"><a href="confounding.html#cb1962-1" tabindex="-1"></a><span class="co"># Set the random number seed so that we can reproduce our results</span></span>
-<span id="cb1962-2"><a href="confounding.html#cb1962-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">234</span>)</span>
-<span id="cb1962-3"><a href="confounding.html#cb1962-3" tabindex="-1"></a></span>
-<span id="cb1962-4"><a href="confounding.html#cb1962-4" tabindex="-1"></a><span class="co"># Set the standard deviation to 100</span></span>
-<span id="cb1962-5"><a href="confounding.html#cb1962-5" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb1962-6"><a href="confounding.html#cb1962-6" tabindex="-1"></a></span>
-<span id="cb1962-7"><a href="confounding.html#cb1962-7" tabindex="-1"></a><span class="co"># Create a data frame with ice cream sales that are associated with</span></span>
-<span id="cb1962-8"><a href="confounding.html#cb1962-8" tabindex="-1"></a><span class="co"># temperature</span></span>
-<span id="cb1962-9"><a href="confounding.html#cb1962-9" tabindex="-1"></a>df_ice_cream <span class="ot">&lt;-</span> df_ice_cream <span class="sc">%&gt;%</span> </span>
-<span id="cb1962-10"><a href="confounding.html#cb1962-10" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1962-11"><a href="confounding.html#cb1962-11" tabindex="-1"></a>    <span class="at">ice_cream =</span> <span class="fu">case_when</span>(</span>
-<span id="cb1962-12"><a href="confounding.html#cb1962-12" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">20</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">100</span>, sd),</span>
-<span id="cb1962-13"><a href="confounding.html#cb1962-13" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">40</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">300</span>, sd),</span>
-<span id="cb1962-14"><a href="confounding.html#cb1962-14" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">60</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">500</span>, sd),</span>
-<span id="cb1962-15"><a href="confounding.html#cb1962-15" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">80</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">800</span>, sd),</span>
-<span id="cb1962-16"><a href="confounding.html#cb1962-16" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">100</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">1000</span>, sd),</span>
-<span id="cb1962-17"><a href="confounding.html#cb1962-17" tabindex="-1"></a>      temperature <span class="sc">&gt;</span> <span class="dv">100</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">1200</span>, sd),</span>
-<span id="cb1962-18"><a href="confounding.html#cb1962-18" tabindex="-1"></a>    )</span>
-<span id="cb1962-19"><a href="confounding.html#cb1962-19" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb1963"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1963-1"><a href="confounding.html#cb1963-1" tabindex="-1"></a><span class="co"># Set the random number seed so that we can reproduce our results</span></span>
+<span id="cb1963-2"><a href="confounding.html#cb1963-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">234</span>)</span>
+<span id="cb1963-3"><a href="confounding.html#cb1963-3" tabindex="-1"></a></span>
+<span id="cb1963-4"><a href="confounding.html#cb1963-4" tabindex="-1"></a><span class="co"># Set the standard deviation to 100</span></span>
+<span id="cb1963-5"><a href="confounding.html#cb1963-5" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1963-6"><a href="confounding.html#cb1963-6" tabindex="-1"></a></span>
+<span id="cb1963-7"><a href="confounding.html#cb1963-7" tabindex="-1"></a><span class="co"># Create a data frame with ice cream sales that are associated with</span></span>
+<span id="cb1963-8"><a href="confounding.html#cb1963-8" tabindex="-1"></a><span class="co"># temperature</span></span>
+<span id="cb1963-9"><a href="confounding.html#cb1963-9" tabindex="-1"></a>df_ice_cream <span class="ot">&lt;-</span> df_ice_cream <span class="sc">%&gt;%</span> </span>
+<span id="cb1963-10"><a href="confounding.html#cb1963-10" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1963-11"><a href="confounding.html#cb1963-11" tabindex="-1"></a>    <span class="at">ice_cream =</span> <span class="fu">case_when</span>(</span>
+<span id="cb1963-12"><a href="confounding.html#cb1963-12" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">20</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">100</span>, sd),</span>
+<span id="cb1963-13"><a href="confounding.html#cb1963-13" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">40</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">300</span>, sd),</span>
+<span id="cb1963-14"><a href="confounding.html#cb1963-14" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">60</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">500</span>, sd),</span>
+<span id="cb1963-15"><a href="confounding.html#cb1963-15" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">80</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">800</span>, sd),</span>
+<span id="cb1963-16"><a href="confounding.html#cb1963-16" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">100</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">1000</span>, sd),</span>
+<span id="cb1963-17"><a href="confounding.html#cb1963-17" tabindex="-1"></a>      temperature <span class="sc">&gt;</span> <span class="dv">100</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">1200</span>, sd),</span>
+<span id="cb1963-18"><a href="confounding.html#cb1963-18" tabindex="-1"></a>    )</span>
+<span id="cb1963-19"><a href="confounding.html#cb1963-19" tabindex="-1"></a>  )</span></code></pre></div>
 <p>And here is what our ice cream sales data looks like in a histogram.</p>
-<div class="sourceCode" id="cb1963"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1963-1"><a href="confounding.html#cb1963-1" tabindex="-1"></a><span class="fu">hist</span>(df_ice_cream<span class="sc">$</span>ice_cream)</span></code></pre></div>
+<div class="sourceCode" id="cb1964"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1964-1"><a href="confounding.html#cb1964-1" tabindex="-1"></a><span class="fu">hist</span>(df_ice_cream<span class="sc">$</span>ice_cream)</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/confounding-ice-cream-sales-hist-1.png" width="672" /></p>
 <p>Finally, let’s create the murder variable. In the code below, the values of murder are only determined by our random number generator and the value of temperature. They are totally oblivious to the values of ice cream sales.</p>
-<div class="sourceCode" id="cb1964"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1964-1"><a href="confounding.html#cb1964-1" tabindex="-1"></a><span class="co"># Set the random number seed so that we can reproduce our results</span></span>
-<span id="cb1964-2"><a href="confounding.html#cb1964-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
-<span id="cb1964-3"><a href="confounding.html#cb1964-3" tabindex="-1"></a></span>
-<span id="cb1964-4"><a href="confounding.html#cb1964-4" tabindex="-1"></a><span class="co"># Set the standard deviation to 100</span></span>
-<span id="cb1964-5"><a href="confounding.html#cb1964-5" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb1964-6"><a href="confounding.html#cb1964-6" tabindex="-1"></a></span>
-<span id="cb1964-7"><a href="confounding.html#cb1964-7" tabindex="-1"></a><span class="co"># Create a data frame with murder rates that are associated with</span></span>
-<span id="cb1964-8"><a href="confounding.html#cb1964-8" tabindex="-1"></a><span class="co"># temperature</span></span>
-<span id="cb1964-9"><a href="confounding.html#cb1964-9" tabindex="-1"></a>df_ice_cream <span class="ot">&lt;-</span> df_ice_cream <span class="sc">%&gt;%</span> </span>
-<span id="cb1964-10"><a href="confounding.html#cb1964-10" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1964-11"><a href="confounding.html#cb1964-11" tabindex="-1"></a>    <span class="at">murder =</span> <span class="fu">case_when</span>(</span>
-<span id="cb1964-12"><a href="confounding.html#cb1964-12" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">20</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">20</span>, sd),</span>
-<span id="cb1964-13"><a href="confounding.html#cb1964-13" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">40</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">30</span>, sd),</span>
-<span id="cb1964-14"><a href="confounding.html#cb1964-14" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">60</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">40</span>, sd),</span>
-<span id="cb1964-15"><a href="confounding.html#cb1964-15" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">80</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">50</span>, sd),</span>
-<span id="cb1964-16"><a href="confounding.html#cb1964-16" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">100</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">60</span>, sd),</span>
-<span id="cb1964-17"><a href="confounding.html#cb1964-17" tabindex="-1"></a>      temperature <span class="sc">&gt;</span> <span class="dv">100</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">70</span>, sd),</span>
-<span id="cb1964-18"><a href="confounding.html#cb1964-18" tabindex="-1"></a>    )</span>
-<span id="cb1964-19"><a href="confounding.html#cb1964-19" tabindex="-1"></a>  )</span>
-<span id="cb1964-20"><a href="confounding.html#cb1964-20" tabindex="-1"></a></span>
-<span id="cb1964-21"><a href="confounding.html#cb1964-21" tabindex="-1"></a><span class="co"># Change negative murder rates to 0</span></span>
-<span id="cb1964-22"><a href="confounding.html#cb1964-22" tabindex="-1"></a>df_ice_cream <span class="ot">&lt;-</span> <span class="fu">mutate</span>(df_ice_cream, <span class="at">murder =</span> <span class="fu">if_else</span>(murder <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">0</span>, murder))</span></code></pre></div>
+<div class="sourceCode" id="cb1965"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1965-1"><a href="confounding.html#cb1965-1" tabindex="-1"></a><span class="co"># Set the random number seed so that we can reproduce our results</span></span>
+<span id="cb1965-2"><a href="confounding.html#cb1965-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb1965-3"><a href="confounding.html#cb1965-3" tabindex="-1"></a></span>
+<span id="cb1965-4"><a href="confounding.html#cb1965-4" tabindex="-1"></a><span class="co"># Set the standard deviation to 100</span></span>
+<span id="cb1965-5"><a href="confounding.html#cb1965-5" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb1965-6"><a href="confounding.html#cb1965-6" tabindex="-1"></a></span>
+<span id="cb1965-7"><a href="confounding.html#cb1965-7" tabindex="-1"></a><span class="co"># Create a data frame with murder rates that are associated with</span></span>
+<span id="cb1965-8"><a href="confounding.html#cb1965-8" tabindex="-1"></a><span class="co"># temperature</span></span>
+<span id="cb1965-9"><a href="confounding.html#cb1965-9" tabindex="-1"></a>df_ice_cream <span class="ot">&lt;-</span> df_ice_cream <span class="sc">%&gt;%</span> </span>
+<span id="cb1965-10"><a href="confounding.html#cb1965-10" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1965-11"><a href="confounding.html#cb1965-11" tabindex="-1"></a>    <span class="at">murder =</span> <span class="fu">case_when</span>(</span>
+<span id="cb1965-12"><a href="confounding.html#cb1965-12" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">20</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">20</span>, sd),</span>
+<span id="cb1965-13"><a href="confounding.html#cb1965-13" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">40</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">30</span>, sd),</span>
+<span id="cb1965-14"><a href="confounding.html#cb1965-14" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">60</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">40</span>, sd),</span>
+<span id="cb1965-15"><a href="confounding.html#cb1965-15" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">80</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">50</span>, sd),</span>
+<span id="cb1965-16"><a href="confounding.html#cb1965-16" tabindex="-1"></a>      temperature <span class="sc">&lt;</span> <span class="dv">100</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">60</span>, sd),</span>
+<span id="cb1965-17"><a href="confounding.html#cb1965-17" tabindex="-1"></a>      temperature <span class="sc">&gt;</span> <span class="dv">100</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="dv">70</span>, sd),</span>
+<span id="cb1965-18"><a href="confounding.html#cb1965-18" tabindex="-1"></a>    )</span>
+<span id="cb1965-19"><a href="confounding.html#cb1965-19" tabindex="-1"></a>  )</span>
+<span id="cb1965-20"><a href="confounding.html#cb1965-20" tabindex="-1"></a></span>
+<span id="cb1965-21"><a href="confounding.html#cb1965-21" tabindex="-1"></a><span class="co"># Change negative murder rates to 0</span></span>
+<span id="cb1965-22"><a href="confounding.html#cb1965-22" tabindex="-1"></a>df_ice_cream <span class="ot">&lt;-</span> <span class="fu">mutate</span>(df_ice_cream, <span class="at">murder =</span> <span class="fu">if_else</span>(murder <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">0</span>, murder))</span></code></pre></div>
 <p>And here is what our murder data looks like in a histogram.</p>
-<div class="sourceCode" id="cb1965"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1965-1"><a href="confounding.html#cb1965-1" tabindex="-1"></a><span class="fu">hist</span>(df_ice_cream<span class="sc">$</span>murder)</span></code></pre></div>
+<div class="sourceCode" id="cb1966"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1966-1"><a href="confounding.html#cb1966-1" tabindex="-1"></a><span class="fu">hist</span>(df_ice_cream<span class="sc">$</span>murder)</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/confounding-murder-hist-1.png" width="672" /></p>
 <p>We know that there is no causal relationship between ice_cream and murder because we created them both.</p>
 <ul>
@@ -1097,14 +1102,14 @@ Unadjusted correlation – As ice cream sales increase so do murders, on average
 <li><p>The value of murder is only determined by temperature, not by ice cream sales.</p></li>
 </ul>
 <p>Therefore, we might naively expect there to be <em>NO</em> correlation between ice cream sales and murder.</p>
-<div class="sourceCode" id="cb1966"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1966-1"><a href="confounding.html#cb1966-1" tabindex="-1"></a><span class="fu">ggplot</span>(df_ice_cream, <span class="fu">aes</span>(ice_cream, murder)) <span class="sc">+</span> </span>
-<span id="cb1966-2"><a href="confounding.html#cb1966-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb1966-3"><a href="confounding.html#cb1966-3" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
-<span id="cb1966-4"><a href="confounding.html#cb1966-4" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1967"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1967-1"><a href="confounding.html#cb1967-1" tabindex="-1"></a><span class="fu">ggplot</span>(df_ice_cream, <span class="fu">aes</span>(ice_cream, murder)) <span class="sc">+</span> </span>
+<span id="cb1967-2"><a href="confounding.html#cb1967-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb1967-3"><a href="confounding.html#cb1967-3" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb1967-4"><a href="confounding.html#cb1967-4" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
 <pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="R-4-Epidemiology_files/figure-html/confounding-plot-ice-cream-and-murder-1.png" width="672" /></p>
 <p>However, there is an obvious correlation between in the data when we view it as a scatter plot. As ice cream sales rise, so do the number of murders, on average.</p>
-<div class="sourceCode" id="cb1968"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1968-1"><a href="confounding.html#cb1968-1" tabindex="-1"></a><span class="fu">cor.test</span>(df_ice_cream<span class="sc">$</span>ice_cream, df_ice_cream<span class="sc">$</span>murder)</span></code></pre></div>
+<div class="sourceCode" id="cb1969"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1969-1"><a href="confounding.html#cb1969-1" tabindex="-1"></a><span class="fu">cor.test</span>(df_ice_cream<span class="sc">$</span>ice_cream, df_ice_cream<span class="sc">$</span>murder)</span></code></pre></div>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation
 ## 
@@ -1162,7 +1167,7 @@ Is that explanation confounded (biased)?</p>
 - Confounder produces observed (unadjusted) estimate of the association between exposure and outcome that is an overestimate of the true (adjusted) association.</p>
 <p>For example…</p>
 <div class="figure"><span style="display:block;" id="fig:confounding-bias-away"></span>
-<img src="img/13_causal_inference/04_confounding/bias_away.png" alt="Bias away from the null (Positive)." width="900" />
+<img src="img/13_causal_inference/04_confounding/bias_away.png" alt="Bias away from the null (Positive)."  />
 <p class="caption">
 Figure 65.3: Bias away from the null (Positive).
 </p>
@@ -1171,7 +1176,7 @@ Figure 65.3: Bias away from the null (Positive).
 <p>Negative Confounding (Toward the null)
 - Confounder produces observed (unadjusted) estimate of the association between exposure and outcome that is an underestimate of true (adjusted) association.</p>
 <div class="figure"><span style="display:block;" id="fig:confounding-bias-toward"></span>
-<img src="img/13_causal_inference/04_confounding/bias_toward.png" alt="Bias toward the null (Negative)." width="900" />
+<img src="img/13_causal_inference/04_confounding/bias_toward.png" alt="Bias toward the null (Negative)."  />
 <p class="caption">
 Figure 65.4: Bias toward the null (Negative).
 </p>
@@ -1264,6 +1269,10 @@ Is Z in the causal pathway from X to Y? No.</p>
 <p>Path: Any arrow-based route between two variables on the graph. Some paths follow the direction of the arrows and some do not.</p>
 <p>Some paths follow the direction of the arrows and some do not.</p>
 <p>Backdoor path: A backdoor path between X and Y is a path that connects X and Y without using any of the arrows that leave from X.</p>
+<pre><code>## Warning in geom_segment(aes(x = (2 - adjust), xend = (1 + adjust), y = (1 - : All aesthetics have length 1, but the data has 4 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing a single row.</code></pre>
+<pre><code>## Warning in geom_segment(aes(x = (2 + adjust), xend = (3 - adjust), y = (1 - : All aesthetics have length 1, but the data has 4 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing a single row.</code></pre>
 <div class="figure"><span style="display:block;" id="fig:confounding-structural-criteria-dag-01"></span>
 <img src="R-4-Epidemiology_files/figure-html/confounding-structural-criteria-dag-01-1.png" alt="Backdoor paths." width="672" />
 <p class="caption">
@@ -1277,6 +1286,10 @@ Figure 65.9: Backdoor paths.
 <p>Confounding is a verb, not a noun.</p>
 <p>We may call Jill a runner, but that doesn’t imply that she runs 24/7. It just implies that she runs in certain contexts that we deem relevant at the time we call her a runner. In a similar way, SES is not a “confounder.” However, SES may confound causal relationships in certain contexts that we deem relevant when discussing a given topic. <!-- I’m not sure if I love the Runner analogy. I might be able to do better. --></p>
 <!-- Figure out how to make Z look adjusted on this plot. -->
+<pre><code>## Warning in geom_segment(aes(x = (2 - adjust), xend = (1 + adjust), y = (1 - : All aesthetics have length 1, but the data has 4 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing a single row.</code></pre>
+<pre><code>## Warning in geom_segment(aes(x = (2 + adjust), xend = (3 - adjust), y = (1 - : All aesthetics have length 1, but the data has 4 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing a single row.</code></pre>
 <div class="figure"><span style="display:block;" id="fig:confounding-structural-criteria-dag-02"></span>
 <img src="R-4-Epidemiology_files/figure-html/confounding-structural-criteria-dag-02-1.png" alt="Blocking ackdoor paths." width="672" />
 <p class="caption">
@@ -1365,7 +1378,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>52 Effect-measure Modification | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="52 Effect-measure Modification | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-10-19" />
+<meta name="date" content="2024-05-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,14 +56,15 @@
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
 <script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RREBTQ0D9"></script>
 <script>
@@ -87,7 +88,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -150,6 +151,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -987,7 +992,7 @@ Copy and paste:
 <p><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#000000;overflow:visible;position:relative;"><path d="M413.5 237.5c-28.2 4.8-58.2-3.6-80-25.4l-38.1-38.1C280.4 159 272 138.8 272 117.6V105.5L192.3 62c-5.3-2.9-8.6-8.6-8.3-14.7s3.9-11.5 9.5-14l47.2-21C259.1 4.2 279 0 299.2 0h18.1c36.7 0 72 14 98.7 39.1l44.6 42c24.2 22.8 33.2 55.7 26.6 86L503 183l8-8c9.4-9.4 24.6-9.4 33.9 0l24 24c9.4 9.4 9.4 24.6 0 33.9l-88 88c-9.4 9.4-24.6 9.4-33.9 0l-24-24c-9.4-9.4-9.4-24.6 0-33.9l8-8-17.5-17.5zM27.4 377.1L260.9 182.6c3.5 4.9 7.5 9.6 11.8 14l38.1 38.1c6 6 12.4 11.2 19.2 15.7L134.9 484.6c-14.5 17.4-36 27.4-58.6 27.4C34.1 512 0 477.8 0 435.7c0-22.6 10.1-44.1 27.4-58.6z"/></svg> This chapter is under heavy development and may still undergo significant changes.</p>
 </div>
 <p>Unlike the past few weeks, effect modification is NOT error in our measure of the truth. It’s not something we are trying to eliminate; rather, it’s something we are trying to understand.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/schema.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/schema.png" /><!-- --></p>
 <p>In some ways, this is a very simple lesson. In other ways, it can be very confusing (although, I’m going to try to help with that). For starters, the term “effect modification” is used inconsistently by different people and different resources, and other terms are often used to mean the same thing effect modification means (sometimes incorrectly). Additionally, the term “effect modification” is sometimes used to describe concepts that are technically distinct from effect modification.</p>
 <p>Some of the other terms you may hear are effect-measure modification, heterogeneity of effects, subgroup effects, and interaction.</p>
 <p>We will discuss the ways in which you can draw distinctions between these terms soon, but first I want to make sure we develop an intuition for what effect modification is.</p>
@@ -997,14 +1002,14 @@ Copy and paste:
 <p>Having said that, recent methodological work is beginning to blur the lines between the two. I won’t talk much about this because I don’t want to confuse you, but you can read the citation at the bottom of this slide for more details if you’re interested. For now, you should definitely say that confounding and effect modification are different things on your exams and whatnot.</p>
 <p>With those caveats out of the way, let’s start with a simple idea. There is some relationship between two variables, X and Y. Here, we are showing a causal relationship, but as I said earlier, effect modification can be present in non-causal relationships as well.</p>
 <p>To make this more concrete, we’ll also assign labels to the variables X and Y.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/dag_01.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/dag_01.png" /><!-- --></p>
 <p>Specifically, I’m going to borrow a hypothetical example from the book Modern Epidemiology. In this example, the variable X represents exposure to asbestos dust and Y represents lung cancer.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/dag_02.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/dag_02.png" /><!-- --></p>
 <p>The causal DAG above tells us that exposure to asbestos dust causes lung cancer. It also tells us that we should expect a statistical association between exposure to asbestos dust and lung cancer in our data.</p>
 <p>Now, suppose we examine the average 10-year risk of lung cancer in an occupational setting and find that the risk among the workers who were exposed to asbestos dust was 2.09 times the risk among workers who were not exposed to asbestos dust over the 10-year period. That’s an interesting finding, and completely consistent with our DAG.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/dag_03.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/dag_03.png" /><!-- --></p>
 <p>But, suppose we believe that smoking cigarettes might have played an important role in the development of lung cancer as well. In this case, we don’t necessarily believe that we are giving credit to Asbestos that belongs to smoking (remember last week, not a common cause, no open backdoor path); rather, we think that asbestos exposure is more likely to produce lung cancer in smokers than it is in non-smokers. How might we evaluate that hypothesis?</p>
-<p><img src="img/10_part_epi_foundations/12_emm/dag_04.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/dag_04.png" /><!-- --></p>
 <p>Well, one way to do that would be estimate the effect of asbestos dust on lung cancer only among people who smoked (represented here by Z+), estimate the effect of asbestos dust on lung cancer only among people who didn’t smoked (represented here by Z-), and then see if our estimates of the effect are the same or different.</p>
 <p>That’s exactly what we’ve done here. Let’s pause and take a look.</p>
 <p>What are the measures we are using to characterize the effect of asbestos dust on lung cancer? Risk ratios (relative risks).</p>
@@ -1015,7 +1020,7 @@ Among non-smokers the risk ratio is 3. That is, among non-smokers, those who wer
 And that’s it. That’s the big idea. The measure of the effect of asbestos on lung cancer is not the same in smokers and non-smokers. From that point of view, I think it’s a pretty simple idea.</p>
 <p>I’d also like you to notice that we did not discuss the relationship between smoking and lung cancer at all on this slide. We discussed the relationship between asbestos and lung cancer within groups that where based on smoking status.</p>
 <p>Finally, some of you may have noticed that the risk ratio is smaller in the non-smoking group than the smoking group and be curious as to why. We’ll come back to that.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/dag_05.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/dag_05.png" /><!-- --></p>
 <p>At this point, I hope you have developed an intuition about what effect modification is. Before getting into greater detail about effect modification is, I’m going to take a detour through how it is distinct from interaction. I’m warning you now, the distinction can seem subtle and a little difficult to wrap your mind around, but I will do my best to make it practically digestible.</p>
 <div id="difference-between-effect-modification-and-effect-measure-modification" class="section level2 hasAnchor" number="52.1">
 <h2><span class="header-section-number">52.1</span> Difference between effect modification and effect measure modification?<a href="effect-measure-modification.html#difference-between-effect-modification-and-effect-measure-modification" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -1033,7 +1038,7 @@ And that’s it. That’s the big idea. The measure of the effect of asbestos on
 <p>Finally, let’s see what the very popular textbook, Modern Epidemiology, has to say about it.</p>
 <!-- [Read and ask the class what they think about this quote.] -->
 <p>Again, it seems like we should be able to use effect modification and effect-measure modification fairly interchangeably. They do go on to say, however, that the term effect modification is too ambiguous and advise using very specific terms that indicate the exact measure that is being modified. We’ll see why they say this shortly.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/em_vs_interaction_01.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/em_vs_interaction_01.png" /><!-- --></p>
 <p>So, it seems to me that effect-measure modification can reasonably be thought of as a synonym for effect modification, along with the terms heterogeneity of effects and subgroup effects.</p>
 <p>All of these things describe a situation in which the magnitude and/or direction of the relationship between two variables, X and Y, is different within levels of a third variable, Z. This is the same situation we saw in the asbestos and lung cancer example.</p>
 <p>However, that still leaves us needing to distinguish between effect modification and statistical and biological interaction.</p>
@@ -1059,12 +1064,12 @@ E[De1q1] - E[De0q1] ≠ E[De1q0] - E[De0q0]</p>
 <p>If we randomize people to get two different treatments and we assess whether those two interventions have synergistic effects that’s causal interaction.</p>
 <p>Problem is that a statistical interaction in a regression model can’t distinguish between these two distinct causal concepts.</p>
 <p>There are more advanced analytic methods like standardization by weights that can distinguish them, but that’s beyond the scope of an MPH.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/em_vs_interaction_02.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/em_vs_interaction_02.png" /><!-- --></p>
 <p>As we saw, previously (and may or may not fully understand) statistical interaction is distinct from effect modification in its mathematical definition. I think the takeaway messages that are important for us are given here.</p>
 <p>But, if you find this super confusing, then just let it go for now. You aren’t going to be tested on it. And, in practice, the terms effect modification and interaction are often used synonymously.</p>
 <p>03Finally, there is yet another distinct form of interaction called biological interaction.</p>
 <p>For biological interaction, you can think of the sufficient-component cause model. If a sufficient causal pie has more than one component cause, then both component causes interact to produce the outcome.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/em_vs_interaction_03.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/em_vs_interaction_03.png" /><!-- --></p>
 </div>
 <div id="assessing-exploring-effect-modification" class="section level2 hasAnchor" number="52.3">
 <h2><span class="header-section-number">52.3</span> Assessing (exploring) effect modification<a href="effect-measure-modification.html#assessing-exploring-effect-modification" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -1125,11 +1130,11 @@ As explained in Chapter 4, if both X and Z have effects and there is no modifica
 - The observed joint effects of the risk factor and third factor differ from that expected on the basis of their independent effects.</p>
 <div id="homogeneity-of-effects" class="section level3 hasAnchor" number="52.3.1">
 <h3><span class="header-section-number">52.3.1</span> Homogeneity of Effects<a href="effect-measure-modification.html#homogeneity-of-effects" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_01.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_01.png" /><!-- --></p>
 <p>This is the example from the beginning of this discussion. Did we explore effect modification here on an additive or multiplicative scale? Multiplicative (RR).</p>
 <p>Which method did we use to to explore effect modification – homogeneity of effects or comparing observed and expected joint effects? Homogeneity of effects.</p>
 <p>However, we could have also explored effect modification on the additive scale by comparing risk differences between smokers and non-smokers like this.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_02.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_02.png" /><!-- --></p>
 <p>We can see that the risk is 20 / 1,000 among asbestos workers who smoked, and it is 10 / 1,000 in workers who smoked and did not work with asbestos.</p>
 <p>We can also see that among nonsmoking asbestos workers, this risk is 3 / 1,000, and the corresponding risk is 1 / 1,000 in nonsmoking workers who did not work with asbestos.</p>
 <p>The risk ratio association between asbestos exposure and lung cancer is then 2 in smokers, less than the risk ratio of 3 in non-smokers.</p>
@@ -1144,13 +1149,13 @@ The RR is higher in Non-smokers (When it isn’t smoking, it has to be something
 The RD is higher in smokers (Smoking is bad. Smoking and asbestos is really bad).</p>
 <p>Main idea: Not the same within strata.</p>
 <!-- ** Socrative ? -->
-<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_03.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_03.png" /><!-- --></p>
 <p>We can also compare joint and expected effects. First, let’s use our data to create a new table that includes lung cancer deaths by exposure status – both exposure to smoking and exposure to asbestos dust.</p>
 <p>How many lung cancer deaths occurred among workers who did not smoke and were not exposed to asbestos? 1</p>
 <p>How many lung cancer deaths occurred among workers who did not smoke, but were exposed to asbestos? 3</p>
 <p>How many lung cancer deaths occurred among workers who smoked and were not exposed to asbestos? 10</p>
 <p>Finally, how many lung cancer deaths occurred among workers who smoked and were exposed to asbestos? 20</p>
-<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_04.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_04.png" /><!-- --></p>
 <p>Now, when there is no effect modification, we expect the combined effects of our two exposures to simply equal the combination of their individual effects. On an additive scale, we combine the individual effects by addition.</p>
 <p>In the top left corner of our table, we see that one person died who did not have exposure to smoking or asbestos. This tells us that there must be at least one sufficient cause set for lung cancer that includes neither smoking nor asbestos. We sometimes call that our baseline risk with respect to smoking and asbestos. Another way to think about it is an estimate of what lung cancer risk would be if we magically got rid of smoking and asbestos, but everything else stayed the same. We will designate this cell the reference cell.</p>
 <p>The top right corner of our table tells us about the risk of lung cancer among people exposed to asbestos in the absence of smoking.</p>
@@ -1158,7 +1163,7 @@ The RD is higher in smokers (Smoking is bad. Smoking and asbestos is really bad)
 <p>Finally, the bottom right corner of our table tells us about the risk of lung cancer among people who smoked and were exposed to asbestos.</p>
 <p>Remember, that we said that when there is no effect modification, we expect the combined effects of our two exposures to simply equal the combination of their individual effects. On an additive scale, the effect of interest could be the risk difference.</p>
 <p>The observed risk difference in the second table represents the differences in the observed absolute incidence between each category and the reference category.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_05.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/homogeneity_of_effects_05.png" /><!-- --></p>
 <p>Once again, when there is no effect modification, we expect the combined effects of our two exposures to simply equal the combination of their individual effects. On an additive scale, we combine the individual effects by addition.</p>
 <p>We already decided that the individual effects of smoking and of asbestos on an additive scale were located in the corners of our table.</p>
 <p>We also said that when we are exploring effect modification on an additive scale, we combine the individual effects by addition.</p>
@@ -1167,24 +1172,24 @@ The RD is higher in smokers (Smoking is bad. Smoking and asbestos is really bad)
 </div>
 <div id="observed-and-expected-joint-effects" class="section level3 hasAnchor" number="52.3.2">
 <h3><span class="header-section-number">52.3.2</span> Observed and Expected Joint Effects<a href="effect-measure-modification.html#observed-and-expected-joint-effects" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><img src="img/10_part_epi_foundations/12_emm/observed_expected_joint_effects_01.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/observed_expected_joint_effects_01.png" /><!-- --></p>
 <p>The first step, using our data to create a new table that includes lung cancer deaths by exposure status – both exposure to smoking and exposure to asbestos dust is the same as before.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/observed_expected_joint_effects_02.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/observed_expected_joint_effects_02.png" /><!-- --></p>
 <p>Once again, when there is no effect modification, we expect the combined effects of our two exposures to simply equal the combination of their individual effects. On an multiplicative scale, we combine the individual effects by multiplication.</p>
 <p>In the top left corner of our table, we see that one person died who did not have exposure to smoking or asbestos. This cell will still be designated the reference cell.</p>
 <p>Remember, that we said that when there is no effect modification, we expect the combined effects of our two exposures to simply equal the combination of their individual effects. On a multiplicative scale, the effect of interest could be the risk ratio.</p>
 <p>The observed risk ratios in the second table represent the ratio of the observed incidence between each category and the reference category.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/observed_expected_joint_effects_03.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/observed_expected_joint_effects_03.png" /><!-- --></p>
 <p>Once again, when there is no effect modification, we expect the combined effects of our two exposures to simply equal the combination of their individual effects. On an multiplicative scale, we combine the individual effects by multiplication.</p>
 <p>We already decided that the individual effects of smoking and of asbestos on an multiplicative scale were located in the corners of our table.</p>
 <p>We also said that when we are exploring effect modification on an multiplicative scale, we combine the individual effects by multiplication.</p>
 <p>Therefore the expected joint risk ratio is 30, which is higher than the observed risk ratio of 20. This is effect modification on the multiplicative scale.</p>
-<p><img src="img/10_part_epi_foundations/12_emm/summary.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/summary.png" /><!-- --></p>
 </div>
 </div>
 <div id="what-is-different-enough" class="section level2 hasAnchor" number="52.4">
 <h2><span class="header-section-number">52.4</span> What is different enough?<a href="effect-measure-modification.html#what-is-different-enough" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><img src="img/10_part_epi_foundations/12_emm/different_enough.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/12_emm/different_enough.png" /><!-- --></p>
 <p>Although no clear-cut rule exists regarding whether to adjust in the presence of heterogeneity, consideration of the following question may be helpful: “Given heterogeneity of this magnitude, am I willing to report an average (adjusted) effect that is reasonably representative of all strata of the study population formed on the basis of the suspected effect modifier?”</p>
 <!-- Also see table 6-24. -->
 <!-- Szklo, Moyses,Nieto, F. Javier. Epidemiology (Kindle Locations 6200-6203). Jones & Bartlett Learning. Kindle Edition.  -->
@@ -1276,7 +1281,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

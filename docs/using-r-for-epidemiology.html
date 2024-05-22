@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>41 Using R for Epidemiology | R for Epidemiology</title>
   <meta name="description" content="This is the textbook for Brad Cannell’s Introduction to R Programming for Epidemiologic Research course." />
-  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="41 Using R for Epidemiology | R for Epidemiology" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2023-10-19" />
+<meta name="date" content="2024-05-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,14 +56,15 @@
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
 <script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.23/datatables.js"></script>
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<script src="libs/datatables-binding-0.33/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0RREBTQ0D9"></script>
 <script>
@@ -87,7 +88,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -150,6 +151,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -993,7 +998,7 @@ Copy and paste:
 <p>Up to this point, this book has primarily been about R programming and data management, generally. We tried to create examples and scenarios that would resonate with epidemiologists, and other people who are interested in epidemiology, but there was very little information in the previous chapters that can reasonably be said to teach a person much about epidemiology as a discipline or how to engage in the practice of epidemiology. From this point on, we will shift focus slightly from learning about R generally to learning about how to use R as a tool for grasping the concepts, and conducting the analyses, that are central to the practice of modern epidemiology.</p>
 <p>This book isn’t intended to be a broad introduction to epidemiology. If you’re reading this, we assume that you’ve already had some exposure to the basics of epidemiology. If you haven’t had any exposure to the basics of epidemiology, <a href="https://www.us.elsevierhealth.com/gordis-epidemiology-9780323552295.html"><em>Epidemiology by Leon Gordis</em></a> is a popular introductory textbook and we recommend that you start there. Alternatively, you could read <a href="https://shop.lww.com/Modern-Epidemiology/p/9781451193282"><strong>Modern Epidemiology by Lash, VanderWeele, Haneuse, and Rothman</strong></a>, which is our personal favorite, but is also regarded as a challenging text by some.</p>
 <p>Having said all of that, in this chapter, we will briefly touch on some foundational epidemiologic concepts as they apply to <em>this</em> book. Specifically, we will start by discussing measurement, uncertainty, and study design.</p>
-<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/measurement_uncertainty_study_design.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/measurement_uncertainty_study_design.png" /><!-- --></p>
 <div id="measurement" class="section level2 hasAnchor" number="41.1">
 <h2><span class="header-section-number">41.1</span> Measurement<a href="using-r-for-epidemiology.html#measurement" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Epidemiology is typically defined as something like the following.</p>
@@ -1001,14 +1006,14 @@ Copy and paste:
 <p>“the study of the occurrence and distribution of health-related states or events in specified populations, including the study of the determinants influencing such states, and the application of this knowledge to control the health problems.”<span class="citation"><sup><a href="#ref-Porta2008-ij">16</a></sup></span></p>
 </blockquote>
 <p>For shorthand, we sometimes say that we study, “who gets sick (or stays healthy) and why.” Because this isn’t an introductory course on epidemiology, we’re not going to attempt to pick apart all the nuances of either definition. However, it may be worth taking a step back and thinking about <em>how</em> we study the occurrence and distribution of these health-related states. Do we consult powerful oracles or deities? Not typically. Do we go into a deep meditative state until the answers just occur to us? Not typically. At least, doing that alone would not typically be very convincing evidence to most people. Instead, we almost always study health-related states in [Populations] by <strong>measuring</strong> some characteristics of those health-related states that are thought to be relevant. Then, we look for useful patterns in those measurements. Recording those measurements typically results in data and we typically look for useful patterns by applying statistical procedures to the data. Hence, <strong>data</strong> and <strong>statistics</strong> are probably the two most commonly used tools in most epidemiologists’ toolbox.</p>
-<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/measurement_data_statistics.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/measurement_data_statistics.png" /><!-- --></p>
 <p>To be even more specific, when we say that we are “measuring characteristics of health-related states,” we mean that we are recording <strong>numerical</strong> or <strong>qualitative</strong> values somewhere as we observe varying quantities or qualities of those characteristics. For example, we might ask someone to step on a scale. We could observe their weight and record it somewhere. As another example, we might ask someone to fill out a questionnaire about their thoughts and feelings. We could then record those responses somewhere as well.</p>
 <div class="note">
 <p>🗒<strong>Side Note:</strong> Notice how we frequently use the word “observe” in epidemiology. In everyday speech, we tend to think of observe as meaning seeing something take place in front of our own eyes. In epidemiology, it is common to use the word observe more broadly. Something closer to simply meaning ”to be aware of” or ”have knowledge about”.</p>
 </div>
 <p>Sometimes, the values we observe are more or less dictated by nature (e.g., a person is currently 71 inches tall or is not), while others are socially constructed (e.g., race), and sometimes they are assigned somewhat arbitrarily (e.g., mild, moderate, and severe pain). Note that what we measure, how we measure it, and how we interpret different measurements we collect are driven by what we believe to be important, and make up part of the assumptions we bring to the research process. This subjectivity should give all of us some pause. While this is not an ethics or philosophy textbook, it is important to point out that data is not value-neutral. If we want to do this work well, we should take the time to think through the assumptions we bring to the table. <!-- Eventually, we may want to add more to this topic somewhere in the book. At the very least, we should add a reference to additional reading. --></p>
 <p>A potentially helpful way to frame this discussion is to think of epidemiologists as storytellers. We tell stories about how different things impact people’s health, and we tell stories about how their health is impacted. What makes us different from some other storytellers is our heavy reliance on quantitative data to help us tell those stories about population health. If that all sounds a little too “deep” to be meaningful, we think the relevant takeaway for now is that a typical day in the life of most epidemiologists includes attempting to <strong>describe</strong>, <strong>predict</strong>, and/or <strong>explain</strong> health-related phenomena. We will spend most of the rest of this book discussing <em>how</em> to do so.</p>
-<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/description_prediction_causation.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/description_prediction_causation.png" /><!-- --></p>
 <p>We may be able to dig a little bit and find some technical definitions somewhere that clearly distinguish each of these measurement and analysis goals, but in our experience there is often some overlap between them in applied epidemiology. Further, the same study may attempt to do all three to varying degrees. Having said that, we believe that there is some value in taking a moment to discuss each individually.</p>
 <div id="descriptive-measures" class="section level3 hasAnchor" number="41.1.1">
 <h3><span class="header-section-number">41.1.1</span> Descriptive measures<a href="using-r-for-epidemiology.html#descriptive-measures" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -1032,7 +1037,7 @@ Copy and paste:
 </div>
 <div id="uncertainty" class="section level2 hasAnchor" number="41.2">
 <h2><span class="header-section-number">41.2</span> Uncertainty<a href="using-r-for-epidemiology.html#uncertainty" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/measurement_uncertainty_study_design.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/measurement_uncertainty_study_design.png" /><!-- --></p>
 <p>In epidemiology generally, and parts of this book specifically, it is important that we become comfortable with <strong>uncertainty</strong>. What do we mean when we say “uncertainty”? In epidemiologic research (and quantitative research more generally), we actually need to get comfortable with uncertainty in a few different ways:</p>
 <ol style="list-style-type: decimal">
 <li>Statistical uncertainty.</li>
@@ -1057,7 +1062,7 @@ Copy and paste:
 <div id="study-design" class="section level2 hasAnchor" number="41.3">
 <h2><span class="header-section-number">41.3</span> Study design<a href="using-r-for-epidemiology.html#study-design" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <!-- Improve this. -->
-<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/study_design.png" width="900" /></p>
+<p><img src="img/10_part_epi_foundations/01_using_r_for_epi/study_design.png" /><!-- --></p>
 <p>So, let’s say that we are getting comfortable with uncertainty and we are ready to gather some measurements from people so that we can describe them, make predictions about them, and/or understand causes of health-related phenomena in their lives. How exactly do we do that? Well, there are many different ways! However, because we generally can’t gather measurements from every single person in the population we are interested in, we almost always need to gather measurements from a smaller sample of people in the population we are interested in.</p>
 <p>It’s important that we classify the different ways that we can sample people to gather measurements from because each of the different ways has its own set of strengths and weaknesses that we need to be aware of. In the figure above, we briefly introduce some of the most common ways to sample people – also known as study designs – used in epidemiology.</p>
 <p>At the first first level, we typically categorize a study designs as either experimental or observational.</p>
@@ -1146,7 +1151,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');
