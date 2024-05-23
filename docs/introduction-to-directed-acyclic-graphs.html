@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2024-05-22" />
+<meta name="date" content="2024-05-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1066,37 +1066,37 @@ Figure 64.8: Screenshot of the DAGitty homepage.
 </p>
 </div>
 <p>You might have also noticed the <code>dagitty</code> R package in figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-dagitty">64.8</a>. It’s a great package that allows us to use DAGitty directly from within an R session, and I encourage interested readers to check it out. However, for the sake of efficiency, we will focus on using a different R package, built on top of <code>dagitty</code>, <code>ggplot2</code>, and <code>ggraph</code>, for the remainder of this chapter. That package is called <a href="https://github.com/r-causal/ggdag">ggdag</a>.</p>
-<div class="sourceCode" id="cb1950"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1950-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1950-1" tabindex="-1"></a><span class="co"># Load the packages we will need below</span></span>
-<span id="cb1950-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1950-2" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1950-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1950-3" tabindex="-1"></a><span class="fu">library</span>(ggdag, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1950-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1950-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
+<div class="sourceCode" id="cb1952"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1952-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-1" tabindex="-1"></a><span class="co"># Load the packages we will need below</span></span>
+<span id="cb1952-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-2" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1952-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-3" tabindex="-1"></a><span class="fu">library</span>(ggdag, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1952-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
 </div>
 <div id="chains" class="section level2 hasAnchor" number="64.3">
 <h2><span class="header-section-number">64.3</span> Chains<a href="introduction-to-directed-acyclic-graphs.html#chains" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The first DAG structure we will learn how to create with <code>ggdag</code> called a <strong>chain</strong>. A chain consists of 3 nodes and two edges, with one edges going into the middle node and the other edge coming out of the middle node.<span class="citation"><sup><a href="#ref-Pearl2016-lu">22</a></sup></span> We have already seen several examples of chains above, for example, figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-paths">64.3</a>. Let’s look at the code we used to create figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-paths">64.3</a>.</p>
-<div class="sourceCode" id="cb1951"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1951-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
-<span id="cb1951-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
-<span id="cb1951-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
-<span id="cb1951-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-4" tabindex="-1"></a>  z <span class="sc">~</span> y,</span>
-<span id="cb1951-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-5" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
-<span id="cb1951-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-6" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
-<span id="cb1951-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-7" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
-<span id="cb1951-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-8" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
-<span id="cb1951-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-9" tabindex="-1"></a>  )</span>
-<span id="cb1951-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-10" tabindex="-1"></a>)</span>
-<span id="cb1951-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-11" tabindex="-1"></a></span>
-<span id="cb1951-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-12" tabindex="-1"></a><span class="co"># Plot the dag called chain and print it to the screen</span></span>
-<span id="cb1951-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-13" tabindex="-1"></a><span class="fu">ggdag</span>(chain) <span class="sc">+</span></span>
-<span id="cb1951-14"><a href="introduction-to-directed-acyclic-graphs.html#cb1951-14" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1953"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1953-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb1953-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb1953-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb1953-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-4" tabindex="-1"></a>  z <span class="sc">~</span> y,</span>
+<span id="cb1953-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-5" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
+<span id="cb1953-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-6" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
+<span id="cb1953-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-7" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
+<span id="cb1953-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-8" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
+<span id="cb1953-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-9" tabindex="-1"></a>  )</span>
+<span id="cb1953-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-10" tabindex="-1"></a>)</span>
+<span id="cb1953-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-11" tabindex="-1"></a></span>
+<span id="cb1953-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-12" tabindex="-1"></a><span class="co"># Plot the dag called chain and print it to the screen</span></span>
+<span id="cb1953-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-13" tabindex="-1"></a><span class="fu">ggdag</span>(chain) <span class="sc">+</span></span>
+<span id="cb1953-14"><a href="introduction-to-directed-acyclic-graphs.html#cb1953-14" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/dags-chain-01-1.png" width="672" /></p>
 <p>Now, let’s walk through building the code step-by-step to better understand how it works.</p>
-<div class="sourceCode" id="cb1952"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1952-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
-<span id="cb1952-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
-<span id="cb1952-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-3" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="co"># The form is effect ~ cause</span></span>
-<span id="cb1952-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-4" tabindex="-1"></a>) </span>
-<span id="cb1952-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-5" tabindex="-1"></a></span>
-<span id="cb1952-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-6" tabindex="-1"></a><span class="co"># Print the value stored in chain to the screen</span></span>
-<span id="cb1952-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1952-7" tabindex="-1"></a>chain</span></code></pre></div>
+<div class="sourceCode" id="cb1954"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1954-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb1954-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb1954-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-3" tabindex="-1"></a>  y <span class="sc">~</span> x <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb1954-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-4" tabindex="-1"></a>) </span>
+<span id="cb1954-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-5" tabindex="-1"></a></span>
+<span id="cb1954-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-6" tabindex="-1"></a><span class="co"># Print the value stored in chain to the screen</span></span>
+<span id="cb1954-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-7" tabindex="-1"></a>chain</span></code></pre></div>
 <pre><code>## dag {
 ## x
 ## y
@@ -1113,11 +1113,11 @@ Figure 64.8: Screenshot of the DAGitty homepage.
 <li><p>We can see the <code>DAGitty</code> syntax when we print the value stored in <code>chain</code> to the screen. However, we won’t actually need to manipulate this code in any way.</p></li>
 </ul>
 <p>Next, we can pass the <code>chain</code> object the the <code>ggdag()</code> function to print our DAG to the screen.</p>
-<div class="sourceCode" id="cb1954"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1954-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-1" tabindex="-1"></a><span class="co"># Set seed so that we can reproduce the plot</span></span>
-<span id="cb1954-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb1954-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-3" tabindex="-1"></a></span>
-<span id="cb1954-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-4" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
-<span id="cb1954-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1954-5" tabindex="-1"></a><span class="fu">ggdag</span>(chain)</span></code></pre></div>
+<div class="sourceCode" id="cb1956"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1956-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-1" tabindex="-1"></a><span class="co"># Set seed so that we can reproduce the plot</span></span>
+<span id="cb1956-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1956-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-3" tabindex="-1"></a></span>
+<span id="cb1956-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-4" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
+<span id="cb1956-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-5" tabindex="-1"></a><span class="fu">ggdag</span>(chain)</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/dags-chain-03-1.png" width="672" /></p>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1129,18 +1129,18 @@ Figure 64.8: Screenshot of the DAGitty homepage.
 <li><p>The DAG was converted to a <code>ggplot2</code> plot and printed to the screen. Notice the x and y axis values in the plot above. These values don’t have any substantive meaning. They are simply coordinates used to place the elements of the graph around the plotting area. By default, if we don’t tell the <code>dagify()</code> function which coordinates to use, then it will select coordinates at random. Therefore, if we want our DAG to look the same every time we run the code above, then we must either use the <code>set.seed()</code> function to produce the same random coordinates each time we run the code <em>or</em> we much specifically pass coordinates to the <code>dagify()</code> function.</p></li>
 </ul>
 <p>Let’s pass coordinates to the the <code>dagify()</code> function now so that we have greater control over the layout and reproducibility of our DAG.</p>
-<div class="sourceCode" id="cb1955"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1955-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
-<span id="cb1955-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
-<span id="cb1955-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
-<span id="cb1955-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-4" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
-<span id="cb1955-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
-<span id="cb1955-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>),</span>
-<span id="cb1955-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
-<span id="cb1955-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-8" tabindex="-1"></a>  ) </span>
-<span id="cb1955-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-9" tabindex="-1"></a>) </span>
-<span id="cb1955-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-10" tabindex="-1"></a></span>
-<span id="cb1955-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-11" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
-<span id="cb1955-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1955-12" tabindex="-1"></a><span class="fu">ggdag</span>(chain)</span></code></pre></div>
+<div class="sourceCode" id="cb1957"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1957-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb1957-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb1957-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb1957-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-4" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
+<span id="cb1957-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
+<span id="cb1957-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>),</span>
+<span id="cb1957-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
+<span id="cb1957-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-8" tabindex="-1"></a>  ) </span>
+<span id="cb1957-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-9" tabindex="-1"></a>) </span>
+<span id="cb1957-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-10" tabindex="-1"></a></span>
+<span id="cb1957-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-11" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
+<span id="cb1957-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-12" tabindex="-1"></a><span class="fu">ggdag</span>(chain)</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/dags-chain-04-1.png" width="672" /></p>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1156,19 +1156,19 @@ Figure 64.8: Screenshot of the DAGitty homepage.
 <li><p>We used the <code>ggdag()</code> function to plot the <code>chain</code> object as a <code>ggplot2</code> plot and print it to the screen.</p></li>
 </ul>
 <p>Now that we know how the coordinate system work, it no longer serves much of a purpose. The x- and y-axis values don’t have any function beyond placing nodes on the plotting area. So, let’s go ahead and remove them. The <code>ggdag</code> package includes a function called <code>theme_dag()</code> that will remove everything from the plot except the nodes and edges. Let’s use it now.</p>
-<div class="sourceCode" id="cb1956"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1956-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
-<span id="cb1956-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
-<span id="cb1956-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
-<span id="cb1956-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-4" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
-<span id="cb1956-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
-<span id="cb1956-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>),</span>
-<span id="cb1956-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
-<span id="cb1956-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-8" tabindex="-1"></a>  ) </span>
-<span id="cb1956-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-9" tabindex="-1"></a>) </span>
-<span id="cb1956-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-10" tabindex="-1"></a></span>
-<span id="cb1956-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-11" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
-<span id="cb1956-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-12" tabindex="-1"></a><span class="fu">ggdag</span>(chain) <span class="sc">+</span> <span class="co"># Make sure to use a + sign, not a pipe</span></span>
-<span id="cb1956-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1956-13" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1958"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1958-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb1958-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb1958-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb1958-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-4" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
+<span id="cb1958-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
+<span id="cb1958-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>),</span>
+<span id="cb1958-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
+<span id="cb1958-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-8" tabindex="-1"></a>  ) </span>
+<span id="cb1958-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-9" tabindex="-1"></a>) </span>
+<span id="cb1958-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-10" tabindex="-1"></a></span>
+<span id="cb1958-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-11" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
+<span id="cb1958-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-12" tabindex="-1"></a><span class="fu">ggdag</span>(chain) <span class="sc">+</span> <span class="co"># Make sure to use a + sign, not a pipe</span></span>
+<span id="cb1958-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-13" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/dags-chain-05-1.png" width="672" /></p>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1176,20 +1176,20 @@ Figure 64.8: Screenshot of the DAGitty homepage.
 <li><p>This time we added the <code>theme_dag()</code> theme to our plot to make it easier to read. Notice that we used the <code>+</code> sign to add the theme, not a pipe operator.</p></li>
 </ul>
 <p>At this point, we have learned all of the basic functionality we need to know to create our chain DAG. We just need to add one more node and one more edge.</p>
-<div class="sourceCode" id="cb1957"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1957-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
-<span id="cb1957-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
-<span id="cb1957-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
-<span id="cb1957-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-4" tabindex="-1"></a>  z <span class="sc">~</span> y,</span>
-<span id="cb1957-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-5" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
-<span id="cb1957-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-6" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
-<span id="cb1957-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-7" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
-<span id="cb1957-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-8" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
-<span id="cb1957-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-9" tabindex="-1"></a>  ) </span>
-<span id="cb1957-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-10" tabindex="-1"></a>) </span>
-<span id="cb1957-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-11" tabindex="-1"></a></span>
-<span id="cb1957-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-12" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
-<span id="cb1957-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-13" tabindex="-1"></a><span class="fu">ggdag</span>(chain) <span class="sc">+</span> <span class="co"># Make sure to use a + sign, not a pipe</span></span>
-<span id="cb1957-14"><a href="introduction-to-directed-acyclic-graphs.html#cb1957-14" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1959"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1959-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-1" tabindex="-1"></a><span class="co"># Create a DAG called chain</span></span>
+<span id="cb1959-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-2" tabindex="-1"></a>chain <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb1959-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-3" tabindex="-1"></a>  y <span class="sc">~</span> x, <span class="co"># The form is effect ~ cause</span></span>
+<span id="cb1959-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-4" tabindex="-1"></a>  z <span class="sc">~</span> y,</span>
+<span id="cb1959-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-5" tabindex="-1"></a>  <span class="co"># Optionally add coordinates to control the placement of the nodes on the DAG</span></span>
+<span id="cb1959-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-6" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>( </span>
+<span id="cb1959-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-7" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
+<span id="cb1959-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-8" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
+<span id="cb1959-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-9" tabindex="-1"></a>  ) </span>
+<span id="cb1959-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-10" tabindex="-1"></a>) </span>
+<span id="cb1959-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-11" tabindex="-1"></a></span>
+<span id="cb1959-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-12" tabindex="-1"></a><span class="co"># Plot the chain dag and print it to the screen</span></span>
+<span id="cb1959-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-13" tabindex="-1"></a><span class="fu">ggdag</span>(chain) <span class="sc">+</span> <span class="co"># Make sure to use a + sign, not a pipe</span></span>
+<span id="cb1959-14"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-14" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/dags-chain-06-1.png" width="672" /></p>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1204,38 +1204,38 @@ Figure 64.8: Screenshot of the DAGitty homepage.
 <div id="forks" class="section level2 hasAnchor" number="64.4">
 <h2><span class="header-section-number">64.4</span> Forks<a href="introduction-to-directed-acyclic-graphs.html#forks" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The next structure we will learn to create with <code>ggdag</code> is the <strong>fork</strong> structure. A fork consists of 3 nodes and two edges, with both edges coming out of the middle node.<span class="citation"><sup><a href="#ref-Pearl2016-lu">22</a></sup></span> We previously saw a fork when we discussed common causes and figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-common-causes">64.7</a>. Here is the code we used to create figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-common-causes">64.7</a>.</p>
-<div class="sourceCode" id="cb1958"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1958-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-1" tabindex="-1"></a><span class="co"># Create the DAG called fork</span></span>
-<span id="cb1958-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-2" tabindex="-1"></a>fork <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
-<span id="cb1958-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-3" tabindex="-1"></a>  x <span class="sc">~</span> y,</span>
-<span id="cb1958-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-4" tabindex="-1"></a>  z <span class="sc">~</span> y,</span>
-<span id="cb1958-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>(</span>
-<span id="cb1958-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
-<span id="cb1958-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
-<span id="cb1958-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-8" tabindex="-1"></a>  )</span>
-<span id="cb1958-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-9" tabindex="-1"></a>) </span>
-<span id="cb1958-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-10" tabindex="-1"></a></span>
-<span id="cb1958-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-11" tabindex="-1"></a><span class="co"># Plot the fork dag and print it to the screen</span></span>
-<span id="cb1958-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-12" tabindex="-1"></a><span class="fu">ggdag</span>(fork) <span class="sc">+</span></span>
-<span id="cb1958-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1958-13" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1960"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1960-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-1" tabindex="-1"></a><span class="co"># Create the DAG called fork</span></span>
+<span id="cb1960-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-2" tabindex="-1"></a>fork <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb1960-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-3" tabindex="-1"></a>  x <span class="sc">~</span> y,</span>
+<span id="cb1960-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-4" tabindex="-1"></a>  z <span class="sc">~</span> y,</span>
+<span id="cb1960-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>(</span>
+<span id="cb1960-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
+<span id="cb1960-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
+<span id="cb1960-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-8" tabindex="-1"></a>  )</span>
+<span id="cb1960-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-9" tabindex="-1"></a>) </span>
+<span id="cb1960-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-10" tabindex="-1"></a></span>
+<span id="cb1960-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-11" tabindex="-1"></a><span class="co"># Plot the fork dag and print it to the screen</span></span>
+<span id="cb1960-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-12" tabindex="-1"></a><span class="fu">ggdag</span>(fork) <span class="sc">+</span></span>
+<span id="cb1960-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1960-13" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/dags-forks-1.png" width="672" /></p>
 <p>The code above only differs from the chain code in the formulas we passed the <code>...</code> argument of the <code>dagify()</code> function. This time, the formulas we passed told the <code>dagify()</code> function that “x is caused by y” (<code>x ~ y</code>) and that “z is caused by y” (<code>z ~ y</code>). Everything else remained the same.</p>
 </div>
 <div id="colliders" class="section level2 hasAnchor" number="64.5">
 <h2><span class="header-section-number">64.5</span> Colliders<a href="introduction-to-directed-acyclic-graphs.html#colliders" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The third structure we will learn to create with <code>ggdag</code> is the <strong>collider</strong> structure. A collider consists of 3 nodes and two edges, with both edges directed into the middle node.<span class="citation"><sup><a href="#ref-Pearl2016-lu">22</a></sup></span> We previously saw a collider in <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-colliders-01">64.5</a>. Here is the code we used to create figure <a href="introduction-to-directed-acyclic-graphs.html#fig:dags-colliders-01">64.5</a>.</p>
-<div class="sourceCode" id="cb1959"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1959-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-1" tabindex="-1"></a><span class="co"># Create the DAG called collider</span></span>
-<span id="cb1959-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-2" tabindex="-1"></a>collider <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
-<span id="cb1959-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-3" tabindex="-1"></a>  y <span class="sc">~</span> x,</span>
-<span id="cb1959-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-4" tabindex="-1"></a>  y <span class="sc">~</span> z,</span>
-<span id="cb1959-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>(</span>
-<span id="cb1959-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
-<span id="cb1959-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
-<span id="cb1959-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-8" tabindex="-1"></a>  )</span>
-<span id="cb1959-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-9" tabindex="-1"></a>)</span>
-<span id="cb1959-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-10" tabindex="-1"></a></span>
-<span id="cb1959-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-11" tabindex="-1"></a><span class="co"># Plot the collider dag and print it to the screen</span></span>
-<span id="cb1959-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-12" tabindex="-1"></a><span class="fu">ggdag</span>(collider) <span class="sc">+</span></span>
-<span id="cb1959-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1959-13" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1961"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1961-1"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-1" tabindex="-1"></a><span class="co"># Create the DAG called collider</span></span>
+<span id="cb1961-2"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-2" tabindex="-1"></a>collider <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb1961-3"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-3" tabindex="-1"></a>  y <span class="sc">~</span> x,</span>
+<span id="cb1961-4"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-4" tabindex="-1"></a>  y <span class="sc">~</span> z,</span>
+<span id="cb1961-5"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-5" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>(</span>
+<span id="cb1961-6"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-6" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">3</span>),</span>
+<span id="cb1961-7"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-7" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">z =</span> <span class="dv">0</span>)</span>
+<span id="cb1961-8"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-8" tabindex="-1"></a>  )</span>
+<span id="cb1961-9"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-9" tabindex="-1"></a>)</span>
+<span id="cb1961-10"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-10" tabindex="-1"></a></span>
+<span id="cb1961-11"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-11" tabindex="-1"></a><span class="co"># Plot the collider dag and print it to the screen</span></span>
+<span id="cb1961-12"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-12" tabindex="-1"></a><span class="fu">ggdag</span>(collider) <span class="sc">+</span></span>
+<span id="cb1961-13"><a href="introduction-to-directed-acyclic-graphs.html#cb1961-13" tabindex="-1"></a>  <span class="fu">theme_dag</span>()</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/dags-colliders-03-1.png" width="672" /></p>
 <p>Once again, the code above only differs from the chain code in the formulas we passed the <code>...</code> argument of the <code>dagify()</code> function. This time, the formulas we passed told the <code>dagify()</code> function that “y is caused by x” (<code>y ~ x</code>) and that “y is caused by z” (<code>y ~ z</code>). Everything else remained the same.</p>
 <p>With only these three structures – chains, forks, and colliders – we can create sophisticated DAGs with the potential to help us reason about almost any causal question we may want to ask. However, before we can use our DAGs, we must understand the rules of d-separation.</p>

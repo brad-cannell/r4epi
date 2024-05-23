@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2024-05-22" />
+<meta name="date" content="2024-05-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -999,59 +999,59 @@ Figure 55.1: Four commonly used generalized linear models.
 </p>
 </div>
 <p>We introduced regression modeling generally in the <a href="introduction-to-regression-analysis.html#introduction-to-regression-analysis">introduction to regression analysis chapter</a>. In this chapter, we will discuss fitting linear regression models, a type of generalized linear model, to our data using R. <strong>In general, the linear model is a good place to start when the regressand we want to model is continuous</strong>. We will begin by loading some useful R packages and simulating some data to fit our model to. We add comments to the code below to help you get a sense for how the values in the simulated data are generated. But please skip over the code if it feels distracting or confusing, as it is not the primary object of our interest right now.</p>
-<div class="sourceCode" id="cb1848"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1848-1"><a href="linear-regression.html#cb1848-1" tabindex="-1"></a><span class="co"># Load the packages we will need below</span></span>
-<span id="cb1848-2"><a href="linear-regression.html#cb1848-2" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1848-3"><a href="linear-regression.html#cb1848-3" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># Makes glm() results easier to read and work with</span></span>
-<span id="cb1848-4"><a href="linear-regression.html#cb1848-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1848-5"><a href="linear-regression.html#cb1848-5" tabindex="-1"></a><span class="fu">library</span>(meantables)</span>
-<span id="cb1848-6"><a href="linear-regression.html#cb1848-6" tabindex="-1"></a><span class="fu">library</span>(freqtables)</span></code></pre></div>
-<div class="sourceCode" id="cb1849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1849-1"><a href="linear-regression.html#cb1849-1" tabindex="-1"></a><span class="co"># Set the seed for the random number generator so that we can reproduce our results</span></span>
-<span id="cb1849-2"><a href="linear-regression.html#cb1849-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb1849-3"><a href="linear-regression.html#cb1849-3" tabindex="-1"></a></span>
-<span id="cb1849-4"><a href="linear-regression.html#cb1849-4" tabindex="-1"></a><span class="co"># Set n to equal the number of people we want to simulate. We will use n</span></span>
-<span id="cb1849-5"><a href="linear-regression.html#cb1849-5" tabindex="-1"></a><span class="co"># repeatedly in the code below.</span></span>
-<span id="cb1849-6"><a href="linear-regression.html#cb1849-6" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
-<span id="cb1849-7"><a href="linear-regression.html#cb1849-7" tabindex="-1"></a></span>
-<span id="cb1849-8"><a href="linear-regression.html#cb1849-8" tabindex="-1"></a><span class="co"># Simulate a data frame with n rows</span></span>
-<span id="cb1849-9"><a href="linear-regression.html#cb1849-9" tabindex="-1"></a><span class="co"># The variables in the data frame are generic continuous, categorical, and </span></span>
-<span id="cb1849-10"><a href="linear-regression.html#cb1849-10" tabindex="-1"></a><span class="co"># count values. They aren&#39;t necessarily intended to represent any real-life </span></span>
-<span id="cb1849-11"><a href="linear-regression.html#cb1849-11" tabindex="-1"></a><span class="co"># health-related state or event</span></span>
-<span id="cb1849-12"><a href="linear-regression.html#cb1849-12" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1849-13"><a href="linear-regression.html#cb1849-13" tabindex="-1"></a>  <span class="co"># Create a continuous regressor containing values selected at random from</span></span>
-<span id="cb1849-14"><a href="linear-regression.html#cb1849-14" tabindex="-1"></a>  <span class="co"># a normal distribution</span></span>
-<span id="cb1849-15"><a href="linear-regression.html#cb1849-15" tabindex="-1"></a>  <span class="at">x_cont  =</span> <span class="fu">rnorm</span>(n, <span class="dv">10</span>, <span class="dv">1</span>),</span>
-<span id="cb1849-16"><a href="linear-regression.html#cb1849-16" tabindex="-1"></a>  <span class="co"># Create a categorical regressor containing values selected at random from</span></span>
-<span id="cb1849-17"><a href="linear-regression.html#cb1849-17" tabindex="-1"></a>  <span class="co"># a binomial distribution with a 0.3 probability of success (i.e., </span></span>
-<span id="cb1849-18"><a href="linear-regression.html#cb1849-18" tabindex="-1"></a>  <span class="co"># selecting a 1)</span></span>
-<span id="cb1849-19"><a href="linear-regression.html#cb1849-19" tabindex="-1"></a>  <span class="at">x_cat   =</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, .<span class="dv">3</span>),</span>
-<span id="cb1849-20"><a href="linear-regression.html#cb1849-20" tabindex="-1"></a>  <span class="co"># Create a continuous regressand that has a value that is equal to the value</span></span>
-<span id="cb1849-21"><a href="linear-regression.html#cb1849-21" tabindex="-1"></a>  <span class="co"># of x_cont plus or minus some random variation. The direction of the</span></span>
-<span id="cb1849-22"><a href="linear-regression.html#cb1849-22" tabindex="-1"></a>  <span class="co"># variation is dependent on the value of x_cat.</span></span>
-<span id="cb1849-23"><a href="linear-regression.html#cb1849-23" tabindex="-1"></a>  <span class="at">y_cont  =</span> <span class="fu">if_else</span>(</span>
-<span id="cb1849-24"><a href="linear-regression.html#cb1849-24" tabindex="-1"></a>    x_cat <span class="sc">==</span> <span class="dv">0</span>, </span>
-<span id="cb1849-25"><a href="linear-regression.html#cb1849-25" tabindex="-1"></a>    x_cont <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="fl">0.1</span>), </span>
-<span id="cb1849-26"><a href="linear-regression.html#cb1849-26" tabindex="-1"></a>    x_cont <span class="sc">-</span> <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="fl">0.1</span>)</span>
-<span id="cb1849-27"><a href="linear-regression.html#cb1849-27" tabindex="-1"></a>  ),</span>
-<span id="cb1849-28"><a href="linear-regression.html#cb1849-28" tabindex="-1"></a>  <span class="co"># Create a categorical regressand that has a value selected at random from</span></span>
-<span id="cb1849-29"><a href="linear-regression.html#cb1849-29" tabindex="-1"></a>  <span class="co"># a binomial distribution. The probability of a successful draw from the </span></span>
-<span id="cb1849-30"><a href="linear-regression.html#cb1849-30" tabindex="-1"></a>  <span class="co"># binomial distribution is dependent on the value of x_cat.</span></span>
-<span id="cb1849-31"><a href="linear-regression.html#cb1849-31" tabindex="-1"></a>  <span class="at">y_cat   =</span> <span class="fu">if_else</span>(</span>
-<span id="cb1849-32"><a href="linear-regression.html#cb1849-32" tabindex="-1"></a>    x_cat <span class="sc">==</span> <span class="dv">0</span>,</span>
-<span id="cb1849-33"><a href="linear-regression.html#cb1849-33" tabindex="-1"></a>    <span class="fu">rbinom</span>(n, <span class="dv">1</span>, .<span class="dv">1</span>),</span>
-<span id="cb1849-34"><a href="linear-regression.html#cb1849-34" tabindex="-1"></a>    <span class="fu">rbinom</span>(n, <span class="dv">1</span>, .<span class="dv">5</span>)</span>
-<span id="cb1849-35"><a href="linear-regression.html#cb1849-35" tabindex="-1"></a>  ),</span>
-<span id="cb1849-36"><a href="linear-regression.html#cb1849-36" tabindex="-1"></a>  <span class="co"># Create a regressand that contains count data selected at random from</span></span>
-<span id="cb1849-37"><a href="linear-regression.html#cb1849-37" tabindex="-1"></a>  <span class="co"># a categorical distribution. The probability of a selecting each value from </span></span>
-<span id="cb1849-38"><a href="linear-regression.html#cb1849-38" tabindex="-1"></a>  <span class="co"># the distribution is dependent on the value of x_cat.</span></span>
-<span id="cb1849-39"><a href="linear-regression.html#cb1849-39" tabindex="-1"></a>  <span class="at">y_count =</span> <span class="fu">if_else</span>(</span>
-<span id="cb1849-40"><a href="linear-regression.html#cb1849-40" tabindex="-1"></a>    x_cat <span class="sc">==</span> <span class="dv">0</span>,</span>
-<span id="cb1849-41"><a href="linear-regression.html#cb1849-41" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, n, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">1</span>, .<span class="dv">2</span>, .<span class="dv">3</span>, .<span class="dv">2</span>, .<span class="dv">2</span>)),</span>
-<span id="cb1849-42"><a href="linear-regression.html#cb1849-42" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, n, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">3</span>, .<span class="dv">3</span>, .<span class="dv">2</span>, .<span class="dv">1</span>, .<span class="dv">1</span>))</span>
-<span id="cb1849-43"><a href="linear-regression.html#cb1849-43" tabindex="-1"></a>  )</span>
-<span id="cb1849-44"><a href="linear-regression.html#cb1849-44" tabindex="-1"></a>)</span>
-<span id="cb1849-45"><a href="linear-regression.html#cb1849-45" tabindex="-1"></a></span>
-<span id="cb1849-46"><a href="linear-regression.html#cb1849-46" tabindex="-1"></a><span class="co"># Print the value stored in df to the screen</span></span>
-<span id="cb1849-47"><a href="linear-regression.html#cb1849-47" tabindex="-1"></a>df</span></code></pre></div>
+<div class="sourceCode" id="cb1850"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1850-1"><a href="linear-regression.html#cb1850-1" tabindex="-1"></a><span class="co"># Load the packages we will need below</span></span>
+<span id="cb1850-2"><a href="linear-regression.html#cb1850-2" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1850-3"><a href="linear-regression.html#cb1850-3" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># Makes glm() results easier to read and work with</span></span>
+<span id="cb1850-4"><a href="linear-regression.html#cb1850-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1850-5"><a href="linear-regression.html#cb1850-5" tabindex="-1"></a><span class="fu">library</span>(meantables)</span>
+<span id="cb1850-6"><a href="linear-regression.html#cb1850-6" tabindex="-1"></a><span class="fu">library</span>(freqtables)</span></code></pre></div>
+<div class="sourceCode" id="cb1851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1851-1"><a href="linear-regression.html#cb1851-1" tabindex="-1"></a><span class="co"># Set the seed for the random number generator so that we can reproduce our results</span></span>
+<span id="cb1851-2"><a href="linear-regression.html#cb1851-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1851-3"><a href="linear-regression.html#cb1851-3" tabindex="-1"></a></span>
+<span id="cb1851-4"><a href="linear-regression.html#cb1851-4" tabindex="-1"></a><span class="co"># Set n to equal the number of people we want to simulate. We will use n</span></span>
+<span id="cb1851-5"><a href="linear-regression.html#cb1851-5" tabindex="-1"></a><span class="co"># repeatedly in the code below.</span></span>
+<span id="cb1851-6"><a href="linear-regression.html#cb1851-6" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb1851-7"><a href="linear-regression.html#cb1851-7" tabindex="-1"></a></span>
+<span id="cb1851-8"><a href="linear-regression.html#cb1851-8" tabindex="-1"></a><span class="co"># Simulate a data frame with n rows</span></span>
+<span id="cb1851-9"><a href="linear-regression.html#cb1851-9" tabindex="-1"></a><span class="co"># The variables in the data frame are generic continuous, categorical, and </span></span>
+<span id="cb1851-10"><a href="linear-regression.html#cb1851-10" tabindex="-1"></a><span class="co"># count values. They aren&#39;t necessarily intended to represent any real-life </span></span>
+<span id="cb1851-11"><a href="linear-regression.html#cb1851-11" tabindex="-1"></a><span class="co"># health-related state or event</span></span>
+<span id="cb1851-12"><a href="linear-regression.html#cb1851-12" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1851-13"><a href="linear-regression.html#cb1851-13" tabindex="-1"></a>  <span class="co"># Create a continuous regressor containing values selected at random from</span></span>
+<span id="cb1851-14"><a href="linear-regression.html#cb1851-14" tabindex="-1"></a>  <span class="co"># a normal distribution</span></span>
+<span id="cb1851-15"><a href="linear-regression.html#cb1851-15" tabindex="-1"></a>  <span class="at">x_cont  =</span> <span class="fu">rnorm</span>(n, <span class="dv">10</span>, <span class="dv">1</span>),</span>
+<span id="cb1851-16"><a href="linear-regression.html#cb1851-16" tabindex="-1"></a>  <span class="co"># Create a categorical regressor containing values selected at random from</span></span>
+<span id="cb1851-17"><a href="linear-regression.html#cb1851-17" tabindex="-1"></a>  <span class="co"># a binomial distribution with a 0.3 probability of success (i.e., </span></span>
+<span id="cb1851-18"><a href="linear-regression.html#cb1851-18" tabindex="-1"></a>  <span class="co"># selecting a 1)</span></span>
+<span id="cb1851-19"><a href="linear-regression.html#cb1851-19" tabindex="-1"></a>  <span class="at">x_cat   =</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, .<span class="dv">3</span>),</span>
+<span id="cb1851-20"><a href="linear-regression.html#cb1851-20" tabindex="-1"></a>  <span class="co"># Create a continuous regressand that has a value that is equal to the value</span></span>
+<span id="cb1851-21"><a href="linear-regression.html#cb1851-21" tabindex="-1"></a>  <span class="co"># of x_cont plus or minus some random variation. The direction of the</span></span>
+<span id="cb1851-22"><a href="linear-regression.html#cb1851-22" tabindex="-1"></a>  <span class="co"># variation is dependent on the value of x_cat.</span></span>
+<span id="cb1851-23"><a href="linear-regression.html#cb1851-23" tabindex="-1"></a>  <span class="at">y_cont  =</span> <span class="fu">if_else</span>(</span>
+<span id="cb1851-24"><a href="linear-regression.html#cb1851-24" tabindex="-1"></a>    x_cat <span class="sc">==</span> <span class="dv">0</span>, </span>
+<span id="cb1851-25"><a href="linear-regression.html#cb1851-25" tabindex="-1"></a>    x_cont <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="fl">0.1</span>), </span>
+<span id="cb1851-26"><a href="linear-regression.html#cb1851-26" tabindex="-1"></a>    x_cont <span class="sc">-</span> <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="fl">0.1</span>)</span>
+<span id="cb1851-27"><a href="linear-regression.html#cb1851-27" tabindex="-1"></a>  ),</span>
+<span id="cb1851-28"><a href="linear-regression.html#cb1851-28" tabindex="-1"></a>  <span class="co"># Create a categorical regressand that has a value selected at random from</span></span>
+<span id="cb1851-29"><a href="linear-regression.html#cb1851-29" tabindex="-1"></a>  <span class="co"># a binomial distribution. The probability of a successful draw from the </span></span>
+<span id="cb1851-30"><a href="linear-regression.html#cb1851-30" tabindex="-1"></a>  <span class="co"># binomial distribution is dependent on the value of x_cat.</span></span>
+<span id="cb1851-31"><a href="linear-regression.html#cb1851-31" tabindex="-1"></a>  <span class="at">y_cat   =</span> <span class="fu">if_else</span>(</span>
+<span id="cb1851-32"><a href="linear-regression.html#cb1851-32" tabindex="-1"></a>    x_cat <span class="sc">==</span> <span class="dv">0</span>,</span>
+<span id="cb1851-33"><a href="linear-regression.html#cb1851-33" tabindex="-1"></a>    <span class="fu">rbinom</span>(n, <span class="dv">1</span>, .<span class="dv">1</span>),</span>
+<span id="cb1851-34"><a href="linear-regression.html#cb1851-34" tabindex="-1"></a>    <span class="fu">rbinom</span>(n, <span class="dv">1</span>, .<span class="dv">5</span>)</span>
+<span id="cb1851-35"><a href="linear-regression.html#cb1851-35" tabindex="-1"></a>  ),</span>
+<span id="cb1851-36"><a href="linear-regression.html#cb1851-36" tabindex="-1"></a>  <span class="co"># Create a regressand that contains count data selected at random from</span></span>
+<span id="cb1851-37"><a href="linear-regression.html#cb1851-37" tabindex="-1"></a>  <span class="co"># a categorical distribution. The probability of a selecting each value from </span></span>
+<span id="cb1851-38"><a href="linear-regression.html#cb1851-38" tabindex="-1"></a>  <span class="co"># the distribution is dependent on the value of x_cat.</span></span>
+<span id="cb1851-39"><a href="linear-regression.html#cb1851-39" tabindex="-1"></a>  <span class="at">y_count =</span> <span class="fu">if_else</span>(</span>
+<span id="cb1851-40"><a href="linear-regression.html#cb1851-40" tabindex="-1"></a>    x_cat <span class="sc">==</span> <span class="dv">0</span>,</span>
+<span id="cb1851-41"><a href="linear-regression.html#cb1851-41" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, n, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">1</span>, .<span class="dv">2</span>, .<span class="dv">3</span>, .<span class="dv">2</span>, .<span class="dv">2</span>)),</span>
+<span id="cb1851-42"><a href="linear-regression.html#cb1851-42" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, n, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">3</span>, .<span class="dv">3</span>, .<span class="dv">2</span>, .<span class="dv">1</span>, .<span class="dv">1</span>))</span>
+<span id="cb1851-43"><a href="linear-regression.html#cb1851-43" tabindex="-1"></a>  )</span>
+<span id="cb1851-44"><a href="linear-regression.html#cb1851-44" tabindex="-1"></a>)</span>
+<span id="cb1851-45"><a href="linear-regression.html#cb1851-45" tabindex="-1"></a></span>
+<span id="cb1851-46"><a href="linear-regression.html#cb1851-46" tabindex="-1"></a><span class="co"># Print the value stored in df to the screen</span></span>
+<span id="cb1851-47"><a href="linear-regression.html#cb1851-47" tabindex="-1"></a>df</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 5
 ##    x_cont x_cat y_cont y_cat y_count
 ##     &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;int&gt;   &lt;int&gt;
@@ -1078,11 +1078,11 @@ Figure 55.1: Four commonly used generalized linear models.
 <div id="continuous-regressand-and-continuous-regressor" class="section level2 hasAnchor" number="55.1">
 <h2><span class="header-section-number">55.1</span> Continuous regressand and continuous regressor<a href="linear-regression.html#continuous-regressand-and-continuous-regressor" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Now that we have some simulated data, we will fit and interpret a few different linear models. We will start by fitting a linear model with a single continuous regressor.</p>
-<div class="sourceCode" id="cb1851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1851-1"><a href="linear-regression.html#cb1851-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
-<span id="cb1851-2"><a href="linear-regression.html#cb1851-2" tabindex="-1"></a>  y_cont <span class="sc">~</span> x_cont,                      <span class="co"># Formula</span></span>
-<span id="cb1851-3"><a href="linear-regression.html#cb1851-3" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>), <span class="co"># Family/distribution/Link function</span></span>
-<span id="cb1851-4"><a href="linear-regression.html#cb1851-4" tabindex="-1"></a>  <span class="at">data   =</span> df                           <span class="co"># Data</span></span>
-<span id="cb1851-5"><a href="linear-regression.html#cb1851-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1853-1"><a href="linear-regression.html#cb1853-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
+<span id="cb1853-2"><a href="linear-regression.html#cb1853-2" tabindex="-1"></a>  y_cont <span class="sc">~</span> x_cont,                      <span class="co"># Formula</span></span>
+<span id="cb1853-3"><a href="linear-regression.html#cb1853-3" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>), <span class="co"># Family/distribution/Link function</span></span>
+<span id="cb1853-4"><a href="linear-regression.html#cb1853-4" tabindex="-1"></a>  <span class="at">data   =</span> df                           <span class="co"># Data</span></span>
+<span id="cb1853-5"><a href="linear-regression.html#cb1853-5" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## 
 ## Call:  glm(formula = y_cont ~ x_cont, family = gaussian(link = &quot;identity&quot;), 
 ##     data = df)
@@ -1107,11 +1107,11 @@ Figure 55.1: Four commonly used generalized linear models.
 <div id="continuous-regressand-and-categorical-regressor" class="section level2 hasAnchor" number="55.2">
 <h2><span class="header-section-number">55.2</span> Continuous regressand and categorical regressor<a href="linear-regression.html#continuous-regressand-and-categorical-regressor" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Next, we will fit a linear model with a single categorical regressor. Notice that the formula syntax, the distribution, and the link function are the same for the single categorical regressor as they were for the single continuous predictor. We just swap our <code>x_cont</code> for <code>x_cat</code> in the formula.</p>
-<div class="sourceCode" id="cb1853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1853-1"><a href="linear-regression.html#cb1853-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
-<span id="cb1853-2"><a href="linear-regression.html#cb1853-2" tabindex="-1"></a>  y_cont <span class="sc">~</span> x_cat,                       <span class="co"># Formula</span></span>
-<span id="cb1853-3"><a href="linear-regression.html#cb1853-3" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>), <span class="co"># Family/distribution/Link function</span></span>
-<span id="cb1853-4"><a href="linear-regression.html#cb1853-4" tabindex="-1"></a>  <span class="at">data   =</span> df                           <span class="co"># Data</span></span>
-<span id="cb1853-5"><a href="linear-regression.html#cb1853-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1855-1"><a href="linear-regression.html#cb1855-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
+<span id="cb1855-2"><a href="linear-regression.html#cb1855-2" tabindex="-1"></a>  y_cont <span class="sc">~</span> x_cat,                       <span class="co"># Formula</span></span>
+<span id="cb1855-3"><a href="linear-regression.html#cb1855-3" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>), <span class="co"># Family/distribution/Link function</span></span>
+<span id="cb1855-4"><a href="linear-regression.html#cb1855-4" tabindex="-1"></a>  <span class="at">data   =</span> df                           <span class="co"># Data</span></span>
+<span id="cb1855-5"><a href="linear-regression.html#cb1855-5" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## 
 ## Call:  glm(formula = y_cont ~ x_cat, family = gaussian(link = &quot;identity&quot;), 
 ##     data = df)
@@ -1138,16 +1138,16 @@ Figure 55.1: Four commonly used generalized linear models.
 <p>“Despres et al. point out that the topography of adipose tissue (AT) is associated with metabolic complications considered as risk factors for cardiovascular disease. It is important, they state, to measure the amount of of intraabdominal AT as part of the evaluation of the cardiovascular-disease risk of an individual. Computed tomography (CT), the only available technique that precisely and reliably measures the amount of deep abdominal AT, however, is costly and requires irradiation of the subject. In addition, the technique is not available to many physicians. Depres and his colleagues conducted a study to develop equations to predict the amount of deep abdominal AT from simple anthropometric measurements. Their subjects were men between the ages of 18 and 42 years who were free from metabolic disease that would require treatment. Among the measurements taken on each subject were deep abdominal AT obtained by CT and waist circumference. A question of interest is how well one can predict and estimate deep abdominal AT from knowledge of waist circumference.”<span class="citation"><sup><a href="#ref-Daniel2013-qq">20</a></sup></span></p>
 </blockquote>
 <p>We will start by simulating some data to roughly match the scenario above.</p>
-<div class="sourceCode" id="cb1855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1855-1"><a href="linear-regression.html#cb1855-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb1855-2"><a href="linear-regression.html#cb1855-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb1855-3"><a href="linear-regression.html#cb1855-3" tabindex="-1"></a>daat_waist <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1855-4"><a href="linear-regression.html#cb1855-4" tabindex="-1"></a>  <span class="at">waist    =</span> <span class="fu">rnorm</span>(n, <span class="dv">39</span>, <span class="dv">2</span>),</span>
-<span id="cb1855-5"><a href="linear-regression.html#cb1855-5" tabindex="-1"></a>  <span class="at">waist_c  =</span> waist <span class="sc">-</span> <span class="dv">39</span>,</span>
-<span id="cb1855-6"><a href="linear-regression.html#cb1855-6" tabindex="-1"></a>  <span class="at">beta1    =</span> <span class="fu">rnorm</span>(n, <span class="fl">3.45</span>, <span class="fl">0.2</span>),</span>
-<span id="cb1855-7"><a href="linear-regression.html#cb1855-7" tabindex="-1"></a>  <span class="at">daat_bar =</span> <span class="fu">rnorm</span>(n, <span class="dv">101</span>, <span class="dv">8</span>),</span>
-<span id="cb1855-8"><a href="linear-regression.html#cb1855-8" tabindex="-1"></a>  <span class="at">daat     =</span> daat_bar <span class="sc">+</span> (beta1 <span class="sc">*</span> waist_c)</span>
-<span id="cb1855-9"><a href="linear-regression.html#cb1855-9" tabindex="-1"></a>)</span>
-<span id="cb1855-10"><a href="linear-regression.html#cb1855-10" tabindex="-1"></a>daat_waist</span></code></pre></div>
+<div class="sourceCode" id="cb1857"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1857-1"><a href="linear-regression.html#cb1857-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1857-2"><a href="linear-regression.html#cb1857-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1857-3"><a href="linear-regression.html#cb1857-3" tabindex="-1"></a>daat_waist <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1857-4"><a href="linear-regression.html#cb1857-4" tabindex="-1"></a>  <span class="at">waist    =</span> <span class="fu">rnorm</span>(n, <span class="dv">39</span>, <span class="dv">2</span>),</span>
+<span id="cb1857-5"><a href="linear-regression.html#cb1857-5" tabindex="-1"></a>  <span class="at">waist_c  =</span> waist <span class="sc">-</span> <span class="dv">39</span>,</span>
+<span id="cb1857-6"><a href="linear-regression.html#cb1857-6" tabindex="-1"></a>  <span class="at">beta1    =</span> <span class="fu">rnorm</span>(n, <span class="fl">3.45</span>, <span class="fl">0.2</span>),</span>
+<span id="cb1857-7"><a href="linear-regression.html#cb1857-7" tabindex="-1"></a>  <span class="at">daat_bar =</span> <span class="fu">rnorm</span>(n, <span class="dv">101</span>, <span class="dv">8</span>),</span>
+<span id="cb1857-8"><a href="linear-regression.html#cb1857-8" tabindex="-1"></a>  <span class="at">daat     =</span> daat_bar <span class="sc">+</span> (beta1 <span class="sc">*</span> waist_c)</span>
+<span id="cb1857-9"><a href="linear-regression.html#cb1857-9" tabindex="-1"></a>)</span>
+<span id="cb1857-10"><a href="linear-regression.html#cb1857-10" tabindex="-1"></a>daat_waist</span></code></pre></div>
 <pre><code>## # A tibble: 100 × 5
 ##    waist waist_c beta1 daat_bar  daat
 ##    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
@@ -1166,24 +1166,24 @@ Figure 55.1: Four commonly used generalized linear models.
 <div id="continuous-regressor-waist-circumference" class="section level3 hasAnchor" number="55.3.1">
 <h3><span class="header-section-number">55.3.1</span> Continuous regressor (waist circumference)<a href="linear-regression.html#continuous-regressor-waist-circumference" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>What is the average waist circumference?</p>
-<div class="sourceCode" id="cb1857"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1857-1"><a href="linear-regression.html#cb1857-1" tabindex="-1"></a><span class="fu">mean</span>(daat_waist<span class="sc">$</span>waist)</span></code></pre></div>
+<div class="sourceCode" id="cb1859"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1859-1"><a href="linear-regression.html#cb1859-1" tabindex="-1"></a><span class="fu">mean</span>(daat_waist<span class="sc">$</span>waist)</span></code></pre></div>
 <pre><code>## [1] 39.18081</code></pre>
 <p>What is the average value of deep abdominal adipose tissue?</p>
-<div class="sourceCode" id="cb1859"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1859-1"><a href="linear-regression.html#cb1859-1" tabindex="-1"></a><span class="fu">mean</span>(daat_waist<span class="sc">$</span>daat)</span></code></pre></div>
+<div class="sourceCode" id="cb1861"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1861-1"><a href="linear-regression.html#cb1861-1" tabindex="-1"></a><span class="fu">mean</span>(daat_waist<span class="sc">$</span>daat)</span></code></pre></div>
 <pre><code>## [1] 102.5663</code></pre>
 <p>What does the relationship between deep abdominal adipose tissue and waist circumference look like as a scatter plot?</p>
-<div class="sourceCode" id="cb1861"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1861-1"><a href="linear-regression.html#cb1861-1" tabindex="-1"></a><span class="fu">ggplot</span>(daat_waist, <span class="fu">aes</span>(<span class="at">x =</span> waist, <span class="at">y =</span> daat)) <span class="sc">+</span></span>
-<span id="cb1861-2"><a href="linear-regression.html#cb1861-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb1861-3"><a href="linear-regression.html#cb1861-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Deep abdominal adipose tissue&quot;</span>) <span class="sc">+</span></span>
-<span id="cb1861-4"><a href="linear-regression.html#cb1861-4" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Waist circumference&quot;</span>) <span class="sc">+</span></span>
-<span id="cb1861-5"><a href="linear-regression.html#cb1861-5" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1863"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1863-1"><a href="linear-regression.html#cb1863-1" tabindex="-1"></a><span class="fu">ggplot</span>(daat_waist, <span class="fu">aes</span>(<span class="at">x =</span> waist, <span class="at">y =</span> daat)) <span class="sc">+</span></span>
+<span id="cb1863-2"><a href="linear-regression.html#cb1863-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb1863-3"><a href="linear-regression.html#cb1863-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Deep abdominal adipose tissue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb1863-4"><a href="linear-regression.html#cb1863-4" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Waist circumference&quot;</span>) <span class="sc">+</span></span>
+<span id="cb1863-5"><a href="linear-regression.html#cb1863-5" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-1365-1.png" width="672" /></p>
 <p>What is the relationship between deep abdominal adipose tissue (regressand) and waist circumference (regressor)?</p>
-<div class="sourceCode" id="cb1862"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1862-1"><a href="linear-regression.html#cb1862-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
-<span id="cb1862-2"><a href="linear-regression.html#cb1862-2" tabindex="-1"></a>  daat <span class="sc">~</span> waist,</span>
-<span id="cb1862-3"><a href="linear-regression.html#cb1862-3" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>),</span>
-<span id="cb1862-4"><a href="linear-regression.html#cb1862-4" tabindex="-1"></a>  <span class="at">data   =</span> daat_waist</span>
-<span id="cb1862-5"><a href="linear-regression.html#cb1862-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1864"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1864-1"><a href="linear-regression.html#cb1864-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
+<span id="cb1864-2"><a href="linear-regression.html#cb1864-2" tabindex="-1"></a>  daat <span class="sc">~</span> waist,</span>
+<span id="cb1864-3"><a href="linear-regression.html#cb1864-3" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>),</span>
+<span id="cb1864-4"><a href="linear-regression.html#cb1864-4" tabindex="-1"></a>  <span class="at">data   =</span> daat_waist</span>
+<span id="cb1864-5"><a href="linear-regression.html#cb1864-5" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## 
 ## Call:  glm(formula = daat ~ waist, family = gaussian(link = &quot;identity&quot;), 
 ##     data = daat_waist)
@@ -1202,23 +1202,23 @@ Figure 55.1: Four commonly used generalized linear models.
 <li><p>waist: The average change in deep abdominal adipose tissue for each one inch increase in waist circumference is 2.86.</p></li>
 </ol>
 <p>And we can add this information to our plot.</p>
-<div class="sourceCode" id="cb1864"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1864-1"><a href="linear-regression.html#cb1864-1" tabindex="-1"></a><span class="fu">ggplot</span>(daat_waist, <span class="fu">aes</span>(<span class="at">x =</span> waist, <span class="at">y =</span> daat)) <span class="sc">+</span></span>
-<span id="cb1864-2"><a href="linear-regression.html#cb1864-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb1864-3"><a href="linear-regression.html#cb1864-3" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="sc">-</span><span class="fl">9.580</span>, <span class="at">slope =</span> <span class="fl">2.862</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
-<span id="cb1864-4"><a href="linear-regression.html#cb1864-4" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Deep abdominal adipose tissue&quot;</span>) <span class="sc">+</span></span>
-<span id="cb1864-5"><a href="linear-regression.html#cb1864-5" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Waist circumference&quot;</span>) <span class="sc">+</span></span>
-<span id="cb1864-6"><a href="linear-regression.html#cb1864-6" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1866"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1866-1"><a href="linear-regression.html#cb1866-1" tabindex="-1"></a><span class="fu">ggplot</span>(daat_waist, <span class="fu">aes</span>(<span class="at">x =</span> waist, <span class="at">y =</span> daat)) <span class="sc">+</span></span>
+<span id="cb1866-2"><a href="linear-regression.html#cb1866-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb1866-3"><a href="linear-regression.html#cb1866-3" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="sc">-</span><span class="fl">9.580</span>, <span class="at">slope =</span> <span class="fl">2.862</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb1866-4"><a href="linear-regression.html#cb1866-4" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Deep abdominal adipose tissue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb1866-5"><a href="linear-regression.html#cb1866-5" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Waist circumference&quot;</span>) <span class="sc">+</span></span>
+<span id="cb1866-6"><a href="linear-regression.html#cb1866-6" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-1367-1.png" width="672" /></p>
 </div>
 </div>
 <div id="categorical-regressor-large-waist" class="section level3 hasAnchor" number="55.3.2">
 <h3><span class="header-section-number">55.3.2</span> Categorical regressor (large waist)<a href="linear-regression.html#categorical-regressor-large-waist" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb1865"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1865-1"><a href="linear-regression.html#cb1865-1" tabindex="-1"></a>daat_waist <span class="ot">&lt;-</span> daat_waist <span class="sc">%&gt;%</span> </span>
-<span id="cb1865-2"><a href="linear-regression.html#cb1865-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1865-3"><a href="linear-regression.html#cb1865-3" tabindex="-1"></a>    <span class="at">large_waist   =</span> <span class="fu">if_else</span>(waist <span class="sc">&lt;</span> <span class="fu">mean</span>(waist), <span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb1865-4"><a href="linear-regression.html#cb1865-4" tabindex="-1"></a>    <span class="at">large_waist_f =</span> <span class="fu">factor</span>(large_waist, <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</span>
-<span id="cb1865-5"><a href="linear-regression.html#cb1865-5" tabindex="-1"></a>  )</span>
-<span id="cb1865-6"><a href="linear-regression.html#cb1865-6" tabindex="-1"></a>daat_waist</span></code></pre></div>
+<div class="sourceCode" id="cb1867"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1867-1"><a href="linear-regression.html#cb1867-1" tabindex="-1"></a>daat_waist <span class="ot">&lt;-</span> daat_waist <span class="sc">%&gt;%</span> </span>
+<span id="cb1867-2"><a href="linear-regression.html#cb1867-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1867-3"><a href="linear-regression.html#cb1867-3" tabindex="-1"></a>    <span class="at">large_waist   =</span> <span class="fu">if_else</span>(waist <span class="sc">&lt;</span> <span class="fu">mean</span>(waist), <span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb1867-4"><a href="linear-regression.html#cb1867-4" tabindex="-1"></a>    <span class="at">large_waist_f =</span> <span class="fu">factor</span>(large_waist, <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</span>
+<span id="cb1867-5"><a href="linear-regression.html#cb1867-5" tabindex="-1"></a>  )</span>
+<span id="cb1867-6"><a href="linear-regression.html#cb1867-6" tabindex="-1"></a>daat_waist</span></code></pre></div>
 <pre><code>## # A tibble: 100 × 7
 ##    waist waist_c beta1 daat_bar  daat large_waist large_waist_f
 ##    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;        
@@ -1233,29 +1233,29 @@ Figure 55.1: Four commonly used generalized linear models.
 ##  9  37.6  -1.37   3.37    114.  110.            0 No           
 ## 10  38.1  -0.891  3.63    101.   97.3           0 No           
 ## # ℹ 90 more rows</code></pre>
-<div class="sourceCode" id="cb1867"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1867-1"><a href="linear-regression.html#cb1867-1" tabindex="-1"></a>daat_by_large_f <span class="ot">&lt;-</span> daat_waist <span class="sc">%&gt;%</span> </span>
-<span id="cb1867-2"><a href="linear-regression.html#cb1867-2" tabindex="-1"></a>  <span class="fu">group_by</span>(large_waist_f) <span class="sc">%&gt;%</span> </span>
-<span id="cb1867-3"><a href="linear-regression.html#cb1867-3" tabindex="-1"></a>  <span class="fu">mean_table</span>(daat)</span>
-<span id="cb1867-4"><a href="linear-regression.html#cb1867-4" tabindex="-1"></a></span>
-<span id="cb1867-5"><a href="linear-regression.html#cb1867-5" tabindex="-1"></a>daat_by_large_f</span></code></pre></div>
+<div class="sourceCode" id="cb1869"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1869-1"><a href="linear-regression.html#cb1869-1" tabindex="-1"></a>daat_by_large_f <span class="ot">&lt;-</span> daat_waist <span class="sc">%&gt;%</span> </span>
+<span id="cb1869-2"><a href="linear-regression.html#cb1869-2" tabindex="-1"></a>  <span class="fu">group_by</span>(large_waist_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb1869-3"><a href="linear-regression.html#cb1869-3" tabindex="-1"></a>  <span class="fu">mean_table</span>(daat)</span>
+<span id="cb1869-4"><a href="linear-regression.html#cb1869-4" tabindex="-1"></a></span>
+<span id="cb1869-5"><a href="linear-regression.html#cb1869-5" tabindex="-1"></a>daat_by_large_f</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 11
 ##   response_var group_var     group_cat     n  mean    sd   sem   lcl   ucl   min   max
 ##   &lt;chr&gt;        &lt;chr&gt;         &lt;fct&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 daat         large_waist_f No           51  98.2  7.71  1.08  96.1  100.  82.1  115.
 ## 2 daat         large_waist_f Yes          49 107.   8.51  1.22 105.   110.  90.2  132.</code></pre>
-<div class="sourceCode" id="cb1869"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1869-1"><a href="linear-regression.html#cb1869-1" tabindex="-1"></a><span class="fu">ggplot</span>(daat_waist, <span class="fu">aes</span>(<span class="at">x =</span> large_waist_f, <span class="at">y =</span> daat)) <span class="sc">+</span></span>
-<span id="cb1869-2"><a href="linear-regression.html#cb1869-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb1869-3"><a href="linear-regression.html#cb1869-3" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
-<span id="cb1869-4"><a href="linear-regression.html#cb1869-4" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="fl">0.75</span>, <span class="fl">1.75</span>), <span class="at">y =</span> mean, <span class="at">xend =</span> <span class="fu">c</span>(<span class="fl">1.25</span>, <span class="fl">2.25</span>), <span class="at">yend =</span> mean), </span>
-<span id="cb1869-5"><a href="linear-regression.html#cb1869-5" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">data =</span> daat_by_large_f</span>
-<span id="cb1869-6"><a href="linear-regression.html#cb1869-6" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb1871"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1871-1"><a href="linear-regression.html#cb1871-1" tabindex="-1"></a><span class="fu">ggplot</span>(daat_waist, <span class="fu">aes</span>(<span class="at">x =</span> large_waist_f, <span class="at">y =</span> daat)) <span class="sc">+</span></span>
+<span id="cb1871-2"><a href="linear-regression.html#cb1871-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb1871-3"><a href="linear-regression.html#cb1871-3" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
+<span id="cb1871-4"><a href="linear-regression.html#cb1871-4" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="fl">0.75</span>, <span class="fl">1.75</span>), <span class="at">y =</span> mean, <span class="at">xend =</span> <span class="fu">c</span>(<span class="fl">1.25</span>, <span class="fl">2.25</span>), <span class="at">yend =</span> mean), </span>
+<span id="cb1871-5"><a href="linear-regression.html#cb1871-5" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">data =</span> daat_by_large_f</span>
+<span id="cb1871-6"><a href="linear-regression.html#cb1871-6" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="R-4-Epidemiology_files/figure-html/unnamed-chunk-1370-1.png" width="672" /></p>
 <p>What is the relationship between deep abdominal adipose tissue (regressand) and tall (regressor)?</p>
-<div class="sourceCode" id="cb1870"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1870-1"><a href="linear-regression.html#cb1870-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
-<span id="cb1870-2"><a href="linear-regression.html#cb1870-2" tabindex="-1"></a>  daat <span class="sc">~</span> large_waist_f,</span>
-<span id="cb1870-3"><a href="linear-regression.html#cb1870-3" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>),</span>
-<span id="cb1870-4"><a href="linear-regression.html#cb1870-4" tabindex="-1"></a>  <span class="at">data   =</span> daat_waist</span>
-<span id="cb1870-5"><a href="linear-regression.html#cb1870-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1872"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1872-1"><a href="linear-regression.html#cb1872-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
+<span id="cb1872-2"><a href="linear-regression.html#cb1872-2" tabindex="-1"></a>  daat <span class="sc">~</span> large_waist_f,</span>
+<span id="cb1872-3"><a href="linear-regression.html#cb1872-3" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>),</span>
+<span id="cb1872-4"><a href="linear-regression.html#cb1872-4" tabindex="-1"></a>  <span class="at">data   =</span> daat_waist</span>
+<span id="cb1872-5"><a href="linear-regression.html#cb1872-5" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## 
 ## Call:  glm(formula = daat ~ large_waist_f, family = gaussian(link = &quot;identity&quot;), 
 ##     data = daat_waist)
@@ -1273,7 +1273,7 @@ Figure 55.1: Four commonly used generalized linear models.
 <li><p>Intercept: The mean value of deep abdominal adipose tissue among people who are not tall is equal to 98.228.</p></li>
 <li><p>large_waist_fYes: The average change in deep abdominal adipose tissue for people with a large waste circumference compared to people with a small waste circumference is 8.854.</p></li>
 </ol>
-<div class="sourceCode" id="cb1872"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1872-1"><a href="linear-regression.html#cb1872-1" tabindex="-1"></a><span class="fl">98.228</span> <span class="sc">+</span> <span class="fl">8.854</span></span></code></pre></div>
+<div class="sourceCode" id="cb1874"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1874-1"><a href="linear-regression.html#cb1874-1" tabindex="-1"></a><span class="fl">98.228</span> <span class="sc">+</span> <span class="fl">8.854</span></span></code></pre></div>
 <pre><code>## [1] 107.082</code></pre>
 
 </div>
