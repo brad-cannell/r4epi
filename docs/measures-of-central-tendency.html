@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2024-05-23" />
+<meta name="date" content="2024-05-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -244,7 +244,10 @@ div.csl-indent {
 <li class="chapter" data-level="4.1" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#r-is-a-language"><i class="fa fa-check"></i><b>4.1</b> R is a <em>language</em></a></li>
 <li class="chapter" data-level="4.2" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#the-r-interpreter"><i class="fa fa-check"></i><b>4.2</b> The R interpreter</a></li>
 <li class="chapter" data-level="4.3" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#errors"><i class="fa fa-check"></i><b>4.3</b> Errors</a></li>
-<li class="chapter" data-level="4.4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#functions"><i class="fa fa-check"></i><b>4.4</b> Functions</a></li>
+<li class="chapter" data-level="4.4" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#functions"><i class="fa fa-check"></i><b>4.4</b> Functions</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#passing-values-to-function-arguments"><i class="fa fa-check"></i><b>4.4.1</b> Passing values to function arguments</a></li>
+</ul></li>
 <li class="chapter" data-level="4.5" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#objects"><i class="fa fa-check"></i><b>4.5</b> Objects</a></li>
 <li class="chapter" data-level="4.6" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#comments"><i class="fa fa-check"></i><b>4.6</b> Comments</a></li>
 <li class="chapter" data-level="4.7" data-path="speaking-rs-language.html"><a href="speaking-rs-language.html#packages"><i class="fa fa-check"></i><b>4.7</b> Packages</a></li>
@@ -1014,33 +1017,33 @@ div.csl-indent {
 <div id="calculate-the-mean" class="section level2 hasAnchor" number="20.1">
 <h2><span class="header-section-number">20.1</span> Calculate the mean<a href="measures-of-central-tendency.html#calculate-the-mean" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Calculating the mean is really straightforward. We can just use base R’s built-in <code>mean()</code> function.</p>
-<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="measures-of-central-tendency.html#cb315-1" tabindex="-1"></a><span class="co"># Load the dplyr package. We will need several of dplyr&#39;s functions in the </span></span>
-<span id="cb315-2"><a href="measures-of-central-tendency.html#cb315-2" tabindex="-1"></a><span class="co"># code below.</span></span>
-<span id="cb315-3"><a href="measures-of-central-tendency.html#cb315-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="measures-of-central-tendency.html#cb316-1" tabindex="-1"></a><span class="co"># Simulate some data</span></span>
-<span id="cb316-2"><a href="measures-of-central-tendency.html#cb316-2" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb316-3"><a href="measures-of-central-tendency.html#cb316-3" tabindex="-1"></a>  <span class="sc">~</span>id,   <span class="sc">~</span>sex,     <span class="sc">~</span>ht_in, <span class="sc">~</span>wt_lbs,</span>
-<span id="cb316-4"><a href="measures-of-central-tendency.html#cb316-4" tabindex="-1"></a>  <span class="st">&quot;001&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">190</span>,</span>
-<span id="cb316-5"><a href="measures-of-central-tendency.html#cb316-5" tabindex="-1"></a>  <span class="st">&quot;002&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">177</span>,</span>
-<span id="cb316-6"><a href="measures-of-central-tendency.html#cb316-6" tabindex="-1"></a>  <span class="st">&quot;003&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">64</span>,     <span class="dv">130</span>,</span>
-<span id="cb316-7"><a href="measures-of-central-tendency.html#cb316-7" tabindex="-1"></a>  <span class="st">&quot;004&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">153</span>,</span>
-<span id="cb316-8"><a href="measures-of-central-tendency.html#cb316-8" tabindex="-1"></a>  <span class="st">&quot;005&quot;</span>, <span class="cn">NA</span>,       <span class="dv">73</span>,     <span class="dv">173</span>,</span>
-<span id="cb316-9"><a href="measures-of-central-tendency.html#cb316-9" tabindex="-1"></a>  <span class="st">&quot;006&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">182</span>,</span>
-<span id="cb316-10"><a href="measures-of-central-tendency.html#cb316-10" tabindex="-1"></a>  <span class="st">&quot;007&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">186</span>,</span>
-<span id="cb316-11"><a href="measures-of-central-tendency.html#cb316-11" tabindex="-1"></a>  <span class="st">&quot;008&quot;</span>, <span class="cn">NA</span>,       <span class="dv">73</span>,     <span class="dv">185</span>,</span>
-<span id="cb316-12"><a href="measures-of-central-tendency.html#cb316-12" tabindex="-1"></a>  <span class="st">&quot;009&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">71</span>,     <span class="dv">157</span>,</span>
-<span id="cb316-13"><a href="measures-of-central-tendency.html#cb316-13" tabindex="-1"></a>  <span class="st">&quot;010&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">66</span>,     <span class="dv">155</span>,</span>
-<span id="cb316-14"><a href="measures-of-central-tendency.html#cb316-14" tabindex="-1"></a>  <span class="st">&quot;011&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">213</span>,</span>
-<span id="cb316-15"><a href="measures-of-central-tendency.html#cb316-15" tabindex="-1"></a>  <span class="st">&quot;012&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">151</span>,</span>
-<span id="cb316-16"><a href="measures-of-central-tendency.html#cb316-16" tabindex="-1"></a>  <span class="st">&quot;013&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">147</span>,</span>
-<span id="cb316-17"><a href="measures-of-central-tendency.html#cb316-17" tabindex="-1"></a>  <span class="st">&quot;014&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">196</span>,</span>
-<span id="cb316-18"><a href="measures-of-central-tendency.html#cb316-18" tabindex="-1"></a>  <span class="st">&quot;015&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">75</span>,     <span class="dv">212</span>,</span>
-<span id="cb316-19"><a href="measures-of-central-tendency.html#cb316-19" tabindex="-1"></a>  <span class="st">&quot;016&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">19000</span>,</span>
-<span id="cb316-20"><a href="measures-of-central-tendency.html#cb316-20" tabindex="-1"></a>  <span class="st">&quot;017&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">194</span>,</span>
-<span id="cb316-21"><a href="measures-of-central-tendency.html#cb316-21" tabindex="-1"></a>  <span class="st">&quot;018&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
-<span id="cb316-22"><a href="measures-of-central-tendency.html#cb316-22" tabindex="-1"></a>  <span class="st">&quot;019&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
-<span id="cb316-23"><a href="measures-of-central-tendency.html#cb316-23" tabindex="-1"></a>  <span class="st">&quot;020&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">102</span></span>
-<span id="cb316-24"><a href="measures-of-central-tendency.html#cb316-24" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="measures-of-central-tendency.html#cb325-1" tabindex="-1"></a><span class="co"># Load the dplyr package. We will need several of dplyr&#39;s functions in the </span></span>
+<span id="cb325-2"><a href="measures-of-central-tendency.html#cb325-2" tabindex="-1"></a><span class="co"># code below.</span></span>
+<span id="cb325-3"><a href="measures-of-central-tendency.html#cb325-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb326-1"><a href="measures-of-central-tendency.html#cb326-1" tabindex="-1"></a><span class="co"># Simulate some data</span></span>
+<span id="cb326-2"><a href="measures-of-central-tendency.html#cb326-2" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb326-3"><a href="measures-of-central-tendency.html#cb326-3" tabindex="-1"></a>  <span class="sc">~</span>id,   <span class="sc">~</span>sex,     <span class="sc">~</span>ht_in, <span class="sc">~</span>wt_lbs,</span>
+<span id="cb326-4"><a href="measures-of-central-tendency.html#cb326-4" tabindex="-1"></a>  <span class="st">&quot;001&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">190</span>,</span>
+<span id="cb326-5"><a href="measures-of-central-tendency.html#cb326-5" tabindex="-1"></a>  <span class="st">&quot;002&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">177</span>,</span>
+<span id="cb326-6"><a href="measures-of-central-tendency.html#cb326-6" tabindex="-1"></a>  <span class="st">&quot;003&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">64</span>,     <span class="dv">130</span>,</span>
+<span id="cb326-7"><a href="measures-of-central-tendency.html#cb326-7" tabindex="-1"></a>  <span class="st">&quot;004&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">153</span>,</span>
+<span id="cb326-8"><a href="measures-of-central-tendency.html#cb326-8" tabindex="-1"></a>  <span class="st">&quot;005&quot;</span>, <span class="cn">NA</span>,       <span class="dv">73</span>,     <span class="dv">173</span>,</span>
+<span id="cb326-9"><a href="measures-of-central-tendency.html#cb326-9" tabindex="-1"></a>  <span class="st">&quot;006&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">69</span>,     <span class="dv">182</span>,</span>
+<span id="cb326-10"><a href="measures-of-central-tendency.html#cb326-10" tabindex="-1"></a>  <span class="st">&quot;007&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">186</span>,</span>
+<span id="cb326-11"><a href="measures-of-central-tendency.html#cb326-11" tabindex="-1"></a>  <span class="st">&quot;008&quot;</span>, <span class="cn">NA</span>,       <span class="dv">73</span>,     <span class="dv">185</span>,</span>
+<span id="cb326-12"><a href="measures-of-central-tendency.html#cb326-12" tabindex="-1"></a>  <span class="st">&quot;009&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">71</span>,     <span class="dv">157</span>,</span>
+<span id="cb326-13"><a href="measures-of-central-tendency.html#cb326-13" tabindex="-1"></a>  <span class="st">&quot;010&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">66</span>,     <span class="dv">155</span>,</span>
+<span id="cb326-14"><a href="measures-of-central-tendency.html#cb326-14" tabindex="-1"></a>  <span class="st">&quot;011&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">71</span>,     <span class="dv">213</span>,</span>
+<span id="cb326-15"><a href="measures-of-central-tendency.html#cb326-15" tabindex="-1"></a>  <span class="st">&quot;012&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">151</span>,</span>
+<span id="cb326-16"><a href="measures-of-central-tendency.html#cb326-16" tabindex="-1"></a>  <span class="st">&quot;013&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">147</span>,</span>
+<span id="cb326-17"><a href="measures-of-central-tendency.html#cb326-17" tabindex="-1"></a>  <span class="st">&quot;014&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">68</span>,     <span class="dv">196</span>,</span>
+<span id="cb326-18"><a href="measures-of-central-tendency.html#cb326-18" tabindex="-1"></a>  <span class="st">&quot;015&quot;</span>, <span class="st">&quot;Male&quot;</span>,   <span class="dv">75</span>,     <span class="dv">212</span>,</span>
+<span id="cb326-19"><a href="measures-of-central-tendency.html#cb326-19" tabindex="-1"></a>  <span class="st">&quot;016&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">69</span>,     <span class="dv">19000</span>,</span>
+<span id="cb326-20"><a href="measures-of-central-tendency.html#cb326-20" tabindex="-1"></a>  <span class="st">&quot;017&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">66</span>,     <span class="dv">194</span>,</span>
+<span id="cb326-21"><a href="measures-of-central-tendency.html#cb326-21" tabindex="-1"></a>  <span class="st">&quot;018&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
+<span id="cb326-22"><a href="measures-of-central-tendency.html#cb326-22" tabindex="-1"></a>  <span class="st">&quot;019&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">176</span>,</span>
+<span id="cb326-23"><a href="measures-of-central-tendency.html#cb326-23" tabindex="-1"></a>  <span class="st">&quot;020&quot;</span>, <span class="st">&quot;Female&quot;</span>, <span class="dv">65</span>,     <span class="dv">102</span></span>
+<span id="cb326-24"><a href="measures-of-central-tendency.html#cb326-24" tabindex="-1"></a>)</span></code></pre></div>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We loaded the <code>tibble</code> package so that we could use its <code>tribble()</code> function.</p></li>
@@ -1051,7 +1054,7 @@ div.csl-indent {
 <li><p>Using the <code>tribble()</code> function to create a data frame isn’t any better or worse than using the <code>data.frame()</code> function. I just wanted you to be aware that it exists and is sometimes useful.</p></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="measures-of-central-tendency.html#cb317-1" tabindex="-1"></a><span class="fu">mean</span>(height_and_weight_20<span class="sc">$</span>ht_in)</span></code></pre></div>
+<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="measures-of-central-tendency.html#cb327-1" tabindex="-1"></a><span class="fu">mean</span>(height_and_weight_20<span class="sc">$</span>ht_in)</span></code></pre></div>
 <pre><code>## [1] 68.4</code></pre>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1066,7 +1069,7 @@ div.csl-indent {
 <div id="calculate-the-median" class="section level2 hasAnchor" number="20.2">
 <h2><span class="header-section-number">20.2</span> Calculate the median<a href="measures-of-central-tendency.html#calculate-the-median" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Similar to above, we can use base R’s <code>median()</code> function to calculate the median.</p>
-<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="measures-of-central-tendency.html#cb319-1" tabindex="-1"></a><span class="fu">median</span>(height_and_weight_20<span class="sc">$</span>ht_in)</span></code></pre></div>
+<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="measures-of-central-tendency.html#cb329-1" tabindex="-1"></a><span class="fu">median</span>(height_and_weight_20<span class="sc">$</span>ht_in)</span></code></pre></div>
 <pre><code>## [1] 68.5</code></pre>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1076,41 +1079,41 @@ div.csl-indent {
 <div id="calculate-the-mode" class="section level2 hasAnchor" number="20.3">
 <h2><span class="header-section-number">20.3</span> Calculate the mode<a href="measures-of-central-tendency.html#calculate-the-mode" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Base R does not have a built-in <code>mode()</code> function. Well, it actually does have a <code>mode()</code> function, but for some reason that function does not return the mode value(s) of a set of numbers. Instead, the <code>mode()</code> function gets or sets the type or storage mode of an object. For example:</p>
-<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="measures-of-central-tendency.html#cb321-1" tabindex="-1"></a><span class="fu">mode</span>(height_and_weight_20<span class="sc">$</span>ht_in)</span></code></pre></div>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="measures-of-central-tendency.html#cb331-1" tabindex="-1"></a><span class="fu">mode</span>(height_and_weight_20<span class="sc">$</span>ht_in)</span></code></pre></div>
 <pre><code>## [1] &quot;numeric&quot;</code></pre>
 <p>This is clearly not what we are looking for. So, how do we find the mode value(s)? Well, we are going to have to build our own mode function. Later in the book, I’ll return to this function and walk you through how I built it one step at a time. For now, just copy and paste the code into R on your computer. Keep in mind, as is almost always the case with R, my way of writing this function is only one of multiple possible ways.</p>
-<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="measures-of-central-tendency.html#cb323-1" tabindex="-1"></a>mode_val <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb323-2"><a href="measures-of-central-tendency.html#cb323-2" tabindex="-1"></a>  </span>
-<span id="cb323-3"><a href="measures-of-central-tendency.html#cb323-3" tabindex="-1"></a>  <span class="co"># Count the number of occurrences for each value of x</span></span>
-<span id="cb323-4"><a href="measures-of-central-tendency.html#cb323-4" tabindex="-1"></a>  value_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(x)</span>
-<span id="cb323-5"><a href="measures-of-central-tendency.html#cb323-5" tabindex="-1"></a>  </span>
-<span id="cb323-6"><a href="measures-of-central-tendency.html#cb323-6" tabindex="-1"></a>  <span class="co"># Get the maximum number of times any value is observed</span></span>
-<span id="cb323-7"><a href="measures-of-central-tendency.html#cb323-7" tabindex="-1"></a>  max_count <span class="ot">&lt;-</span> <span class="fu">max</span>(value_counts)</span>
-<span id="cb323-8"><a href="measures-of-central-tendency.html#cb323-8" tabindex="-1"></a>  </span>
-<span id="cb323-9"><a href="measures-of-central-tendency.html#cb323-9" tabindex="-1"></a>  <span class="co"># Create and index vector that identifies the positions that correspond to</span></span>
-<span id="cb323-10"><a href="measures-of-central-tendency.html#cb323-10" tabindex="-1"></a>  <span class="co"># count values that are the same as the maximum count value: TRUE if so</span></span>
-<span id="cb323-11"><a href="measures-of-central-tendency.html#cb323-11" tabindex="-1"></a>  <span class="co"># and false otherwise</span></span>
-<span id="cb323-12"><a href="measures-of-central-tendency.html#cb323-12" tabindex="-1"></a>  index <span class="ot">&lt;-</span> value_counts <span class="sc">==</span> max_count</span>
-<span id="cb323-13"><a href="measures-of-central-tendency.html#cb323-13" tabindex="-1"></a>  </span>
-<span id="cb323-14"><a href="measures-of-central-tendency.html#cb323-14" tabindex="-1"></a>  <span class="co"># Use the index vector to get all values that are observed the same number </span></span>
-<span id="cb323-15"><a href="measures-of-central-tendency.html#cb323-15" tabindex="-1"></a>  <span class="co"># of times as the maximum number of times that any value is observed</span></span>
-<span id="cb323-16"><a href="measures-of-central-tendency.html#cb323-16" tabindex="-1"></a>  unique_values <span class="ot">&lt;-</span> <span class="fu">names</span>(value_counts)</span>
-<span id="cb323-17"><a href="measures-of-central-tendency.html#cb323-17" tabindex="-1"></a>  result <span class="ot">&lt;-</span> unique_values[index]</span>
-<span id="cb323-18"><a href="measures-of-central-tendency.html#cb323-18" tabindex="-1"></a>  </span>
-<span id="cb323-19"><a href="measures-of-central-tendency.html#cb323-19" tabindex="-1"></a>  <span class="co"># If result is the same length as value counts that means that every value</span></span>
-<span id="cb323-20"><a href="measures-of-central-tendency.html#cb323-20" tabindex="-1"></a>  <span class="co"># occured the same number of times. If every value occurred the same number</span></span>
-<span id="cb323-21"><a href="measures-of-central-tendency.html#cb323-21" tabindex="-1"></a>  <span class="co"># of times, then there is no mode</span></span>
-<span id="cb323-22"><a href="measures-of-central-tendency.html#cb323-22" tabindex="-1"></a>  no_mode <span class="ot">&lt;-</span> <span class="fu">length</span>(value_counts) <span class="sc">==</span> <span class="fu">length</span>(result)</span>
-<span id="cb323-23"><a href="measures-of-central-tendency.html#cb323-23" tabindex="-1"></a>  </span>
-<span id="cb323-24"><a href="measures-of-central-tendency.html#cb323-24" tabindex="-1"></a>  <span class="co"># If there is no mode then change the value of result to NA</span></span>
-<span id="cb323-25"><a href="measures-of-central-tendency.html#cb323-25" tabindex="-1"></a>  <span class="cf">if</span> (no_mode) {</span>
-<span id="cb323-26"><a href="measures-of-central-tendency.html#cb323-26" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb323-27"><a href="measures-of-central-tendency.html#cb323-27" tabindex="-1"></a>  }</span>
-<span id="cb323-28"><a href="measures-of-central-tendency.html#cb323-28" tabindex="-1"></a>  </span>
-<span id="cb323-29"><a href="measures-of-central-tendency.html#cb323-29" tabindex="-1"></a>  <span class="co"># Return result</span></span>
-<span id="cb323-30"><a href="measures-of-central-tendency.html#cb323-30" tabindex="-1"></a>  result</span>
-<span id="cb323-31"><a href="measures-of-central-tendency.html#cb323-31" tabindex="-1"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb324"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb324-1"><a href="measures-of-central-tendency.html#cb324-1" tabindex="-1"></a><span class="fu">mode_val</span>(height_and_weight_20<span class="sc">$</span>ht_in)</span></code></pre></div>
+<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="measures-of-central-tendency.html#cb333-1" tabindex="-1"></a>mode_val <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb333-2"><a href="measures-of-central-tendency.html#cb333-2" tabindex="-1"></a>  </span>
+<span id="cb333-3"><a href="measures-of-central-tendency.html#cb333-3" tabindex="-1"></a>  <span class="co"># Count the number of occurrences for each value of x</span></span>
+<span id="cb333-4"><a href="measures-of-central-tendency.html#cb333-4" tabindex="-1"></a>  value_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(x)</span>
+<span id="cb333-5"><a href="measures-of-central-tendency.html#cb333-5" tabindex="-1"></a>  </span>
+<span id="cb333-6"><a href="measures-of-central-tendency.html#cb333-6" tabindex="-1"></a>  <span class="co"># Get the maximum number of times any value is observed</span></span>
+<span id="cb333-7"><a href="measures-of-central-tendency.html#cb333-7" tabindex="-1"></a>  max_count <span class="ot">&lt;-</span> <span class="fu">max</span>(value_counts)</span>
+<span id="cb333-8"><a href="measures-of-central-tendency.html#cb333-8" tabindex="-1"></a>  </span>
+<span id="cb333-9"><a href="measures-of-central-tendency.html#cb333-9" tabindex="-1"></a>  <span class="co"># Create and index vector that identifies the positions that correspond to</span></span>
+<span id="cb333-10"><a href="measures-of-central-tendency.html#cb333-10" tabindex="-1"></a>  <span class="co"># count values that are the same as the maximum count value: TRUE if so</span></span>
+<span id="cb333-11"><a href="measures-of-central-tendency.html#cb333-11" tabindex="-1"></a>  <span class="co"># and false otherwise</span></span>
+<span id="cb333-12"><a href="measures-of-central-tendency.html#cb333-12" tabindex="-1"></a>  index <span class="ot">&lt;-</span> value_counts <span class="sc">==</span> max_count</span>
+<span id="cb333-13"><a href="measures-of-central-tendency.html#cb333-13" tabindex="-1"></a>  </span>
+<span id="cb333-14"><a href="measures-of-central-tendency.html#cb333-14" tabindex="-1"></a>  <span class="co"># Use the index vector to get all values that are observed the same number </span></span>
+<span id="cb333-15"><a href="measures-of-central-tendency.html#cb333-15" tabindex="-1"></a>  <span class="co"># of times as the maximum number of times that any value is observed</span></span>
+<span id="cb333-16"><a href="measures-of-central-tendency.html#cb333-16" tabindex="-1"></a>  unique_values <span class="ot">&lt;-</span> <span class="fu">names</span>(value_counts)</span>
+<span id="cb333-17"><a href="measures-of-central-tendency.html#cb333-17" tabindex="-1"></a>  result <span class="ot">&lt;-</span> unique_values[index]</span>
+<span id="cb333-18"><a href="measures-of-central-tendency.html#cb333-18" tabindex="-1"></a>  </span>
+<span id="cb333-19"><a href="measures-of-central-tendency.html#cb333-19" tabindex="-1"></a>  <span class="co"># If result is the same length as value counts that means that every value</span></span>
+<span id="cb333-20"><a href="measures-of-central-tendency.html#cb333-20" tabindex="-1"></a>  <span class="co"># occured the same number of times. If every value occurred the same number</span></span>
+<span id="cb333-21"><a href="measures-of-central-tendency.html#cb333-21" tabindex="-1"></a>  <span class="co"># of times, then there is no mode</span></span>
+<span id="cb333-22"><a href="measures-of-central-tendency.html#cb333-22" tabindex="-1"></a>  no_mode <span class="ot">&lt;-</span> <span class="fu">length</span>(value_counts) <span class="sc">==</span> <span class="fu">length</span>(result)</span>
+<span id="cb333-23"><a href="measures-of-central-tendency.html#cb333-23" tabindex="-1"></a>  </span>
+<span id="cb333-24"><a href="measures-of-central-tendency.html#cb333-24" tabindex="-1"></a>  <span class="co"># If there is no mode then change the value of result to NA</span></span>
+<span id="cb333-25"><a href="measures-of-central-tendency.html#cb333-25" tabindex="-1"></a>  <span class="cf">if</span> (no_mode) {</span>
+<span id="cb333-26"><a href="measures-of-central-tendency.html#cb333-26" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb333-27"><a href="measures-of-central-tendency.html#cb333-27" tabindex="-1"></a>  }</span>
+<span id="cb333-28"><a href="measures-of-central-tendency.html#cb333-28" tabindex="-1"></a>  </span>
+<span id="cb333-29"><a href="measures-of-central-tendency.html#cb333-29" tabindex="-1"></a>  <span class="co"># Return result</span></span>
+<span id="cb333-30"><a href="measures-of-central-tendency.html#cb333-30" tabindex="-1"></a>  result</span>
+<span id="cb333-31"><a href="measures-of-central-tendency.html#cb333-31" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="measures-of-central-tendency.html#cb334-1" tabindex="-1"></a><span class="fu">mode_val</span>(height_and_weight_20<span class="sc">$</span>ht_in)</span></code></pre></div>
 <pre><code>## [1] &quot;65&quot; &quot;69&quot;</code></pre>
 <p>👆 <strong>Here’s what we did above:</strong></p>
 <ul>
@@ -1122,14 +1125,14 @@ div.csl-indent {
 <h2><span class="header-section-number">20.4</span> Compare mean, median, and mode<a href="measures-of-central-tendency.html#compare-mean-median-and-mode" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <!-- This isn't HOW to get the mean. This a comparison of the mean and the median - the WHY -->
 <p>Now that you know how to calculate the mean, median, and mode, let’s compare these three measures of central tendency. This is a good opportunity to demonstrate some of the different characteristics of each that we spoke about earlier.</p>
-<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb326-1"><a href="measures-of-central-tendency.html#cb326-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
-<span id="cb326-2"><a href="measures-of-central-tendency.html#cb326-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb326-3"><a href="measures-of-central-tendency.html#cb326-3" tabindex="-1"></a>    <span class="at">min_weight    =</span> <span class="fu">min</span>(wt_lbs),</span>
-<span id="cb326-4"><a href="measures-of-central-tendency.html#cb326-4" tabindex="-1"></a>    <span class="at">mean_weight   =</span> <span class="fu">mean</span>(wt_lbs),</span>
-<span id="cb326-5"><a href="measures-of-central-tendency.html#cb326-5" tabindex="-1"></a>    <span class="at">median_weight =</span> <span class="fu">median</span>(wt_lbs),</span>
-<span id="cb326-6"><a href="measures-of-central-tendency.html#cb326-6" tabindex="-1"></a>    <span class="at">mode_weight   =</span> <span class="fu">mode_val</span>(wt_lbs) <span class="sc">%&gt;%</span> <span class="fu">as.double</span>(),</span>
-<span id="cb326-7"><a href="measures-of-central-tendency.html#cb326-7" tabindex="-1"></a>    <span class="at">max_weight    =</span> <span class="fu">max</span>(wt_lbs)</span>
-<span id="cb326-8"><a href="measures-of-central-tendency.html#cb326-8" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="measures-of-central-tendency.html#cb336-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb336-2"><a href="measures-of-central-tendency.html#cb336-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb336-3"><a href="measures-of-central-tendency.html#cb336-3" tabindex="-1"></a>    <span class="at">min_weight    =</span> <span class="fu">min</span>(wt_lbs),</span>
+<span id="cb336-4"><a href="measures-of-central-tendency.html#cb336-4" tabindex="-1"></a>    <span class="at">mean_weight   =</span> <span class="fu">mean</span>(wt_lbs),</span>
+<span id="cb336-5"><a href="measures-of-central-tendency.html#cb336-5" tabindex="-1"></a>    <span class="at">median_weight =</span> <span class="fu">median</span>(wt_lbs),</span>
+<span id="cb336-6"><a href="measures-of-central-tendency.html#cb336-6" tabindex="-1"></a>    <span class="at">mode_weight   =</span> <span class="fu">mode_val</span>(wt_lbs) <span class="sc">%&gt;%</span> <span class="fu">as.double</span>(),</span>
+<span id="cb336-7"><a href="measures-of-central-tendency.html#cb336-7" tabindex="-1"></a>    <span class="at">max_weight    =</span> <span class="fu">max</span>(wt_lbs)</span>
+<span id="cb336-8"><a href="measures-of-central-tendency.html#cb336-8" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 5
 ##   min_weight mean_weight median_weight mode_weight max_weight
 ##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;
@@ -1158,20 +1161,20 @@ div.csl-indent {
 <p>In <a href="numerical-descriptions-of-categorical-variables.html#cat-missing-data">numerical descriptions of categorical variables</a> we saw that we could use the <code>dplyr::filter()</code> function to remove all the rows from our data frame that contained a missing value for any of our variables of interest. We learned that this is called a <strong>complete case analysis</strong>. This method should pretty much always work, but in this section I’m going to show you an alternative method for dropping missing values from your analysis that you are likely to come across often when reading R documentation – the <code>na.rm</code> argument.</p>
 <p>Many R functions that perform calculations on numerical variables include an <code>na.rm</code> – short for “Remove NA” – argument. By default, this argument is typically set to <code>FALSE</code>. By passing the value <code>TRUE</code> to this argument, we can perform a complete case analysis. Let’s quickly take a look at how it works.</p>
 <p>We already saw that we can calculate the mean value of a numeric vector using the <code>mean()</code> function:</p>
-<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="measures-of-central-tendency.html#cb328-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="measures-of-central-tendency.html#cb338-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 <p>But, what happens when our vector has a missing value?</p>
-<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="measures-of-central-tendency.html#cb330-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="cn">NA</span>, <span class="dv">3</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="measures-of-central-tendency.html#cb340-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="cn">NA</span>, <span class="dv">3</span>))</span></code></pre></div>
 <pre><code>## [1] NA</code></pre>
 <p>As you can see, the <code>mean()</code> function returns <code>NA</code> by default when we pass it a numeric vector that contains a missing value. It took me a little while to wrap my head around why this is the case when I was a student. Perhaps some of you are confused as well. The logic goes something like this. In R, an <code>NA</code> doesn’t represent the <em>absence</em> of a value – a value that doesn’t exist at all; rather, it represents a value that does exist, but is <em>unknown</em> to us. So, if I ask you to tell me the mean of a set of numbers that contains 1, some unknown number, and 3 what would your answer be? Well, you can’t just give me the mean of 1 and 2. That would imply that the unknown number doesn’t exist. Further, you can’t really give me <em>any</em> numeric answer because that answer will depend on the value of the missing number. So, the only logical answer to give me is something like “I don’t know” or “it depends.” 🤷 That is essentially what R is telling us when it returns an <code>NA</code>.</p>
 <p>While this answer is technically correct, it usually isn’t very satisfying to us. Instead, we often want R to calculate the mean of the numbers that remain after all missing values are removed from the original set. The implicit assumption is that the mean of that reduced set of numbers will be “close enough” to the mean of the original set of numbers for our purposes. We can ask R to do this by changing the value of the <code>na.rm</code> argument from <code>FALSE</code> – the default – to <code>TRUE</code>.</p>
-<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="measures-of-central-tendency.html#cb332-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="cn">NA</span>, <span class="dv">3</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="measures-of-central-tendency.html#cb342-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="cn">NA</span>, <span class="dv">3</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 <p>In this case, the mean of the original set of numbers (2) and the mean of our complete case analysis (2) are identical. That won’t always be the case.</p>
 <p>Finally, let’s compare using <code>filter()</code> and <code>na.rm = TRUE</code> in a <code>dplyr</code> pipeline. We will first use the <code>replace()</code> function to add some missing values to our <code>height_and_weight_20</code> data.</p>
-<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="measures-of-central-tendency.html#cb334-1" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> height_and_weight_20 <span class="sc">%&gt;%</span> </span>
-<span id="cb334-2"><a href="measures-of-central-tendency.html#cb334-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ht_in =</span> <span class="fu">replace</span>(ht_in, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="cn">NA</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb334-3"><a href="measures-of-central-tendency.html#cb334-3" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="measures-of-central-tendency.html#cb344-1" tabindex="-1"></a>height_and_weight_20 <span class="ot">&lt;-</span> height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb344-2"><a href="measures-of-central-tendency.html#cb344-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ht_in =</span> <span class="fu">replace</span>(ht_in, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="cn">NA</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb344-3"><a href="measures-of-central-tendency.html#cb344-3" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 20 × 4
 ##    id    sex    ht_in wt_lbs
 ##    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
@@ -1200,41 +1203,41 @@ div.csl-indent {
 <li>Replaced the 1st and 2nd value of <code>ht_in</code> with <code>NA</code> (missing) using the <code>replace()</code> function.</li>
 </ul>
 <p>Here’s what our results look like when we don’t perform a complete case analysis.</p>
-<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="measures-of-central-tendency.html#cb336-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
-<span id="cb336-2"><a href="measures-of-central-tendency.html#cb336-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb336-3"><a href="measures-of-central-tendency.html#cb336-3" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in),</span>
-<span id="cb336-4"><a href="measures-of-central-tendency.html#cb336-4" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in),</span>
-<span id="cb336-5"><a href="measures-of-central-tendency.html#cb336-5" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in),</span>
-<span id="cb336-6"><a href="measures-of-central-tendency.html#cb336-6" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in),</span>
-<span id="cb336-7"><a href="measures-of-central-tendency.html#cb336-7" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in)</span>
-<span id="cb336-8"><a href="measures-of-central-tendency.html#cb336-8" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="measures-of-central-tendency.html#cb346-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb346-2"><a href="measures-of-central-tendency.html#cb346-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb346-3"><a href="measures-of-central-tendency.html#cb346-3" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in),</span>
+<span id="cb346-4"><a href="measures-of-central-tendency.html#cb346-4" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in),</span>
+<span id="cb346-5"><a href="measures-of-central-tendency.html#cb346-5" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in),</span>
+<span id="cb346-6"><a href="measures-of-central-tendency.html#cb346-6" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in),</span>
+<span id="cb346-7"><a href="measures-of-central-tendency.html#cb346-7" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in)</span>
+<span id="cb346-8"><a href="measures-of-central-tendency.html#cb346-8" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 5
 ##   min_height mean_height median_height mode_height max_height
 ##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
 ## 1         NA          NA            NA 65                  NA</code></pre>
 <p>Here’s what our results look like when we use the <code>filter()</code> function.</p>
-<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="measures-of-central-tendency.html#cb338-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
-<span id="cb338-2"><a href="measures-of-central-tendency.html#cb338-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ht_in)) <span class="sc">%&gt;%</span> </span>
-<span id="cb338-3"><a href="measures-of-central-tendency.html#cb338-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb338-4"><a href="measures-of-central-tendency.html#cb338-4" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in),</span>
-<span id="cb338-5"><a href="measures-of-central-tendency.html#cb338-5" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in),</span>
-<span id="cb338-6"><a href="measures-of-central-tendency.html#cb338-6" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in),</span>
-<span id="cb338-7"><a href="measures-of-central-tendency.html#cb338-7" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in),</span>
-<span id="cb338-8"><a href="measures-of-central-tendency.html#cb338-8" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in)</span>
-<span id="cb338-9"><a href="measures-of-central-tendency.html#cb338-9" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="measures-of-central-tendency.html#cb348-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb348-2"><a href="measures-of-central-tendency.html#cb348-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ht_in)) <span class="sc">%&gt;%</span> </span>
+<span id="cb348-3"><a href="measures-of-central-tendency.html#cb348-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb348-4"><a href="measures-of-central-tendency.html#cb348-4" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in),</span>
+<span id="cb348-5"><a href="measures-of-central-tendency.html#cb348-5" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in),</span>
+<span id="cb348-6"><a href="measures-of-central-tendency.html#cb348-6" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in),</span>
+<span id="cb348-7"><a href="measures-of-central-tendency.html#cb348-7" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in),</span>
+<span id="cb348-8"><a href="measures-of-central-tendency.html#cb348-8" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in)</span>
+<span id="cb348-9"><a href="measures-of-central-tendency.html#cb348-9" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 5
 ##   min_height mean_height median_height mode_height max_height
 ##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
 ## 1         64        68.2            68 65                  75</code></pre>
 <p>And, here’s what our results look like when we change the <code>na.rm</code> argument to <code>TRUE</code>.</p>
-<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="measures-of-central-tendency.html#cb340-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
-<span id="cb340-2"><a href="measures-of-central-tendency.html#cb340-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb340-3"><a href="measures-of-central-tendency.html#cb340-3" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb340-4"><a href="measures-of-central-tendency.html#cb340-4" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb340-5"><a href="measures-of-central-tendency.html#cb340-5" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb340-6"><a href="measures-of-central-tendency.html#cb340-6" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in),</span>
-<span id="cb340-7"><a href="measures-of-central-tendency.html#cb340-7" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb340-8"><a href="measures-of-central-tendency.html#cb340-8" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="measures-of-central-tendency.html#cb350-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span> </span>
+<span id="cb350-2"><a href="measures-of-central-tendency.html#cb350-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb350-3"><a href="measures-of-central-tendency.html#cb350-3" tabindex="-1"></a>    <span class="at">min_height    =</span> <span class="fu">min</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb350-4"><a href="measures-of-central-tendency.html#cb350-4" tabindex="-1"></a>    <span class="at">mean_height   =</span> <span class="fu">mean</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb350-5"><a href="measures-of-central-tendency.html#cb350-5" tabindex="-1"></a>    <span class="at">median_height =</span> <span class="fu">median</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb350-6"><a href="measures-of-central-tendency.html#cb350-6" tabindex="-1"></a>    <span class="at">mode_height   =</span> <span class="fu">mode_val</span>(ht_in),</span>
+<span id="cb350-7"><a href="measures-of-central-tendency.html#cb350-7" tabindex="-1"></a>    <span class="at">max_height    =</span> <span class="fu">max</span>(ht_in, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb350-8"><a href="measures-of-central-tendency.html#cb350-8" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 5
 ##   min_height mean_height median_height mode_height max_height
 ##        &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
@@ -1246,17 +1249,17 @@ div.csl-indent {
 <p>In the sections above, we learned how to use <code>dplyr</code> functions to calculate various measures of central tendency for continuous variables. However, there can be a fair amount of code writing involved when using those methods. The more we have to repeatedly type code, the more tedious and error-prone it becomes. This is an idea we will return to many times in this book. Luckily, the R programming language allows us to write our own functions, which solves both of those problems.</p>
 <p>Later in this book, I will show you <a href="writing-functions.html#writing-functions">how to write your own functions</a>. For the time being, I’m going to suggest that you install and use a package I created called <a href="https://github.com/brad-cannell/meantables">meantables</a>. The <code>meantables</code> package is basically an enhanced version of the code we wrote in the sections above. I designed it to help us quickly make tables of descriptive statistics for continuous variables, and it’s specifically designed to work in a <code>dplyr</code> pipeline.</p>
 <p>Like all packages, you need to first install it…</p>
-<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="measures-of-central-tendency.html#cb342-1" tabindex="-1"></a><span class="co"># You may be asked if you want to update other packages on your computer that</span></span>
-<span id="cb342-2"><a href="measures-of-central-tendency.html#cb342-2" tabindex="-1"></a><span class="co"># meantables uses. Go ahead and do so.</span></span>
-<span id="cb342-3"><a href="measures-of-central-tendency.html#cb342-3" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;meantables&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="measures-of-central-tendency.html#cb352-1" tabindex="-1"></a><span class="co"># You may be asked if you want to update other packages on your computer that</span></span>
+<span id="cb352-2"><a href="measures-of-central-tendency.html#cb352-2" tabindex="-1"></a><span class="co"># meantables uses. Go ahead and do so.</span></span>
+<span id="cb352-3"><a href="measures-of-central-tendency.html#cb352-3" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;meantables&quot;</span>)</span></code></pre></div>
 <p>And then load it…</p>
-<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="measures-of-central-tendency.html#cb343-1" tabindex="-1"></a><span class="co"># After installing meantables on your computer, you can load it just like you</span></span>
-<span id="cb343-2"><a href="measures-of-central-tendency.html#cb343-2" tabindex="-1"></a><span class="co"># would any other package.</span></span>
-<span id="cb343-3"><a href="measures-of-central-tendency.html#cb343-3" tabindex="-1"></a><span class="fu">library</span>(meantables)</span></code></pre></div>
+<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="measures-of-central-tendency.html#cb353-1" tabindex="-1"></a><span class="co"># After installing meantables on your computer, you can load it just like you</span></span>
+<span id="cb353-2"><a href="measures-of-central-tendency.html#cb353-2" tabindex="-1"></a><span class="co"># would any other package.</span></span>
+<span id="cb353-3"><a href="measures-of-central-tendency.html#cb353-3" tabindex="-1"></a><span class="fu">library</span>(meantables)</span></code></pre></div>
 <p>Now, let’s use the <code>mean_table()</code> function from <code>meantables</code> package to rerun our analysis from above.</p>
-<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="measures-of-central-tendency.html#cb344-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span></span>
-<span id="cb344-2"><a href="measures-of-central-tendency.html#cb344-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ht_in)) <span class="sc">%&gt;%</span></span>
-<span id="cb344-3"><a href="measures-of-central-tendency.html#cb344-3" tabindex="-1"></a>  <span class="fu">mean_table</span>(ht_in)</span></code></pre></div>
+<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="measures-of-central-tendency.html#cb354-1" tabindex="-1"></a>height_and_weight_20 <span class="sc">%&gt;%</span></span>
+<span id="cb354-2"><a href="measures-of-central-tendency.html#cb354-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ht_in)) <span class="sc">%&gt;%</span></span>
+<span id="cb354-3"><a href="measures-of-central-tendency.html#cb354-3" tabindex="-1"></a>  <span class="fu">mean_table</span>(ht_in)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 9
 ##   response_var     n  mean    sd   sem   lcl   ucl   min   max
 ##   &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
