@@ -23,7 +23,7 @@
 <meta name="author" content="Brad Cannell" />
 
 
-<meta name="date" content="2024-05-28" />
+<meta name="date" content="2024-05-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1054,29 +1054,29 @@ Figure 54.1: Four commonly used generalized linear models.
 <p>In R, we fill one of our generalized linear models to our data using the <code>glm()</code> function. Actually, this isn’t totally true. We the Cox proportional hazard model is fit to data using a different function. The Cox proportional hazards model is technically a generalized linear model, but it has some important differences from the other three shown above. Therefore, we will introduce linear, logistic, and Poisson regression only in this chapter. We will discuss the Cox proportional hazards model later as part of our broader discussion of survival analysis<!-- Link to the survival analysis chapter when it's written -->.</p>
 <p>Let’s start by simulating some data and then fitting a model to that data. After viewing a complete working example, we will break down the code and discuss it in greater detail.</p>
 <p>The code below simulates a data frame that contains the age (<code>age</code>) and weekly minutes of physical activity (<code>phys_act</code>) for a sample of 100 people. We add comments to the code below to help you get a sense for how the values are generated. But please skip over the code if it feels distracting or confusing, as it is not the primary object of our interest right now.</p>
-<div class="sourceCode" id="cb1845"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1845-1"><a href="introduction-to-regression-analysis.html#cb1845-1" tabindex="-1"></a><span class="co"># Set the seed for the random number generator so that we can reproduce our results</span></span>
-<span id="cb1845-2"><a href="introduction-to-regression-analysis.html#cb1845-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb1845-3"><a href="introduction-to-regression-analysis.html#cb1845-3" tabindex="-1"></a></span>
-<span id="cb1845-4"><a href="introduction-to-regression-analysis.html#cb1845-4" tabindex="-1"></a><span class="co"># Simulate a sample of 100 people</span></span>
-<span id="cb1845-5"><a href="introduction-to-regression-analysis.html#cb1845-5" tabindex="-1"></a><span class="co"># Include measures of physical activity and age</span></span>
-<span id="cb1845-6"><a href="introduction-to-regression-analysis.html#cb1845-6" tabindex="-1"></a>physical_activity_age <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1845-7"><a href="introduction-to-regression-analysis.html#cb1845-7" tabindex="-1"></a>  <span class="co"># Create participant ids</span></span>
-<span id="cb1845-8"><a href="introduction-to-regression-analysis.html#cb1845-8" tabindex="-1"></a>  <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,</span>
-<span id="cb1845-9"><a href="introduction-to-regression-analysis.html#cb1845-9" tabindex="-1"></a>  <span class="co"># Sample ages between 18 and 100</span></span>
-<span id="cb1845-10"><a href="introduction-to-regression-analysis.html#cb1845-10" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">sample</span>(<span class="dv">18</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="cn">TRUE</span>),</span>
-<span id="cb1845-11"><a href="introduction-to-regression-analysis.html#cb1845-11" tabindex="-1"></a>  <span class="co"># Center age at 18</span></span>
-<span id="cb1845-12"><a href="introduction-to-regression-analysis.html#cb1845-12" tabindex="-1"></a>  <span class="at">age_c =</span> age <span class="sc">-</span> <span class="dv">18</span>,</span>
-<span id="cb1845-13"><a href="introduction-to-regression-analysis.html#cb1845-13" tabindex="-1"></a>  <span class="co"># Create term that quantifies the change in the mean value of weekly minutes</span></span>
-<span id="cb1845-14"><a href="introduction-to-regression-analysis.html#cb1845-14" tabindex="-1"></a>  <span class="co"># of physical activity for each additional year of age plus some random </span></span>
-<span id="cb1845-15"><a href="introduction-to-regression-analysis.html#cb1845-15" tabindex="-1"></a>  <span class="co"># variation.</span></span>
-<span id="cb1845-16"><a href="introduction-to-regression-analysis.html#cb1845-16" tabindex="-1"></a>  <span class="at">beta_1 =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.5</span>),</span>
-<span id="cb1845-17"><a href="introduction-to-regression-analysis.html#cb1845-17" tabindex="-1"></a>  <span class="co"># Set the value for weekly minutes of physical activity as 140 at age 18, </span></span>
-<span id="cb1845-18"><a href="introduction-to-regression-analysis.html#cb1845-18" tabindex="-1"></a>  <span class="co"># declining by beta_1 for each additional year of age after 18 (age_c).</span></span>
-<span id="cb1845-19"><a href="introduction-to-regression-analysis.html#cb1845-19" tabindex="-1"></a>  <span class="at">phys_act =</span> <span class="dv">140</span> <span class="sc">+</span> (beta_1 <span class="sc">*</span> age_c) </span>
-<span id="cb1845-20"><a href="introduction-to-regression-analysis.html#cb1845-20" tabindex="-1"></a>)</span>
-<span id="cb1845-21"><a href="introduction-to-regression-analysis.html#cb1845-21" tabindex="-1"></a></span>
-<span id="cb1845-22"><a href="introduction-to-regression-analysis.html#cb1845-22" tabindex="-1"></a><span class="co"># Print the value stored in physical_activity_age to the screen</span></span>
-<span id="cb1845-23"><a href="introduction-to-regression-analysis.html#cb1845-23" tabindex="-1"></a>physical_activity_age</span></code></pre></div>
+<div class="sourceCode" id="cb1847"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1847-1"><a href="introduction-to-regression-analysis.html#cb1847-1" tabindex="-1"></a><span class="co"># Set the seed for the random number generator so that we can reproduce our results</span></span>
+<span id="cb1847-2"><a href="introduction-to-regression-analysis.html#cb1847-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1847-3"><a href="introduction-to-regression-analysis.html#cb1847-3" tabindex="-1"></a></span>
+<span id="cb1847-4"><a href="introduction-to-regression-analysis.html#cb1847-4" tabindex="-1"></a><span class="co"># Simulate a sample of 100 people</span></span>
+<span id="cb1847-5"><a href="introduction-to-regression-analysis.html#cb1847-5" tabindex="-1"></a><span class="co"># Include measures of physical activity and age</span></span>
+<span id="cb1847-6"><a href="introduction-to-regression-analysis.html#cb1847-6" tabindex="-1"></a>physical_activity_age <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1847-7"><a href="introduction-to-regression-analysis.html#cb1847-7" tabindex="-1"></a>  <span class="co"># Create participant ids</span></span>
+<span id="cb1847-8"><a href="introduction-to-regression-analysis.html#cb1847-8" tabindex="-1"></a>  <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,</span>
+<span id="cb1847-9"><a href="introduction-to-regression-analysis.html#cb1847-9" tabindex="-1"></a>  <span class="co"># Sample ages between 18 and 100</span></span>
+<span id="cb1847-10"><a href="introduction-to-regression-analysis.html#cb1847-10" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">sample</span>(<span class="dv">18</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="cn">TRUE</span>),</span>
+<span id="cb1847-11"><a href="introduction-to-regression-analysis.html#cb1847-11" tabindex="-1"></a>  <span class="co"># Center age at 18</span></span>
+<span id="cb1847-12"><a href="introduction-to-regression-analysis.html#cb1847-12" tabindex="-1"></a>  <span class="at">age_c =</span> age <span class="sc">-</span> <span class="dv">18</span>,</span>
+<span id="cb1847-13"><a href="introduction-to-regression-analysis.html#cb1847-13" tabindex="-1"></a>  <span class="co"># Create term that quantifies the change in the mean value of weekly minutes</span></span>
+<span id="cb1847-14"><a href="introduction-to-regression-analysis.html#cb1847-14" tabindex="-1"></a>  <span class="co"># of physical activity for each additional year of age plus some random </span></span>
+<span id="cb1847-15"><a href="introduction-to-regression-analysis.html#cb1847-15" tabindex="-1"></a>  <span class="co"># variation.</span></span>
+<span id="cb1847-16"><a href="introduction-to-regression-analysis.html#cb1847-16" tabindex="-1"></a>  <span class="at">beta_1 =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1847-17"><a href="introduction-to-regression-analysis.html#cb1847-17" tabindex="-1"></a>  <span class="co"># Set the value for weekly minutes of physical activity as 140 at age 18, </span></span>
+<span id="cb1847-18"><a href="introduction-to-regression-analysis.html#cb1847-18" tabindex="-1"></a>  <span class="co"># declining by beta_1 for each additional year of age after 18 (age_c).</span></span>
+<span id="cb1847-19"><a href="introduction-to-regression-analysis.html#cb1847-19" tabindex="-1"></a>  <span class="at">phys_act =</span> <span class="dv">140</span> <span class="sc">+</span> (beta_1 <span class="sc">*</span> age_c) </span>
+<span id="cb1847-20"><a href="introduction-to-regression-analysis.html#cb1847-20" tabindex="-1"></a>)</span>
+<span id="cb1847-21"><a href="introduction-to-regression-analysis.html#cb1847-21" tabindex="-1"></a></span>
+<span id="cb1847-22"><a href="introduction-to-regression-analysis.html#cb1847-22" tabindex="-1"></a><span class="co"># Print the value stored in physical_activity_age to the screen</span></span>
+<span id="cb1847-23"><a href="introduction-to-regression-analysis.html#cb1847-23" tabindex="-1"></a>physical_activity_age</span></code></pre></div>
 <pre><code>## # A tibble: 100 × 5
 ##       id   age age_c beta_1 phys_act
 ##    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
@@ -1092,11 +1092,11 @@ Figure 54.1: Four commonly used generalized linear models.
 ## 10    10    42    24  -1.88     94.9
 ## # ℹ 90 more rows</code></pre>
 <p>Next, let’s fit a generalized linear model to the data we simulated above.</p>
-<div class="sourceCode" id="cb1847"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1847-1"><a href="introduction-to-regression-analysis.html#cb1847-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
-<span id="cb1847-2"><a href="introduction-to-regression-analysis.html#cb1847-2" tabindex="-1"></a>  <span class="at">formula =</span> phys_act <span class="sc">~</span> age,</span>
-<span id="cb1847-3"><a href="introduction-to-regression-analysis.html#cb1847-3" tabindex="-1"></a>  <span class="at">family  =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>),</span>
-<span id="cb1847-4"><a href="introduction-to-regression-analysis.html#cb1847-4" tabindex="-1"></a>  <span class="at">data    =</span> physical_activity_age</span>
-<span id="cb1847-5"><a href="introduction-to-regression-analysis.html#cb1847-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1849-1"><a href="introduction-to-regression-analysis.html#cb1849-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
+<span id="cb1849-2"><a href="introduction-to-regression-analysis.html#cb1849-2" tabindex="-1"></a>  <span class="at">formula =</span> phys_act <span class="sc">~</span> age,</span>
+<span id="cb1849-3"><a href="introduction-to-regression-analysis.html#cb1849-3" tabindex="-1"></a>  <span class="at">family  =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>),</span>
+<span id="cb1849-4"><a href="introduction-to-regression-analysis.html#cb1849-4" tabindex="-1"></a>  <span class="at">data    =</span> physical_activity_age</span>
+<span id="cb1849-5"><a href="introduction-to-regression-analysis.html#cb1849-5" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## 
 ## Call:  glm(formula = phys_act ~ age, family = gaussian(link = &quot;identity&quot;), 
 ##     data = physical_activity_age)
@@ -1109,11 +1109,11 @@ Figure 54.1: Four commonly used generalized linear models.
 ## Null Deviance:       268600 
 ## Residual Deviance: 47170     AIC: 905.4</code></pre>
 <p>If you already know how to interpret these results, that’s great! If not, don’t worry. We will learn how to interpret them soon, but not now. Right now, we are just interested in the R code we used to produce these results. In general, we will need to pass the following the following information to the <code>glm()</code> function when fitting a generalized linear model to our data in R:</p>
-<div class="sourceCode" id="cb1849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1849-1"><a href="introduction-to-regression-analysis.html#cb1849-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
-<span id="cb1849-2"><a href="introduction-to-regression-analysis.html#cb1849-2" tabindex="-1"></a>  <span class="co"># formula = The regression formula Y ~ X</span></span>
-<span id="cb1849-3"><a href="introduction-to-regression-analysis.html#cb1849-3" tabindex="-1"></a>  <span class="co"># family  = The distribution family and link function</span></span>
-<span id="cb1849-4"><a href="introduction-to-regression-analysis.html#cb1849-4" tabindex="-1"></a>  <span class="co"># data    = The data frame containing the data we want to fit the model to</span></span>
-<span id="cb1849-5"><a href="introduction-to-regression-analysis.html#cb1849-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1851-1"><a href="introduction-to-regression-analysis.html#cb1851-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
+<span id="cb1851-2"><a href="introduction-to-regression-analysis.html#cb1851-2" tabindex="-1"></a>  <span class="co"># formula = The regression formula Y ~ X</span></span>
+<span id="cb1851-3"><a href="introduction-to-regression-analysis.html#cb1851-3" tabindex="-1"></a>  <span class="co"># family  = The distribution family and link function</span></span>
+<span id="cb1851-4"><a href="introduction-to-regression-analysis.html#cb1851-4" tabindex="-1"></a>  <span class="co"># data    = The data frame containing the data we want to fit the model to</span></span>
+<span id="cb1851-5"><a href="introduction-to-regression-analysis.html#cb1851-5" tabindex="-1"></a>)</span></code></pre></div>
 <p>First, we pass a <strong>formula</strong> the <code>glm()</code> function takes the form <code>Y ~ X</code>, where <code>Y</code> is the regressand, tilde (<code>~</code>) means “equals”, and <code>X</code> is the regressor. In our example above, we had data on age (<code>age</code>) and weekly minutes of physical activity (<code>phys_act</code>). We wanted to model physical activity as the regressand and age as the regressor, so we passed <code>phys_act ~ age</code> to the <code>formula</code> argument. This formula is very similar to the general model form shown in table <a href="introduction-to-regression-analysis.html#fig:intro-regression-regression-models-01">54.1</a> above. However, the general model form shown in table <a href="introduction-to-regression-analysis.html#fig:intro-regression-regression-models-01">54.1</a> shows the regressand with the link function already applied. For example, <code>ln[E(Y|X)]</code> or <code>ln[E(phys_act|age)]</code> instead of just <code>E(Y|X)</code> or <code>E(phys_act|age)</code>. In the <code>glm()</code> function, we tell R to what link function to apply to <code>Y</code> using the <code>family</code> argument (discussed next).</p>
 <p>Second, we pass one of the following distribution family and link functions to the <code>family</code> argument of the <code>glm()</code> function. In the example above, we passed the <code>gaussian(link = "identity")</code> to the <code>family</code> argument to fit a <em>linear</em> regression model to our data.</p>
 <table>
@@ -1159,18 +1159,18 @@ Figure 54.1: Four commonly used generalized linear models.
 <div id="regression-intuition" class="section level2 hasAnchor" number="54.2">
 <h2><span class="header-section-number">54.2</span> Regression intuition<a href="introduction-to-regression-analysis.html#regression-intuition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In the sections above, we formally defined regression analysis and we introduced R’s <code>glm()</code> function – a function we an use to fit generalized linear models to our data. Now, let’s walk through another example to help us develop our intuition about what is happening “under the hood” in regression models. For this example, we want to regress diabetes (0 = Negative, 1 = Positive) on family history of diabetes (0 = No, 1 = Yes), to investigate the relationship between diabetes and family history of diabetes in our data.</p>
-<div class="sourceCode" id="cb1850"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1850-1"><a href="introduction-to-regression-analysis.html#cb1850-1" tabindex="-1"></a><span class="co"># Simulate a sample of 698 people</span></span>
-<span id="cb1850-2"><a href="introduction-to-regression-analysis.html#cb1850-2" tabindex="-1"></a><span class="co"># Include measures of family history of diabetes (0 = No, 1 = Yes) and diabetes </span></span>
-<span id="cb1850-3"><a href="introduction-to-regression-analysis.html#cb1850-3" tabindex="-1"></a><span class="co"># (0 = Negative, 1 = Positive)</span></span>
-<span id="cb1850-4"><a href="introduction-to-regression-analysis.html#cb1850-4" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(</span>
-<span id="cb1850-5"><a href="introduction-to-regression-analysis.html#cb1850-5" tabindex="-1"></a>  <span class="at">family_history =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb1850-6"><a href="introduction-to-regression-analysis.html#cb1850-6" tabindex="-1"></a>  <span class="at">diabetes       =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb1850-7"><a href="introduction-to-regression-analysis.html#cb1850-7" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb1850-8"><a href="introduction-to-regression-analysis.html#cb1850-8" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">count =</span> <span class="fu">c</span>(<span class="dv">58</span>, <span class="dv">196</span>, <span class="dv">63</span>, <span class="dv">381</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1850-9"><a href="introduction-to-regression-analysis.html#cb1850-9" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">uncount</span>(count)</span>
-<span id="cb1850-10"><a href="introduction-to-regression-analysis.html#cb1850-10" tabindex="-1"></a></span>
-<span id="cb1850-11"><a href="introduction-to-regression-analysis.html#cb1850-11" tabindex="-1"></a><span class="co"># Print the value stored in diabetes to the screen</span></span>
-<span id="cb1850-12"><a href="introduction-to-regression-analysis.html#cb1850-12" tabindex="-1"></a>diabetes</span></code></pre></div>
+<div class="sourceCode" id="cb1852"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1852-1"><a href="introduction-to-regression-analysis.html#cb1852-1" tabindex="-1"></a><span class="co"># Simulate a sample of 698 people</span></span>
+<span id="cb1852-2"><a href="introduction-to-regression-analysis.html#cb1852-2" tabindex="-1"></a><span class="co"># Include measures of family history of diabetes (0 = No, 1 = Yes) and diabetes </span></span>
+<span id="cb1852-3"><a href="introduction-to-regression-analysis.html#cb1852-3" tabindex="-1"></a><span class="co"># (0 = Negative, 1 = Positive)</span></span>
+<span id="cb1852-4"><a href="introduction-to-regression-analysis.html#cb1852-4" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(</span>
+<span id="cb1852-5"><a href="introduction-to-regression-analysis.html#cb1852-5" tabindex="-1"></a>  <span class="at">family_history =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb1852-6"><a href="introduction-to-regression-analysis.html#cb1852-6" tabindex="-1"></a>  <span class="at">diabetes       =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb1852-7"><a href="introduction-to-regression-analysis.html#cb1852-7" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1852-8"><a href="introduction-to-regression-analysis.html#cb1852-8" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">count =</span> <span class="fu">c</span>(<span class="dv">58</span>, <span class="dv">196</span>, <span class="dv">63</span>, <span class="dv">381</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1852-9"><a href="introduction-to-regression-analysis.html#cb1852-9" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">uncount</span>(count)</span>
+<span id="cb1852-10"><a href="introduction-to-regression-analysis.html#cb1852-10" tabindex="-1"></a></span>
+<span id="cb1852-11"><a href="introduction-to-regression-analysis.html#cb1852-11" tabindex="-1"></a><span class="co"># Print the value stored in diabetes to the screen</span></span>
+<span id="cb1852-12"><a href="introduction-to-regression-analysis.html#cb1852-12" tabindex="-1"></a>diabetes</span></code></pre></div>
 <pre><code>## # A tibble: 698 × 2
 ##    family_history diabetes
 ##             &lt;dbl&gt;    &lt;dbl&gt;
@@ -1192,18 +1192,18 @@ Figure 54.1: Four commonly used generalized linear models.
 And the proportion of ones in the vector will be:</p>
 <p><span class="math display">\[\frac{3}{5} = 0.6\]</span></p>
 <p>With that in mind, the mean value of <code>diabetes</code> across subgroups defined by <code>family_history</code> are:</p>
-<div class="sourceCode" id="cb1852"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1852-1"><a href="introduction-to-regression-analysis.html#cb1852-1" tabindex="-1"></a>diabetes <span class="sc">%&gt;%</span> </span>
-<span id="cb1852-2"><a href="introduction-to-regression-analysis.html#cb1852-2" tabindex="-1"></a>  <span class="fu">group_by</span>(family_history) <span class="sc">%&gt;%</span> </span>
-<span id="cb1852-3"><a href="introduction-to-regression-analysis.html#cb1852-3" tabindex="-1"></a>  <span class="fu">mean_table</span>(diabetes)</span></code></pre></div>
+<div class="sourceCode" id="cb1854"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1854-1"><a href="introduction-to-regression-analysis.html#cb1854-1" tabindex="-1"></a>diabetes <span class="sc">%&gt;%</span> </span>
+<span id="cb1854-2"><a href="introduction-to-regression-analysis.html#cb1854-2" tabindex="-1"></a>  <span class="fu">group_by</span>(family_history) <span class="sc">%&gt;%</span> </span>
+<span id="cb1854-3"><a href="introduction-to-regression-analysis.html#cb1854-3" tabindex="-1"></a>  <span class="fu">mean_table</span>(diabetes)</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 11
 ##   response_var group_var      group_cat     n  mean    sd    sem   lcl   ucl   min   max
 ##   &lt;chr&gt;        &lt;chr&gt;              &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 diabetes     family_history         0   444  0.14  0.35 0.0166  0.11  0.17     0     1
 ## 2 diabetes     family_history         1   254  0.23  0.42 0.0264  0.18  0.28     0     1</code></pre>
 <p>The mean value of <code>diabetes</code> across subgroups defined by <code>family_history</code> are 0.14 when <code>family_history</code> equals 0 and 0.23 when <code>family_history</code> equals 1. Additionally, the proportion of people with diabetes across subgroups defined by <code>family_history</code> are:</p>
-<div class="sourceCode" id="cb1854"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1854-1"><a href="introduction-to-regression-analysis.html#cb1854-1" tabindex="-1"></a>diabetes <span class="sc">%&gt;%</span> </span>
-<span id="cb1854-2"><a href="introduction-to-regression-analysis.html#cb1854-2" tabindex="-1"></a>  <span class="fu">freq_table</span>(family_history, diabetes) <span class="sc">%&gt;%</span> </span>
-<span id="cb1854-3"><a href="introduction-to-regression-analysis.html#cb1854-3" tabindex="-1"></a>  <span class="fu">select</span>(row_var<span class="sc">:</span>n, percent_row)</span></code></pre></div>
+<div class="sourceCode" id="cb1856"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1856-1"><a href="introduction-to-regression-analysis.html#cb1856-1" tabindex="-1"></a>diabetes <span class="sc">%&gt;%</span> </span>
+<span id="cb1856-2"><a href="introduction-to-regression-analysis.html#cb1856-2" tabindex="-1"></a>  <span class="fu">freq_table</span>(family_history, diabetes) <span class="sc">%&gt;%</span> </span>
+<span id="cb1856-3"><a href="introduction-to-regression-analysis.html#cb1856-3" tabindex="-1"></a>  <span class="fu">select</span>(row_var<span class="sc">:</span>n, percent_row)</span></code></pre></div>
 <pre><code>## # A tibble: 4 × 6
 ##   row_var        row_cat col_var  col_cat     n percent_row
 ##   &lt;chr&gt;          &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;   &lt;int&gt;       &lt;dbl&gt;
@@ -1214,11 +1214,11 @@ And the proportion of ones in the vector will be:</p>
 <p>Take a look at the percentage of people with family history of diabetes who have diabetes (22%) and the percentage of people without family history of diabetes who have diabetes (14%). You should notice that it is the same as the subgroup means (multiplied by 100 because they are percentages).</p>
 <p>This illustrates an important property: “When the regressand Y is a binary indicator (0, 1) variable, <span class="math inline">\(E(Y|X=x)\)</span> is called a binary regression, and this regression simplifies in a very useful manner. Specifically, when Y can be only 0 or 1 the average <span class="math inline">\(E(Y|X=x)\)</span> equals the proportion of population members who have Y=1 among those who have X=x.”<span class="citation"><sup><a href="#ref-Lash2021-mb">18</a></sup></span></p>
 <p>Now, let’s fit a linear regression model to this data.</p>
-<div class="sourceCode" id="cb1856"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1856-1"><a href="introduction-to-regression-analysis.html#cb1856-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
-<span id="cb1856-2"><a href="introduction-to-regression-analysis.html#cb1856-2" tabindex="-1"></a>  <span class="at">formula =</span> diabetes <span class="sc">~</span> family_history,</span>
-<span id="cb1856-3"><a href="introduction-to-regression-analysis.html#cb1856-3" tabindex="-1"></a>  <span class="at">family  =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>),</span>
-<span id="cb1856-4"><a href="introduction-to-regression-analysis.html#cb1856-4" tabindex="-1"></a>  <span class="at">data    =</span> diabetes</span>
-<span id="cb1856-5"><a href="introduction-to-regression-analysis.html#cb1856-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1858"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1858-1"><a href="introduction-to-regression-analysis.html#cb1858-1" tabindex="-1"></a><span class="fu">glm</span>(</span>
+<span id="cb1858-2"><a href="introduction-to-regression-analysis.html#cb1858-2" tabindex="-1"></a>  <span class="at">formula =</span> diabetes <span class="sc">~</span> family_history,</span>
+<span id="cb1858-3"><a href="introduction-to-regression-analysis.html#cb1858-3" tabindex="-1"></a>  <span class="at">family  =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>),</span>
+<span id="cb1858-4"><a href="introduction-to-regression-analysis.html#cb1858-4" tabindex="-1"></a>  <span class="at">data    =</span> diabetes</span>
+<span id="cb1858-5"><a href="introduction-to-regression-analysis.html#cb1858-5" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## 
 ## Call:  glm(formula = diabetes ~ family_history, family = gaussian(link = &quot;identity&quot;), 
 ##     data = diabetes)
