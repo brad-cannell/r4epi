@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>31&nbsp; Working with Multiple Data Frames – R 4 Epidemiology</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/restructuring_data_frames/restructuring_data_frames.html" rel="next">
+<link href="../../chapters/conditional_operations/conditional_operations.html" rel="prev">
+<link href="../../r4epi_favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_data_management/introduction.html">Data Management</a></li><li class="breadcrumb-item"><a href="../../chapters/multiple_data_frames/multiple_data_frames.html"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">R 4 Epidemiology</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/brad-cannell/r4epi_quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../../R-4-Epidemiology.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/contributing/contributing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Contributing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/about_the_authors/about_the_authors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Authors</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/installing_r_and_rstudio/installing_r_and_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Installing R and RStudio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/what_is_r/what_is_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">What is R?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/navigating_rstudio/navigating_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Navigating the RStudio Interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/speaking_r/speaking_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Speaking R’s Language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lets_get_programming/lets_get_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Let’s Get Programming</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/asking_questions/asking_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Asking Questions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Coding Tools and Best Practices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_scripts/r_scripts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/quarto_files/quarto_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quarto Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_projects/projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">R Projects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/best_practices/best_practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Coding Best Practices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_pipes/using_pipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Using Pipes</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Transfer</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data_transfer/data_transfer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Data Transfer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/file_paths/file_paths.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">File Paths</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_plain_text/importing_plain_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Importing Plain Text Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_binary_files/importing_binary_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Importing Binary Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/rstudio_import_tool/rstudio_import_tool.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">RStudio’s Data Import Tool</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/exporting_data_to_disk/exporting_data_to_disk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Exporting Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Descriptive Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_descriptive_analysis/intro_descriptive_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduction to Descriptive Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/categorical_variables/categorical_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Numerical Descriptions of Categorical Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/central_tendency/central_tendency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Measures of Central Tendency</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dispersion/dispersion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measures of Dispersion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cont_pred/cont_out_cont_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Continuous Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cat_pred/cont_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cat_out_cat_pred/cat_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Categorical Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Management</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_data_management/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Data Management</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_and_modifying_columns/creating_and_modifying_columns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Creating and Modifying Columns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Subsetting Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_dates/working_with_dates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Working with Dates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_character_strings/working_with_character_strings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Working with Character Strings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/conditional_operations/conditional_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/multiple_data_frames/multiple_data_frames.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/restructuring_data_frames/restructuring_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Restructuring Data frames</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Repeated Operations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_repeated_operations/intro_repeated_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Introduction to Repeated Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_functions/writing_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Writing Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dplyr_column_wise/dplyr_column_wise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Column-wise Operations in dplyr</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_for_loops/writing_for_loops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Writing For Loops</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_purrr/using_purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Using the purrr Package</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Collaboration</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_git_github/intro_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Introduction to git and GitHub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_git_github/using_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Presenting Results</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_word_tables/creating_word_tables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">References</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">References</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendices/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#combining-data-frames-vertically-adding-rows" id="toc-combining-data-frames-vertically-adding-rows" class="nav-link active" data-scroll-target="#combining-data-frames-vertically-adding-rows"><span class="header-section-number">31.1</span> Combining data frames vertically: Adding rows</a>
+  <ul class="collapse">
+  <li><a href="#combining-more-than-2-data-frames" id="toc-combining-more-than-2-data-frames" class="nav-link" data-scroll-target="#combining-more-than-2-data-frames"><span class="header-section-number">31.1.1</span> Combining more than 2 data frames</a></li>
+  <li><a href="#adding-rows-with-differing-columns" id="toc-adding-rows-with-differing-columns" class="nav-link" data-scroll-target="#adding-rows-with-differing-columns"><span class="header-section-number">31.1.2</span> Adding rows with differing columns</a></li>
+  <li><a href="#differing-column-positions" id="toc-differing-column-positions" class="nav-link" data-scroll-target="#differing-column-positions"><span class="header-section-number">31.1.3</span> Differing column positions</a></li>
+  <li><a href="#differing-column-names" id="toc-differing-column-names" class="nav-link" data-scroll-target="#differing-column-names"><span class="header-section-number">31.1.4</span> Differing column names</a></li>
+  </ul></li>
+  <li><a href="#combining-data-frames-horizontally-adding-columns" id="toc-combining-data-frames-horizontally-adding-columns" class="nav-link" data-scroll-target="#combining-data-frames-horizontally-adding-columns"><span class="header-section-number">31.2</span> Combining data frames horizontally: Adding columns</a>
+  <ul class="collapse">
+  <li><a href="#combining-data-frames-horizontally-by-position" id="toc-combining-data-frames-horizontally-by-position" class="nav-link" data-scroll-target="#combining-data-frames-horizontally-by-position"><span class="header-section-number">31.2.1</span> Combining data frames horizontally by position</a></li>
+  <li><a href="#combining-data-frames-horizontally-by-key-values" id="toc-combining-data-frames-horizontally-by-key-values" class="nav-link" data-scroll-target="#combining-data-frames-horizontally-by-key-values"><span class="header-section-number">31.2.2</span> Combining data frames horizontally by key values</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/multiple_data_frames/multiple_data_frames.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_data_management/introduction.html">Data Management</a></li><li class="breadcrumb-item"><a href="../../chapters/multiple_data_frames/multiple_data_frames.html"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+Stacking data frames vertically
+Stacking data frames horizontally
+Introduction to relational data
+Joining data frames deterministically 
+Joining data frames probabilistically 
+Add link to cheat sheet
+-->
+<p>Up to this point, the data we’ve needed has always been stored in a single data frame. However, that won’t always be the case. At times we may need to combine data from multiple agencies in order to complete your analysis.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="agencies.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Additionally, large studies often gather data at multiple sites.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sites.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Or, data is sometimes gathered over long periods of time. When this happens, it is not uncommon for observations across the study sites or times to be stored as separate data sets.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="time.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Another common scenario in which you end up with multiple data sets for the same study is when researchers use different data sets to record the results of different survey instruments or groups of similar instruments.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="instruments.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In any of these cases, you may need to combine data from across data sets in order to complete your analysis.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="datasets.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This combining of data comes in two basic forms: combining vertically and combining horizontally. First we’ll learn about combining vertically, or adding rows. Later, we’ll learn about combining horizontally, or adding columns.</p>
+<p>Below we have two separate data frames - data frame one and data frame two. In this case both data frames contain the exact same variables: Var1, Var2, and Var3. However, they aren’t identical because they contain different observations.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="two_data_sets1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, you want to combine these two data frames and end up with one data frame that includes the observations from data frame two listed directly below the observations from data frame one. This is a situation where we want to combine data frames vertically.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="two_data_sets2.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>When combining data frames vertically, one of the most important questions to ask is, “do the data frames have variables in common?” Just by examining data frame one and data frame two, you can see that the variables have the same names. How can you check to make sure that the variables also contain the same type of data? Well, you can use the <code>str()</code> or <code>glimpse()</code> functions to compare the details of the columns in the two data frames.</p>
+<p>Sometimes, you might find that columns that have different names across data frames contain the same data. For example, suppose that data frame one has a variable named ID and data frame two has a variable named subject ID. In this situation you might want R to combine these two variables when you combine data frames.</p>
+<p>On the other hand, you may find that variables that have the same name across data frames, actually contain different data. For example, both data frames may contain the variable <code>date</code>. But, one <code>date</code> variable might store birth date and the other might store date of admission. You would not want to combine these two variables.</p>
+<p>As you may have guessed, when combining data frames vertically, it’s easiest to combine data frames that have identical variables. However, you will also learn how to combine data frames that have different variables.</p>
+<section id="combining-data-frames-vertically-adding-rows" class="level2" data-number="31.1">
+<h2 data-number="31.1" class="anchored" data-anchor-id="combining-data-frames-vertically-adding-rows"><span class="header-section-number">31.1</span> Combining data frames vertically: Adding rows</h2>
+<p>Suppose you are working on a multisite clinical trial recruiting participants over multiple years. You have a data frame named Trial, that stores the number of participants recruited each year, as well as the number of participants who experienced the outcome of interest. Another data frame named Trial_2020 was just sent to you with the recruitment numbers for the year 2020.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="trial.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You want to add the observations about the participants recruited in 2020 to the master data frame so that it contains the information about all years. To do this, you bind the rows in the <code>trial_2020</code> data frame to the <code>trial</code> data frame.</p>
+<p>Let’s go ahead and load <code>dplyr</code>:</p>
+<p>And simulate our data frames:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+   year     n outcome
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1  2016   501      51
+2  2017   499      52
+3  2018   498      49
+4  2019   502      50</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+   year     n outcome
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1  2020   500      48</code></pre>
+</div>
+</div>
+<p>we can see above that column names and types in both data frames are identical. In this case, we can easily bind them together vertically with <code>dplyr</code>’s <code>bind_rows()</code> function:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+   year     n outcome
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1  2016   501      51
+2  2017   499      52
+3  2018   498      49
+4  2019   502      50
+5  2020   500      48</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>bind_rows()</code> function to vertically stack, or bind, the rows in <code>trial_2020</code> to the rows in <code>trials</code>.</p></li>
+<li><p>You can type <code>?bind_rows</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>bind_rows()</code> function is the <code>...</code> argument. Typically, we will pass one or more data frames that we want to combine to the <code>...</code> argument.</p></li>
+</ul>
+<section id="combining-more-than-2-data-frames" class="level3" data-number="31.1.1">
+<h3 data-number="31.1.1" class="anchored" data-anchor-id="combining-more-than-2-data-frames"><span class="header-section-number">31.1.1</span> Combining more than 2 data frames</h3>
+<p>What if we want to vertically combine more than two data frames? This isn’t a problem. Thankfully, <code>bind_rows()</code> lets us pass as many data frames as we want to the <code>...</code> argument. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+   year     n outcome
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1  2021   598      57</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+   year     n outcome
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1  2016   501      51
+2  2017   499      52
+3  2018   498      49
+4  2019   502      50
+5  2020   500      48
+6  2021   598      57</code></pre>
+</div>
+</div>
+</section>
+<section id="adding-rows-with-differing-columns" class="level3" data-number="31.1.2">
+<h3 data-number="31.1.2" class="anchored" data-anchor-id="adding-rows-with-differing-columns"><span class="header-section-number">31.1.2</span> Adding rows with differing columns</h3>
+<p>What happens when the data frames we want to combine don’t have identical sets of columns? For example, let’s say that we started collecting data on adverse events for the first time in 2020. In this case, <code>trials_2020</code> would contain a column that <code>trials</code> doesn’t contain. Can we still row bind our two data frames? Let’s see:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+   year     n outcome adv_event
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+1  2020   500      48         3</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+   year     n outcome adv_event
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+1  2016   501      51        NA
+2  2017   499      52        NA
+3  2018   498      49        NA
+4  2019   502      50        NA
+5  2020   500      48         3</code></pre>
+</div>
+</div>
+<p>we sure can! R just sets the value of <code>adv_event</code> to <code>NA</code> in the rows that came from the <code>trial</code> data frame.</p>
+</section>
+<section id="differing-column-positions" class="level3" data-number="31.1.3">
+<h3 data-number="31.1.3" class="anchored" data-anchor-id="differing-column-positions"><span class="header-section-number">31.1.3</span> Differing column positions</h3>
+<p>Next, let’s say that the person doing data entry accidently put the columns in a different order in 2020. Is <code>bind_rows()</code> able to figure out which columns go together?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+   year     n adv_event outcome
+  &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1  2020   500         3      48</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+   year     n outcome adv_event
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+1  2016   501      51        NA
+2  2017   499      52        NA
+3  2018   498      49        NA
+4  2019   502      50        NA
+5  2020   500      48         3</code></pre>
+</div>
+</div>
+<p>Yes! The <code>bind_rows()</code> function binds the data frames together based on column names. So, having our columns in a different order in the two data frames isn’t a problem. But, what happens when we have different column names?</p>
+</section>
+<section id="differing-column-names" class="level3" data-number="31.1.4">
+<h3 data-number="31.1.4" class="anchored" data-anchor-id="differing-column-names"><span class="header-section-number">31.1.4</span> Differing column names</h3>
+<p>As a final wrinkle, let’s say that the person doing data entry started using different column names in 2020 as well. For example, below, the <code>n</code> column is now named <code>count</code> and the <code>outcome</code> column is now named <code>outcomes</code>. Will <code>bind_rows()</code> still be able to vertically combine these data frames?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+   year count adv_event outcomes
+  &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1  2020   500         3       48</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+   year     n outcome count adv_event outcomes
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1  2016   501      51    NA        NA       NA
+2  2017   499      52    NA        NA       NA
+3  2018   498      49    NA        NA       NA
+4  2019   502      50    NA        NA       NA
+5  2020    NA      NA   500         3       48</code></pre>
+</div>
+</div>
+<p>In this case, <code>bind_rows()</code> plays it safe and doesn’t make any assumptions about whether columns with different names belong together or not. However, we only need to rename the columns in one data frame or the other to fix this problem. We could do this in separate steps like this:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+   year     n outcome adv_event
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+1  2016   501      51        NA
+2  2017   499      52        NA
+3  2018   498      49        NA
+4  2019   502      50        NA
+5  2020   500      48         3</code></pre>
+</div>
+</div>
+<p>Or, we could rename and bind in a single step by nesting functions like this:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+   year     n outcome adv_event
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+1  2016   501      51        NA
+2  2017   499      52        NA
+3  2018   498      49        NA
+4  2019   502      50        NA
+5  2020   500      48         3</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we <em>nested</em> the code that we previously used to create the <code>trial_2020_rename</code> data frame inside of the <code>bind_rows()</code> function instead creating the actual <code>trial_2020_rename</code> data frame and passing it to <code>bind_rows()</code>.</p></li>
+<li><p>I don’t think you can really say that one method is “better” or “worse”. The first method requires two steps and creates a data frame in our global environment that we may or may not ever need again (i.e., potentially just clutter). However, one could make an argument that the first method is also easier to glance at and read. I would typically use the second method, but this is really just a personal preference in this case.</p></li>
+</ul>
+<p>And that’s pretty much it. The <code>bind_rows()</code> function makes it really easy to combine R data frames vertically. Next, let’s learn how to combine data frames horizontally.</p>
+</section>
+</section>
+<section id="combining-data-frames-horizontally-adding-columns" class="level2" data-number="31.2">
+<h2 data-number="31.2" class="anchored" data-anchor-id="combining-data-frames-horizontally-adding-columns"><span class="header-section-number">31.2</span> Combining data frames horizontally: Adding columns</h2>
+<p>In this section we will once again begin with two separate data frames - data frame one and data frame two. But, unlike before, these data frames share only one variable in common. And, the data contained in both data frames pertains to the same observations.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="two_data_sets_horiz.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Our goal is once again to combine these data frames. But, this time we want to combine them horizontally. In other words, we want a combined data frame that combines all the <em>columns</em> from data frame one and data frame two.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="goal.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Combining data frames horizontally can be slightly more complicated than combining them vertically. As shown in the following flow chart, we can either match the rows of our two data frames up by position or by key values.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="flow_chart.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="combining-data-frames-horizontally-by-position" class="level3" data-number="31.2.1">
+<h3 data-number="31.2.1" class="anchored" data-anchor-id="combining-data-frames-horizontally-by-position"><span class="header-section-number">31.2.1</span> Combining data frames horizontally by position</h3>
+<p>In the simplest case, we match the rows in our data frames up by position. In other words, row 1 in data frame one is matched up with row 1 in data frame two, row 2 in data frame one is matched up with row 2 in data frame two, and so on. Row n (meaning, any number) in data frame one always gets matched to row n in data frame two, regardless of the values in any column of those rows.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="position.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Combining data frames horizontally by position is very easy in R. We just use <code>dplyr</code>’s <code>bind_cols()</code> function similarly to the way used <code>bind_rows()</code> above. Just remember that when we horizontally combine data frames by position both data frames must have the same number of rows. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  color size  
+  &lt;chr&gt; &lt;chr&gt; 
+1 red   small 
+2 green medium
+3 blue  large </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  amount  dose
+   &lt;dbl&gt; &lt;dbl&gt;
+1      1    10
+2      4    20
+3      3    30</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  color size   amount  dose
+  &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;
+1 red   small       1    10
+2 green medium      4    20
+3 blue  large       3    30</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>bind_cols()</code> function to horizontally bind the columns in <code>df1</code> to the columns in <code>df2</code>.</p></li>
+<li><p>You can type <code>?bind_cols</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The only argument to the <code>bind_cols()</code> function is the <code>...</code> argument. Typically, we will pass one or more data frames that we want to combine to the <code>...</code> argument.</p></li>
+</ul>
+<p>In general, it’s a bad idea to combine data frames that contain different kinds of information (i.e., variables) about the same set of people (or places or things) in this way. It’s difficult to ensure that the information in row n in both data frames is really about the same person (or place or thing). However, we do sometimes find <code>bind_cols()</code> to be useful when we’re writing our own functions in R. We haven’t quite learned how to do that yet, but we will soon.</p>
+</section>
+<section id="combining-data-frames-horizontally-by-key-values" class="level3" data-number="31.2.2">
+<h3 data-number="31.2.2" class="anchored" data-anchor-id="combining-data-frames-horizontally-by-key-values"><span class="header-section-number">31.2.2</span> Combining data frames horizontally by key values</h3>
+<p>In all the examples from here on out we will match the rows of our data frames by one or more key values.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="flow_chart_key_value.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In epidemiology, the term I most often hear used for combining data frames in this way is <strong>merging</strong>. So, I will mostly use that term below. However, in other disciplines it is common to use the term <strong>joining</strong>, or performing a data <strong>join</strong>, to mean the same thing. The <code>dplyr</code> package, in specific, refers to these as “mutating joins.”</p>
+<section id="relationship-types" class="level4" data-number="31.2.2.1">
+<h4 data-number="31.2.2.1" class="anchored" data-anchor-id="relationship-types"><span class="header-section-number">31.2.2.1</span> Relationship types</h4>
+<p>When we merge data frames it’s important to ask ourselves, “what is the relationship between the observations in the original data frames?” The observations can be related in several different ways.</p>
+<p>In a one-to-one relationship, a single observation in one data frame is related to no more than one observation in the other data frame. We know how to align, or connect, the rows in the two data frames based on the values of one or more common variables.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="one_to_one.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This common variable, or set of common variables, is also called a <strong>key</strong>. When we use the values in the key to match rows in our data frames, we can say that we are <em>matching on key values</em>.</p>
+<p>In the example above, There is one key column – <code>Var1</code>. Both data frames contain the column named <code>Var1</code>, and the values of that column tell R how to align the rows in both data frames so that all the values in that row contain data are about the same person, place, or thing. In the example above, we know that the first row of data frame one goes with the <em>second</em> row of data frame two because both rows have the same key value – <code>1</code>.</p>
+<p>In a one-to-many relationship, a single observation in one data frame is related to multiple observations in the other data frame.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="one_to_many.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And finally, in a many-to-many relationship, multiple observations in one data frame are related to multiple observations in the other data frame.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="many_to_many.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Many-to-many relationships are messy and are generally best avoided, if possible. In practice, we’re not sure that we’ve ever merged two data frames that had a <em>true</em> many-to-many relationship. We emphasize <em>true</em> because we have definitely merged data frames that had a many-to-many relationship when matching on a single key column. However, after matching on multiple key columns (e.g., study id and date instead of just study id), the relationship became one-to-one or one-to-many. We’ll see an example of matching on multiple key columns later.</p>
+</section>
+<section id="dplyr-join-types" class="level4" data-number="31.2.2.2">
+<h4 data-number="31.2.2.2" class="anchored" data-anchor-id="dplyr-join-types"><span class="header-section-number">31.2.2.2</span> dplyr join types</h4>
+<p>In this chapter, we will merge data frames using one of <code>dplyr</code>’s four mutating join functions.</p>
+<p>The first three arguments to all four of <code>dplyr</code>’s mutating join functions are: <code>x</code>, <code>y</code>, and <code>by</code>. You should pass the names of the data frames you want to merge to the <code>x</code> and <code>y</code> arguments respectively. You should pass the name(s) of the key column(s) to the <code>by</code> argument. In many cases, you will get a different merge result depending on which data frame you pass to the <code>x</code> and <code>y</code> arguments, and which mutating join function you use. Below, we will give you a brief overview of each of the mutating join functions, and then we will jump into some examples.</p>
+<p>The four mutating join functions are:</p>
+<ol type="1">
+<li><code>left_join()</code>. This is probably the join function that you will use the most. It’s important to remember that <code>left_join()</code> keeps all the rows from the <code>x</code> data frame in the resulting combined data frame. However, it only keeps the rows from the <code>y</code> data frame that have a key value match in the <code>x</code> data frame. The values for columns with no key value match in the opposite data frame are set to <code>NA</code>.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="left_join.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="2" type="1">
+<li><code>right_join()</code>. This is just the mirror opposite of <code>left_join()</code>. Accordingly, <code>right_join()</code> keeps all the rows from the <code>y</code> data frame in the resulting combined data frame, and only keep the rows from the <code>x</code> data frame that have a key value match in the <code>y</code> data frame. The values for columns with no key value match in the opposite data frame are set to <code>NA</code>.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="right_join.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="3" type="1">
+<li><code>full_join()</code>. Full join keeps all the rows from both data frames in the resulting combined data frame. The values for columns with no key value match in the opposite data frame are set to <code>NA</code>.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="full_join.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li><code>inner_join()</code>. Inner join keeps only the rows from both data frames that have a key value match in the opposite data frame in the resulting combined data frame.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inner_join.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now that we have a common vocabulary, let’s take a look at some more concrete examples.</p>
+<p>Suppose we are analyzing data from a study of aging and functional ability. At baseline, we assigned a study id to each of our participants. We then ask them their date of birth and their race and ethnicity. We saved that information in a data frame called <code>demographics</code>.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  id    dob        race_eth
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;
+1 1001  1968-12-14        1
+2 1002  1952-08-03        2
+3 1003  1949-05-27        2
+4 1004  1955-03-12        4</code></pre>
+</div>
+</div>
+<p>Then, we asked our participants to do a series of functional tests. The functional tests included measuring grip strength in their right hand (<code>grip_r</code>) and grip strength in their left hand (<code>grip_l</code>). We saved each measure, along with their study id, in a separate data frame called <code>grip_strength</code>.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  id    grip_r grip_l
+  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1002      32     30
+2 1001      28     30
+3 1003      32     28
+4 1004      22     22</code></pre>
+</div>
+</div>
+<p>Now, we want to merge these two data frames together so that we can include age, race/ethnicity, and grip strength in our analysis.</p>
+<p>Let’s first ask ourselves, “what is the relationship between the observations in <code>demographics</code> and the observations in <code>grip_strength</code>?”</p>
+</section>
+<section id="one-to-one-relationship-merge" class="level4" data-number="31.2.2.3">
+<h4 data-number="31.2.2.3" class="anchored" data-anchor-id="one-to-one-relationship-merge"><span class="header-section-number">31.2.2.3</span> One-to-one relationship merge</h4>
+<p>It’s a one-to-one relationship because each participant in <code>demographics</code> has no more than one corresponding row in <code>grip_strength</code>. Since both data frames have exactly four rows, we can go ahead hand combine them horizontally using <code>bind_cols()</code> like this:</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+• `id` -&gt; `id...1`
+• `id` -&gt; `id...4`</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 6
+  id...1 dob        race_eth id...4 grip_r grip_l
+  &lt;chr&gt;  &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 1001   1968-12-14        1 1002       32     30
+2 1002   1952-08-03        2 1001       28     30
+3 1003   1949-05-27        2 1003       32     28
+4 1004   1955-03-12        4 1004       22     22</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>bind_cols()</code> function to horizontally bind the columns in <code>demographics</code> to the columns in <code>grip_strength</code>. <strong>This was a bad idea!</strong></p></li>
+<li><p>Notice the message that <code>bind_cols()</code> gave us this time: <code>New names: * id -&gt; id...1 * id -&gt; id...2</code>. This is telling us that both data frames had a column named <code>id</code>. If <code>bind_cols()</code> had left the column names as-is, then the resulting combined data frame would have had two columns named <code>id</code>, which isn’t allowed.</p></li>
+<li><p><strong>More importantly</strong>, notice the demographic data for participant 1001 is now aligned with the grip strength data for participant 1002, and vice versa. The grip strength data was recorded in the order that participants came in to have their grip strength measured. In this case, participant 1002 came in before 1001. Remember that <code>bind_cols()</code> matches rows by position, which results in mismatched data in this case.</p></li>
+</ul>
+<p>Now, let’s learn a better way to merge these two data frames – <code>dplyr</code>’s <code>left_join()</code> function:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  id    dob        race_eth grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1     28     30
+2 1002  1952-08-03        2     32     30
+3 1003  1949-05-27        2     32     28
+4 1004  1955-03-12        4     22     22</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>left_join()</code> function to perform a one-to-one merge of the <code>demographics</code> data frame with the <code>grip_strength</code> data frame.</p></li>
+<li><p>You can type <code>?left_join</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>left_join()</code> function is the <code>x</code> argument. You should pass a data frame to the <code>x</code> argument.</p></li>
+<li><p>The second argument to the <code>left_join()</code> function is the <code>y</code> argument. You should pass a data frame to the <code>y</code> argument.</p></li>
+<li><p>The third argument to the <code>left_join()</code> function is the <code>by</code> argument. You should pass the name of the column, or columns, that contain the key values. The column name should be wrapped in quotes.</p></li>
+<li><p>Notice that the demographics and grip strength data are now correctly aligned for participants 1001 and 1002 even though they were still misaligned in the original data frames. That’s because row position is irrelevant when we match by key values.</p></li>
+<li><p>Notice that the result above only includes a single <code>id</code> column. This is because we aren’t simply smooshing two data frames together, side-by-side. We are integrating information from across the two data frames based on the value of the key column – <code>id</code>.</p></li>
+</ul>
+<p>The merge we did above is about as simple as it gets. It was a one-to-one merge where every key value in the <code>x</code> data frame had one, and only one, matching key value in the <code>y</code> data frame. Therefore, in this simple case, all four join types give us the same result:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  id    dob        race_eth grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1     28     30
+2 1002  1952-08-03        2     32     30
+3 1003  1949-05-27        2     32     28
+4 1004  1955-03-12        4     22     22</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  id    dob        race_eth grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1     28     30
+2 1002  1952-08-03        2     32     30
+3 1003  1949-05-27        2     32     28
+4 1004  1955-03-12        4     22     22</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  id    dob        race_eth grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1     28     30
+2 1002  1952-08-03        2     32     30
+3 1003  1949-05-27        2     32     28
+4 1004  1955-03-12        4     22     22</code></pre>
+</div>
+</div>
+<p>Additionally, aside from the order of the rows and columns in the resulting combined data frame, it makes no difference which data frame you pass to the <code>x</code> and <code>y</code> arguments in this case:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  id    grip_r grip_l dob        race_eth
+  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;date&gt;        &lt;dbl&gt;
+1 1002      32     30 1952-08-03        2
+2 1001      28     30 1968-12-14        1
+3 1003      32     28 1949-05-27        2
+4 1004      22     22 1955-03-12        4</code></pre>
+</div>
+</div>
+<p>As our merges get more complex, we will get different results depending on which join function we choose and the ordering in which we pass our data frames to the <code>x</code> and <code>y</code> arguments. We’re not going to attempt to cover every possible combination. But, we are going to try to give you a flavor for some of the scenarios we believe you are most likely to encounter in practice.</p>
+</section>
+<section id="differing-rows" class="level4" data-number="31.2.2.4">
+<h4 data-number="31.2.2.4" class="anchored" data-anchor-id="differing-rows"><span class="header-section-number">31.2.2.4</span> Differing rows</h4>
+<p>In the real world, participants don’t always attend scheduled visits. Let’s suppose that there was actually a fifth participant that we collected baseline data from:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  id    dob        race_eth
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;
+1 1001  1968-12-14        1
+2 1002  1952-08-03        2
+3 1003  1949-05-27        2
+4 1004  1955-03-12        4
+5 1005  1942-06-07        3</code></pre>
+</div>
+</div>
+<p>However, participant 1005 never made it back in for a grip strength test. Now, what do you think will happen when we merge <code>demographics</code> and <code>grip_strength</code> using <code>left_join()</code>?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 5
+  id    dob        race_eth grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1     28     30
+2 1002  1952-08-03        2     32     30
+3 1003  1949-05-27        2     32     28
+4 1004  1955-03-12        4     22     22
+5 1005  1942-06-07        3     NA     NA</code></pre>
+</div>
+</div>
+<p>The resulting data frame includes <em>all</em> rows from the <code>demographics</code> data frame <em>and all</em> the rows from the <code>grip_strength</code> data frame. Because participant 1005 never had their grip strength measured, and therefore, had no rows in the <code>grip_strength</code> data frame, their values for <code>grip_r</code> and <code>grip_l</code> are set to missing.</p>
+<p>This scenario is a little a different than the one above. It’s still a one-to-one relationship because each participant in <code>demographics</code> has no more than one corresponding row in <code>grip_strength</code>. However, every key value in the <code>x</code> data frame no longer has one, and only one, matching key value in the <code>y</code> data frame. Therefore, we will now get different results depending on which join function we choose, and the order in which we pass our data frames to the <code>x</code> and <code>y</code> arguments. Before reading further, think about what you expect the results from each join function to look like. Think about what you expect the results of switching the data frame order to look like.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  id    dob        race_eth grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1     28     30
+2 1002  1952-08-03        2     32     30
+3 1003  1949-05-27        2     32     28
+4 1004  1955-03-12        4     22     22</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 5
+  id    dob        race_eth grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1     28     30
+2 1002  1952-08-03        2     32     30
+3 1003  1949-05-27        2     32     28
+4 1004  1955-03-12        4     22     22
+5 1005  1942-06-07        3     NA     NA</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  id    dob        race_eth grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1     28     30
+2 1002  1952-08-03        2     32     30
+3 1003  1949-05-27        2     32     28
+4 1004  1955-03-12        4     22     22</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  id    grip_r grip_l dob        race_eth
+  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;date&gt;        &lt;dbl&gt;
+1 1002      32     30 1952-08-03        2
+2 1001      28     30 1968-12-14        1
+3 1003      32     28 1949-05-27        2
+4 1004      22     22 1955-03-12        4</code></pre>
+</div>
+</div>
+<p>Well, were those the results you expected? In practice, the “correct” result depends on what we are trying to do. In the scenario above, we would probably tend to want the result from <code>left_join()</code> or <code>full_join()</code> in most cases. The reason is that it’s much harder to add data into our analysis that never made it into our combined data frame than it is to drop rows from our results data frame that we don’t need for our analysis.</p>
+</section>
+<section id="differing-key-column-names" class="level4" data-number="31.2.2.5">
+<h4 data-number="31.2.2.5" class="anchored" data-anchor-id="differing-key-column-names"><span class="header-section-number">31.2.2.5</span> Differing key column names</h4>
+<p>Sometimes the key columns will have different names across data frames. For example, let’s imagine that the team collecting the grip strength data named the participant id column <code>pid</code> instead of <code>id</code>:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  pid   grip_r grip_l
+  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1002      32     30
+2 1001      28     30
+3 1003      32     28
+4 1004      22     22</code></pre>
+</div>
+</div>
+<p>If we try to merge <code>demographics</code> and <code>grip_strength</code> as we did before, we will get an error.</p>
+<div class="cell">
+<div class="cell-output cell-output-error">
+<pre><code>Error in `left_join()`:
+! Join columns in `y` must be present in the data.
+✖ Problem with `id`.</code></pre>
+</div>
+</div>
+<p>This error is <code>left_join()</code> telling us that it couldn’t find a column named <code>id</code> in both data frames. To get around this error, we can simply tell <code>left_join()</code> which column is the matching key column in the opposite data frame using a named vector like this:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 5
+  id    dob        race_eth grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1     28     30
+2 1002  1952-08-03        2     32     30
+3 1003  1949-05-27        2     32     28
+4 1004  1955-03-12        4     22     22
+5 1005  1942-06-07        3     NA     NA</code></pre>
+</div>
+</div>
+<p>Just make sure that the first column name you pass to the named vector (i.e., <code>"id"</code>) is the name of the key column in the <code>x</code> data frame and that the second column name you pass to the named vector (i.e., <code>"pid"</code>) is the name of the key column in the <code>y</code> data frame.</p>
+</section>
+<section id="one-to-many-relationship-merge" class="level4" data-number="31.2.2.6">
+<h4 data-number="31.2.2.6" class="anchored" data-anchor-id="one-to-many-relationship-merge"><span class="header-section-number">31.2.2.6</span> One-to-many relationship merge</h4>
+<p>Now suppose that our grip strength study has a longitudinal design. The demographics data was only collected at enrollment into the study. After all, race and dob don’t change. There’s no need to ask our participants about them at every follow-up interview.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  id    dob        race_eth
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt;
+1 1001  1968-12-14        1
+2 1002  1952-08-03        2
+3 1003  1949-05-27        2
+4 1004  1955-03-12        4
+5 1005  1942-06-07        3</code></pre>
+</div>
+</div>
+<p>Grip strength, however, was measured pre and post some intervention.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 4
+  id    visit grip_r grip_l
+  &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  pre       32     30
+2 1001  post      33     32
+3 1002  pre       28     30
+4 1002  post      27     30
+5 1003  pre       32     28
+6 1003  post      34     30
+7 1004  pre       22     22
+8 1004  post      27     26</code></pre>
+</div>
+</div>
+<p>Now what is the relationship of these two data frames?</p>
+<p>These data frames have a one-to-many relationship because at least one observation in one data frame is related to multiple observations in the other data frame. The <code>demographics</code> data frame has one observation for each value of <code>id</code>. The <code>grip_strength</code> data frame has two observations for each value of the <code>id</code>’s <code>1001</code> through <code>1004</code>.</p>
+<p>Now, to conduct our analysis, we need to combine the data in <code>demographics</code> with the data in the longitudinal <code>grip_strength</code> data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/brad-cannell\.github\.io\/r4epi_quarto\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/conditional_operations/conditional_operations.html" class="pagination-link" aria-label="Conditional Operations">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/restructuring_data_frames/restructuring_data_frames.html" class="pagination-link" aria-label="Restructuring Data frames">
+        <span class="nav-page-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Restructuring Data frames</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>R for Epidemiology</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/multiple_data_frames/multiple_data_frames.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://Quarto/.org/">Quarto/</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

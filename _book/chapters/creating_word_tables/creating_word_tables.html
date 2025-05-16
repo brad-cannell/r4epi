@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>40&nbsp; Creating Tables with R and Microsoft Word – R 4 Epidemiology</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../references.html" rel="next">
+<link href="../../chapters/using_git_github/using_git_github.html" rel="prev">
+<link href="../../r4epi_favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/creating_word_tables/creating_word_tables.html">Presenting Results</a></li><li class="breadcrumb-item"><a href="../../chapters/creating_word_tables/creating_word_tables.html"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">R 4 Epidemiology</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/brad-cannell/r4epi_quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../../R-4-Epidemiology.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/contributing/contributing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Contributing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/about_the_authors/about_the_authors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Authors</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/installing_r_and_rstudio/installing_r_and_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Installing R and RStudio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/what_is_r/what_is_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">What is R?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/navigating_rstudio/navigating_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Navigating the RStudio Interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/speaking_r/speaking_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Speaking R’s Language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lets_get_programming/lets_get_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Let’s Get Programming</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/asking_questions/asking_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Asking Questions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Coding Tools and Best Practices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_scripts/r_scripts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/quarto_files/quarto_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quarto Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_projects/projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">R Projects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/best_practices/best_practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Coding Best Practices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_pipes/using_pipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Using Pipes</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Transfer</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data_transfer/data_transfer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Data Transfer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/file_paths/file_paths.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">File Paths</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_plain_text/importing_plain_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Importing Plain Text Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_binary_files/importing_binary_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Importing Binary Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/rstudio_import_tool/rstudio_import_tool.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">RStudio’s Data Import Tool</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/exporting_data_to_disk/exporting_data_to_disk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Exporting Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Descriptive Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_descriptive_analysis/intro_descriptive_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduction to Descriptive Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/categorical_variables/categorical_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Numerical Descriptions of Categorical Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/central_tendency/central_tendency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Measures of Central Tendency</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dispersion/dispersion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measures of Dispersion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cont_pred/cont_out_cont_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Continuous Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cat_pred/cont_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cat_out_cat_pred/cat_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Categorical Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Management</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_data_management/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Data Management</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_and_modifying_columns/creating_and_modifying_columns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Creating and Modifying Columns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Subsetting Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_dates/working_with_dates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Working with Dates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_character_strings/working_with_character_strings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Working with Character Strings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/conditional_operations/conditional_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/multiple_data_frames/multiple_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/restructuring_data_frames/restructuring_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Restructuring Data frames</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Repeated Operations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_repeated_operations/intro_repeated_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Introduction to Repeated Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_functions/writing_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Writing Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dplyr_column_wise/dplyr_column_wise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Column-wise Operations in dplyr</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_for_loops/writing_for_loops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Writing For Loops</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_purrr/using_purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Using the purrr Package</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Collaboration</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_git_github/intro_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Introduction to git and GitHub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_git_github/using_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Presenting Results</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_word_tables/creating_word_tables.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">References</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">References</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendices/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#table-1" id="toc-table-1" class="nav-link active" data-scroll-target="#table-1"><span class="header-section-number">40.1</span> Table 1</a></li>
+  <li><a href="#opioid-drug-use" id="toc-opioid-drug-use" class="nav-link" data-scroll-target="#opioid-drug-use"><span class="header-section-number">40.2</span> Opioid drug use</a></li>
+  <li><a href="#table-columns" id="toc-table-columns" class="nav-link" data-scroll-target="#table-columns"><span class="header-section-number">40.3</span> Table columns</a></li>
+  <li><a href="#table-rows" id="toc-table-rows" class="nav-link" data-scroll-target="#table-rows"><span class="header-section-number">40.4</span> Table rows</a></li>
+  <li><a href="#make-the-table-skeleton" id="toc-make-the-table-skeleton" class="nav-link" data-scroll-target="#make-the-table-skeleton"><span class="header-section-number">40.5</span> Make the table skeleton</a></li>
+  <li><a href="#fill-in-column-headers" id="toc-fill-in-column-headers" class="nav-link" data-scroll-target="#fill-in-column-headers"><span class="header-section-number">40.6</span> Fill in column headers</a>
+  <ul class="collapse">
+  <li><a href="#group-sample-sizes" id="toc-group-sample-sizes" class="nav-link" data-scroll-target="#group-sample-sizes"><span class="header-section-number">40.6.1</span> Group sample sizes</a></li>
+  <li><a href="#formatting-column-headers" id="toc-formatting-column-headers" class="nav-link" data-scroll-target="#formatting-column-headers"><span class="header-section-number">40.6.2</span> Formatting column headers</a></li>
+  </ul></li>
+  <li><a href="#fill-in-row-headers" id="toc-fill-in-row-headers" class="nav-link" data-scroll-target="#fill-in-row-headers"><span class="header-section-number">40.7</span> Fill in row headers</a>
+  <ul class="collapse">
+  <li><a href="#label-statistics" id="toc-label-statistics" class="nav-link" data-scroll-target="#label-statistics"><span class="header-section-number">40.7.1</span> Label statistics</a></li>
+  <li><a href="#formatting-row-headers" id="toc-formatting-row-headers" class="nav-link" data-scroll-target="#formatting-row-headers"><span class="header-section-number">40.7.2</span> Formatting row headers</a></li>
+  </ul></li>
+  <li><a href="#fill-in-data-values" id="toc-fill-in-data-values" class="nav-link" data-scroll-target="#fill-in-data-values"><span class="header-section-number">40.8</span> Fill in data values</a>
+  <ul class="collapse">
+  <li><a href="#manually-type-values" id="toc-manually-type-values" class="nav-link" data-scroll-target="#manually-type-values"><span class="header-section-number">40.8.1</span> Manually type values</a></li>
+  <li><a href="#copy-and-paste-values" id="toc-copy-and-paste-values" class="nav-link" data-scroll-target="#copy-and-paste-values"><span class="header-section-number">40.8.2</span> Copy and paste values</a></li>
+  <li><a href="#knit-a-word-document" id="toc-knit-a-word-document" class="nav-link" data-scroll-target="#knit-a-word-document"><span class="header-section-number">40.8.3</span> Knit a Word document</a></li>
+  <li><a href="#flextable-and-officer" id="toc-flextable-and-officer" class="nav-link" data-scroll-target="#flextable-and-officer"><span class="header-section-number">40.8.4</span> flextable and officer</a></li>
+  <li><a href="#significant-digits" id="toc-significant-digits" class="nav-link" data-scroll-target="#significant-digits"><span class="header-section-number">40.8.5</span> Significant digits</a></li>
+  <li><a href="#formatting-data-values" id="toc-formatting-data-values" class="nav-link" data-scroll-target="#formatting-data-values"><span class="header-section-number">40.8.6</span> Formatting data values</a></li>
+  </ul></li>
+  <li><a href="#fill-in-title" id="toc-fill-in-title" class="nav-link" data-scroll-target="#fill-in-title"><span class="header-section-number">40.9</span> Fill in title</a></li>
+  <li><a href="#fill-in-footnotes" id="toc-fill-in-footnotes" class="nav-link" data-scroll-target="#fill-in-footnotes"><span class="header-section-number">40.10</span> Fill in footnotes</a>
+  <ul class="collapse">
+  <li><a href="#formatting-footnotes" id="toc-formatting-footnotes" class="nav-link" data-scroll-target="#formatting-footnotes"><span class="header-section-number">40.10.1</span> Formatting footnotes</a></li>
+  </ul></li>
+  <li><a href="#final-formatting" id="toc-final-formatting" class="nav-link" data-scroll-target="#final-formatting"><span class="header-section-number">40.11</span> Final formatting</a>
+  <ul class="collapse">
+  <li><a href="#adjust-column-widths" id="toc-adjust-column-widths" class="nav-link" data-scroll-target="#adjust-column-widths"><span class="header-section-number">40.11.1</span> Adjust column widths</a></li>
+  <li><a href="#merge-cells" id="toc-merge-cells" class="nav-link" data-scroll-target="#merge-cells"><span class="header-section-number">40.11.2</span> Merge cells</a></li>
+  <li><a href="#remove-cell-borders" id="toc-remove-cell-borders" class="nav-link" data-scroll-target="#remove-cell-borders"><span class="header-section-number">40.11.3</span> Remove cell borders</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">40.12</span> Summary</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/creating_word_tables/creating_word_tables.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/creating_word_tables/creating_word_tables.html">Presenting Results</a></li><li class="breadcrumb-item"><a href="../../chapters/creating_word_tables/creating_word_tables.html"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>At this point, you should all know that it is generally a bad idea to submit raw R output as part of a report, presentation, or publication. You should also understand when it is most appropriate to use tables, as opposed to charts and graphs, to present your results. If not, please stop here and read Chapter 7 of <em>Successful Scientific Writing</em>, which discusses the “why” behind much of what we will show you “how” to do in this chapter.<span class="citation" data-cites="Matthews2014-ah"><sup><a href="../../references.html#ref-Matthews2014-ah" role="doc-biblioref">1</a></sup></span></p>
+<p><em>R for Epidemiology</em> is predominantly a book about using R to manage, visualize, and analyze data in ways that are common in the field of epidemiology. However, in most modern work/research environments it is difficult to escape the requirement to share your results in a Microsoft Word document. And often, because we are dealing with data, those results include tables of some sort. However, not all tables communicate your results equally well. In this chapter, we will walk you through the process of starting with some results you calculated in R and ending with a nicely formatted table in Microsoft Word. Specifically, we are going to create a Table 1.</p>
+<section id="table-1" class="level2" data-number="40.1">
+<h2 data-number="40.1" class="anchored" data-anchor-id="table-1"><span class="header-section-number">40.1</span> Table 1</h2>
+<p>In epidemiology, medicine, and other disciplines, “Table 1” has a special meaning. Yes, it’s the first table shown to the reader of your article, report, or presentation, but the special meaning goes beyond that. In many disciplines, including epidemiology, when you speak to a colleague about their “Table 1” it is understood that you are speaking about a table that describes (statistically) the relevant characteristics of the sample being studied. Often, but not always, the sample being studied is made up of people, and the relevant descriptive characteristics about those people include sociodemographic and/or general health information. Therefore, it is important that you don’t label any of your tables as “Table 1” arbitrarily. Unless you have a <em>really</em> good reason to do otherwise, your Table 1 should always be a descriptive overview of your sample.</p>
+<p>Here is a list of other traits that should consider when creating your Table 1:</p>
+<ul>
+<li><p>All other formatting best practices that apply to scientific tables in general. This includes formatting requirements specific to wherever you are submitting your table (e.g., formatting requirements in the American Journal of Public Health).</p></li>
+<li><p>Table 1 is often, but not always, stratified into subgroups (i.e., descriptive results are presented separately for each subgroup of the study sample in a way that lends itself to between-group comparisons).</p></li>
+<li><p>When Table 1 is stratified into subgroups, the variable that contains the subgroups is typically the primary exposure/predictor of interest in your study.</p></li>
+</ul>
+</section>
+<section id="opioid-drug-use" class="level2" data-number="40.2">
+<h2 data-number="40.2" class="anchored" data-anchor-id="opioid-drug-use"><span class="header-section-number">40.2</span> Opioid drug use</h2>
+<p>As a motivating example, let’s say that we are working at the North Texas Regional Health Department and have been asked to create a report about drug use in our region. Our stakeholders are particularly interested in opioid drug use. To create this report, we will analyze data from a sample of 9,985 adults who were asked about their use of drugs. One of the first analyses that we did was a descriptive comparison of the sociodemographic characteristics of 3 subgroups of people in our data. We will use these analyses to create our Table 1.</p>
+<p>You can view/download the data by <a href="https://github.com/brad-cannell/r4epi/blob/master/data/drugs.csv">clicking here</a></p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 9985 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (4): age, edu, female, use
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>    var              cat    n n_total   percent        se   t_crit      lcl
+1 use_f        Non-users 8315    9985 83.274912 0.3734986 1.960202 82.52992
+2 use_f  Use other drugs 1532    9985 15.343015 0.3606903 1.960202 14.64925
+3 use_f Use opioid drugs  138    9985  1.382073 0.1168399 1.960202  1.17080
+        ucl
+1 83.994296
+2 16.063453
+3  1.630841</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  var use    n     mean       sd   t_crit        sem      lcl      ucl
+1 age   0 8315 36.80173 9.997545 1.960249 0.10963828 36.58681 37.01665
+2 age   1 1532 21.98362 2.979511 1.961515 0.07612296 21.83431 22.13294
+3 age   2  138 17.34740 3.081049 1.977431 0.26227634 16.82877 17.86603</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  row_var row_cat  col_var col_cat    n n_row n_total percent_total   se_total
+1     use       0 female_f      No 3077  8315    9985    30.8162243 0.46210382
+2     use       0 female_f     Yes 5238  8315    9985    52.4586880 0.49979512
+3     use       1 female_f      No  796  1532    9985     7.9719579 0.27107552
+4     use       1 female_f     Yes  736  1532    9985     7.3710566 0.26150858
+5     use       2 female_f      No   91   138    9985     0.9113671 0.09510564
+6     use       2 female_f     Yes   47   138    9985     0.4707061 0.06850118
+  t_crit_total  lcl_total  ucl_total percent_row    se_row t_crit_row  lcl_row
+1     1.960202 29.9178650 31.7293461    37.00541 0.5295162   1.960202 35.97359
+2     1.960202 51.4781679 53.4373162    62.99459 0.5295162   1.960202 61.95076
+3     1.960202  7.4565108  8.5197562    51.95822 1.2768770   1.960202 49.45247
+4     1.960202  6.8745702  7.9003577    48.04178 1.2768770   1.960202 45.54583
+5     1.960202  0.7426382  1.1179996    65.94203 4.0488366   1.960202 57.62323
+6     1.960202  0.3538217  0.6259604    34.05797 4.0488366   1.960202 26.61786
+   ucl_row
+1 38.04924
+2 64.02641
+3 54.45417
+4 50.54753
+5 73.38214
+6 42.37677</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   row_var row_cat col_var               col_cat    n n_row n_total
+1      use       0   edu_f Less than high school 3908  8315    9985
+2      use       0   edu_f           High school 2494  8315    9985
+3      use       0   edu_f          Some college  915  8315    9985
+4      use       0   edu_f      College graduate  998  8315    9985
+5      use       1   edu_f Less than high school  322  1532    9985
+6      use       1   edu_f           High school  567  1532    9985
+7      use       1   edu_f          Some college  321  1532    9985
+8      use       1   edu_f      College graduate  322  1532    9985
+9      use       2   edu_f Less than high school   36   138    9985
+10     use       2   edu_f           High school   36   138    9985
+11     use       2   edu_f          Some college   40   138    9985
+12     use       2   edu_f      College graduate   26   138    9985
+   percent_total   se_total t_crit_total  lcl_total  ucl_total percent_row
+1     39.1387081 0.48845160     1.960202 38.1855341 40.1002400    46.99940
+2     24.9774662 0.43322925     1.960202 24.1379137 25.8362747    29.99399
+3      9.1637456 0.28874458     1.960202  8.6132458  9.7456775    11.00421
+4      9.9949925 0.30017346     1.960202  9.4217947 10.5989817    12.00241
+5      3.2248373 0.17680053     1.960202  2.8957068  3.5899942    21.01828
+6      5.6785178 0.23161705     1.960202  5.2411937  6.1499638    37.01044
+7      3.2148222 0.17653492     1.960202  2.8862151  3.5794637    20.95300
+8      3.2248373 0.17680053     1.960202  2.8957068  3.5899942    21.01828
+9      0.3605408 0.05998472     1.960202  0.2601621  0.4994549    26.08696
+10     0.3605408 0.05998472     1.960202  0.2601621  0.4994549    26.08696
+11     0.4006009 0.06321673     1.960202  0.2939655  0.5457064    28.98551
+12     0.2603906 0.05100282     1.960202  0.1773397  0.3821865    18.84058
+      se_row t_crit_row  lcl_row  ucl_row
+1  0.5473707   1.960202 45.92799 48.07358
+2  0.5025506   1.960202 29.01822 30.98824
+3  0.3432094   1.960202 10.34925 11.69521
+4  0.3564220   1.960202 11.32112 12.71881
+5  1.0412961   1.960202 19.04975 23.13209
+6  1.2339820   1.960202 34.62587 39.46012
+7  1.0401075   1.960202 18.98696 23.06466
+8  1.0412961   1.960202 19.04975 23.13209
+9  3.7515606   1.960202 19.42163 34.07250
+10 3.7515606   1.960202 19.42163 34.07250
+11 3.8761776   1.960202 22.00774 37.12261
+12 3.3408449   1.960202 13.13952 26.26721</code></pre>
+</div>
+</div>
+<p>Above, we have the results of several different descriptive analyses we did in R. Remember that we never want to present raw R output. Perhaps you’ve already thought to yourselves, “wow, these results are really overwhelming. We’re not sure what we’re even looking at.” Well, that’s exactly how many of the people in your audience will feel as well. In its current form, this information is really hard for us to process. We want to take some of the information from the output above and use it to create a Table 1 in Word that is much easier to read.</p>
+<p>Specifically, we want our final Table 1 to look like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="table1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You may also <a href="https://www.dropbox.com/s/bu8r81jhzr2r3cj/final_table_01.docx?dl=0">click here to view/download the Word file that contains Table 1</a>.</p>
+<p>Now that you’ve seen the end result, let’s learn how to make this Table 1 together, step-by-step. Go ahead and open Microsoft Word now if you want to follow along.</p>
+</section>
+<section id="table-columns" class="level2" data-number="40.3">
+<h2 data-number="40.3" class="anchored" data-anchor-id="table-columns"><span class="header-section-number">40.3</span> Table columns</h2>
+<p>The first thing we typically do is figure out how many columns and rows our table will need. This is generally pretty straightforward; although, there are exceptions. For a basic Table 1 like the one we are creating above we need the following columns:</p>
+<p>One column for our row headers (i.e., the names and categories of the variables we are presenting in our analysis).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="row_header.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>One column for each subgroup that we will be describing in our table. In this case, there are 3 subgroups so we will need 3 additional columns.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="subgroups.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So, we will need 4 total columns.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> If you are going to describe the entire sample overall without stratifying it into subgroups then you would simply have 2 columns. One for the row headers and one for the values.</p>
+</div>
+</div>
+</section>
+<section id="table-rows" class="level2" data-number="40.4">
+<h2 data-number="40.4" class="anchored" data-anchor-id="table-rows"><span class="header-section-number">40.4</span> Table rows</h2>
+<p>Next, we need to figure out how many rows our table will need. This is also pretty straightforward. Generally, we will need the following rows:</p>
+<p>One row for the title. Some people write their table titles outside (above or below) the actual table. We like to include the title directly in the top row of the table. That way, it moves with the table if the table gets moved around.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="title.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>One row for the column headers. The column headers generally include a label like “Characteristic” for the row headers column and a descriptive label for each subgroup we are describing in our table.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="column_header.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>One row for each variable we will analyze in our analysis. In this example, we have three – age, sex, and education. <strong>NOTE</strong> that we do <em>NOT</em> need a separate row for each category of each variable.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="variables.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>One row for the footer.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="footer.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So, we will need 6 total rows.</p>
+</section>
+<section id="make-the-table-skeleton" class="level2" data-number="40.5">
+<h2 data-number="40.5" class="anchored" data-anchor-id="make-the-table-skeleton"><span class="header-section-number">40.5</span> Make the table skeleton</h2>
+<p>Now that we know we need to create a table with 4 columns and 6 rows, let’s go ahead and do that in Microsoft Word. We do so by clicking the <code>Insert</code> tab in the ribbon above our document. Then, we click the <code>Table</code> button and select the number of columns and rows we want.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-make-table" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A gif showing how to insert a table into a Microsoft Word document.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-make-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="make_table.gif" class="img-fluid figure-img" alt="A gif showing how to insert a table into a Microsoft Word document.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-make-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40.1: A gif showing how to insert a table into a Microsoft Word document.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="fill-in-column-headers" class="level2" data-number="40.6">
+<h2 data-number="40.6" class="anchored" data-anchor-id="fill-in-column-headers"><span class="header-section-number">40.6</span> Fill in column headers</h2>
+<p>Now we have our table skeleton. The next thing we would typically do is fill in the column headers. Remember that our column headers look like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="column_header.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here are a couple of suggestions for filling in your column headers:</p>
+<ul>
+<li><p>Put your column headers in the second row of the empty table shell. The title will eventually go into the first row. We don’t add the title right away because it is typically long and will distort the table’s dimensions. Later, we will see how to horizontally merge table cells to remove this distortion, but we don’t want to do that now. Right now, we want to leave all the cells unmerged so that we can easily resize our columns.</p></li>
+<li><p>The first column header is generally a label for our row headers. Because the rows are typically characteristics of our sample, we almost always use the word “characteristic” here. If you come up with a better word, please feel free to use it.</p></li>
+<li><p>The rest of the column headers are generally devoted to the subgroups we are describing.</p>
+<ul>
+<li><p>The subgroups should be ordered in a way that is meaningful. For example, by level of severity or chronological order. Typically, ordering in alphabetical order isn’t that meaningful.</p></li>
+<li><p>The subgroup labels should be informative and meaningful, but also succinct. This can sometimes be a challenge.</p></li>
+<li><p>we have seen terms like “Value”, “All”, and “Full Sample” used when Table 1 was describing the entire sample overall rather than describing the sample by subgroups.</p></li>
+</ul></li>
+</ul>
+<section id="group-sample-sizes" class="level3" data-number="40.6.1">
+<h3 data-number="40.6.1" class="anchored" data-anchor-id="group-sample-sizes"><span class="header-section-number">40.6.1</span> Group sample sizes</h3>
+<p>You should always include the group sample size in the column header. They should typically be in the format “(n = sample size)” and typed in the same cell as the label, but below the label (i.e., hit the return key). The group sample sizes can often provide important context to the statistics listed below in the table, and clue the reader into missing data issues.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sample_size.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="formatting-column-headers" class="level3" data-number="40.6.2">
+<h3 data-number="40.6.2" class="anchored" data-anchor-id="formatting-column-headers"><span class="header-section-number">40.6.2</span> Formatting column headers</h3>
+<p>we generally bold our column headers, horizontally center them, and vertically align them to the bottom of the row.</p>
+<p>At this point, your table should look like this in Microsoft Word:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="make_column_headers.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="fill-in-row-headers" class="level2" data-number="40.7">
+<h2 data-number="40.7" class="anchored" data-anchor-id="fill-in-row-headers"><span class="header-section-number">40.7</span> Fill in row headers</h2>
+<p>The next thing we would typically do is fill in the row headers. Remember, that our row headers look like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="row_header.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here are a couple of suggestions for filling in your row headers:</p>
+<ul>
+<li><p>The variables should be organized in a way that is meaningful. In our example, we have only 3 sociodemographic variables. However, if we also had some variables about health status and some variables related to criminal history, then we would almost certainly want the variables that fit into each of these categories to be vertically arranged next to each other.</p></li>
+<li><p>Like the column headers, the row headers should be informative and meaningful, but also succinct. Again, this can sometimes be a challenge. In our example, we use “Age”, “Sex”, and “Education”. Something like “Highest level of formal education completed” would have also been informative and meaningful, but not succinct. Something like “Question 6” is succinct, but isn’t informative or meaningful at all.</p></li>
+</ul>
+<section id="label-statistics" class="level3" data-number="40.7.1">
+<h3 data-number="40.7.1" class="anchored" data-anchor-id="label-statistics"><span class="header-section-number">40.7.1</span> Label statistics</h3>
+<p>You should always tell the reader what kind of statistics they are looking at – don’t assume that they know. For example, the highlighted numbers in figure @ref(fig:what-stats) are 36.8 and 10. What is 36.8? The mean, the median? The percentage of people who had a non-missing value for age? What is 10? The sample size? The standard error of the mean? An odds ratio? You know that 36.8 is a mean and 10 is the standard deviation because we identified what they were in the row header. @ref(fig:identify-stats) When you label the statistics in the row headers as we’ve done in our example, they should take the format you see in figure @ref(fig:identify-stats). That is, the variable name, followed by a comma, followed by the statistics used in that row. Also notice the use of parentheses. We used parentheses around the letters “sd” (for standard deviation) because the numbers inside the parentheses in that row are standard deviations. So, the label used to identify the statistics should give the reader a blueprint for interpreting the statistics that matches the format of the statistics themselves.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="what_stats.png" class="img-fluid figure-img" width="900"></p>
+<figcaption>What are these numbers?</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="identify_stats.png" class="img-fluid figure-img" width="900"></p>
+<figcaption>Identifying statistics in the row header.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The statistics can, and sometimes are, labeled in the column header instead of the row header. This can sometimes be a great idea. However, it can also be a source of confusion. For example, in the figure below, the column headers include labels (i.e., n (%)) for the statistics below. However, <em>not all the statistics below are counts (n) and percentages</em>!</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="bad_stat_labels.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Even though the Age variable has its own separate statistics label in the row header, this is still generally a really bad idea! Therefore, we highly recommend only labeling your statistics in the column header when those labels are accurate for <em>every</em> value in the column. For example:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="good_stat_labels.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="formatting-row-headers" class="level3" data-number="40.7.2">
+<h3 data-number="40.7.2" class="anchored" data-anchor-id="formatting-row-headers"><span class="header-section-number">40.7.2</span> Formatting row headers</h3>
+<ul>
+<li><p>Whenever possible, make sure that variable name and statistic identifier fit on one line (i.e., they don’t carry over into the line below).</p></li>
+<li><p>Always type the category labels for categorical variables in the same cell as the variable name. However, each category should have its own line (i.e., hit the return key).</p></li>
+<li><p>Whenever possible, make sure that each category label fits on one line (i.e., it doesn’t carry over into the line below).</p></li>
+<li><p>Indent each category label two spaces to the left of the variable name.</p></li>
+<li><p>Hit the return key once after the last category for each categorical variable. This creates a blank line that adds vertical separation between row headers and makes them easier to read.</p></li>
+</ul>
+<p>At this point, your table should look like this in Microsoft Word:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="make_row_headers.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="fill-in-data-values" class="level2" data-number="40.8">
+<h2 data-number="40.8" class="anchored" data-anchor-id="fill-in-data-values"><span class="header-section-number">40.8</span> Fill in data values</h2>
+<p>So, we have some statistics visible to us on the screen in RStudio. Somehow, we have to get those numbers over to our table in Microsoft Word. There are many different ways we can do this. We’re going to compare a few of those ways here.</p>
+<section id="manually-type-values" class="level3" data-number="40.8.1">
+<h3 data-number="40.8.1" class="anchored" data-anchor-id="manually-type-values"><span class="header-section-number">40.8.1</span> Manually type values</h3>
+<p>One option is to manually type the numbers into your word document.</p>
+<p>👍 If you are in a hurry, or if you just need to update a small handful of statistics in your table, then this option is super straightforward. However, there are at least two big problems with this method.</p>
+<p>👎 First, it is <em>extremely</em> error prone. Most people are very likely to type a wrong number or misplace a decimal here and there when they manually type statistics into their Word tables.</p>
+<p>👎 Second, it isn’t very scalable. What if you need to make very large tables with lots and lots of numbers? What if you update your data set and need to change every number in your Word table? This is not fun to do manually.</p>
+</section>
+<section id="copy-and-paste-values" class="level3" data-number="40.8.2">
+<h3 data-number="40.8.2" class="anchored" data-anchor-id="copy-and-paste-values"><span class="header-section-number">40.8.2</span> Copy and paste values</h3>
+<p>Another option is to copy and paste values from RStudio into Word. This option is similar to above, but instead of <em>typing</em> each value into your Word table, you highlight and copy the value in RStudio and <em>paste</em> it into Word.</p>
+<p>👍 If you are in a hurry, or if you just need to update a small handful of statistics in your table, then this option is also pretty straightforward. However, there are still issues associated with this method.</p>
+<p>👎 First, it is still somewhat error prone. It’s true that the numbers and decimal placements should always be correct when you copy and paste; however, you may be surprised by how often many people accidentally paste the values into the wrong place or in the wrong order.</p>
+<p>👎 Second, I’ve noticed that there are often weird formatting things that happen when we copy from RStudio and paste into Word. They are usually pretty easy to fix, but this is still a small bit of extra hassle.</p>
+<p>👎 Third, it isn’t very scalable. Again, if we need to make very large tables with lots and lots of numbers or update our data set and need to change every number in your Word table, this method is time-consuming and tedious.</p>
+</section>
+<section id="knit-a-word-document" class="level3" data-number="40.8.3">
+<h3 data-number="40.8.3" class="anchored" data-anchor-id="knit-a-word-document"><span class="header-section-number">40.8.3</span> Knit a Word document</h3>
+<p>So far, we have only used the HTML Notebook output type for our R markdown files. However, it’s actually very easy have <a href="https://rmarkdown.rstudio.com/lesson-9.html">RStudio create a Word document from you R markdown files</a>. We don’t have all the R knowledge we need to fully implement this method yet, so we don’t want to confuse you by going into the details here. But, we do want to mention that it is possible.</p>
+<p>👍 The main advantages of this method are that it is much less error prone and much more scalable than manually typing or copying and pasting values.</p>
+<p>👎 The main disadvantages are that it requires more work on the front end and still requires you to open Microsoft Word a do a good deal of formatting of the table(s).</p>
+</section>
+<section id="flextable-and-officer" class="level3" data-number="40.8.4">
+<h3 data-number="40.8.4" class="anchored" data-anchor-id="flextable-and-officer"><span class="header-section-number">40.8.4</span> flextable and officer</h3>
+<p>A final option we’ll mention is to create your table with the <a href="https://davidgohel.github.io/flextable/index.html">flextable</a> and <a href="https://davidgohel.github.io/officer/">officer</a> packages. This is our favorite option, but it is also definitely the most complicated. Again, we’re not going to go into the details here because they would likely just be confusing for most readers.</p>
+<p>👍 This method essentially overcomes all of the previous methods’ limitations. It is the least error prone, it is extremely scalable, and it allows us to do basically all the formatting in R. With a push of a button we have a complete, perfectly formatted table output to a Word document. If we update our data, we just push the button again and we have a new perfectly formatted table.</p>
+<p>👎 The primary downside is that this method requires you to invest some time in learning these packages, and requires the greatest amount of writing code up front. If you just need to create a single small table that you will never update, this method is probably not worth the effort. However, if you absolutely need to make sure that your table has no errors, or if you will need to update your table on a regular basis, then this method is definitely worth learning.</p>
+</section>
+<section id="significant-digits" class="level3" data-number="40.8.5">
+<h3 data-number="40.8.5" class="anchored" data-anchor-id="significant-digits"><span class="header-section-number">40.8.5</span> Significant digits</h3>
+<p>No matter which of the methods above you choose, you will almost never want to give your reader the level of precision that R will give you. For example, the first row of the R results below indicates that 83.274912% of our sample reported that they don’t use drugs.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>    var              cat    n n_total   percent        se   t_crit      lcl
+1 use_f        Non-users 8315    9985 83.274912 0.3734986 1.960202 82.52992
+2 use_f  Use other drugs 1532    9985 15.343015 0.3606903 1.960202 14.64925
+3 use_f Use opioid drugs  138    9985  1.382073 0.1168399 1.960202  1.17080
+        ucl
+1 83.994296
+2 16.063453
+3  1.630841</code></pre>
+</div>
+</div>
+<p>Notice the level of precision there. R gives us the percentage out to 6 decimal places. If you fill your table with numbers like this, it will be much harder for your readers to digest your table and make comparisons between groups. It’s just the way our brains work. So, the logical next question is, “how many decimal places should we report?” Unfortunately, this is another one of those times that we have to give you an answer that may be a little unsatisfying. It is true that there are rules for <a href="https://en.wikipedia.org/wiki/Significant_figures">significant figures (significant digits)</a>; however, the rules are not always helpful to students in my experience. Therefore, we’re going to share with you a few things we try to consider when deciding how many digits to present.</p>
+<ul>
+<li><p>we don’t recall <em>ever</em> presenting a level of precision greater than 3 decimal places in the research we’ve been involved with. If you are working in physics or genetics and measuring really tiny things it may be totally valid to report 6, 8, or 10 digits to the right of the decimal. But, in epidemiology – a population science – this is rarely, if ever, useful.</p></li>
+<li><p>What is the overall message we are trying to communicate? That is the point of the table, right? We’re trying to clearly and honestly communicate information to our readers. In general, the simpler the numbers are to read and compare, the clearer the communication. So, we tend to err on the side of simplifying as much as possible. For example, in the R results below, we could say that 83.274912% of our sample reported that they don’t use drugs, 15.343015% reported that they use drugs other than opioids, and 1.382073% reported that they use opioid drugs. Is saying it that way really more useful than saying that “83% of our sample reported that they don’t use drugs, 15% reported that they use drugs other than opioids, and 1% reported that they use opioid drugs”? Are we missing any actionable information by rounding our percentages to the nearest integer here? Are our overall conclusions about drug use any different? No, probably not. And, the rounded percentages are much easier to read, compare, and remember.</p></li>
+<li><p>Be consistent – especially within a single table. We have experienced some rare occasions where it made sense to round one variable to 1 decimal place and another variable to 3 decimal places in the same table. But, circumstances like this are definitely the exception. Generally speaking, if you round one variable to 1 decimal place then you want to round them all to one decimal place.</p></li>
+</ul>
+<p>Like all other calculations we’ve done in this book, we suggest you let R do the heavy lifting when it comes to rounding. In other words, have R round the values for you <em>before</em> you move them to Word. R is much less likely to make a rounding error than you are! You may recall that we learned how to round in the <a href="../../chapters/categorical_variables/categorical_variables.html">chapter on numerical descriptions of categorical variables</a>.</p>
+</section>
+<section id="formatting-data-values" class="level3" data-number="40.8.6">
+<h3 data-number="40.8.6" class="anchored" data-anchor-id="formatting-data-values"><span class="header-section-number">40.8.6</span> Formatting data values</h3>
+<p>Now that we have our appropriately rounded values in our table, we just need to do a little formatting before we move on.</p>
+<p>First, make sure to fix any fonts, font sizes, and/or background colors that may have been changed if you copied and pasted the values from RStudio into Word.</p>
+<p>Second, make sure the values line up horizontally with the correct variable names and category labels.</p>
+<p>Third, we tend to horizontally center all our values in their columns.</p>
+<p>At this point, your table should look like this in Microsoft Word:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="make_data_values.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="fill-in-title" class="level2" data-number="40.9">
+<h2 data-number="40.9" class="anchored" data-anchor-id="fill-in-title"><span class="header-section-number">40.9</span> Fill in title</h2>
+<p>At this point in the process, we will typically go ahead and add the title to the first cell of our Word table. The title should always start with “Table #.” In our case, it will start with “Table 1.” In general, we use bold text for this part of the title. What comes next will change a little bit from table to table but is extremely important and worth putting some thought into.</p>
+<p>Remember, all tables and figures need to be able to <em>stand on their own</em>. What does that mean? It means that if we pick up your report and flip straight to the table, we should be able to understand what it’s about and how to read it without reading any of the other text in your report. The title is a critical part of making a table stand on its own. In general, your title should tell the reader what the table contains (e.g., sociodemographic characteristics) and who the table is about (e.g., results of the Texas Opioid Study). We will usually also add the size of the sample of people included in the table (e.g., n = 9985) and the year the data was collected (e.g., 2020).</p>
+<p>In different circumstances, more or less information may be needed. However, always ask yourself, “can this table stand on its own? Can most readers understand what’s going on in this table even if they didn’t read the full report?”</p>
+<p>At this point, your table should look like this in Microsoft Word:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="make_title.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Don’t worry about your title being all bunched up in the corner. We will fix it soon.</p>
+</section>
+<section id="fill-in-footnotes" class="level2" data-number="40.10">
+<h2 data-number="40.10" class="anchored" data-anchor-id="fill-in-footnotes"><span class="header-section-number">40.10</span> Fill in footnotes</h2>
+<p>Footnotes are another tool we can use to help our table stand on its own. The footnotes give readers additional information that they may need to read and understand our table. Again, there are few hard and fast rules regarding what footnotes you should include, but we can give you some general categories of things to think about.</p>
+<p>First, use footnotes to explain any abbreviations in your table that aren’t standard and broadly understood. These abbreviations are typically related to statistics used in the table (e.g., RR = risk ratio) and/or units of measure (e.g., mmHg = millimeters of mercury). Admittedly, there is some subjectivity associated with “standard and broadly understood.” In our example, we did not provide a footnote for “n”, “sd”, or “%” because most researchers would agree that these abbreviations are standard and broadly understood, but we typically do provide footnotes for statistics like “OR” (odds ratio) and “RR” (relative risk or risk ratio).</p>
+<p>Additionally, we mentioned above that it is desirable, but sometimes challenging, to get your variable names and category labels to fit on a single line. Footnotes can sometimes help with this. In our example, instead of writing “Age in years, mean (sd)” as a row header we wrote “Age, mean (sd)” and added a footnote that tells the reader that age is measured in years. This may not be the best possible example, but hopefully you get the idea.</p>
+<section id="formatting-footnotes" class="level3" data-number="40.10.1">
+<h3 data-number="40.10.1" class="anchored" data-anchor-id="formatting-footnotes"><span class="header-section-number">40.10.1</span> Formatting footnotes</h3>
+<p>When using footnotes, you need to somehow let the reader know which element in the table each footnote goes with. Sometimes, there will be guidelines that require you to use certain symbols (e.g., *, †, and ‡), but we typically use numbers to match table elements to footnotes when we can. In the example below, there is a superscript “1” immediately after the word “Age” that lets the reader know that footnote number 1 is adding additional information to this part of the table.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="number_footnotes.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If you do use numbers to match table elements to footnotes, make sure you do so in the order people read [English], which is left to right and top to bottom. For example, the following would be inappropriate because the number 2 comes before the number 1 when reading from top to bottom:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="bad_footnote_1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As another example, the following would be inappropriate because the number 2 comes before the number 1 when reading from left to right:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="bad_footnote_2.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Additionally, when using numbers to match table elements to footnotes, it’s a good idea to superscript the numbers in the table. This makes it clear that the number is being used to identify a footnote rather than being part of the text or abbreviation. Formatting a number as a superscript is easy in Microsoft Word. Just highlight the number you want to format and click the superscript button.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-make-footnotes" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A gif showing the superscript button in Microsoft Word.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-make-footnotes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="make_footnotes.gif" class="img-fluid figure-img" alt="A gif showing the superscript button in Microsoft Word.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-make-footnotes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40.2: A gif showing the superscript button in Microsoft Word.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>At this point, your table should look like this in Microsoft Word:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="make_footnotes.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="final-formatting" class="level2" data-number="40.11">
+<h2 data-number="40.11" class="anchored" data-anchor-id="final-formatting"><span class="header-section-number">40.11</span> Final formatting</h2>
+<p>We have all of our data and explanatory text in our table. The last few remaining steps are just about formatting our table to make it as easy to read and digest as possible.</p>
+<section id="adjust-column-widths" class="level3" data-number="40.11.1">
+<h3 data-number="40.11.1" class="anchored" data-anchor-id="adjust-column-widths"><span class="header-section-number">40.11.1</span> Adjust column widths</h3>
+<p>As I’ve already mentioned more than once, we don’t want our text carryover onto multiple lines whenever we can help it. In my experience, this occurs most often in the row headings. Therefore, we will often need to adjust (widen) the first column of our table. You can do that by clicking on the black border that separates the columns and moving your mouse left or right.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-adjust-columns" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A gif showing the superscript button in Microsoft Word.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-adjust-columns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="adjust_columns.gif" class="img-fluid figure-img" alt="A gif showing the superscript button in Microsoft Word.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-adjust-columns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40.3: A gif showing the superscript button in Microsoft Word.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>After you adjust the width of your first column, the widths of the remaining columns will likely be uneven. To distribute the remaining space in the table evenly among the remaining columns, first select the columns by clicking immediately above the first column you want to select and dragging your cursor across the remaining columns. Then, click the <code>layout</code> tab in the ribbon above your document and the <code>Distribute Columns</code> button.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-even-columns" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A gif showing how to distribute columns evenly in Microsoft Word.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-even-columns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="even_columns.gif" class="img-fluid figure-img" alt="A gif showing how to distribute columns evenly in Microsoft Word.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-even-columns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40.4: A gif showing how to distribute columns evenly in Microsoft Word.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In our particular example, there was no need to adjust column widths because all of our text fit into the default widths.</p>
+</section>
+<section id="merge-cells" class="level3" data-number="40.11.2">
+<h3 data-number="40.11.2" class="anchored" data-anchor-id="merge-cells"><span class="header-section-number">40.11.2</span> Merge cells</h3>
+<p>Now, we can finally merge some cells so that our title and footnote spread the entire width of the table. We waited until now to merge cells because if we had done so earlier it would have made the previous step (i.e., adjusting column widths) more difficult.</p>
+<p>To spread our title out across the entire width of the table, we just need to select all the cells in the first row, then right click and select <code>merge cells</code>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-merge-title" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A gif showing how to merge table cells in Microsoft Word.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-merge-title-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="merge_title.gif" class="img-fluid figure-img" alt="A gif showing how to merge table cells in Microsoft Word.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-merge-title-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40.5: A gif showing how to merge table cells in Microsoft Word.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>After merging the footnote cells in exactly the same way, your table should look like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="make_merged.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="remove-cell-borders" class="level3" data-number="40.11.3">
+<h3 data-number="40.11.3" class="anchored" data-anchor-id="remove-cell-borders"><span class="header-section-number">40.11.3</span> Remove cell borders</h3>
+<p>The final step is to clean up our borders. In my experience, students like to do all kinds of creative things with cell borders. However, when it comes to borders, keeping it simple is usually the best approach. Therefore, we will start by removing <em>all</em> borders in the table. We do so by clicking the little cross with arrowheads that pops up diagonal to the top-left corner of the table when you move your mouse over it. Clicking this button will highlight your entire table. Then, we will click the downward facing arrow next to the <code>borders</code> button in the ribbon above your document. Then, we will click the <code>No Border</code> option.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-remove-borders" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A gif showing how to remove table borders in Microsoft Word.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-remove-borders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="remove_borders.gif" class="img-fluid figure-img" alt="A gif showing how to remove table borders in Microsoft Word.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-remove-borders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40.6: A gif showing how to remove table borders in Microsoft Word.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Our final step will be to add a single horizontal border under the title, a single horizontal border under the column header row, and a single horizontal border above the footnotes. We will add the borders by highlighting the correct rows and selecting the correct options for the same <code>borders</code> dropdown menu we used above.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-make-borders" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A gif showing how to add borders to table cells in Microsoft Word.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-make-borders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="make_borders.gif" class="img-fluid figure-img" alt="A gif showing how to add borders to table cells in Microsoft Word.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-make-borders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40.7: A gif showing how to add borders to table cells in Microsoft Word.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Notice that there are <em>no vertical lines (borders) anywhere on our table</em>. That should almost always be the case for your tables too.</p>
+</section>
+</section>
+<section id="summary" class="level2" data-number="40.12">
+<h2 data-number="40.12" class="anchored" data-anchor-id="summary"><span class="header-section-number">40.12</span> Summary</h2>
+<p>Just like with guidelines we’ve discussed about R coding style; you don’t have to create tables in exactly the same way that we do. But, you should have a good reason for all the decisions you make leading up</p>
+
+
+<div id="refs" class="references csl-bib-body" role="list" style="display: none">
+<div id="ref-Matthews2014-ah" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Matthews JR, Matthews RW. <em>Successful Scientific Writing: A <span class="nocase">Step-by-Step</span> Guide for the Biological and Medical Sciences</em>. Cambridge University Press; 2014.</div>
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/brad-cannell\.github\.io\/r4epi_quarto\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/using_git_github/using_git_github.html" class="pagination-link" aria-label="Using git and GitHub">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">References</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>R for Epidemiology</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/creating_word_tables/creating_word_tables.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://Quarto/.org/">Quarto/</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

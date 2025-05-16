@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>39&nbsp; Using git and GitHub – R 4 Epidemiology</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/creating_word_tables/creating_word_tables.html" rel="next">
+<link href="../../chapters/intro_git_github/intro_git_github.html" rel="prev">
+<link href="../../r4epi_favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_git_github/intro_git_github.html">Collaboration</a></li><li class="breadcrumb-item"><a href="../../chapters/using_git_github/using_git_github.html"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">R 4 Epidemiology</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/brad-cannell/r4epi_quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../../R-4-Epidemiology.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/contributing/contributing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Contributing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/about_the_authors/about_the_authors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Authors</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/installing_r_and_rstudio/installing_r_and_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Installing R and RStudio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/what_is_r/what_is_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">What is R?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/navigating_rstudio/navigating_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Navigating the RStudio Interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/speaking_r/speaking_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Speaking R’s Language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lets_get_programming/lets_get_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Let’s Get Programming</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/asking_questions/asking_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Asking Questions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Coding Tools and Best Practices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_scripts/r_scripts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/quarto_files/quarto_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quarto Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_projects/projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">R Projects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/best_practices/best_practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Coding Best Practices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_pipes/using_pipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Using Pipes</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Transfer</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data_transfer/data_transfer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Data Transfer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/file_paths/file_paths.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">File Paths</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_plain_text/importing_plain_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Importing Plain Text Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_binary_files/importing_binary_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Importing Binary Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/rstudio_import_tool/rstudio_import_tool.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">RStudio’s Data Import Tool</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/exporting_data_to_disk/exporting_data_to_disk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Exporting Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Descriptive Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_descriptive_analysis/intro_descriptive_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduction to Descriptive Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/categorical_variables/categorical_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Numerical Descriptions of Categorical Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/central_tendency/central_tendency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Measures of Central Tendency</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dispersion/dispersion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measures of Dispersion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cont_pred/cont_out_cont_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Continuous Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cat_pred/cont_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cat_out_cat_pred/cat_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Categorical Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Management</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_data_management/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Data Management</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_and_modifying_columns/creating_and_modifying_columns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Creating and Modifying Columns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Subsetting Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_dates/working_with_dates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Working with Dates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_character_strings/working_with_character_strings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Working with Character Strings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/conditional_operations/conditional_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/multiple_data_frames/multiple_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/restructuring_data_frames/restructuring_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Restructuring Data frames</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Repeated Operations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_repeated_operations/intro_repeated_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Introduction to Repeated Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_functions/writing_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Writing Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dplyr_column_wise/dplyr_column_wise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Column-wise Operations in dplyr</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_for_loops/writing_for_loops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Writing For Loops</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_purrr/using_purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Using the purrr Package</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Collaboration</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_git_github/intro_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Introduction to git and GitHub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_git_github/using_git_github.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Presenting Results</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_word_tables/creating_word_tables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">References</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">References</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendices/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#install-git" id="toc-install-git" class="nav-link active" data-scroll-target="#install-git"><span class="header-section-number">39.1</span> Install git</a></li>
+  <li><a href="#sign-up-for-a-github-account" id="toc-sign-up-for-a-github-account" class="nav-link" data-scroll-target="#sign-up-for-a-github-account"><span class="header-section-number">39.2</span> Sign up for a GitHub account</a></li>
+  <li><a href="#install-gitkraken" id="toc-install-gitkraken" class="nav-link" data-scroll-target="#install-gitkraken"><span class="header-section-number">39.3</span> Install GitKraken</a></li>
+  <li><a href="#example-1-contribute-to-r4epi" id="toc-example-1-contribute-to-r4epi" class="nav-link" data-scroll-target="#example-1-contribute-to-r4epi"><span class="header-section-number">39.4</span> Example 1: Contribute to R4Epi</a></li>
+  <li><a href="#example-2-create-a-repository-for-a-research-project" id="toc-example-2-create-a-repository-for-a-research-project" class="nav-link" data-scroll-target="#example-2-create-a-repository-for-a-research-project"><span class="header-section-number">39.5</span> Example 2: Create a repository for a research project</a>
+  <ul class="collapse">
+  <li><a href="#step-1-create-a-repository-on-github" id="toc-step-1-create-a-repository-on-github" class="nav-link" data-scroll-target="#step-1-create-a-repository-on-github">Step 1: Create a repository on GitHub</a></li>
+  <li><a href="#step-2-clone-the-repository-to-your-computer" id="toc-step-2-clone-the-repository-to-your-computer" class="nav-link" data-scroll-target="#step-2-clone-the-repository-to-your-computer">Step 2: Clone the repository to your computer</a></li>
+  <li><a href="#step-3-add-an-r-project-file-to-the-repository" id="toc-step-3-add-an-r-project-file-to-the-repository" class="nav-link" data-scroll-target="#step-3-add-an-r-project-file-to-the-repository">Step 3: Add an R project file to the repository</a></li>
+  <li><a href="#step-4-update-and-commit-gitignore" id="toc-step-4-update-and-commit-gitignore" class="nav-link" data-scroll-target="#step-4-update-and-commit-gitignore">Step 4: Update and commit gitignore</a></li>
+  <li><a href="#step-5-keep-adding-and-committing-files" id="toc-step-5-keep-adding-and-committing-files" class="nav-link" data-scroll-target="#step-5-keep-adding-and-committing-files">Step 5: Keep adding and committing files</a></li>
+  </ul></li>
+  <li><a href="#committing-and-pushing" id="toc-committing-and-pushing" class="nav-link" data-scroll-target="#committing-and-pushing"><span class="header-section-number">39.6</span> Committing and pushing</a></li>
+  <li><a href="#example-3-contribute-to-a-research-project" id="toc-example-3-contribute-to-a-research-project" class="nav-link" data-scroll-target="#example-3-contribute-to-a-research-project"><span class="header-section-number">39.7</span> Example 3: Contribute to a research project</a>
+  <ul class="collapse">
+  <li><a href="#forking-a-repository" id="toc-forking-a-repository" class="nav-link" data-scroll-target="#forking-a-repository"><span class="header-section-number">39.7.1</span> Forking a repository</a></li>
+  <li><a href="#creating-a-pull-request" id="toc-creating-a-pull-request" class="nav-link" data-scroll-target="#creating-a-pull-request"><span class="header-section-number">39.7.2</span> Creating a pull request</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">39.8</span> Summary</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/using_git_github/using_git_github.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_git_github/intro_git_github.html">Collaboration</a></li><li class="breadcrumb-item"><a href="../../chapters/using_git_github/using_git_github.html"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+Hidden comments placeholder
+---------------------------
+
+To preview:
+bookdown::preview_chapter("using_git_github/using_git_github.qmd")
+
+👆**Here's what we did above:**
+-->
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="logos.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="../../chapters/intro_git_github/intro_git_github.html">In the previous chapter</a>, we discussed <em>why</em> we should consider learning to use git and GitHub as part of our workflow when our projects include data and/or coding. In this chapter, we will begin to talk about <em>how</em> to use git and GitHub. We will also introduce a third tool, GitKraken, that makes it easier for us to use git and GitHub.</p>
+<section id="install-git" class="level2" data-number="39.1">
+<h2 data-number="39.1" class="anchored" data-anchor-id="install-git"><span class="header-section-number">39.1</span> Install git</h2>
+<p>Before we can use git, we will need to install it on our computer. The following chapter of Pro Git provides instructions for installing git on Linux, Windows, and MacOS operating systems: <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Get Started Installing Git</a>.</p>
+<p>If you are using a Mac, it’s likely that you already have git — most Macs ship with git installed. To check, open your Terminal app. The Terminal app is located in the Utilities folder, which is located in the Applications folder. In the terminal app, type “git version”. If you see a version number, then it is already installed. If not, then please follow the installation instructions given in the link to Pro Git above.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-terminal" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-terminal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="terminal_git_version.png" class="img-fluid figure-img" width="900">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-terminal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;39.1: Checking git version in the MacOS terminal.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sign-up-for-a-github-account" class="level2" data-number="39.2">
+<h2 data-number="39.2" class="anchored" data-anchor-id="sign-up-for-a-github-account"><span class="header-section-number">39.2</span> Sign up for a GitHub account</h2>
+<p>We have already alluded to the fact that git and GitHub are not the same thing. You can use git locally on your computer without ever using GitHub. Conversely, you can browse GitHub, and even do some limited contributing to code, without ever installing git on your computer (e.g., see <a href="../../chapters/contributing/contributing.html">Contributing to R4Epi</a>. However, git and GitHub work best when used together. You don’t need to download anything to start using GitHub, but you will need to sign up for a free GitHub account. To do so, just navigate to <a href="https://github.com/" class="uri">https://github.com/</a></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="github_01_home.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="install-gitkraken" class="level2" data-number="39.3">
+<h2 data-number="39.3" class="anchored" data-anchor-id="install-gitkraken"><span class="header-section-number">39.3</span> Install GitKraken</h2>
+<p>Git is software for our computer. However, unlike most of the software we are used to using, git does not have a <a href="https://en.wikipedia.org/wiki/Graphical_user_interface">graphical user interface</a> (GUI - pronounced “gooey”). In other words, there is no git application that we can open and start clicking around in. Instead, by default, we interact with git by typing commands into the computer’s terminal – also called “command line” in GitHub’s documentation – like we saw in <a href="#fig-terminal" class="quarto-xref">Figure&nbsp;<span>39.1</span></a>. The commands we type to use git kind of look like their own programming language. In our experience, interacting with git in the terminal is awkward, inefficient, and unnecessary for most new git users. And learning to use git in this way is a barrier to getting started in the first place. 😩</p>
+<p>Thankfully, other third-party vendors have made excellent GUI’s for git that we can download and use for free. Our current favorite is called <strong>GitKraken</strong>. To use GitKraken, you will first need to navigate to the GitKraken website (<a href="https://www.gitkraken.com/" class="uri">https://www.gitkraken.com/</a>). If it helps, you can think of git and GitKraken as having a relationship that is very similar to the relationship between R and RStudio. R is the language. RStudio is the application that makes it easier for us to use the R language to work with data. Similarly, git is the language and GitKraken is the application that makes it easier for us to use git to track versions of our project files.</p>
+<p>Before you use the GitKraken client, you will need to sign up for an account. It may say that you need to sign up for a free trial. Go ahead and do it. The free trial is just for the “Pro” version. At the end of the free trial, you will automatically be downgraded to the “Free” version, which is… free. And, the free version will do everything you need to do to follow along with this book.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gitkraken_01_home.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Next, you will need to click on the “Try Free” button. Then, download and install the GitKraken Client to your computer.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gitkraken_02_client.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As you are installing GitKraken, it should ask you if you want to sign up with your GitHub account. Yes, you do! It will make your life much easier down the road. If you didn’t sign up for a GitHub account in the previous step, please go back and do so.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gitkraken_03_github.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Then click the green <code>Continue authorization</code> button.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gitkraken_04_authorize.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Then, you will be asked to sign into your GitHub account – possibly using your two-factor authentication. When you see the success screen, you can close your browser and return to GitKraken.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gitkraken_05_success.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The next thing you will do is create a profile. After you create a profile, you will be asked if you want the Repo Tab first or the Terminal Tab first. We recommend that you select the Repo Tab option.</p>
+<div class="cell" data-lable="gitkraken_06_repo_tab">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gitkraken_06_repo_tab.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Once you have installed Git and GitKraken, and you’ve created your GitHub account, you will have all the tools you need to follow along with all of the examples in this book. Speaking of examples, let’s go ahead and take a look at a couple now.</p>
+</section>
+<section id="example-1-contribute-to-r4epi" class="level2" data-number="39.4">
+<h2 data-number="39.4" class="anchored" data-anchor-id="example-1-contribute-to-r4epi"><span class="header-section-number">39.4</span> Example 1: Contribute to R4Epi</h2>
+<p>If you haven’t already done so, please read the <a href="../../chapters/contributing/contributing.html">contributing to R4Epi portion of the book’s welcome page</a>. This will give you a gentle introduction to using GitHub, for a very practical purpose, without even needing to use git or GitKraken.</p>
+</section>
+<section id="example-2-create-a-repository-for-a-research-project" class="level2" data-number="39.5">
+<h2 data-number="39.5" class="anchored" data-anchor-id="example-2-create-a-repository-for-a-research-project"><span class="header-section-number">39.5</span> Example 2: Create a repository for a research project</h2>
+<p>In this example, we will learn how to create our very own git and GitHub repositories from scratch. We can immediately begin using the lessons from this example for our research projects – even if we aren’t collaborating with others on them. Remember, <a href="../../chapters/intro_git_github/intro_git_github.html">there are at least four overarching reasons</a> why you should consider learning to use git and GitHub as part of your workflow for your projects, and collaboration is only one of them. Not to mention the fact that it is often useful to think of our future selves as other collaborators, which we have mentioned and/or alluded to many times in this book.</p>
+<p>There are many possible ways we could set up our project to take advantage of all that git and GitHub have to offer. We’re going to show you one possible sequence of steps in this example, but you may decide that you prefer a different sequence as you get more experience, and that’s totally fine!</p>
+<p>This example is long! So, we created a brief outline that you can quickly reference in the future. Details are below.</p>
+<p><a href="#step-1-create-a-repository-on-github">Step 1: Create a repository on GitHub</a><br>
+<a href="#step-2-clone-the-repository-to-your-computer">Step 2: Clone the repository to your computer</a><br>
+<a href="#step-3-add-an-r-project-file-to-the-repository">Step 3: Add an R project file to the repository</a><br>
+<a href="#step-4-update-and-commit-gitignore">Step 4: Update and commit gitignore</a><br>
+<a href="#step-5-keep-adding-and-committing-files">Step 5: Keep adding and committing files</a></p>
+<section id="step-1-create-a-repository-on-github" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="step-1-create-a-repository-on-github">Step 1: Create a repository on GitHub</h3>
+<p>The first thing we will do is create a repository on <em>GitHub</em>. <strong>Repositories</strong> are the fundamental organizational units of your GitHub account. Other cloud storage services like Dropbox are organized into file folders at every level. Meaning, you have your main Dropbox folder, which has other folders nested inside of it – many of which may have their own nested folders. Your GitHub account also stores all your files in file folders; however, the level one folders — those that aren’t nested inside of another folder — are called repositories (represented by the book icon in the image below and on the GitHub website). Typically, each repository is an entire, self-contained project. Like a file folder, each repository can contain other folders, code files, media files, data sets, and any other type of file needed to reproduce your research project.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="repositories_01.png" class="img-fluid figure-img" width="900"></p>
+<figcaption>GitHub repositories compared to Dropbox.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Just because we <em>can</em> upload data to GitHub doesn’t mean we <em>should</em> upload data to GitHub. Often, the data we use in epidemiology contains <a href="https://privacyruleandresearch.nih.gov/pr_07.asp">protected health information</a> (PHI) that we must go to great lengths to keep secure. In general, GitHub is <strong>NOT</strong> considered a secure place to store our data and should not be used for this purpose. Below, we will demonstrate how to make sure our data isn’t uploaded to GitHub with the rest of the files in our repository.</p>
+</div>
+</div>
+<p>To create a new repository in GitHub, we will simply click the green <code>Create repository</code> button. This button will look slightly different depending on where we are at in the GitHub website. The screenshot below was taken from Arthur Epi’s (our fictitious research assistant) main landing page (i.e., <a href="https://github.com/" class="uri">https://github.com/</a>).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_01_create.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>After clicking the green <code>Create repository</code> button, the next page Arthur will see is the setup page for his repository. For the purposes of this example, he will use the following information to set it up.</p>
+<ul>
+<li><p><strong>Repository name</strong>: As the on-screen prompt says, great repository names are short and memorable. Further, the repository name must be unique to his account (i.e., he can’t have two repositories with the same name), and it can only include letters, numbers, dashes (<code>-</code>), underscores (<code>_</code>), and periods (<code>.</code>). We recommend using underscores to separate words to be consistent with the object naming guidelines from <a href="../../chapters/best_practices/best_practices.html">coding-best-practices</a>. For this example, he will name the repository <code>r4epi_example_project</code>.</p></li>
+<li><p><strong>Description</strong>: The description is optional, but we like to fill it in. Arthur’s description should also be brief. Ideally it will allow others scanning our repository to quickly determine what it’s all about. For this example, the description will say, “An example repository that accompanies the git and GitHub chapters in the R4Epi book.”</p></li>
+<li><p><strong>Public/Private</strong>: We can choose to make our repositories public or private. If we make them public, they can be <em>viewed</em> by anyone on the internet. If we make them private, we can control who is able to view them. At first, you may be tempted to make your repositories private. It can feel vulnerable to put your project/code out there for the entire internet to view. However, we are going to recommend that you make all of your repositories public and be thoughtful about the files/documents/information you choose to upload to them. For example, we <strong>NEVER</strong> want to upload data containing information with PHI or individual identifiers in it. So, we will often need to figure out a different way to share our data with others who legitimately need access to it, but we can often use GitHub to share all other files related to the project. Making our repository public makes it easier for others to locate our work and potentially collaborate with us.</p></li>
+<li><p><strong>Add a README file</strong>: A <strong>README</strong> file has a special place in GitHub. Under the hood, it is just a markdown file. No different than the Quarto files we learned about in the chapter on <a href="../Quarto_files/Quarto_files.qmd">Quarto files</a> (. However, naming it <code>README</code> gives it a special status. When we include a README file in our repository, GitHub will automatically add it to our repository’s homepage. We should use it to give others more information about our project, what our repository does, how to use the files in our repository, and/or how to contribute. So, we will definitely want a README file. Arthur may as well go ahead and check the box to create it along with his repository (although, we can always add it later).</p></li>
+<li><p><strong>Add .gitignore</strong>: We will discuss <code>.gitignore</code> later. Briefly, you can think of it as a list of files we are telling GitHub to ignore (i.e., not to track). This gets back to versioning, which we discussed in the [Versioning] section of the introduction to git and GitHub chapter. For now, Arthur will just leave it as is.</p></li>
+<li><p><strong>License</strong>: The GitHub documentation states that, “Public repositories on GitHub are often used to share open-source software. For your repository to truly be open source, you’ll need to license it so that others are free to use, change, and distribute the software.”<span class="citation" data-cites="GitHub2022-iw"><sup><a href="../../references.html#ref-GitHub2022-iw" role="doc-biblioref">1</a></sup></span> Because we aren’t currently using our repository to create and distribute open-source software (like R!!), we don’t need to worry about adding a license. That isn’t to say that you won’t <em>ever</em> need to worry about a license. For more on choosing a license, we can consult the <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository">GitHub documentation</a> or potentially consult with our employer or study sponsor. For example, our universities have officials that help us determine if our repositories need a license.</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_02_set_up.png" class="img-fluid figure-img" width="739"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, that he has completed all the setup steps, Arthur can click the green <code>Create repository</code> button. This will create his repository and take him to its homepage on GitHub. As you can see in the screenshot below (<a href="https://github.com/arthur-epi/r4epi_example_project">you can also navigate to the website yourself</a>), GitHub creates a basic little website for the repository. The top middle portion of the page (outlined in red below) displays all of the files and folders in the repository. Currently, the repository only contains one file – <code>README.md</code> – but Arthur will add others soon.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_03_files.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To the right of files and folders section of the homepage is the <code>About</code> section of the page. This section (outlined in red below) contains the repository’s description, tags, and other information that we will ignore for now.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_04_about.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Below the files and folders section of the page is where the <strong>README</strong> file is displayed. Notice that by default, GitHub added the repository’s name and description to the README file. Not a bad start, but we can add all kinds of cool stuff to README – including tables, figured, images, links, and other media. In fact, you can add almost anything to a README file that you can add to any other website. This is a great place to get creative and really make your project stand out!</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_05_readme.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, Arthur has a working GitHub repository up and running. Let’s pause for a moment to and celebrate! 🎉</p>
+<p>Okay, celebration complete. Now, what does he do with this new GitHub repository? Well, he does the four things covered in <a href="../../chapters/intro_git_github/intro_git_github.html">Introduction to git and GitHub</a></p>
+<ol type="1">
+<li>He will start adding files to his repository and document their purpose and evolution with <strong>versioning</strong>.<br>
+</li>
+<li>In the process, he will <strong>preserve</strong> his files, and by extension, his project.<br>
+</li>
+<li>Doing so will help to make his research more <strong>reproducible</strong>.<br>
+</li>
+<li>And make it easier for him to <strong>collaborate</strong> with others – including his future self.</li>
+</ol>
+<p>Let’s start by taking a look at versioning in GitHub. As we discussed in the <a href="../../chapters/intro_git_github/intro_git_github.html">Versioning</a> section of the <a href="../../chapters/intro_git_github/intro_git_github.html">Introduction to git and GitHub</a> chapter, GitHub uses the word <strong>commit</strong> to refer to taking a snapshot of the state of our project, similar to how we might typically think about saving a version of a document we are working on. We saw how we could view the version history of our Google Doc by clicking <code>File</code> then <code>Version history</code> then <code>See version history</code>. In GitHub, we can similarly view the version history (also called the commit history) of our repository. To do so, we navigate to our repository’s homepage, and click on the word <code>commit</code> in the top right corner of the files section (outlined in red below).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_06_commit.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This will take us to our repository’s version history page. Currently, this repository only has one commit – the “Initial commit”. This name is used by convention in the GitHub community to refer to the first commit in the repository. The history also tells us when the commit was made and who made it. On the right side of the commit, there are three buttons.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_07_commit_history.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li><p>The first button on the left that looks like two partially overlapping boxes will copy the commit’s ID so that we can paste it elsewhere if we want. In GitHub, every commit is assigned a unique ID, which is also called an “SHA” or “hash”. The commit ID is a string of 40 characters that can be used to refer to a specific commit. The <code>274519</code> displayed on the middle button is the first 7 characters of this commit’s ID.</p></li>
+<li><p>As noted above, the middle button is labeled with the first 7 characters of this commit’s ID - <code>274519</code>. Clicking on it will take us to a new screen with the details of what this commit does to the files in the repository (i.e., additions, edits, and deletions). Arthur will click it so we take a look momentarily.</p></li>
+<li><p>The button on the far right, which is labeled with two angle brackets (<code>&lt; &gt;</code>) will take us back to the repository’s homepage. However, the files in the repository will be set back to the state they were in when the commit was made. In this case, there is only one commit. So, there’s no difference between the current state of the repository and the state it would be in if Arthur clicked this button. However, this button can be useful. If Arthur makes some changes to a file and then later wants to see what the file looked like before he made those changes, he can use this button to take a look.</p></li>
+</ol>
+<p>Now, Arthur will click the middle button labeled with the short version of the commit ID.</p>
+<p>On the page he is taken to, we can see more details about what commit <code>274519</code> does to the files in the repository. The top section of the page (outlined in red below) contains pretty much the same information we saw on the previous page. The little symbol on the left that looks kind of like a backwards 4 with open circles at the ends of the lines tells us which branch we are operating on. Branches are a more advanced topic that we will discuss later. Currently, our repository only has one branch – the default <code>main</code> branch – and the symbol followed by the word “main” is telling us that this commit is on the main branch. To the far right of this section, there is a button that says <code>Browse files</code>. Clicking this button does the exact same thing as the button on the previous page that was labeled with two angle brackets (<code>&lt; &gt;</code>). Below the <code>Browse files</code> button, are the words <code>0 parents</code> and <code>commit 277451996a7e9a0a6e583124d762db2a9cd439a2</code>. This tells us that this commit doesn’t have any parent commits and that the full commit ID is <code>277451996a7e9a0a6e583124d762db2a9cd439a2</code>. We discussed commit ID’s above. The parent commit is the commit or commits that this commit is based on. In other words, what were the other things that happened to get us to this point? Because this is the initial commit, there are no parent commits.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_08_commit_details_01.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The middle section of the commit details page tells us that applying this commit to the repository changes 1 file. In that file, there are two additions and no deletions. Below this text we can see which file was changed - <code>README.md</code>. This is also called the <strong>diff view</strong> because we can see the differences between this version of the file and previous versions of the file. In this case, because there wasn’t a previous version of the file, we just see the two additions that were made to the file. They are the level one header that was added to the first line of the file (i.e., <code># r4epi_example_project</code>) and our project’s description was added to the second line of the file. These additions were made automatically by GitHub. We know they are additions because the background color is green and there is a little plus sign immediately to their left. We know which lines of the file were changed because GitHub shows us the line number immediately to the left of the plus signs.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_08_commit_details_02.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The final section of the commit details page shows us any existing comments that Arthur, or others, made about this commit. It also allows us, or others to create a new comment, using the text box.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_08_commit_details_03.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the screenshot below, we can see an example comment. Note all the cool things features GitHub comments allow us to use. We can format the text, add bullets, add links, and even add clickable checkboxes.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_08_commit_details_04.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Finally, clicking the green <code>Comment on this commit</code> button adds our comment to the commit details page.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_08_commit_details_05.png" class="img-fluid figure-img" width="1245"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s pause here for a moment and try to appreciate how powerful GitHub already is compared to other cloud-based file storage services like Dropbox, Google Drive, or OneDrive. Like those file storage services, all of our files are backed up and preserved in the cloud and can easily be shared with others. However, unlike Dropbox, Google Drive, and OneDrive, we can turn our repository’s homepage into a little website describing our project, we can view all the changes that have been made to our project over time, we can see which specific lines of each file have changed and how, and we can gather all comments, questions, and concerns about the files in one place. Oh, and it’s <strong>Free</strong>!</p>
+</section>
+<section id="step-2-clone-the-repository-to-your-computer" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="step-2-clone-the-repository-to-your-computer">Step 2: Clone the repository to your computer</h3>
+<p>At this point, Arthur’s repository, which is just a fancy file folder, and the one file in his repository (README.md), only exist on the GitHub cloud.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> What is “the GitHub cloud”? For our purposes, the cloud just refers to a specific type of computer – called a server – that physically exists somewhere else in the world, which we can connect to over the internet. GitHub owns many servers, and our files are stored on one of them. After we connect to the GitHub server, we can pass files back and forth between our computer and GitHub’s computer (i.e., the server).</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-github-cloud" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-github-cloud-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="new_repository_09_github_cloud.png" class="img-fluid figure-img" width="900">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-github-cloud-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;39.2: GitHub Cloud.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>So, how does he get the repository from the GitHub cloud to his computer so that he can start making changes to it?</p>
+<p>He will <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">clone</a> the repository to his computer. Don’t get thrown off by the funny name. You can simply think “make a copy of” whenever you see the word “clone” for now. So, he will “make a copy of” the repository on his computer. However, cloning the repository actually does two very useful things at once:</p>
+<ol type="1">
+<li>It creates a copy of our repository, and all of the files and folders in it, on our computer.<br>
+</li>
+<li>It creates a connection between our computer and the GitHub cloud that allows us to pass files back and forth.</li>
+</ol>
+<p>There are multiple possible ways we could clone our repository, but we’re going to use GitKraken in this book. If you did not already download GitKraken and connect it with your GitHub account as demonstrated at the beginning of the chapter, please do so now.</p>
+<p>When we open GitKraken, we should see something similar to the screenshot below. Arthur will start the cloning process by clicking the <code>Clone a repo</code> button.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_10_clone_01.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>When the Repository Management dialogue box opens, he will need to make 3 changes.</p>
+<ol type="1">
+<li><p>Click <code>GitHub.com</code> in the clone menu. This tells GitKraken that the repository he wants to clone currently lives on his GitHub account. Note that it has to be on <strong>his</strong> account in order for it to show up on this list – not someone else’s account. We will learn how to get files from someone else’s account later.</p></li>
+<li><p>Set the path where he wants the repository to be cloned to. Remember, the repository is a just a folder with some files in it. When we clone the repository to our computer, those files and folders will live on our computer somewhere. We need to tell GitKraken where we want them to live. In the screenshot below, Arthur is just cloning the repository to his computer’s desktop.</p></li>
+<li><p>Tell GitKraken which repository on his GitHub account he wants to clone. We can use the drop-down arrow to search a list of all of our repositories. In the screenshot below, Arthur selected the <code>r4epi_example_project</code> repository.</p></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_10_clone_02.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Finally, he will click the green <code>Clone the repo!</code> button. Now, he has successfully cloned his repository to his computer! 🎉</p>
+<p>Before moving on, let’s pause and review what just happened.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_10_clone_03.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we discussed above, Arthur’s repository already existed on the GitHub cloud see <a href="#fig-github-cloud" class="quarto-xref">Figure&nbsp;<span>39.2</span></a>. In git terminology, the GitHub cloud called a <strong>remote repository</strong>, or “repo” for short. Remote repositories are just copies of our repository that live on the internet or some other network. Arthur then <strong>cloned</strong> his remote repository to his computer. That means, he made a copy of all of the files and folders on his computer. In git terminology, the repository on our computer is called a <strong>local</strong> repository.</p>
+<p>Now that he has successfully cloned his repository, he should be able to view it in two different ways.</p>
+<p>First, he should be able to see his repository’s file folder on his desktop (because that’s the location he chose above).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_11_view_folder.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Second, he should be able to open a tab in GitKraken with all the versioning information about his repository.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_12_view_gitkraken_01.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s pause here and <strong>watch a brief video</strong> from GitKraken that orients us to the GitKraken user interface. For now, the first three minutes of the video is all we need. There may be some unfamiliar terms in the video. Don’t stress about it! We will cover the most important parts after the video and learn some of the other terms in future examples.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/RiAeNSFjjLc" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>Moving back to Arthur’s repository, we can see that the repository graph in the middle section of the user interface has only on commit – the initial commit. This matches what we saw on GitHub.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_12_view_gitkraken_02.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If we zoom in on the upper left corner of the left sidebar menu (outlined in red below), we can see that GitKraken is aware of two different places where the repository lives. First, it tells us that Arthur has a local repository on his computer with one branch – the main branch. Next, it tells us that there is one remote location for the repository – called “origin” – with one branch – the main branch.</p>
+<p>The term “origin” is used by convention in the git language to refer to the remote repository that we originally cloned from. It uses the nickname “origin” instead of using the remote repository’s full URL (i.e., web address). Arthur could change this name if he wanted, but there’s really no need.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_12_view_gitkraken_03.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Another useful thing we can see in the current view, is that the local repository and the remote repository on GitHub are in sync. Meaning, the files and folders in the repository on Arthur’s computer are identical to the files and folders in the repository on the GitHub cloud. We know this because the little white and gray picture that represents the remote repository and the little picture of the laptop that represents the local repository are located side-by-side on the repository graph (see red arrow below). When we have made changes in one location or another, but haven’t synced those changes to the other location, the two icons will be in different rows of the repository graph. We will see an example of this soon.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_12_view_gitkraken_04.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="step-3-add-an-r-project-file-to-the-repository" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="step-3-add-an-r-project-file-to-the-repository">Step 3: Add an R project file to the repository</h3>
+<p>This step is technically optional, but we highly recommend it! We introduced <a href="../../chapters/r_projects/projects.html">R projects</a> earlier in the book. Arthur will go ahead and add an R project file to his repository now. This will make his life easier later. To create a new R project, he just needs to click the drop-down arrow next to the words <code>Project: (None)</code> to open the projects menu. Then, he will click the <code>New Project...</code> option.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_13_new_project_01.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>That will open the new project dialogue box. This time, he will click the <code>Existing Directory</code> option instead of clicking the <code>New Directory</code> option. Why? Because the directory (i.e., folder) he wants to contain his R project already exists on his computer. Arthur cloned it to his desktop in [step 2][Step 2: Clone the repository] above.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_13_new_project_02.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>All Arthur has to do now, is tell RStudio where to find the <code>r4epi_example_project</code> directory on his computer using the <code>Browse...</code> button. In this case, on his desktop. Finally, he will click the <code>Create Project</code> button.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_13_new_project_03.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-update-and-commit-gitignore" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="step-4-update-and-commit-gitignore">Step 4: Update and commit gitignore</h3>
+<p>Let’s take a look at Arthur’s RStudio files pane. Notice that there are now three files in the project directory. There is the <code>README</code> file, the <code>.Rproj</code> file, and a file called <code>.gitignore</code>. RStudio created this file automatically when Arthur designated the directory as an R project.</p>
+<p>Outside of the name – <code>.gitignore</code> – there is nothing special about this file. It’s just a plain text file. But naming it <code>.gitignore</code> tells the git software that it contains a list of files that git should ignore. By ignore, we mean, “pretend they don’t exist.”</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_14_gitignore_01.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Arthur will now open the <code>.gitignore</code> file and see what’s there.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_14_gitignore_02.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Currently, there are four files on the <code>.gitignore</code> list. These files were added automatically by RStudio to try to help him out. Tracking versions of these files typically isn’t useful. Because these files are on the <code>.gitignore</code> list, git and GitHub won’t even notice if Arthur creates, edits, or deletes any of them. This means that they also won’t ever be uploaded to GitHub.</p>
+<p>At this point, Arthur is going to go ahead and add one more file to the <code>.gitignore</code> list. He will add <code>.DS_store</code> to the list. <code>.DS_store</code> is a file that the MacOS operating system creates automatically when a Mac user navigates to a file or folder using Finder. None of that really matters for our purposes, though. What does matter is that there is no need to track versions of this file and it will be a constant annoyance if Arthur doesn’t ignore it.</p>
+<p>If Arthur were using a Windows PC instead of a Mac, the <code>.DS_store</code> file should not be an issue. However, adding <code>.DS_store</code> to <code>.gitignore</code> isn’t a bad idea even when using a Windows PC for at least two reasons. First, there is no harm in doing so. Second, if Arthur ever collaborates with someone else on this project who is using a Mac, then the <code>.DS_store</code> file could find its way into the repository and become an annoyance. Therefore, we recommend always adding <code>.DS_store</code> to the <code>.gitignore</code> list regardless of the operating system you personally use.</p>
+<p>Adding <code>.DS_store</code> (or any other file name) to the <code>.gitignore</code> list is as simple as typing <code>.DS_store</code> on its own line of the <code>.gitignore</code> file and clicking <code>Save</code>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_14_gitignore_03.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Typically, the next thing we would do after creating our repository is to start creating and adding the files we need to complete our analyses.</p>
+<p>Now, Arthur will open GitKraken so we can take a look. Notice that Arthur’s GitKraken looks different than it did the last time we viewed it. That’s because we’ve been making changes to the repository. Specifically, we’ve added two files since the last commit was made. There are at least two ways we can tell that is the case.</p>
+<p>First, the repository graph in the middle section of the user interface has now has two rows. The bottom row is still the initial commit, but now there is a row above it that says <code>// WIP</code> and has a <code>+ 2</code> symbol. <code>WIP</code> stands for work in progress and the <code>+ 2</code> indicates that there are two files that have changed (in this case, they were added) since the last commit. So, Arthur has been working on two files since his last commit.</p>
+<p>Additionally, the commit panel on the right side of the screen shows that there are two new uncommitted and unstaged files in the directory. They are <code>.gitignore</code> and <code>r4epi_example_project.Rproj</code>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_01.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>At this point, Arthur wants to take a snapshot of the state of his repository. Meaning, he wants to save a version of his repository as it currently exists. To do that, he first needs to <strong>stage</strong> the changes since the previous commit that he wants to be included in this commit. In this case, he wants to include all changes. So, he will click the green <code>Stage all changes</code> button located in the commit panel.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_02.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>After clicking the <code>Stage all changes</code> button, the two new files are moved down to the <code>Staged Files</code> window of the commit panel.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_03.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Next, Arthur will write a commit message. Just like there are <a href="../../chapters/best_practices/best_practices.html">best practices for writing R code</a>, there are also best practices for writing commit messages. Here is a link to a blog post that we think does a good job of explaining these best practices: <a href="https://cbea.ms/git-commit" class="uri">https://cbea.ms/git-commit</a>.</p>
+<p>The first line is called the <strong>commit message</strong>. You can think of the commit message as a brief summary of what this commit does to the repository. This message will help Arthur and his collaborators find key commits later in the future. In this context, “brief” means 72 characters or less. GitKraken tries to help us out by telling us how many characters we’ve typed in our commit message. Additionally, the commit message should be written in the imperative voice – like a command. Another way to think about it is that the commit message should typically complete the phrase, “If applied, this commit will…”. The screenshot below shows that Arthur wrote <code>Add Rproj and gitignore to project</code> (red arrow 1).</p>
+<p>In addition to the commit message, there is also a description box we can use to add more details about the commit. Sometimes, this is unnecessary. However, when we do choose to add a description, it is best practice to use it to explain <em>what</em> the commit does or <em>why</em> we chose to do it rather than <em>how</em> it does whatever it does. That’s in the code. In the screenshot below, you can see that Arthur added some bulleted notes to the description (red arrow 2).</p>
+<p>Finally, Arthur will click the green commit button at the bottom of the commit panel (red arrow 3). This will commit (save) a version of our repository that includes the changes to any of the files in the <code>Staged Files</code> window.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_04.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And here is what his GitKraken screen looks like after committing.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_05.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s pay special attention to what is being displayed in a couple of different areas. We’ll start by zooming in on the commit panel.</p>
+<p>At the top of the commit panel, we can see the short version of the commit ID – <code>4a394b</code>. Below that, we can see the commit message and description. Below that, we can see who created the commit and when. This tends to be more useful when we are collaborating with others. To the right of that information, GitKraken also shows us the commit ID for this commit’s parent commit – <code>277451</code>. Finally, it shows us the file changes that this commit applies to our repository. More specifically, it shows us the changes that commit <code>4a394b</code> makes to commit <code>277451</code>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_06.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>At this point, you may be wondering what this whole parent-child thing is and why we keep talking about it. The diagram below is a very simple graphical representation of how git views our repository. It views it as a series of commits that chronologically build our repository when they are applied to each other in sequence. Familial terms are often used in the git community to describe the relationship between commits. For example, in the diagram below commit <code>4a394b</code> is a child of commit <code>288451</code>. Child commits are always more recent than parent commits. This knowledge is not incredibly useful to us at this point, but it can be helpful when we start to learn about more advanced topics like merging commits. For now, just be aware of the terminology.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_07.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>It is also important to point out that Arthur’s most recent commit (<code>4a394b</code>) <strong>only exists in his local repository</strong>. That is, the repository on his computer. He has not yet shared the commit – or the new files associated with the commit – to the remote repository on GitHub.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_08.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>How do we know? Well, one way we can tell is by looking at Arthur’s GitKraken window. In the repository graph, the local repository (i.e., the little laptop icon) and the remote repository (i.e., the little gray and white icon) are on different rows. Additionally, there is a little <code>1</code> next to an up arrow displayed to the left of the main branch of our local repository in the left panel of GitKraken. Both of these indicate that the most recent commits contained in each repository are different. Specifically, that the local repository is one commit ahead of the remote repository.</p>
+<p>This concept is important to understand. [In Google Docs][versioning], when we made a change to our document locally, that change was automatically synced to Google’s servers. We didn’t have to <em>do</em> anything to save/create a version of the document. We had to put in a little effort if we wanted to name a particular version, but the version itself was already saved – identified using a date-time stamp. Conversely, git does not automatically make commits (i.e., save snapshots of the state of the files in our repository), nor does our local repository automatically sync up with our remote repository (in this case, GitHub). We have to do both of these things manually. This will create a little extra work for us, but it will also give us a lot more control.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_09.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As one additional check, Arthur can go look at the repository’s commit history on GitHub. As shown in the screenshot below, the commit history still only shows one commit – the initial commit.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_10.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s quickly pause and recap what Arthur has done so far.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_11.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>First, Arthur created a repository on GitHub. It was a remote repository because he accesses it over the internet. Then, he cloned (i.e., made a copy of) the remote repository to his computer. This copy is referred to as a local repository. Next, Arthur made some changes to the repository locally and committed them. At this point, the local repository is 1 commit ahead of the remote repository, and the changes that Arthur made locally are not currently reflected on GitHub.</p>
+<p>So, how does Arthur sync the changes he made locally with GitHub? He will <strong>push</strong> them to GitHub, which GitKraken makes incredibly easy. All he needs to do is click the <code>Push</code> button at the top of his GitKraken window (see below).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_12.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>After doing so, we will once again see some changes. What changes do you notice in the screenshot below?</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_13.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the repository graph, the local repository (i.e., the little laptop icon) and the remote repository (i.e., the little gray and white icon) are back on the same row. Additionally, the little <code>1</code> next to an up arrow is no longer displayed in the left panel. Both of these changes indicate that the most recent commits contained in each repository are the same.</p>
+<p>And if Arthur once again checks GitHub…</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_14.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>He will now see that the GitHub repository also has two commits. He can click on the text that says <code>2 commits</code> to view each commit in the commit history.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_15.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the commit history, he can now see commit <code>4a394b7</code>. Let’s take another pause here and recap.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_16.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>First, Arthur created a repository on GitHub. Then, he <strong>cloned</strong> the remote (i.e., GitHub) repository to his computer. Next, Arthur made some changes to the repository locally and <strong>committed</strong> them locally. Finally, he <strong>pushed</strong> the local commit up to GitHub. Now, his GitHub repository and local repository are in sync with each other.</p>
+<p>We realize that it probably seems like it took a lot of work for Arthur to get everything set up. But in reality, all of the steps up to this point will only take a couple of minutes once you’ve gone through them a few times.</p>
+</section>
+<section id="step-5-keep-adding-and-committing-files" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="step-5-keep-adding-and-committing-files">Step 5: Keep adding and committing files</h3>
+<p>At this point, Arthur has his repositories all set up and is ready to start rocking and rolling on his actual data analysis. To round out this example, Arthur will add some data to his repository that he will eventually analyze using R.</p>
+<div class="cell" data-lable="new_repository_15_commit_17">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_17.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The screenshot above shows that Arthur created a new folder inside the R project directory called <code>data</code>. He created it in the same way he would create any other new folder in his computer’s operating system. Then, he added a data set to the data folder he created. This particular data set happens to be stored in an Excel file named <code>form_20.xlsx</code>.</p>
+<p>Now, when Arthur checks GitKraken, this is what he sees in the commit panel.</p>
+<div class="cell" data-lable="new_repository_15_commit_18">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_18.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Just like before, GitHub is telling Arthur that he has a new unstaged file in the repository. Stop for a moment and think. What should Arthur do next?</p>
+<p>Was your answer, “stage and commit the new file”? If so, slow down and think again. Remember, in general, we don’t <em>ever</em> want to commit our research data to our GitHub repository. GitHub is not typically considered secure or private. So, how can Arthur keep the data in his local repository so that he can work with it, keep his local repository synced with GitHub, but make sure the data doesn’t get pushed up to GitHub?</p>
+<p>Do you remember earlier when Arthur told git and GitHub to ignore the <code>.DS_Store</code> file? In exactly the same way, Arthur can tell git and GitHub to ignore this data set. And once it’s ignored, it won’t ever be pushed to GitHub. Remember, our local git repository only includes files it’s <strong>tracking</strong> in commits, and it only pushes commits (and the files included in them) up to GitHub.</p>
+<p>In the screenshot below, Arthur added <code>data/</code> to line 6 of the <code>.gitignore</code> file. He could have added <code>form_20.xlsx</code> instead. That would have told git to ignore the <code>form_20.xlsx</code> data set specifically. However, Arthur doesn’t want to push <em>any</em> data to GitHub – including any data sets that he may add in the future. By adding <code>data/</code> to the <code>.gitignore</code> file, he is telling git to ignore the entire folder named <code>data</code> and all of the files it contains – now and in the future.</p>
+<div class="cell" data-lable="new_repository_15_commit_19">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_19.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>After saving the updated <code>.gitignore</code> file, the commit pane in GitKraken changes once again.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_20.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The new file <code>data/form_20.xlsx</code> is no longer showing up as an unstaged change. Instead, the only unstaged change showing up is the edited <code>.gitignore</code> file. We can tell that the changes to the <code>.gitignore</code> file are edits – as opposed to adding the file for the first time – because there is a little pencil icon to the left of the file name instead of a little green plus icon. Now what should Arthur do next?</p>
+<p>Was your answer, “stage and commit the edited file”? If so, you are correct! Now it is safe for Arthur to go ahead and commit these changes.</p>
+<p>After doing so, he can see that the GitHub repository contains 3 commits. Additionally, as shown the red box below, the data folder is nowhere to be found among the files contained in the GitHub repository.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_15_commit_21.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Arthur will now add one final file to the <code>r4epi_example_project</code> as part of this example. He will add an Quartofile with a little bit of R code in it. The code will import <code>form_20.xlsx</code> into the global environment as a data frame.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="new_repository_16_add_code.png" class="img-fluid figure-img" width="867"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>An then he will commit and push the <code>data_01_import.Rmd</code> to GitHub in the same way he committed and pushed previous files to Github.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="new_repository_17_commit_data_01_import.gif" class="img-fluid figure-img" alt="A gif about file import."></p>
+<figcaption>A gif about data import.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Arthur can continue adding files to his local repository and then pushing them to GitHub in this fashion for the remainder of the time he is working on this project, and the <a href="../../chapters/intro_git_github/intro_git_github.html">introduction to git and GitHub chapter</a> discusses <em>why</em> he should consider doing so.</p>
+<p>After going through this example, many students have three lingering questions:</p>
+<ol type="1">
+<li><p>How often should we commit?</p></li>
+<li><p>How often should we push our commits to GitHub?</p></li>
+<li><p>If we can’t use GitHub to share our data, how <em>should</em> we share data?</p></li>
+</ol>
+<p>We will answer questions 1 &amp; 2 immediately below. We will answer the third question in the <a href="#example-3-contribute-to-a-research-project">next example</a>.</p>
+</section>
+</section>
+<section id="committing-and-pushing" class="level2" data-number="39.6">
+<h2 data-number="39.6" class="anchored" data-anchor-id="committing-and-pushing"><span class="header-section-number">39.6</span> Committing and pushing</h2>
+<p>As we are learning to use git and GitHub, it is reasonable to ask how often we should commit our work as we go along. For better or worse, there is no hard-and-fast rule we can give you here. In Happy Git and GitHub for the useR, Dr.&nbsp;Jennifer (Jenny) Bryan writes that we should commit “every time you finish a valuable chunk of work, probably many times a day.”<span class="citation" data-cites="Bryan2016-yy"><sup><a href="../../references.html#ref-Bryan2016-yy" role="doc-biblioref">2</a></sup></span> This seems like a pretty good starting place to us.</p>
+<p>Of course, a natural follow-up question is to ask how often we should push our commits to GitHub. We could automatically push every commit we make to GitHub as soon as we make it. However, this isn’t always a good idea. It is much easier to edit or rollback commits that we have only made locally than it is to edit or rollback commits that we’ve pushed to our remote repository. For example, if we accidentally include a data set in a commit and push it to GitHub, this is a much bigger problem than if we accidentally include a data set in a commit and catch it before we push to GitHub. For this reason, we don’t suggest that you automatically push every commit you make to GitHub. So, how often <em>should</em> you push? Well, once again, there is no hard-and-fast rule. And once again, we think Dr.&nbsp;Bryan’s advice is a good starting point. She writes, “Do this [push] a few times a day, but possibly less often than you commit.”<span class="citation" data-cites="Bryan2016-yy"><sup><a href="../../references.html#ref-Bryan2016-yy" role="doc-biblioref">2</a></sup></span> It is also worth noting that how often you commit and push will also be dictated, at least partially, by the dynamics of the group of people who are contributing to the repository. So far, we have really only seen a repository with a single contributor (i.e., Arthur Epi). That will change in the next example.</p>
+<p>The advice above about committing and pushing may seem a little vague to you right now. It <em>is</em> a little vague. We apologize for that. However, we believe it’s also the best we can do. On the bright side, as you practice with git and GitHub, you will eventually fall into a rhythm that works well for you. Just give it a little time!</p>
+</section>
+<section id="example-3-contribute-to-a-research-project" class="level2" data-number="39.7">
+<h2 data-number="39.7" class="anchored" data-anchor-id="example-3-contribute-to-a-research-project"><span class="header-section-number">39.7</span> Example 3: Contribute to a research project</h2>
+<p>When our research assistants begin helping us with data management and analysis projects, we often have them start by going to the project’s GitHub repository to read the existing documentation and <a href="#step-2-clone-the-repository-to-your-computer">clone</a> all the existing code to their computer. This example is going to walk through that process step-by-step. For demonstration purposes, we will work with the example repository that our fictitious research assistant named Arthur Epi created in <a href="#example-2-create-a-repository-for-a-research-project">Example 2 above</a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> It’s probably worth noting that in most real-world scenarios the roles here would be reversed. That is, we (Brad or Doug) would have created the original repository and Arthur would be working off of it. However, the example repository above was already created using Arthur’s GitHub account, and we will continue to work off of it in this example. If you are a research assistant working with us (i.e., Brad or Doug) in real life, and using this example to walk yourself through getting started on a real project, you should insert yourself (and your GitHub account) into Brad’s role (and GitHub account) in the example below.</p>
+</div>
+</div>
+<p>In this example, we’re going to work collaboratively with Arthur on the <code>r4epi_example_project</code>. Arthur could have just emailed us all of the project files, but sometimes that might be <em>many</em> files, some of them may be very large, and he runs the risk of forgetting to send some of them by accident. Further, every time any of the contributors adds or updates a file, they will have to email all the other contributors the new file(s) and an explanation of the updates they’ve made. This process is typically inefficient and error prone. Conversely, Arthur could set up a shared folder on a cloud-based file storage service like Dropbox, Google Drive, or OneDrive. Doing so would circumvent the issues caused by emailing files that we just mentioned (i.e., many files, large files, forgetting files, and manually sending updates). However, Dropbox, Google Drive, and OneDrive aren’t designed to take advantage of all that git and GitHub have to offer (e.g., project documentation, versioning and version history, viewing differences between code versions, issue tracking, creating static websites for research dissemination, and more). Because Arthur created his repository on GitHub, all of the files and documentation we need to get started assisting him are easily accessible to us. All, he has to do is send us the repository’s web address, which is <a href="https://github.com/arthur-epi/r4epi_example_project" class="uri">https://github.com/arthur-epi/r4epi_example_project</a>.</p>
+<p>After navigating to a GitHub repository, the first thing we typically want to do is read the README. It should have some useful information for us about what the repository does, how it is organized, and how to use it. Because this is a fictitious, minimal example for the book, the current README in the <code>r4epi_example_project</code> project isn’t that useful, impressive, or informative. Matias Singers maintains a list of great READMEs at the following link that you may want to check out: <a href="https://github.com/matiassingers/awesome-readme" class="uri">https://github.com/matiassingers/awesome-readme</a>. If you want to see an example README from a real research project that we worked on, you can check out this link: <a href="https://github.com/brad-cannell/detect_pilot_test_5w" class="uri">https://github.com/brad-cannell/detect_pilot_test_5w</a>. After we read over the README file, we are ready to start making edits and additions to the project. But how do we do that?</p>
+<p>While it is technically possible for us to edit code files directly on GitHub (see [Contributing to R4Epi]), this is typically <em>only</em> a good idea for <em>extremely minor edits</em> (e.g., a typo in the documentation). Typically, we will want to make a copy of all the code files on our computer so that we can experiment with the edits we are making. Said another way, we can suggest <em>edits</em> to R code files directly on GitHub, but we can’t <em>run</em> those files in R directly on GitHub to make sure they do what we intend for them to do. To test our changes in R, we will need all of the repository’s files on our local computer. And how do we do that?</p>
+<section id="forking-a-repository" class="level3" data-number="39.7.1">
+<h3 data-number="39.7.1" class="anchored" data-anchor-id="forking-a-repository"><span class="header-section-number">39.7.1</span> Forking a repository</h3>
+<p>If your answer the question above was, “we <strong>clone</strong> the <code>r4epi_example_project</code> repository to our computer” you were close, but that isn’t our best option here. While we technically <em>can</em> clone public repositories that aren’t on our account, we <em>can’t</em> push any changes to them. And this is a <strong>good thing</strong>! Think about it, do we really want any person out there on the internet to be able to make changes to our repository anytime they want without any oversight from us? No way!</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="forking_01.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this case, <strong>forking</strong> the repository is going to be the better option. This is another funny name, but we are once again just talking about making a copy of the repository. However, this time we are copying the repository from the original <em>GitHub account</em> (i.e., Arthur’s) to our <em>GitHub account</em>. With cloning, we were copying the repository from the original <em>GitHub account</em> to our <em>computer</em>. Do you see the difference? Let’s try to visualize it.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="forking_02.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The purple arrow above indicates that we are forking (i.e., making a copy of) the original <code>r4epi_example_project</code> repository on Arthur’s GitHub account to Brad’s GitHub account. And doing so is really easy. All Brad has to do is log in to GitHub and navigate to <em>Arthur’s</em> <code>r4epi_example_project</code> repository located at <a href="https://github.com/arthur-epi/r4epi_example_project" class="uri">https://github.com/arthur-epi/r4epi_example_project</a>. Then, he needs to click on the <code>Fork</code> button located near the top-right corner of the screen.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="forking_03.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Then Brad will click the green <code>Create fork</code> button on the next page.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="forking_04.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And after a few moments, this will create an entirely new repository on Brad’s GitHub account. It will contain an exact copy of the all the files that were on the repository in Arthur’s GitHub account, but <em>Brad</em> is the owner of <em>this</em> repository on his account (shown in the screenshot below).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="forking_05.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Because Brad is the owner of this repository, he can clone it to his local computer, work on it, and push changes up to GitHub in exactly the same way that Arthur did in the <a href="#step-2-clone-the-repository-to-your-computer">example above</a>. Just to be clear, the changes that Brad pushes to <em>his</em> GitHub repository will have no effect on Arthur’s GitHub repository.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> As we’ve pointed out multiple times in this chapter, we generally do not want to upload research data to GitHub. Why? Because it isn’t typically considered private or secure. However, in order for Brad to do work on this project, he will need to access the data somehow. This will require Arthur to share to data with Brad through some means other than GitHub. Different organizations have different rules about what is considered secure. For example, it may be an encrypted email or it may be a link to a shared drive on a secure server. However the data is shared, it is important for Brad to <strong>create the same file structure on his computer</strong> that Arthur has on his computer. Otherwise, the R code will not work on both computers. Remember from the example above that Arthur created a <code>data/</code> folder in his local repository and he moved the <code>form_20.xlsx</code> data to that folder. Then, in the <code>data_01_import</code> Quartofile, he imports the data using the relative path <code>data/form_20.xlsx</code>. In the chapter on <a href="../../chapters/file_paths/file_paths.html">file paths</a> we discussed the advantages of using relative file paths when working collaboratively. Just remember, in order for this relative file path to work identically on Arthur’s computer and Brad’s computer, the folder structure and file names must also be <em>identical</em>. So, if Brad put the <code>form_20.xlsx</code> data in a folder in his local repository called <code>data sets/</code> instead of <code>data/</code>, then the code in the <code>data_01_import</code> Quartofile would throw an error.</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="forking_06.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notice that in the diagram above, Arthur’s original repository is totally unaffected by any changes that Brad is pushing from his local computer to the repository on his GitHub account. There is no arrow from Brad’s remote repository going <em>into</em> Arthur’s remote repository. Again, this is a good thing. Literally anyone else in the world with a GitHub account could just as easily fork the repository and start making changes. If they also had the ability to make changes to the original repository at will, they could potentially do a lot of damage!</p>
+<p>However, in this case, Arthur and Brad <em>do</em> know each other and they <em>are</em> working collaboratively on this project. And at some point, the work that Brad is doing needs to be synced up with the work that Arthur is doing. In order to make that happen, Brad will need to send Arthur a <em>request</em> to <em>pull</em> the changes from Brad’s remote repository into Arthur’s remote repository. This is called a <strong>pull request</strong>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_01.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="creating-a-pull-request" class="level3" data-number="39.7.2">
+<h3 data-number="39.7.2" class="anchored" data-anchor-id="creating-a-pull-request"><span class="header-section-number">39.7.2</span> Creating a pull request</h3>
+<p>To make this section slightly more realistic, let’s say that Brad adds some code to <code>data_01_import.Qmd</code>. Specifically, he adds some code that will coerce the <code>date_received</code> column from character strings to dates (code below).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_02.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Then, Brad commits the changes and pushes them up to his GitHub account. Now, when he checks his GitHub account he can see that his remote repository is 1 commit ahead of Arthur’s remote repository. And that makes sense, right? Brad just updated the code in <code>data_01_import.Qmd</code>, committed that changed, and pushed the commit to his GitHub account, but nothing has changed in the repository on Arthur’s GitHub account.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_03.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, Brad needs to create a pull request. This pull request will let Arthur know that Brad has made some changes to the code that he wants to share with Arthur. To do so, Brad will click <code>Contribute</code> and then click the green <code>Open pull request</code> button as shown below.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_04.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The top section of the next screen, which is outlined in red below, allows Brad to select the repository and branch on his GitHub account that he wants to share with Arthur (to the right of the arrow). More specifically, he is sending a request to Arthur asking him to merge his code into Arthur’s code. In this case, the code he wants to ask Arthur to merge is on the main branch of the <code>brad-cannell/r4epi_example_project repository</code> (Brad’s repository only has one branch – the main branch – at this point). To the left of the arrow, Brad can select the repository and branch on Arthur’s GitHub account that he wants to ask Arthur to merge the code into. In this case, the main branch of the <code>arthur-epi/r4epi_example_project repository</code> (Arthur’s repository only has the main branch at this point as well).</p>
+<p>Below the red box, GitHub is telling Brad about the commits that will be sent in this pull request and the changes that will be made to Arthur’s files if he merges the pull request into his repository. In this case, only one file in Arthur’s repository would be altered – <code>data_01_import.Rmd</code>. Below that, Brad can see that the exact differences between his version of <code>data_01_import.Rmd</code> and the version that currently exists in Arthur’s repository. How cool is that that Brad and Arthur can actually see exactly how this pull request changes the file state down to individual lines of code?</p>
+<p>Because Brad is satisfied with what he sees here, he clicks the green <code>Create pull request</code> button shown in the middle right of the screenshot below.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_05.png" class="img-fluid figure-img" width="1236"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s pause here and get explicit about two things.</p>
+<ol type="1">
+<li><p>As we’ve tried to really drive home above, this pull request will <strong>not</strong> automatically make any changes to Arthur’s repository. Rather, it will only send Arthur Brad’s code, ask him to review it, and then allow him to <em>choose</em> whether to incorporate it into his repository or not.</p></li>
+<li><p>Pull requests are sent at the <strong>branch level</strong> not at the <strong>file level</strong>. Meaning, if Arthur accepts Brad’s pull request, it will make <em>all</em> of the files on his main branch identical to <em>all</em> of the files on Brad’s main branch (the main branch because that is the branch Brad chose in the screenshot above – and currently the only branch in either repository). In this case, that means that the only file that would change as a result of copying over the entire branch is <code>data_01_import.Rmd</code>. However, if Brad had made changes to <code>data_01_import.Rmd</code> <em>and</em> another file, Arthur would only have the option to merge <em>both</em> files or <em>neither</em> file. He would not have the option of merging <code>data_01_import.Rmd</code> <em>only</em>. Pull requests merge the entire branch, not specific files. We are emphasizing this because this may affect how you commit, push, and create pull requests when you are working collaboratively. More specifically, you may want to commit, push, and send pull requests more frequently than you would if you were working on a project independently.</p></li>
+</ol>
+<p>On the next screen, Brad is given an opportunity to give the pull request a title and add a message for Arthur that give him some additional details. In general, it’s a good idea to fill this part out using similar conventions to those described above for commit messages.</p>
+<p>After filling out the commit message, Brad will click the green <code>Create pull request</code> button on last time, and he is done. This will send Arthur the pull request.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_06.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The next time Arthur checks the <code>r4epi_example_project</code> on GitHub, he will see that he has a new pull request.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_07.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If he clicks on the text <code>Pull requests</code> text, he will be taken to his pull requests page. It will show him all pending pull requests. In this case, there is just the one pull request that Brad sent.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_08.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>When he clicks on it, he will see a screen like the one in the screenshot below. Scanning from top to bottom, it will tell him which branch Brad is requesting to merge the code into, show him the message Brad wrote, tell him that he can merge this branch without any conflicts if he so chooses, and give him an opportunity to write a message back to Brad before deciding whether to merge this pull request or close it.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_09.png" class="img-fluid figure-img" width="1260"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>He also has the option to view some additional details by clicking the <code>Commits</code> tab, <code>Checks</code> tab, and/or <code>Files changed</code> tab towards the top of the screen. Let’s say he decides to click on the <code>Files changed</code> tab.</p>
+<p>On the <code>Files changed</code> tab, Arthur can see each of the files that the pull request would change if he were to merge it into his repository (in this case, only one file). For each file, he can see (and even comment on) each specific line of code that would change. In this case, Arthur is pleased with the changes and navigates back to the <code>Conversation</code> tab by clicking on it.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_10.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Back on the <code>Conversation</code> tab (see screenshot below), Arthur has some options. If he wants more clarification about the pull request, he can send leave a comment for Brad using the comment box near the bottom of the screen. If he knows that he does <strong>NOT</strong> want to merge this pull request into his code, he can click the <code>Close pull request</code> button at the bottom of the screen. This will close the pull request and his code will remain unchanged. In this case, Arthur wants to incorporate the changes that Brad sent over, so he clicks the green <code>Merge pull request</code> button in the middle of the screen.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_11.png" class="img-fluid figure-img" width="1260"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Then, he is given an opportunity to add some details about the changes this merge will make to the repository once it is committed. You can once again think of this message as having a very similar purpose to commit messages, which were discussed above. In fact, it will appear as a commit in the repository’s commit history.</p>
+<p>Finally, he clicks the green <code>Confirm merge</code> button.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_12.png" class="img-fluid figure-img" width="1248"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And if Arthur navigates back to his commit history page, he can see two new commits. Brad’s commit with the updated <code>data_01_import.Qmd</code> file, and the commit that was automatically created when Arthur merged the branches together.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_15.png" class="img-fluid figure-img" width="1248"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, Arthur takes a look at <code>data_01_import.Qmd</code> on his computer. To his surprise, the code to coerce date_received into dates isn’t there. Why not?</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_16.png" class="img-fluid figure-img" width="869"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Well, let’s open GitKraken on Arthur’s computer and see if we can help him figure it out. In the repository graph, Arthur’s local repository (i.e., the little laptop icon) and the remote repository (i.e., the little gray and white icon) are on different rows. Additionally, there is a little <code>2</code> next to a down arrow displayed to the left of the main branch of our local repository in the left panel of GitKraken. Both of these indicate that the most recent commits contained in each repository are different. Specifically, that the local repository is two commits <em>behind</em> the remote repository.</p>
+<div class="cell" data-lable="pull_request_17">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_17.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So, let’s pause here for a second and review what we’ve done so far. As shown in the figure below:</p>
+<ol type="1">
+<li><p>Brad made some updates to the code on his computer and then committed those changes to his local repository. At this point, his local repository is out of sync with his remote repository, Arthur’s remote repository, and Arthur’s local repository.</p></li>
+<li><p>Next, Brad pushed that commit from his local repository up to his remote repository on GitHub. After doing so, his local repository and remote repository are synced with each other, but they are still out of sync with Arthur’s remote repository and Arthur’s local repository.</p></li>
+<li><p>Then, Brad created a pull request for Arthur. The request was for Arthur to pull the latest commit from Brad’s remote repository into Arthur’s remote repository.</p></li>
+<li><p>Arthur accepted and merged Brad’s pull request. After doing so, his remote repository, Brad’s remote repository, and Brad’s local repository are all contain the updated <code>data_01_import.Qmd</code> file, but Arthur’s local repository still does not.</p></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_18.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So, how does Arthur get his local repository in sync with his remote repository?</p>
+<p>Arthur just needs to use the <strong>pull</strong> command to download the files from his updated remote repository and merge them into his local repository (step 5 below).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_19.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And GitKraken makes pulling the files from his remote repository really easy. All Arthur needs to do is click the pull button shown in the screenshot below. GitKraken will download (also called <strong>fetch</strong>) the updated repository and merge the changes into his local repository.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_20.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And as shown in the screenshot below, Arthur can now see that his local repository is now in sync with his remote repository once again! 🎉</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_21.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>But, what about Brad’s repository? Well, as you can see in the screenshot below, Brad’s remote repository is now 1 commit <em>behind</em> Arthur’s. Why?</p>
+<p>This one is kind of weird/tricky. Although the code in Brad’s repository is now identical to the code in Arthur’s repository, the <em>commit history</em> is not. Remember, Arthur’s commit history from above? When he merged Brad’s code into his own, that automatically created an additional commit. And that additional commit does not currently exist in Brad’s commit history. It’s an easy fix though!</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_22.png" class="img-fluid figure-img" width="871"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>All Brad needs to do is a quick <strong>fetch</strong> from Arthur’s remote repository to merge that last commit into his commit history, and then <strong>pull</strong> it down to his local repository.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_23.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To do so, Brad will first click <code>Fetch upstream</code> followed by the green <code>Fetch and merge</code> button.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_24.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>After a few seconds, GitHub will show him that his remote repository is now synced up with Arthur’s remote repository. All he as to do now is a quick pull in GitHub.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pull_request_25.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And now we have seen the basic process for collaboratively coding with git and GitHub. Don’t feel bad if you are still feeling a little bit confused. Git and GitHub are confusing at times even for experienced programmers. But that doesn’t mean that they aren’t still valuable tools! They are!</p>
+<p>We also recognize that it might seem like that was a ton of steps above. Again, we went through this process slowly and methodically because we are all trying to learn here. In a real-life project with two experienced collaborators, the steps in this example would typically be completed in a matter of minutes. No big deal.</p>
+</section>
+</section>
+<section id="summary" class="level2" data-number="39.8">
+<h2 data-number="39.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">39.8</span> Summary</h2>
+<p>There is so much more to learn about git and GitHub, but that’s not what this book is about. So, we will stop here. We hope the examples above demonstrate some of the potential value of using git and GitHub in your project workflow. We also hope they give you enough information to get you started.</p>
+<p>Here are some free resources we recommend if you want to learn even more:</p>
+<ol type="1">
+<li><p>Chacon S, Straub B. Pro Git. Second. Apress; 2014. Accessed June 13, 2022. https://git-scm.com/book/en/v2</p></li>
+<li><p>GitHub. Getting started with GitHub. GitHub Docs. Accessed June 13, 2022. https://ghdocs-prod.azurewebsites.net/en/get-started</p></li>
+<li><p>Bryan J. Happy Git and GitHub for the useR.; 2016. Accessed June 2, 2022. https://happygitwithr.com/index.html</p></li>
+<li><p>Keyes D. How to Use Git/GitHub with R. R for the Rest of Us. Published February 13, 2021. Accessed June 13, 2022. https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r/</p></li>
+<li><p>Wickham H, Bryan J. Chapter 18 Git and GitHub. In: R Packages. Accessed June 13, 2022. https://r-pkgs.org/git.html</p></li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body" role="list" style="display: none">
+<div id="ref-GitHub2022-iw" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">GitHub. Licensing a repository. Published online May 2022.</div>
+</div>
+<div id="ref-Bryan2016-yy" class="csl-entry" role="listitem">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Bryan J. <em>Happy Git and <span>GitHub</span> for the useR</em>.; 2016.</div>
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/brad-cannell\.github\.io\/r4epi_quarto\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/intro_git_github/intro_git_github.html" class="pagination-link" aria-label="Introduction to git and GitHub">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Introduction to git and GitHub</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/creating_word_tables/creating_word_tables.html" class="pagination-link" aria-label="Creating Tables with R and Microsoft Word">
+        <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>R for Epidemiology</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/using_git_github/using_git_github.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://Quarto/.org/">Quarto/</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
