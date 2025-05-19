@@ -1,0 +1,304 @@
+# Linear Regression
+
+```{=html}
+<!-- 
+Hidden comments placeholder
+---------------------------
+
+To preview:
+bookdown::preview_chapter("chapters/11_part_regression/03_logistic_regression.Rmd")
+
+Copy and paste:
+👆**Here's what we did above:**
+
+-->
+```
+
+::: under-construction
+`r fontawesome::fa("hammer", fill = "#000000", height="1em")` This chapter is under heavy development and may still undergo significant changes.
+:::
+
+```{r logistic-regression-regression-models-01, echo=FALSE, fig.cap="Four commonly used generalized linear models."}
+knitr::include_graphics("img/11_part_regression/01_intro_regression/regression_models_01.png")
+```
+
+We introduced regression modeling generally in the [introduction to regression analysis chapter][Introduction to Regression Analysis]. In this chapter, we will discuss fitting logistic regression models, a type of generalized linear model, to our data using R. **In general, the logistic model is a good place to start when the regressand we want to model is dichotomous**. We will begin by loading some useful R packages and simulating some data to fit our model to. We add comments to the code below to help you get a sense for how the values in the simulated data are generated. But please skip over the code if it feels distracting or confusing, as it is not the primary object of our interest right now.
+
+```{r logistic-regression-load-packages}
+# Load the packages we will need below
+library(dplyr, warn.conflicts = FALSE)
+library(broom) # Makes glm() results easier to read and work with
+library(ggplot2)
+library(meantables)
+library(freqtables)
+```
+
+```{r logistic-regression-sim-data}
+# Set the seed for the random number generator so that we can reproduce our results
+set.seed(123)
+
+# Set n to equal the number of people we want to simulate. We will use n
+# repeatedly in the code below.
+n <- 20
+
+# Simulate a data frame with n rows
+# The variables in the data frame are generic continuous, categorical, and 
+# count values. They aren't necessarily intended to represent any real-life 
+# health-related state or event
+df <- tibble(
+  # Create a continuous regressor containing values selected at random from
+  # a normal distribution
+  x_cont  = rnorm(n, 10, 1),
+  # Create a categorical regressor containing values selected at random from
+  # a binomial distribution with a 0.3 probability of success (i.e., 
+  # selecting a 1)
+  x_cat   = rbinom(n, 1, .3),
+  # Create a continuous regressand that has a value that is equal to the value
+  # of x_cont plus or minus some random variation. The direction of the
+  # variation is dependent on the value of x_cat.
+  y_cont  = if_else(
+    x_cat == 0, 
+    x_cont + rnorm(n, 1, 0.1), 
+    x_cont - rnorm(n, 1, 0.1)
+  ),
+  # Create a categorical regressand that has a value selected at random from
+  # a binomial distribution. The probability of a successful draw from the 
+  # binomial distribution is dependent on the value of x_cat.
+  y_cat   = if_else(
+    x_cat == 0,
+    rbinom(n, 1, .1),
+    rbinom(n, 1, .5)
+  ),
+  # Create a regressand that contains count data selected at random from
+  # a categorical distribution. The probability of a selecting each value from 
+  # the distribution is dependent on the value of x_cat.
+  y_count = if_else(
+    x_cat == 0,
+    sample(1:5, n, TRUE, c(.1, .2, .3, .2, .2)),
+    sample(1:5, n, TRUE, c(.3, .3, .2, .1, .1))
+  )
+)
+
+# Print the value stored in df to the screen
+df
+```
+
+## Categorical regressand continuous regressor
+
+Now that we have some simulated data, we will fit and interpret a few different logistic models. We will start by fitting a logistic model with a single continuous regressor. 
+
+```{r}
+glm(
+  y_cat  ~ x_cont,                   # Formula
+  family = binomial(link = "logit"), # Family/distribution/Link function
+  data   = df                        # Data
+)
+```
+
+This model isn't the most interesting model to interpret because we are just modeling numbers without any context. However, because we are modeling numbers without any context, we can strip out any unnecessary complexity or biases from our interpretations. Therefore, in a sense, these will be the "purist", or at least the most general, interpretations of the regression coefficients produced by this type of model. We hope that learning these general interpretations will help us to understand the models, and to more easily interpret more complex models in the future.
+
+<!-- Interpret model results other than coefficients. For example, degrees of freedom, null deviance, residual deviance, and AIC -->
+
+### Interpretation
+
+1. Intercept: The natural log of the odds of `y_cat` when `x_cont` is equal to zero. 
+
+2. x_cont: The average change in the natural log of the odds of `y_cont` for each one-unit increase in `x_cont`. 
+
+## Categorical regressand categorical regressor
+
+Next, we will fit a logistic model with a single categorical regressor. Notice that the formula syntax, the distribution, and the link function are the same for the single categorical regressor as they were for the single continuous regressor We just swap our `x_cont` for `x_cat` in the formula. 
+
+```{r}
+glm(
+  y_cat  ~ x_cat,                    # Formula
+  family = binomial(link = "logit"), # Family/distribution/Link function
+  data   = df                        # Data
+)
+```
+
+### Interpretation
+
+1. Intercept: The natural log of the odds of `y_cat` when `x_cat` is equal to zero. 
+
+2. x_catt: The average change in the natural log of the odds of `y_cont` when `x_cat` changes from zero to one.
+
+Now that we have reviewed the general interpretations, let's practice using logistic regression to explore the relationship between two variables that feel more like a scenario that we may plausibly be interested in.
+
+## Elder mistreatment example
+
+<!-- Add comments to the code below explaining how we are simulating the data -->
+
+```{r}
+set.seed(123)
+n <- 100
+em_dementia <- tibble(
+  age = sample(65:100, n, TRUE),
+  dementia = case_when(
+    age < 70 ~ sample(0:1, n, TRUE, c(.99, .01)),
+    age < 75 ~ sample(0:1, n, TRUE, c(.97, .03)),
+    age < 80 ~ sample(0:1, n, TRUE, c(.91, .09)),
+    age < 85 ~ sample(0:1, n, TRUE, c(.84, .16)),
+    age < 90 ~ sample(0:1, n, TRUE, c(.78, .22)),
+    TRUE ~ sample(0:1, n, TRUE, c(.67, .33))
+  ),
+  dementia_f = factor(dementia, 0:1, c("No", "Yes")),
+  em = case_when(
+    dementia_f == "No"  ~ sample(0:1, n, TRUE, c(.9, .1)),
+    dementia_f == "Yes" ~ sample(0:1, n, TRUE, c(.5, .5))
+  ),
+  em_f = factor(em, 0:1, c("No", "Yes"))
+)
+em_dementia
+```
+
+<!-- We need to add a lot more narrative below that walks readers through what we are doing. -->
+
+### Categorical regressor (dementia)
+
+```{r}
+em_dementia %>% 
+  freq_table(dementia_f, em_f) %>% 
+  select(row_var:n_row, percent_row)
+```
+
+```{r}
+glm(
+  em_f  ~ dementia_f,
+  family = binomial(link = "logit"),
+  data   = em_dementia
+)
+```
+
+### Interpretation
+
+1. Intercept: The natural log of the odds of `elder mistreatment` among people who do not have dementia is -2.734. (Generally not of great interest or directly interpreted)
+
+2. dementia_fYes: The average change in the natural log of the odds of `elder mistreatment` among people with dementia compared to people without dementia.
+
+```{r}
+tibble(
+  intercpet   = exp(-2.734),
+  dementia_or = exp(2.282)
+)
+```
+
+3. dementia_fYes: People with dementia have 9.8 times the odds of `elder mistreatment` among compared to people without dementia.
+
+```{r}
+em_dementia_ct <- matrix(
+  c(a = 7, b = 11, c = 5, d = 77),
+  ncol = 2,
+  byrow = TRUE
+)
+
+em_dementia_ct <- addmargins(em_dementia_ct)
+
+dimnames(em_dementia_ct) <- list(
+  Dementia = c("Yes", "No", "col_sum"), # Row names
+  EM       = c("Yes", "No", "row_sum")  # Then column names
+)
+
+em_dementia_ct
+```
+
+```{r}
+incidence_prop <- em_dementia_ct[, "Yes"] / em_dementia_ct[, "row_sum"]
+em_dementia_ct <- cbind(em_dementia_ct, incidence_prop)
+em_dementia_ct
+```
+
+```{r}
+incidence_odds <- em_dementia_ct[, "incidence_prop"] / (1 - em_dementia_ct[, "incidence_prop"])
+em_dementia_ct <- cbind(em_dementia_ct, incidence_odds)
+em_dementia_ct
+```
+
+```{r}
+ior <- em_dementia_ct["Yes", "incidence_odds"] / em_dementia_ct["No", "incidence_odds"]
+ior
+```
+
+```{r}
+# Alternative coding
+em_dementia %>% 
+  freq_table(dementia_f, em_f) %>% 
+  select(row_var:n_row, percent_row) %>% 
+  filter(col_cat == "Yes") %>% 
+  mutate(
+    prop_row = percent_row / 100,
+    odds = prop_row / (1 - prop_row)
+  ) %>% 
+  summarise(or = odds[row_cat == "Yes"] / odds[row_cat == "No"])
+```
+
+### Continuous regressor (age)
+
+```{r}
+ggplot(em_dementia, aes(x = age, y = em_f)) +
+  geom_point()
+```
+
+```{r}
+em_dementia %>%
+  group_by(em_f) %>% 
+  mean_table(age)
+```
+
+```{r}
+glm(
+  em_f  ~ age,
+  family = binomial(link = "logit"),
+  data   = em_dementia
+)
+```
+
+### Interpretation
+
+1. Intercept: The natural log of the odds of `elder mistreatment` among people who do not have dementia is -3.80. (Generally not of great interest or directly interpreted)
+
+2. age: The average change in the natural log of the odds of `elder mistreatment` for each one-year increase in age is 0.02.
+
+```{r}
+glm(
+  em_f  ~ age,
+  family = binomial(link = "logit"),
+  data   = em_dementia
+) %>% 
+  broom::tidy(exp = TRUE, ci = TRUE)
+```
+
+```{r}
+em_age_70 <- -3.180 + (0.02127 * 70)
+em_age_70
+```
+
+```{r}
+em_age_71 <- -3.180 + (0.02127 * 71)
+em_age_71
+```
+
+```{r}
+em_age_71 - em_age_70
+```
+
+```{r}
+exp(0.02127)
+```
+
+```{r}
+em_dementia %>% 
+  filter(age %in% c(70, 71))
+```
+
+## Assumptions
+
+<!-- Consider moving these to the top of the page -->
+
+Here are some assumptions of the logistic model to keep in mind.
+
+- The regressand, $Y$, follows a Bernoulli distribution.
+
+- The mean of $Y$ is given by the logistic function.
+
+- Observations are independent

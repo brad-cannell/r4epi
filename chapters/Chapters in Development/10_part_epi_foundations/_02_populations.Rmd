@@ -1,0 +1,209 @@
+# Populations and Samples
+
+```{=html}
+<!-- 
+Hidden comments placeholder
+---------------------------
+
+For more population plot code see: 
+- Dropbox/Teaching/epi_3_public/modules/graphics/population_plots.Rmd
+- Dropbox/Teaching/epi_3_public/modules/graphics/epi_3_graphics.Rmd
+
+To preview:
+bookdown::preview_chapter("chapters/10_part_epi_foundations/02_populations.Rmd")
+
+Copy and paste:
+👆**Here's what we did above:**
+-->
+```
+
+::: under-construction
+`r fontawesome::fa("hammer", fill = "#000000", height="1em")` This chapter is under heavy development and may still undergo significant changes.
+:::
+
+```{r populations, echo=FALSE}
+# knitr::include_graphics("img/10_part_epi_foundations/02_populations/figure.png")
+```
+
+```{r populations-load-packages, echo=FALSE}
+library(dplyr, warn.conflicts = FALSE)
+library(tidyr)
+library(ggplot2)
+library(templates)
+
+# Load color template
+data("my_colors")
+```
+
+```{r populations-load-helper-functions, echo=FALSE}
+# Adding some helper functions to help with population plots.
+# Set everything to echo=FALSE. The goal here isn't to teach learners how to make population plots. It is simply to use them as a visual aid for learning about populations and samples.
+# source("../../R/templates.R") # For colors
+# source("../../R/sample_ny.R") # To make sampling easier
+# source("../../R/make_pop.R")  # To make an example population
+# source("../../R/plot_pop.R")  # To make a population plot
+
+source("R/templates.R") # For colors
+source("R/sample_ny.R") # To make sampling easier
+source("R/make_pop.R")  # To make an example population
+source("R/plot_pop.R")  # To make a population plot
+```
+
+<!-- Improve this graphic. -->
+
+```{r populations-simulate-population, echo=FALSE}
+pop <- expand_grid(x = 1:10, y = 1:10)
+
+ggplot(pop, aes(x, y)) +
+  geom_point(size = 10, color = u_orange) +
+  theme(
+    panel.background = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank()
+  ) +
+  labs(
+    title = "A graphical representation of a popluation of 100 people.",
+    subtitle = "Created in R."
+  )
+```
+
+In the [using R for epidemiology chapter][Using R for Epidemiology], we said that epidemiology is usually defined as something like, "the study of the occurrence and distribution of health-related states or events in specified <span class="u-orange-text">populations</span>, including the study of the determinants influencing such states, and the application of this knowledge to control the health problems." @Porta2008-ij We highlighted the word "populations" in that quote because populations are such an important concept in epidemiology. So important that they are embedded in the very definition of our discipline, and as epidemiologists, we generally strive to describe a population, predict the occurrence of something in a population, or explain the causes of something in a population. But, what is a population?
+
+> "The simplest definition of a population is a group of people who share characteristics or meet criteria that define membership in the population." @Lash2021-mb
+
+In other words, we set some criteria of interest and then anyone who meets that criteria is a member of the population. In everyday language, we most often think about the criteria that defines population membership as being geographic. For example, all of the people who live in the United States make up the population of the United States. The criteria that defines them is the fact that they live in the United States.
+
+But we certainly do not have to limit our criteria of interest to be geographic. We can use pretty much any criteria that is useful for our purposes. For example, people of a particular age, gender, or race or ethnicity; people who work in a particular occupation; people who participate in a particular behavior or activity; or people who have a particular disease. All the people who meet the criteria we choose are de facto members of the population.
+
+::: note
+🗒**Side Note:** We would add "during a defined time period" to the definition given above. As we hope to show you, the inclusion of the time period of interest is a critical component of making almost every measure we will use in epidemiology meaningful.
+:::
+
+## Open and closed populations
+
+Populations may be further classified as **open** or **closed**. A population is considered *closed* when new members are *not* added after the population is defined. Further, closed populations may only lose members to death. A population is considered *open* when new members *are* added over time -- through birth or as new people meet the population definition. Like closed populations, open populations may lose members to death, but they may also lose members as people cease to meet the criteria for population membership. For example, when a person moves out of a geographic area they stop meeting the criteria for being included in the population of people who live in that geographic area.
+
+So, the most obvious way that open and closed populations differ is that people can move in and out of open populations over time, but the same is not true for closed populations. As we will see, this has implications for the kinds of measures we can/should use when studying the health of populations. It also has implications for the meaning we make of our conclusions.
+
+A second, more subtle, distinction between whether a population is closed or open is the time axis we choose to use to describe the population. So, closed or open aren't necessarily a property of the group of people under study. It is simply a consequence of the way we define the population. To help solidify this distinction between open and closed populations in our minds, let's think about the population of people who use Aspirin. It may not initially be obvious, but we could use more than one time axis to define the population of aspirin users.
+
+```{r populations-closed-vs-open-populations-01, echo=FALSE}
+knitr::include_graphics("img/10_part_epi_foundations/02_populations/closed_vs_open_populations_01.png")
+```
+
+For example, the x-axis of the figure shown above represents **calendar time** -- September 1, September 7, September 14, etc. Four population members are also graphically represented in the figure above. Each person's **index time** -- the moment when all membership criteria are met and they enter the population -- is at the point where medicine bottle appears, and the time time spent as a member of the population is represented by the orange arrow moving from left to right.
+
+Is the population above, defined by calendar time, an open or closed population?
+
+It is an open population when defined in calendar time because new people are entering the population over time.
+
+However, that same population could also be defined as a closed population if the x-axis is measured from the start of their Aspirin use.
+
+```{r populations-closed-vs-open-populations-02, echo=FALSE}
+knitr::include_graphics("img/10_part_epi_foundations/02_populations/closed_vs_open_populations_02.png")
+```
+
+Now, in the figure above, time is measured as weeks since the initiation of Aspirin use. This is an example of marking the x-axis with **event time**. Let's take a moment to notice some important differences between this figure and the figure that had calendar time on the x-axis <!-- Cross reference the figures -->. First, population membership once again starts with the occurrence of an event -- aspirin use. However, the x-axis is now defined by weeks since the index time, and not by calendar time (i.e., dates). Because we define time this way, all the people entered the population at the exact same index "time" -- when they took aspirin for the first time. Graphically, this looks like every person's time starting at the far left of the x-axis. Second, although not completely obvious from the figure alone, the criteria for membership never changes for these four people -- they are forever a person who took aspirin. So, in the population above, we used event time to mark the x-axis, membership started with the occurrence of the event, and membership never ends for a reason other than death.
+
+Is the population above, defined by event time, an open or closed population?
+
+It is a closed population when defined in event time because each person entered at the same time -- their event time -- and no member was lost for a reason other than death.
+
+But, what happens when a fifth person takes aspirin for the first time? Won't they become a new member of the population? And, if a population can gain new members, isn't it an open population by definition? Great question! Remember that our definition of a closed population was "when new members are not added *after the population is defined*..." In this scenario, we are defining the population as people who have ever taken Aspirin as of this moment. People who initiate aspirin use in later moments will not meet that definition, and cannot be added to the population.
+
+It is also worth noting that any population that has loss to follow-up, even if the people who are lost to follow-up would still meet eligibility criteria if they were being followed, is an open population. And what is loss to follow-up? For our purposes, a person is lost to follow-up when they can no longer be observed.
+
+```{r populations-closed-vs-open-populations-03, echo=FALSE}
+knitr::include_graphics("img/10_part_epi_foundations/02_populations/closed_vs_open_populations_03.png")
+```
+
+For example, let's say that membership in our Aspirin population is defined by taking Aspirin once a week. However, person 2 moves and doesn't leave us with any contact information. This is now, by definition, an open population. This is actually a very common occurrence in practice, and we will discuss methods for analyzing the data from such populations in later chapters <!-- link to the the relevant chapters -->.
+
+The table that follows contains some examples of open and closed populations. Do you understand why each is open or closed? <!-- Can we hide and reveal the answers somehow? -->
+
+| Description                                                                                      | Population type   |
+|:-----------------------------------------------|:----------------------|
+| Students currently enrolled in a particular introduction to epidemiology course.                 | Open population   |
+| Students who have ever enrolled in a particular introduction to epidemiology course as of today. | Closed population |
+| Residents of the United States.                                                                  | Open population   |
+| All people aged 65+ as of today.                                                                 | Closed population |
+| All people aged 20 to 30 as of today.                                                            | Open population   |
+
+## Other ways to define populations
+
+Closed and open are not the only ways we can qualify a population in epidemiology. It is also often common to hear epidemiologists refer to **source populations**, **target populations**, and **study populations**.
+
+> "The source population is the population from which persons will be sampled and included in a measurement of disease frequency." @Lash2021-mb
+
+For example, the source population of the original Detection of Elder Abuse Through Emergency Care Technicians (DETECT) study included men and women 65+ years of age who used emergency medical services and were residents of the city of Fort Worth, Texas, between 2014 and 2018.
+
+> "The target population is the group of people about which our scientific or public-health question asks, and comprises the persons for whom information gleaned by the measurement of disease frequency will be relevant [we hope]." @Lash2021-mb
+
+For example, the results of the DETECT study were intended to be applicable to all adults age 65+ who use emergency medical services.
+
+> "The study population is the subset, up to a complete census, of the source population whose experience is included in a measurement of disease frequency." @Lash2021-mb
+
+For example, not all people who were eligible for the DETECT study actually participated in the DETECT study. Those who did made up the study population.
+
+## Samples
+
+> "A selected subset of a population. A sample may be random or nonrandom and may be representative or nonrepresentative." @Porta2008-ij
+
+<!-- Much of this language is borrowed from somewhere, but I'm not sure where. We need to figure it out and reword. -->
+
+A sample can be a noun or a verb. We often talk about "having" a sample and we often talk about sampling a population. In the latter case, sample can mean "recruit". It can also mean using the records we have access to.
+
+Because we almost never actually observe our measure of interest on every member of our target population, the measures we talk about in the remainder of the book assume that we are talking about a study population or sample unless specifically stated otherwise.
+
+Because samples are not the entire population by definition, then we cannot be sure that the value for the measurements we calculated from the sample is the same value we would have gotten if we had been able to observe our measures in every person in the target population. The value we get from our sample is called an estimate and the value we would have gotten from the target population is called the true population parameter. It's important to note that the true population parameter is generally a theoretical quantity that exists, but is rarely ever actually known. The difference between our estimate (the value we got from our sample) and the true population parameter (the answer we would have from the target population) is called **bias** or **error** depending on the context. This is an idea that we will return to many times throughout the book. Additionally, this is the primary source of the statistical uncertainty we discussed in the [using R for epidemiology chapter][Using R for Epidemiology].
+
+## Cohorts
+
+> "A group of persons for whom membership is defined in a permanent fashion, or a population in which membership is determined by satisfying a set of defining events and so becomes permanent. Often used as a synonym for"sample" in the context of a cohort study." @Lash2021-mb
+
+Cohort is another term that is frequently used in epidemiology, sometimes interchangeably with population or sample. Using the definition above, a cohort is similar to a population. The primary difference is that a every member of a cohort is enumerated (i.e., known or listed), which is not necessarily true of a population.
+
+For example, all of the people who participated in the DETECT study constitutes a cohort. Over time, as people die or are lost to follow-up, we are able to observe fewer and fewer cohort members. Even though the people who are lost to follow-up are no longer part of the study population (i.e., people we are collecting data from), they are still part of the initial DETECT cohort. Further, the members of the DETECT cohort (or any other cohort) are also members of a closed population when we define the population using event time with the index time being the moment when all membership criteria are met.
+
+## Summary
+
+In this chapter, we more formally defined populations and related concepts. Understanding populations is a critical part of the practice of epidemiology. So critical, that it is a defining characteristic of the discipline. More practically, understanding populations, and sampling people from populations, will have an impact on the study designs and analysis techniques we use. The chapters that follow will cover these topics in greater depth. For now, here is a quick recap of the terminology we learned in this chapter.
+
+```{r populations-terminology-recap, echo=FALSE}
+population_def <- "A group of people [during a defined time period] who share characteristics or meet criteria that define membership in the population."
+population_ex  <- "The population of the United States."
+closed_pop_def <- "Given a particular time frame (after the population is defined), a population that doesn't add any new members over time and loses members only to death."
+closed_pop_ex  <- "People who had a flu vaccine in the year 2023."
+open_pop_def   <- "Given a particular time frame, a population that gains members over time through birth or as new people meet the criteria that define the population, and/or a population that loses members over time as people stop meeting the criteria or are lost to follow-up."
+open_pop_ex    <- "People who currently have the flu."
+source_pop_def <- "The population from which persons will be sampled and included in a measurement of disease frequency."
+source_pop_ex  <- "The source population of the original Detection of Elder Abuse Through Emergency Care Technicians (DETECT) study included men and women 65+ years of age who used emergency medical services and were residents of the city of Fort Worth, Texas, between 2014 and 2018."
+target_pop_def <- "The group of people about which our scientific or public-health question asks and comprises the persons for whom information gleaned by the measurement of disease frequency will be relevant [we hope]. This is also sometimes called our population of interest."
+target_pop_ex  <- "The results of the DETECT study were intended to be applicable to all adults age 65+ who use emergency medical services."
+study_pop_def  <- "The subset, up to a complete census, of the source population whose experience is included in a measurement of disease frequency."
+study_pop_ex   <- "Not all people who were eligible for the DETECT study actually participated in the DETECT study. Those who did made up the study population."
+sample_def     <- "A selected subset of a population. A sample may be random or nonrandom and may be representative or nonrepresentative."
+sample_ex      <- "In this book, we will use sample and study population interchangably. Sample is probably the more commonly used term in this context."
+cohort_def     <- "A group of persons for whom membership is defined in a permanent fashion, or a population in which membership is determined by satisfying a set of defining events and so becomes permanent. May be open or closed. Often used as a synonym for “sample” in the context of a cohort study."
+cohort_ex      <- "Similar to a population. The key difference is that every member of the cohort is enumerated (i.e., known or listed)."
+
+populations_terminology_recap <- tribble(
+  ~Term,               ~Definition,    ~`Examples and Notes`,
+  "Population",        population_def, population_ex,
+  "Closed population", closed_pop_def, closed_pop_ex,
+  "Open population",   open_pop_def,   open_pop_ex,
+  "Source population", source_pop_def, source_pop_ex,
+  "Target population", target_pop_def, target_pop_ex,
+  "Study population",  study_pop_def,  study_pop_ex,
+  "Sample",            sample_def,     sample_ex,
+  "Cohort",            cohort_def,     cohort_ex
+)
+
+knitr::kable(populations_terminology_recap)
+```
+
+```{r populations-clean-up, echo=FALSE}
+# clean up
+rm(list = ls())
+```
