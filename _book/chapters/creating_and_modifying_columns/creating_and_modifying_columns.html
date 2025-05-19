@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>26&nbsp; Creating and Modifying Columns – R 4 Epidemiology</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" rel="next">
+<link href="../../chapters/intro_data_management/introduction.html" rel="prev">
+<link href="../../r4epi_favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_data_management/introduction.html">Data Management</a></li><li class="breadcrumb-item"><a href="../../chapters/creating_and_modifying_columns/creating_and_modifying_columns.html"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Creating and Modifying Columns</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">R 4 Epidemiology</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/brad-cannell/r4epi_quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../../R-4-Epidemiology.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/contributing/contributing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Contributing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/about_the_authors/about_the_authors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Authors</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/installing_r_and_rstudio/installing_r_and_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Installing R and RStudio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/what_is_r/what_is_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">What is R?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/navigating_rstudio/navigating_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Navigating the RStudio Interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/speaking_r/speaking_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Speaking R’s Language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lets_get_programming/lets_get_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Let’s Get Programming</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/asking_questions/asking_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Asking Questions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Coding Tools and Best Practices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_scripts/r_scripts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/quarto_files/quarto_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quarto Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_projects/projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">R Projects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/best_practices/best_practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Coding Best Practices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_pipes/using_pipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Using Pipes</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Transfer</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data_transfer/data_transfer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Data Transfer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/file_paths/file_paths.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">File Paths</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_plain_text/importing_plain_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Importing Plain Text Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_binary_files/importing_binary_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Importing Binary Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/rstudio_import_tool/rstudio_import_tool.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">RStudio’s Data Import Tool</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/exporting_data_to_disk/exporting_data_to_disk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Exporting Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Descriptive Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_descriptive_analysis/intro_descriptive_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduction to Descriptive Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/categorical_variables/categorical_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Numerical Descriptions of Categorical Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/central_tendency/central_tendency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Measures of Central Tendency</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dispersion/dispersion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measures of Dispersion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cont_pred/cont_out_cont_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Continuous Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cat_pred/cont_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cat_out_cat_pred/cat_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Categorical Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Management</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_data_management/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Data Management</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_and_modifying_columns/creating_and_modifying_columns.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Creating and Modifying Columns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Subsetting Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_dates/working_with_dates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Working with Dates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_character_strings/working_with_character_strings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Working with Character Strings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/conditional_operations/conditional_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/multiple_data_frames/multiple_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/restructuring_data_frames/restructuring_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Restructuring Data frames</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Repeated Operations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_repeated_operations/intro_repeated_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Introduction to Repeated Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_functions/writing_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Writing Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dplyr_column_wise/dplyr_column_wise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Column-wise Operations in dplyr</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_for_loops/writing_for_loops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Writing For Loops</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_purrr/using_purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Using the purrr Package</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Collaboration</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_git_github/intro_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Introduction to git and GitHub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_git_github/using_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Presenting Results</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_word_tables/creating_word_tables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">References</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">References</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendices/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#creating-data-frames" id="toc-creating-data-frames" class="nav-link active" data-scroll-target="#creating-data-frames"><span class="header-section-number">26.1</span> Creating data frames</a></li>
+  <li><a href="#dollar-sign-notation" id="toc-dollar-sign-notation" class="nav-link" data-scroll-target="#dollar-sign-notation"><span class="header-section-number">26.2</span> Dollar sign notation</a></li>
+  <li><a href="#bracket-notation" id="toc-bracket-notation" class="nav-link" data-scroll-target="#bracket-notation"><span class="header-section-number">26.3</span> Bracket notation</a></li>
+  <li><a href="#modify-individual-values" id="toc-modify-individual-values" class="nav-link" data-scroll-target="#modify-individual-values"><span class="header-section-number">26.4</span> Modify individual values</a></li>
+  <li><a href="#the-mutate-function" id="toc-the-mutate-function" class="nav-link" data-scroll-target="#the-mutate-function"><span class="header-section-number">26.5</span> The mutate() function</a>
+  <ul class="collapse">
+  <li><a href="#adding-or-modifying-a-single-column" id="toc-adding-or-modifying-a-single-column" class="nav-link" data-scroll-target="#adding-or-modifying-a-single-column"><span class="header-section-number">26.5.1</span> Adding or modifying a single column</a></li>
+  <li><a href="#recycling-rules" id="toc-recycling-rules" class="nav-link" data-scroll-target="#recycling-rules"><span class="header-section-number">26.5.2</span> Recycling rules</a></li>
+  <li><a href="#using-existing-variables-in-name-value-pairs" id="toc-using-existing-variables-in-name-value-pairs" class="nav-link" data-scroll-target="#using-existing-variables-in-name-value-pairs"><span class="header-section-number">26.5.3</span> Using existing variables in name-value pairs</a></li>
+  <li><a href="#adding-or-modifying-multiple-columns" id="toc-adding-or-modifying-multiple-columns" class="nav-link" data-scroll-target="#adding-or-modifying-multiple-columns"><span class="header-section-number">26.5.4</span> Adding or modifying multiple columns</a></li>
+  <li><a href="#rowwise-mutations" id="toc-rowwise-mutations" class="nav-link" data-scroll-target="#rowwise-mutations"><span class="header-section-number">26.5.5</span> Rowwise mutations</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/creating_and_modifying_columns/creating_and_modifying_columns.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_data_management/introduction.html">Data Management</a></li><li class="breadcrumb-item"><a href="../../chapters/creating_and_modifying_columns/creating_and_modifying_columns.html"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Creating and Modifying Columns</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Creating and Modifying Columns</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+Dollar sign notation
+Bracket notation
+mutate
+
+I start with dollar sign and bracket because they were exposed to those before 
+mutate already in the book.
+-->
+<p>Two of the most fundamental data management tasks are to create new columns in your data frame and to modify existing columns in your data frame. In fact, we’ve already talked about creating and modifying columns at a few different places in the book.</p>
+<p>In this book, we are actually going to learn 4 different methods for creating and modifying columns of a data frame. They are:</p>
+<ol type="1">
+<li><p>Using name-value pairs to add columns to a data frame during its initial creation. This was one of the first methods we used in this book for creating columns in a data frame. However, this method does not apply to creating or modifying columns in <em>a data frame that already exists</em>. Therefore, we won’t discuss it much in this chapter.</p></li>
+<li><p>Dollar sign notation. This is probably the most commonly used base R way of creating and modifying columns in a data frame. In this book, we won’t use it as much as we use <code>dplyr::mutate()</code>, but you will see it all over the place in the R community.</p></li>
+<li><p>Bracket notation. Again, we won’t use bracket notation very often in this book. However, we will use it later on when we learn about <a href="../../chapters/writing_for_loops/writing_for_loops.html">for loops</a>. Therefore, we’re going to introduce you to using bracket notation to create and modify data frame columns now.</p></li>
+<li><p>The <code>mutate()</code> function from the <code>dplyr</code> package. This is the method that we will use the vast majority of the time in this book (and in our real-life projects). We’re going to recommend that you do the same.</p></li>
+</ol>
+<section id="creating-data-frames" class="level2" data-number="26.1">
+<h2 data-number="26.1" class="anchored" data-anchor-id="creating-data-frames"><span class="header-section-number">26.1</span> Creating data frames</h2>
+<p>Very early on, in the <a href="../../chapters/lets_get_programming/lets_get_programming.html">Let’s get programming</a> chapter, we learned how to create data frame columns using name-value pairs passed directly into the <code>tibble()</code> function.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  names heights
+  &lt;chr&gt;   &lt;dbl&gt;
+1 John       68
+2 Sally      63
+3 Brad       71
+4 Anne       72</code></pre>
+</div>
+</div>
+<p>This is an absolutely fundamental R programming skill, and one that you will likely use often. However, most people would not consider this to be a “data management” task, which is the focus of this part of the book. Further, we’ve really already covered all we need to cover about creating columns this way. So, we’re not going to write anything further about this method.</p>
+</section>
+<section id="dollar-sign-notation" class="level2" data-number="26.2">
+<h2 data-number="26.2" class="anchored" data-anchor-id="dollar-sign-notation"><span class="header-section-number">26.2</span> Dollar sign notation</h2>
+<p>Later in the <a href="../../chapters/lets_get_programming/lets_get_programming.html">Let’s get programming</a> chapter, we learned about <strong>dollar sign notation</strong>. At that time, we used dollar sign notation to access or “get” values from a column.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 68 63 71 72</code></pre>
+</div>
+</div>
+<p>However, we can also use dollar sign notation to create and/or modify columns in our data frame. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  names heights
+  &lt;chr&gt;   &lt;dbl&gt;
+1 John     5.67
+2 Sally    5.25
+3 Brad     5.92
+4 Anne     6   </code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>we modified the values in the <code>heights</code> column of our <code>class</code> data frame using dollar sign notation. More specifically, we converted the values in the <code>heights</code> column from inches to feet. We did this by telling R to “get” the values for the <code>heights</code> column and divide them by 12 (<code>class$heights / 12</code>) and then assign those new values back to the <code>heights</code> column (<code>class$heights &lt;-</code>). In this case, that has the effect of modifying the values of a column that already exists.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> we would actually suggest that you don’t typically do what we just did above in a real-world analysis. It’s typically safer to create a new variable with the modified values (e.g.&nbsp;<code>height_feet</code>) and leave the original values in the original variable as-is.</p>
+</div>
+</div>
+<p>we can also create a <em>new</em> variable in our data frame in a similar way. All we have to do is use a valid column name (that doesn’t already exist in the data frame) on the left side of our assignment arrow. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  names heights grades
+  &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 John     5.67     89
+2 Sally    5.25     92
+3 Brad     5.92     86
+4 Anne     6        98</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>we created a new column in our <code>class</code> data frame using dollar sign notation. We assigned the values 89, 92, 86, and 98 to that column with the assignment arrow.</li>
+</ul>
+</section>
+<section id="bracket-notation" class="level2" data-number="26.3">
+<h2 data-number="26.3" class="anchored" data-anchor-id="bracket-notation"><span class="header-section-number">26.3</span> Bracket notation</h2>
+<p>we also learned how to access or “get” values from a column using bracket notation in the <a href="../../chapters/lets_get_programming/lets_get_programming.html">Let’s get programming</a> chapter. There, we actually used a combination of dollar sign and bracket notation to access single individual values from a data frame column. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.916667</code></pre>
+</div>
+</div>
+<p>But, we can also use bracket notation to access or “get” the entire column. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.666667 5.250000 5.916667 6.000000</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>we used bracket notation to get all of the values from the <code>heights</code> column of the <code>class</code> data frame.</li>
+</ul>
+<p>we’d like you to notice a couple of things about the example above. First, notice that this is the exact same result we got from (<code>class$heights</code>). Well, technically, the heights are now in feet instead of inches, but you know what we mean. R returned a numeric vector containing the values from the <code>heights</code> column to us. Second, notice that we used double brackets (i.e., two brackets on each side of the column name), and that the column name is wrapped in quotation marks. Both are required to get this result.</p>
+<p>Similar to dollar sign notation, we can also create and/or modify columns in our data frame using bracket notation. For example, let’s convert those heights back to inches using bracket notation:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  names heights grades
+  &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 John       68     89
+2 Sally      63     92
+3 Brad       71     86
+4 Anne       72     98</code></pre>
+</div>
+</div>
+<p>And, let’s go ahead and add one more variable to our data frame using bracket notation.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  names heights grades  rank
+  &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1 John       68     89     3
+2 Sally      63     92     2
+3 Brad       71     86     4
+4 Anne       72     98     1</code></pre>
+</div>
+</div>
+<p>Somewhat confusingly, we can also access, create, and modify data frame columns using single brackets. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+  heights
+    &lt;dbl&gt;
+1      68
+2      63
+3      71
+4      72</code></pre>
+</div>
+</div>
+<p>Notice, however, that this returns a different result than <code>class$heights</code> and <code>class[["heights]]</code>. The results returned from <code>class$heights</code> and <code>class[["heights]]</code> were numeric vectors with 4 elements. The result returned from <code>class["heights"]</code> was a data frame with 1 column and 4 rows.</p>
+<p>we don’t want you to get too hung up on the difference between single and double brackets right now. As we said, we are primarily going to use <code>mutate()</code> to create and modify data frame columns in this book. For now, it’s enough for you to simply be aware that single brackets and double brackets are a thing, and they can sometimes return different results. We will make sure to point out whether or not that matters when we use bracket notation later in the book.</p>
+</section>
+<section id="modify-individual-values" class="level2" data-number="26.4">
+<h2 data-number="26.4" class="anchored" data-anchor-id="modify-individual-values"><span class="header-section-number">26.4</span> Modify individual values</h2>
+<p>Before moving on to the <code>mutate()</code> function, we wanted to quickly discuss using dollar sign and bracket notation for modifying individual values in a column. Recall that we already learned how to access individual column values in the <a href="../../chapters/lets_get_programming/lets_get_programming.html">Let’s get programming</a> chapter.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 71</code></pre>
+</div>
+</div>
+<p>As you may have guessed, we can also get the result above using only bracket notation.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 71</code></pre>
+</div>
+</div>
+<p>Not only can we use these methods to get individual values from a column in a data frame, but we can also use these methods to <em>modify</em> an individual value in a column of a data frame. When might we want to do this? Well, we generally do this in one of two different circumstances.</p>
+<ul>
+<li><p>First, we may do this when we’re writing our own R functions (you’ll learn how to do this later) and we want to make sure the function still behaves in the way we intended when there are small changes to the data. So, we may add a missing value to a column or something like that.</p></li>
+<li><p>The second circumstance is when there are little one-off typos in the data. For example, let’s say we imported a data frame that looked like this:</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+     id site 
+  &lt;dbl&gt; &lt;chr&gt;
+1     1 TX   
+2     2 CA   
+3     3 tx   
+4     4 CA   </code></pre>
+</div>
+</div>
+<p>Notice that <code>tx</code> in the third row of data isn’t capitalized. Remember, R is a case-sensitive language, so this will likely cause us problems down the road if we don’t fix it. The easiest way to do so is probably:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+     id site 
+  &lt;dbl&gt; &lt;chr&gt;
+1     1 TX   
+2     2 CA   
+3     3 TX   
+4     4 CA   </code></pre>
+</div>
+</div>
+<p>Keep in mind that we said that we fix <em>little one-off typos</em>. If we needed to change <code>tx</code> to <code>TX</code> in multiple different places in the data, we wouldn’t use this method. Instead, we would use a <a href="../../chapters/conditional_operations/conditional_operations.html">conditional operation</a>, which we will discuss later in the book.</p>
+</section>
+<section id="the-mutate-function" class="level2" data-number="26.5">
+<h2 data-number="26.5" class="anchored" data-anchor-id="the-mutate-function"><span class="header-section-number">26.5</span> The mutate() function</h2>
+<p>we first discussed <code>mutate()</code> in the <a href="../../chapters/exporting_data_to_disk/exporting_data_to_disk.html">chapter on exporting data</a>, and again in the <a href="../../chapters/intro_data_management/introduction.html">Introduction to data management chapter</a>. As we said there, the first two arguments to <code>mutate()</code> are <code>.data</code> and <code>...</code>.</p>
+<p>The value passed to <code>.data</code> should always be a data frame. In this book, we will often pass data frames to the <code>.data</code> argument using the pipe operator (e.g., <code>df %&gt;% mutate()</code>).</p>
+<p>The value passed to the <code>...</code> argument should be a name-value pair or multiple name value pairs separated by commas. The <code>...</code> argument is where you will tell <code>mutate()</code> to create or modify columns in your data frame and how.</p>
+<ul>
+<li>Name-value pairs look like this: <code>column name = value</code>. The only thing that distinguishes whether you are creating or modifying a column is the column name in the name-value pair. If the column name in the name-value pair matches the name of an existing column in the data frame, then <code>mutate()</code> will modify that existing column. If the column name in the name-value pair does NOT match the name of an existing column in the data frame, then <code>mutate()</code> will create a <em>new</em> column in the data frame with a matching column name.</li>
+</ul>
+<p>Let’s take a look at a couple of examples. To get us started, let’s simulate some data that is a little more interesting than the class data we used above.</p>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we are simulating some drug trial data that includes the following variables:</p>
+<ul>
+<li><p>id: Study id, there are 20 people enrolled in the trial.</p></li>
+<li><p>year: Follow-up year, 0 = baseline, 1 = year one, 2 = year two.</p></li>
+<li><p>age: Participant age a baseline. Must be between the ages of 35 and 75 at baseline to be eligible for the study.</p></li>
+<li><p>drug: Drug the participant received, Placebo or active.</p></li>
+<li><p>se_headache: Reported headaches side effect, Y/N.</p></li>
+<li><p>se_diarrhea: Report diarrhea side effect, Y/N.</p></li>
+<li><p>se_dry_mouth: Report dry mouth side effect, Y/N.</p></li>
+<li><p>mi: Participant had myocardial infarction in study year, Y/N.</p></li>
+</ul></li>
+<li><p>we used the <code>tibble()</code> function above to create our data frame instead of the <code>data.frame()</code> function. This allows us to pass the <code>drug</code> column as a value to the <code>if_else()</code> function when we create <code>se_headache</code>, <code>se_diarrhea</code>, <code>se_dry_mouth</code>, and <code>mi</code>. If we had used <code>data.frame()</code> instead, we would have had to create <code>se_headache</code>, <code>se_diarrhea</code>, <code>se_dry_mouth</code>, and <code>mi</code> in a separate step.</p></li>
+<li><p>we used a new function, <code>if_else()</code>, above to help us simulate this data. This function allows us to do something called <strong>conditional operations</strong>. There will be an entire chapter on <a href="../../chapters/conditional_operations/conditional_operations.html">conditional operations</a> later in the book.</p></li>
+<li><p>we used a new function, <code>sample()</code>, above to help us simulate this data. We used this function to randomly assign values to <code>age</code>, <code>drug</code>, <code>se_headache</code>, <code>se_diarrhea</code>, <code>se_dry_mouth</code>, and <code>mi</code> instead of manually assigning each value ourselves.</p>
+<ul>
+<li><p>You can type <code>?sample</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>sample()</code> function is the <code>x</code> argument. You should pass a vector of values you want R to randomly choose from. For example, we told R to select values from a vector of numbers that spanned between 35 and 75 to fill-in the <code>age</code> column. Alternatively, we told R to select values from a character vector that included the values “Placebo” and “Active” to fill-in the <code>drug</code> column.</p></li>
+<li><p>The second argument to the <code>sample()</code> function is the <code>size</code> argument. You should pass a number to the size argument. That number tells R how many times to choose a value from the vector of possible values passed to the <code>x</code> argument.</p></li>
+<li><p>The third argument to the <code>sample()</code> function is the <code>replace</code> argument. The default value passed to the <code>replace</code> argument is <code>FALSE</code>. This tells R that once it has chosen a value from the vector of possible values passed to the <code>x</code> argument, it can’t choose that value again. If you want R to be able to choose the same value more than once, then you have to pass the value <code>TRUE</code> to the <code>replace</code> argument.</p></li>
+<li><p>The fourth argument to the <code>sample()</code> function is the <code>prob</code> argument. The default value passed to the <code>prob</code> argument is <code>NULL</code>. This just means that this argument is <em>optional</em>. Passing a vector of probabilities to this argument allows you to adjust how likely it is that R will choose certain values from the vector of possible values passed to the <code>x</code> argument.</p></li>
+<li><p>Finally, notice that we also used the <code>set.seed()</code> function at the very top of the code chunk. We did this because, the <code>sample()</code> function chooses values at random. That means, every time we run the code above, we get different values. That makes it difficult for me to write about the data because it’s constantly changing. When we use the <code>set.seed()</code> function, the values will still be randomly selected, but they will be the <em>same</em> randomly selected values every time. It doesn’t matter what numbers you pass to the <code>set.seed()</code> function as long as you pass the same numbers every time you want to get the same random values. For example:</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  5 29 50 70 74 26 73 11  6 96</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 76 83 91 56 96 27 94 68 88 28</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 35 38 85 27 25 78 31 73 79 90</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 35 38 85 27 25 78 31 73 79 90</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  45  12  42  26  99  37 100  43  67  70</code></pre>
+</div>
+</div>
+<ul>
+<li>It’s not important that you fully understand the <code>sample()</code> function at this point. We’re just including it for those of you who are interested in simulating some slightly more complex data than we have simulated so far. The rest of you can just copy and paste the code if you want to follow along.</li>
+</ul>
+<section id="adding-or-modifying-a-single-column" class="level3" data-number="26.5.1">
+<h3 data-number="26.5.1" class="anchored" data-anchor-id="adding-or-modifying-a-single-column"><span class="header-section-number">26.5.1</span> Adding or modifying a single column</h3>
+<p>This is probably the simplest case of adding a new column. We are going to use <code>mutate()</code> to add a single new column to the <code>drug_trial</code> data frame. Let’s say we want to add a column called <code>complete</code> that is equal to <code>1</code> if the participant showed up for all follow-up visits and equal to <code>0</code> if they didn’t. In this case, we simulated our data in such a way that we have complete follow-up for every participant. So, the value for complete should be <code>0</code> in all 60 rows of the data frame. We can do this in a few different ways.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 9
+      id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+ 1     1     0    65 Active            0           1            1     0        0
+ 2     1     1    65 Active            1           1            1     0        0
+ 3     1     2    65 Active            1           1            0     0        0
+ 4     2     0    49 Active            1           1            1     0        0
+ 5     2     1    49 Active            0           0            1     0        0
+ 6     2     2    49 Active            1           1            1     0        0
+ 7     3     0    48 Placebo           0           0            0     0        0
+ 8     3     1    48 Placebo           0           0            0     0        0
+ 9     3     2    48 Placebo           0           0            0     0        0
+10     4     0    37 Placebo           0           0            0     0        0
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>So, that works, but typing that out is no fun. Not to mention, this isn’t scalable at all. What if we needed 1,000 zeros? There’s actually a much easier way to get the result above, which may surprise you. Take a look 👀:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 9
+      id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+ 1     1     0    65 Active            0           1            1     0        0
+ 2     1     1    65 Active            1           1            1     0        0
+ 3     1     2    65 Active            1           1            0     0        0
+ 4     2     0    49 Active            1           1            1     0        0
+ 5     2     1    49 Active            0           0            1     0        0
+ 6     2     2    49 Active            1           1            1     0        0
+ 7     3     0    48 Placebo           0           0            0     0        0
+ 8     3     1    48 Placebo           0           0            0     0        0
+ 9     3     2    48 Placebo           0           0            0     0        0
+10     4     0    37 Placebo           0           0            0     0        0
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>How easy is that? Just pass the value to the name-value pair once and R will use it in every row. This works because of something called the recycling rules ♻️. In a nutshell, this means that R will change the length of vectors in certain situations all by itself when it thinks it knows what you “meant.” So, above we passed gave R a length 1 vector <code>0</code> (i.e.&nbsp;a numeric vector with one value in it), and R changed it to a length 60 vector behind the scenes so that it could complete the operation it thought you were trying to complete.</p>
+</section>
+<section id="recycling-rules" class="level3" data-number="26.5.2">
+<h3 data-number="26.5.2" class="anchored" data-anchor-id="recycling-rules"><span class="header-section-number">26.5.2</span> Recycling rules</h3>
+<p>♻️The recycling rules work as long as the length of the longer vector is an integer multiple of the length of the shorter vector. For example, every vector (column) in R data frames must have the same length. In this case, 60. The length of the value we used in the name-value pair above was 1 (i.e., a single <code>0</code>). Therefore, the longer vector had a length of 60 and the shorter vector had a length of 1. Because 60 * 1 = But, what if we had tried to pass the values 0 and 1 to the column instead of just zero?</p>
+<div class="cell">
+<div class="cell-output cell-output-error">
+<pre><code>Error in `mutate()`:
+ℹ In argument: `complete = c(0, 1)`.
+Caused by error:
+! `complete` must be size 60 or 1, not 2.</code></pre>
+</div>
+</div>
+<p>This doesn’t work, but it actually isn’t for the reason you may be thinking. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). However, <code>tidyverse</code> functions throw errors when you try to recycle anything other than a single number. They are designed this way to protect you from accidentally getting unexpected results. So, we’re going to switch back over to using base R to round out our discussion of the recycling rules. Let’s try our example above again using base R:</p>
+<div class="cell">
+<div class="cell-output cell-output-error">
+<pre><code>Error in `$&lt;-`:
+! Assigned data `c(0, 1)` must be compatible with existing data.
+✖ Existing data has 60 rows.
+✖ Assigned data has 2 rows.
+ℹ Only vectors of size 1 are recycled.
+Caused by error in `vectbl_recycle_rhs_rows()`:
+! Can't recycle input of size 2 to size 60.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 8
+      id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
+ 1     1     0    65 Active            0           1            1     0
+ 2     1     1    65 Active            1           1            1     0
+ 3     1     2    65 Active            1           1            0     0
+ 4     2     0    49 Active            1           1            1     0
+ 5     2     1    49 Active            0           0            1     0
+ 6     2     2    49 Active            1           1            1     0
+ 7     3     0    48 Placebo           0           0            0     0
+ 8     3     1    48 Placebo           0           0            0     0
+ 9     3     2    48 Placebo           0           0            0     0
+10     4     0    37 Placebo           0           0            0     0
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>Wait, why are we still getting an error? Well, take a look at the output below and see if you can figure it out.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "tbl_df"     "tbl"        "data.frame"</code></pre>
+</div>
+</div>
+<p>It may not be totally obvious, but this is telling us that <code>drug_trial</code> is a tibble – an enhanced data frame. Remember, we created <code>drug_trial</code> using the <code>tibble()</code> function instead of the <code>tibble()</code> function. Because tibbles are part of the <code>tidyverse</code> they throw the same recycling errors that the <code>mutate()</code> function did above. So, we’ll need to create a non-tibble version of <code>drug_trial</code> to finish our discussion of recycling rules.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data.frame"</code></pre>
+</div>
+</div>
+<p>There we go! A regular old data frame.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   id year age    drug se_headache se_diarrhea se_dry_mouth mi complete
+1   1    0  65  Active           0           1            1  0        0
+2   1    1  65  Active           1           1            1  0        1
+3   1    2  65  Active           1           1            0  0        0
+4   2    0  49  Active           1           1            1  0        1
+5   2    1  49  Active           0           0            1  0        0
+6   2    2  49  Active           1           1            1  0        1
+7   3    0  48 Placebo           0           0            0  0        0
+8   3    1  48 Placebo           0           0            0  0        1
+9   3    2  48 Placebo           0           0            0  0        0
+10  4    0  37 Placebo           0           0            0  0        1
+11  4    1  37 Placebo           0           0            0  0        0
+12  4    2  37 Placebo           0           0            0  1        1
+13  5    0  71 Placebo           0           0            0  0        0
+14  5    1  71 Placebo           0           0            0  0        1
+15  5    2  71 Placebo           0           0            0  0        0
+16  6    0  48 Placebo           0           0            0  0        1
+17  6    1  48 Placebo           0           0            0  1        0
+18  6    2  48 Placebo           0           0            0  1        1
+19  7    0  59  Active           1           1            1  0        0
+20  7    1  59  Active           1           1            0  0        1
+21  7    2  59  Active           1           1            1  0        0
+22  8    0  60 Placebo           0           0            0  0        1
+23  8    1  60 Placebo           0           0            0  0        0
+24  8    2  60 Placebo           0           0            0  0        1
+25  9    0  61  Active           1           1            1  0        0
+26  9    1  61  Active           0           1            1  0        1
+27  9    2  61  Active           1           0            0  0        0
+28 10    0  39  Active           1           0            1  0        1
+29 10    1  39  Active           1           0            0  0        0
+30 10    2  39  Active           1           1            1  0        1
+31 11    0  61 Placebo           0           0            0  0        0
+32 11    1  61 Placebo           0           0            0  1        1
+33 11    2  61 Placebo           0           0            0  0        0
+34 12    0  62 Placebo           1           0            1  0        1
+35 12    1  62 Placebo           0           0            0  0        0
+36 12    2  62 Placebo           0           0            0  0        1
+37 13    0  43 Placebo           0           0            0  0        0
+38 13    1  43 Placebo           0           0            0  0        1
+39 13    2  43 Placebo           0           0            0  0        0
+40 14    0  63 Placebo           0           0            0  0        1
+41 14    1  63 Placebo           0           0            0  0        0
+42 14    2  63 Placebo           0           0            0  0        1
+43 15    0  69  Active           1           1            1  0        0
+44 15    1  69  Active           1           0            1  0        1
+45 15    2  69  Active           1           1            1  0        0
+46 16    0  42 Placebo           0           0            0  0        1
+47 16    1  42 Placebo           0           0            1  0        0
+48 16    2  42 Placebo           0           0            0  1        1
+49 17    0  60 Placebo           0           0            0  0        0
+50 17    1  60 Placebo           0           0            0  0        1
+51 17    2  60 Placebo           1           0            0  0        0
+52 18    0  41  Active           1           1            1  0        1
+53 18    1  41  Active           1           1            1  0        0
+54 18    2  41  Active           1           1            0  1        1
+55 19    0  43 Placebo           0           0            0  0        0
+56 19    1  43 Placebo           0           0            0  0        1
+57 19    2  43 Placebo           0           0            0  0        0
+58 20    0  53 Placebo           0           0            0  0        1
+59 20    1  53 Placebo           0           0            0  0        0
+60 20    2  53 Placebo           0           0            0  0        1</code></pre>
+</div>
+</div>
+<p>As you can see, the values 0 and 1 are now recycled as expected. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). Now, what happens in a situation where the length of the longer vector is <em>not</em> an integer multiple of the length of the shorter vector.</p>
+<div class="cell">
+<div class="cell-output cell-output-error">
+<pre><code>Error in `$&lt;-.data.frame`(`*tmp*`, complete, value = c(0, 1, 2, 3, 4, : replacement has 7 rows, data has 60</code></pre>
+</div>
+</div>
+<p>60 / 7 = 8.571429 – not an integer. Because there is no integer value that we can multiply by 7 to get the number 60, R throws us an error telling us that it isn’t able to use the recycling rules.</p>
+<p>Finally, the recycling rules don’t only apply to creating new data frame columns. It applies in all cases where R is using two vectors to perform an operation. For example, R uses the recycling rules in mathematical operations.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+</div>
+<p>To demonstrate, we create a simple numeric vector above. This vector just contains the numbers 1 through 10. Now, we can add 1 to each of those numbers like so:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  2  3  4  5  6  7  8  9 10 11</code></pre>
+</div>
+</div>
+<p>Notice how R used the recycling rules to add 1 to every number in the <code>nums</code> vector. We didn’t have to explicitly tell R to add 1 to each number. This is sometimes referred to as <strong>vectorization</strong>. Functions that perform an action on <em>all</em> elements of a vector, rather than having to be explicitly programmed to perform an action on <em>each</em> element of a vector, is a <strong>vectorized</strong> function. Remember, that mathematical operators – including <code>+</code> – <em>are functions</em> in R. More specifically, <code>+</code> is a <strong>vectorized</strong> function. In fact, most built-in R functions are vectorized. Why are we telling you this? It isn’t intended to confuse you, but when I was learning R I came across this term all the time in R resources and help pages, and I had no idea what it meant. We hope that this very simple example above makes it easy to understand what vectorization means, and you won’t be intimidated when it pops up while you’re trying to get help with your R programs.</p>
+<p>Ok, so what happens when we add a longer vector and a shorter vector?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  2  4  4  6  6  8  8 10 10 12</code></pre>
+</div>
+</div>
+<p>As expected, R uses the recycling rules to change the length of the short vector to match the length of the longer vector, and then performs the operation – in this case, addition. So, the net result is 1 + 1 = <code>2</code>, 2 + 2 = <code>4</code>, 3 + 1 = <code>4</code>, 4 + 2 = <code>6</code>, etc. You probably already guessed what’s going to happen if we try to add a length 3 vector to <code>nums</code>, but let’s go ahead and take a look for the sake of completeness:</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in nums + c(1, 2, 3): longer object length is not a multiple of shorter
+object length</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  2  4  6  5  7  9  8 10 12 11</code></pre>
+</div>
+</div>
+<p>Yep, we get an error. 10 / 3 = 3.333333 – not an integer. Because there is no integer value that we can multiply by 3 to get the number 10, R throws us an error telling us that it isn’t able to use the recycling rules.</p>
+<p>Now that you understand R’s recycling rules, let’s return to our motivating example.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 9
+      id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+ 1     1     0    65 Active            0           1            1     0        0
+ 2     1     1    65 Active            1           1            1     0        0
+ 3     1     2    65 Active            1           1            0     0        0
+ 4     2     0    49 Active            1           1            1     0        0
+ 5     2     1    49 Active            0           0            1     0        0
+ 6     2     2    49 Active            1           1            1     0        0
+ 7     3     0    48 Placebo           0           0            0     0        0
+ 8     3     1    48 Placebo           0           0            0     0        0
+ 9     3     2    48 Placebo           0           0            0     0        0
+10     4     0    37 Placebo           0           0            0     0        0
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>This method works, but not always. And, it can sometimes give us intended results. You may have originally thought to yourself, “we’ve already learned the <code>rep()</code> function. Let’s use that.” In fact, that’s a great idea!</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 9
+      id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+ 1     1     0    65 Active            0           1            1     0        0
+ 2     1     1    65 Active            1           1            1     0        0
+ 3     1     2    65 Active            1           1            0     0        0
+ 4     2     0    49 Active            1           1            1     0        0
+ 5     2     1    49 Active            0           0            1     0        0
+ 6     2     2    49 Active            1           1            1     0        0
+ 7     3     0    48 Placebo           0           0            0     0        0
+ 8     3     1    48 Placebo           0           0            0     0        0
+ 9     3     2    48 Placebo           0           0            0     0        0
+10     4     0    37 Placebo           0           0            0     0        0
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>That’s a lot less typing than the first method we tried, and it also has the added benefit of providing code that is easier for humans to read. We can both look at the code we used in the first method and tell that there are a bunch of zeros, but it’s hard to guess exactly how many, and it’s hard to feel completely confident that there isn’t a 1 in there somewhere that our eyes are missing. By contrast, it’s easy to look at <code>rep(0, 60)</code> and know that there are exactly 60 zeros, and only 60 zeros.</p>
+</section>
+<section id="using-existing-variables-in-name-value-pairs" class="level3" data-number="26.5.3">
+<h3 data-number="26.5.3" class="anchored" data-anchor-id="using-existing-variables-in-name-value-pairs"><span class="header-section-number">26.5.3</span> Using existing variables in name-value pairs</h3>
+<p>In the example above, we create a new column called <code>complete</code> by directly supplying values for that column in the name-value pair. In our experience, it is probably more common to create new columns in our data frames by combining or transforming the values of columns that already exist in our data frame. You’ve already seen an example of doing so when <a href="../../chapters/lets_get_programming/lets_get_programming.html">we created factor versions of variables</a>. As an additional example, we could create a factor version of our <code>mi</code> variable like this:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 9
+      id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi mi_f 
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt; &lt;fct&gt;
+ 1     1     0    65 Active            0           1            1     0 No   
+ 2     1     1    65 Active            1           1            1     0 No   
+ 3     1     2    65 Active            1           1            0     0 No   
+ 4     2     0    49 Active            1           1            1     0 No   
+ 5     2     1    49 Active            0           0            1     0 No   
+ 6     2     2    49 Active            1           1            1     0 No   
+ 7     3     0    48 Placebo           0           0            0     0 No   
+ 8     3     1    48 Placebo           0           0            0     0 No   
+ 9     3     2    48 Placebo           0           0            0     0 No   
+10     4     0    37 Placebo           0           0            0     0 No   
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>Notice that in the code above, we didn’t tell R what values to use for <code>mi_f</code> by typing them explicitly in the name-value pair. Instead, we told R to go get the values of the column <code>mi</code>, do some stuff to those values, and then assign those modified values to a column in the data frame and name that column <code>mi_f</code>.</p>
+<p>Here’s another example. It’s common to mean-center numeric values for many different kinds of analyses. For example, this is often done in regression analysis to aid in the interpretation of regression coefficients. We can easily mean-center numeric variables inside our <code>mutate()</code> function like so:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 9
+      id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;      &lt;dbl&gt;
+ 1     1     0    65 Acti…           0           1            1     0       11.3
+ 2     1     1    65 Acti…           1           1            1     0       11.3
+ 3     1     2    65 Acti…           1           1            0     0       11.3
+ 4     2     0    49 Acti…           1           1            1     0       -4.7
+ 5     2     1    49 Acti…           0           0            1     0       -4.7
+ 6     2     2    49 Acti…           1           1            1     0       -4.7
+ 7     3     0    48 Plac…           0           0            0     0       -5.7
+ 8     3     1    48 Plac…           0           0            0     0       -5.7
+ 9     3     2    48 Plac…           0           0            0     0       -5.7
+10     4     0    37 Plac…           0           0            0     0      -16.7
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>Notice how succinctly we were able to express this fairly complicated task. We had to figure out the find the mean of the variable <code>age</code> in the <code>drug_trial</code> data frame, subtract that value from the value for <code>age</code> in each row of the data frame, and then create a new column in the data frame containing the mean-centered values. Because of the fact that <code>mutate()</code>’s name-value pairs can accept complex expressions a value, and because all of the functions used in the code above are vectorized, we can perform this task using only a single, easy-to-read line of code (<code>age_center = age - mean(age)</code>).</p>
+</section>
+<section id="adding-or-modifying-multiple-columns" class="level3" data-number="26.5.4">
+<h3 data-number="26.5.4" class="anchored" data-anchor-id="adding-or-modifying-multiple-columns"><span class="header-section-number">26.5.4</span> Adding or modifying multiple columns</h3>
+<p>In all of the examples above, we passed a single name-value pair to the <code>...</code> argument of the <code>mutate()</code> function. If we want to create or modify multiple columns, we don’t need to keep typing the <code>mutate()</code> function over and over. We can simply pass multiple name-value pairs, separated by columns, to the <code>...</code> argument. And, there is no limit to the number of pairs we can pass. This is part of the beauty of the <code>...</code> argument in R. For example, we have three variables in <code>drug_trial</code> that capture information about whether or not the participant reported side effects including headache, diarrhea, and dry mouth. Currently, those are all stored as integer vectors that can take the values <code>0</code> and <code>1</code>. Let’s say that we want to also create factor versions of those vectors:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 11
+      id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
+ 1     1     0    65 Active            0           1            1     0
+ 2     1     1    65 Active            1           1            1     0
+ 3     1     2    65 Active            1           1            0     0
+ 4     2     0    49 Active            1           1            1     0
+ 5     2     1    49 Active            0           0            1     0
+ 6     2     2    49 Active            1           1            1     0
+ 7     3     0    48 Placebo           0           0            0     0
+ 8     3     1    48 Placebo           0           0            0     0
+ 9     3     2    48 Placebo           0           0            0     0
+10     4     0    37 Placebo           0           0            0     0
+# ℹ 50 more rows
+# ℹ 3 more variables: se_headache_f &lt;fct&gt;, se_diarrhea_f &lt;fct&gt;,
+#   se_dry_mouth_f &lt;fct&gt;</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created three new factor columns in the <code>drug_trial</code> data called <code>se_headache_f</code>, <code>se_diarrhea_f</code>, and <code>se_dry_mouth_f</code>.</p></li>
+<li><p>we created all columns inside a single <code>mutate()</code> function.</p></li>
+<li><p>Notice that we created one variable per line. We suggest you do the same. It just makes your code much easier to read.</p></li>
+</ul>
+<p>So, adding or modifying multiple columns is really easy with <code>mutate()</code>. But, did any of you notice an error? Take a look at the structure of the data the line of code that creates <code>se_diarrhea_f</code>. Instead of writing the “No” label with an “N” and an “o”, we accidently wrote it with an “N” and a zero. We find that when we have to type something over and over like this, we are more likely to make a mistake. Further, if we ever need to change the levels or labels, we will have to change them in every <code>factor()</code> function in the code above.</p>
+<p>For these reasons (and others), programmers of many languages – including R – are taught <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">the DRY principle</a>. DRY is an acronym for don’t repeat yourself. We will discuss the DRY principle again in the chapter on <a href="#introduction-to-repeated-operations">repeated operations</a>, but for now, it just means that you typically don’t want to type code that is the same (or nearly the same) over and over in your programs. Here’s one way we could reduce the repetition in the code above:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 11
+      id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
+ 1     1     0    65 Active            0           1            1     0
+ 2     1     1    65 Active            1           1            1     0
+ 3     1     2    65 Active            1           1            0     0
+ 4     2     0    49 Active            1           1            1     0
+ 5     2     1    49 Active            0           0            1     0
+ 6     2     2    49 Active            1           1            1     0
+ 7     3     0    48 Placebo           0           0            0     0
+ 8     3     1    48 Placebo           0           0            0     0
+ 9     3     2    48 Placebo           0           0            0     0
+10     4     0    37 Placebo           0           0            0     0
+# ℹ 50 more rows
+# ℹ 3 more variables: se_headache_f &lt;fct&gt;, se_diarrhea_f &lt;fct&gt;,
+#   se_dry_mouth_f &lt;fct&gt;</code></pre>
+</div>
+</div>
+<p>Notice that in the code above we type <code>c(0, 1)</code> and <code>c("No", "Yes")</code> once each instead of 3 times each. In the chapter on <a href="../../chapters/intro_repeated_operations/intro_repeated_operations.html">repeated operations</a> we will learn techniques for removing even more repetition from the code above.</p>
+</section>
+<section id="rowwise-mutations" class="level3" data-number="26.5.5">
+<h3 data-number="26.5.5" class="anchored" data-anchor-id="rowwise-mutations"><span class="header-section-number">26.5.5</span> Rowwise mutations</h3>
+<p>In all the examples above we used the values from <em>a single</em> already existing variable in our name-value pair. However, we can also use the values from <em>multiple</em> variables in our name-value pairs.</p>
+<p>For example, we have three variables in our <code>drug_trial</code> data that capture information about whether or not the participant reported side effects including headache, diarrhea, and dry mouth (sounds like every drug commercial that exists 😂). What if we want to know if our participants reported <em>any</em> side effect at each follow-up? That requires us to combine and transform data from across three different columns! This is one of those situations where there are many different ways we could accomplish this task, but we’re going to use <code>dplyr</code>’s <code>rowwise()</code> function to do so in the following code:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 9
+# Rowwise: 
+      id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;int&gt;
+ 1     1     0    65 Active            0           1            1     0
+ 2     1     1    65 Active            1           1            1     0
+ 3     1     2    65 Active            1           1            0     0
+ 4     2     0    49 Active            1           1            1     0
+ 5     2     1    49 Active            0           0            1     0
+ 6     2     2    49 Active            1           1            1     0
+ 7     3     0    48 Placebo           0           0            0     0
+ 8     3     1    48 Placebo           0           0            0     0
+ 9     3     2    48 Placebo           0           0            0     0
+10     4     0    37 Placebo           0           0            0     0
+# ℹ 50 more rows
+# ℹ 1 more variable: any_se_year &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created a new column in the <code>drug_trial</code> data called <code>any_se_year</code> using the <code>mutate()</code> function.</p></li>
+<li><p>we used the <code>rowwise()</code> function to tell R to group the data frame by rows. Said another way</p></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/brad-cannell\.github\.io\/r4epi_quarto\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/intro_data_management/introduction.html" class="pagination-link" aria-label="Introduction to Data Management">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Data Management</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" class="pagination-link" aria-label="Subsetting Data Frames">
+        <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Subsetting Data Frames</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>R for Epidemiology</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/creating_and_modifying_columns/creating_and_modifying_columns.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://Quarto/.org/">Quarto/</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

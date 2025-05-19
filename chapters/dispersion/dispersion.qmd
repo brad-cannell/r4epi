@@ -1,0 +1,353 @@
+# Measures of Dispersion
+
+```{r}
+#| include: FALSE
+library(ggplot2)
+```
+
+In the chapter on [measures of central tendency](../central_tendency/central_tendency.qmd), we found the minimum value, mean value, median value, mode value, and maximum value of the weight variable in our hypothetical sample of students. We'll go ahead and start this lesson by rerunning that analysis below, but this time we will analyze heights instead of weights.
+
+```{r}
+#| message: FALSE
+# Load the dplyr package. We will need several of dplyr's functions in the 
+# code below.
+library(dplyr)
+```
+
+```{r}
+# Simulate some data
+height_and_weight_20 <- tribble(
+  ~id,   ~sex,     ~ht_in, ~wt_lbs,
+  "001", "Male",   71,     190,
+  "002", "Male",   69,     177,
+  "003", "Female", 64,     130,
+  "004", "Female", 65,     153,
+  "005", NA,       73,     173,
+  "006", "Male",   69,     182,
+  "007", "Female", 68,     186,
+  "008", NA,       73,     185,
+  "009", "Female", 71,     157,
+  "010", "Male",   66,     155,
+  "011", "Male",   71,     213,
+  "012", "Female", 69,     151,
+  "013", "Female", 66,     147,
+  "014", "Female", 68,     196,
+  "015", "Male",   75,     212,
+  "016", "Female", 69,     19000,
+  "017", "Female", 66,     194,
+  "018", "Female", 65,     176,
+  "019", "Female", 65,     176,
+  "020", "Female", 65,     102
+)
+```
+
+```{r}
+# Recreate our mode function
+mode_val <- function(x) {
+  value_counts <- table(x)
+  result <- names(value_counts)[value_counts == max(value_counts)]
+  if (length(value_counts) == length(result)) {
+    result <- NA
+  }
+  result
+}
+```
+
+```{r}
+height_and_weight_20 %>% 
+  summarise(
+    min_height    = min(ht_in),
+    mean_height   = mean(ht_in),
+    median_height = median(ht_in),
+    mode_height   = mode_val(ht_in) %>% paste(collapse = " , "),
+    max_height    = max(ht_in)
+  )
+```
+
+::: {.callout-note}
+To get both mode height values to display in the output above we used the `paste()` function with the collapse argument set to " , " (notice the spaces). This forces R to display our mode values as a character string. The downside is that the “mode_height” variable no longer has any numeric value to R -- it's simply a character string. However, this isn't a problem for us. We won't be using the mode in this lesson -- and it is rarely used in practice.
+:::
+
+Keep in mind that our interest is in describing the “typical” or “average” person in our sample. The result of our analysis above tells us that the average person who answered the height question in our hypothetical class was: 68.4 inches. This information gets us reasonably close to understanding the typical height of the students in our hypothetical class. But remember, our average person does not necessarily have the same height as any __actual person__ in our class. So a natural extension of our original question is: “how much like the average person, are the other people in class.”
+
+For example, is everyone in class 68.4 inches? 
+
+```{r}
+#| label: dispersion-01-people
+#| echo: FALSE
+#| fig-cap: Example with people with the same height 
+knitr::include_graphics("dispersion_01_people.png")
+```
+
+Or are there differences in everyone’s height, with the average person’s height always having a value in the middle of everyone else’s?
+
+```{r}
+#| label: dispersion-02-people
+#| echo: FALSE
+#| fig-cap: Example with people of different heights
+knitr::include_graphics("dispersion_02_people.png")
+```
+
+The measures used to answer this question are called measures of dispersion, which we can say is the amount of difference between people in the class, or more generally, the amount of variability in the data.
+
+Three common measures of dispersion used are the:
+
+* **Range**   
+* **Variance**   
+* **Standard Deviation**  
+
+```{r}
+#| label: dispersion-03-overview
+#| echo: FALSE
+#| fig-cap: Measures of dispersion chart
+knitr::include_graphics("dispersion_03_overview.png") 
+```
+
+**Range**
+
+The [range](../appendices/glossary.qmd#glossary-console) is simply the difference between the maximum and minimum value in the data. 
+
+```{r}
+height_and_weight_20 %>% 
+  summarise(
+    min_height  = min(ht_in),
+    mean_height = mean(ht_in),
+    max_height  = max(ht_in),
+    range       = max_height - min_height
+  )
+```
+
+In this case, the range is 11. The range can be useful because it tells us how much difference there is between the tallest person in our class and the shortest person in our class -- 11 inches. However, it doesn’t tell us how close to 68.4 inches “most” people in the class are.
+
+In other words, are most people in the class out at the edges of the range of values in the data? 
+
+```{r}
+#| label: dispersion-04-edges
+#| echo: FALSE
+#| fig-cap: Example with people's heights on the edges of the range
+knitr::include_graphics("dispersion_04_edges.png")
+```
+
+Or are people “evenly distributed” across the range of heights for the class? 
+
+```{r}
+#| label: dispersion-05-even
+#| echo: FALSE
+#| fig-cap: Example with people's heights evenly distributed across the range
+knitr::include_graphics("dispersion_05_even.png")
+```
+
+Or something else entirely?
+
+**Variance**
+
+The [variance](../appendices/glossary.qmd#glossary-variance) is a measure of dispersion that is slightly more complicated to calculate, although not much, but gives us a number we can use to quantify the dispersion of heights around the mean. To do this, let’s work through a simple example that only includes six observations: 3 people who are 58 inches tall and 3 people who are 78 inches tall. In this sample of six people from our population the average height is 68 inches.
+
+```{r}
+#| label: dispersion-04-edges2
+#| echo: FALSE
+#| fig-cap: Example with people's heights on the edges of the range
+knitr::include_graphics("dispersion_04_edges.png")
+```
+
+Next, let’s draw an imaginary line straight up from the mean.
+
+```{r}
+#| label: dispersion-06_variance
+#| echo: FALSE
+#| fig-cap: Drawing an maginary line at the mean height
+knitr::include_graphics("dispersion_06_variance.png")
+```
+
+Then, let’s measure the difference, or distance, between each person’s height and the mean height.
+
+```{r echo=FALSE}
+#| label: dispersion-07-variance
+#| echo: FALSE
+#| fig-cap: Calculating the differences between individual heights and the mean height
+knitr::include_graphics("dispersion_07_variance.png")
+```
+
+Then we square the differences. 
+
+```{r}
+#| label: dispersion-08-variance
+#| echo: FALSE
+#| fig-cap: Squaring the differences between individual heights and the mean height
+knitr::include_graphics("dispersion_08_variance.png")
+```
+
+Then we add up all the squared differences.
+
+```{r}
+#| label: dispersion-09-variance
+#| echo: FALSE
+#| fig-cap: Adding the squared differences between individual heights and the mean height
+knitr::include_graphics("dispersion_09_variance.png")
+```
+
+And finally, we divide by n, the number of non-missing observations, minus 1. In this case n equals six, so n-1 equals five.
+
+```{r}
+#| label: dispersion-10-variance
+#| echo: FALSE
+#| fig-cap: Dividing the sum of the squared differences between individual heights and the mean height by n
+knitr::include_graphics("dispersion_10_variance.png")
+```
+
+::: {.callout-note}
+The sample variance is often written as $s^2$.
+:::
+
+::: {.callout-note}
+If the 6 observations here represented our entire population of interest, then we could simply divide by n instead of n-1.
+:::
+
+Getting R to do this math for us is really straightforward. We simply use base R's `var()` function.
+
+```{r}
+var(c(rep(58, 3), rep(78, 3)))
+```
+
+👆 **Here's what we did above:**
+
+* We created a numeric vector of heights using the `c()` function. 
+
+* Instead of typing `c(58, 58, 58, 78, 78, 78)` we used the `rep()` function. `rep(58, 3)` is equivalent to typing `c(58, 58, 58)` and `rep(78, 3)` is equivalent to typing `c(78, 78, 78)`.
+
+* We passed this numeric vector to the `var()` function and R returned the variance -- 120
+
+So, 600 divided by 5 equals 120. Therefore, the sample variance in this case is 120. However, because the variance is expressed in squared units, instead of the original units, it isn’t necessarily intuitive to interpret.
+
+**Standard deviation**
+
+If we take the square root of the variance, we get the [standard deviation](../appendices/glossary.qmd#glossary-standard-deviation). 
+
+```{r}
+#| label: dispersion-11-sd
+#| echo: FALSE
+#| fig-cap: Obtaining the standard deviation by taking the square root of the variance
+knitr::include_graphics("dispersion_11_sd.png")
+```
+
+::: {.callout-note}
+The sample standard deviation is often written as $s$.
+:::
+
+The standard deviation is 10.95 inches, which is much easier to interpret, and compare with other samples. Now that we know the sample standard deviation, we can use it to describe a value’s distance from the mean. Additionally, when our data is approximately normally distributed, then the percentage of values within each standard deviation from the mean follow the rules displayed in this table:
+
+```{r}
+#| label: dispersion-12-sd
+#| echo: FALSE
+#| fig-cap: 68–95–99.7 rule for approximately normal data
+knitr::include_graphics("dispersion_12_sd.png")
+```
+
+That is, about 68% of all the observations fall within one standard deviation of the mean (that is, 10.95 inches). About 95% of all observations are within 2 standard deviations of the mean (that is, 10.95 * 2 = 21.9 inches), and about 99.9% of all observations are within 3 standard deviations of the mean (that is, 10.95 * 3 = 32.85 inches).
+
+Don't forget that these percentage rules apply to values __around__ the mean. In other words, half the values will be greater than the mean and half the values will be lower than the mean. You will often see this graphically illustrated with a "normal curve" or "bell curve."
+
+<!-- Helpful site: http://t-redactyl.io/blog/2016/03/creating-plots-in-r-using-ggplot2-part-9-function-plots.html -->
+
+```{r}
+#| echo: FALSE
+mean      <- 68
+sd        <- 10.95
+limits    <- c(mean - 4 * sd, mean + 4 * sd)
+my_breaks <- purrr::map_dbl(seq(-4, 4, 1), ~ mean + . * sd)
+peak      <- dnorm(mean, mean = mean, sd = sd)
+
+shaded <- function(x, n_sds) {
+  y <- dnorm(x, mean = mean, sd = sd)
+  y[x < (mean - n_sds * sd) | x > (mean + n_sds * sd)] <- NA
+  y
+}
+
+y_labels <- function(x) {
+  out <- dnorm(x, mean = mean, sd = sd)
+  out
+}
+
+ggplot(tibble(x = c(limits[1], limits[2])), aes(x = x)) + 
+  stat_function(fun = dnorm, args = list(mean = mean, sd = sd)) +
+  geom_segment(aes(x = 68, y = 0, xend = 68, yend = peak), color = "red", linetype = "dashed") +
+  scale_x_continuous("Heights", breaks = my_breaks) +
+  # Add shaded area for 68%
+  stat_function(fun = shaded, args = list(n_sds = 3), geom = "area", fill = "#005493", alpha = 0.2) +
+  geom_text(aes(x = my_breaks[c(4, 6)], y = y_labels(my_breaks[c(4, 6)]), label = "1 SD \n 68%"), nudge_y = 0.007) +
+  # Add shaded area for 95%
+  stat_function(fun = shaded, args = list(n_sds = 2), geom = "area", fill = "#005493", alpha = 0.2) +
+  geom_text(aes(x = my_breaks[c(3, 7)], y = y_labels(my_breaks[c(3, 7)]), label = "2 SD \n 95%"), nudge_y = 0.005) +
+  # Add shaded area for 99%
+  stat_function(fun = shaded, args = list(n_sds = 1), geom = "area", fill = "#005493", alpha = 0.2) +
+  geom_text(aes(x = my_breaks[c(2, 8)], y = y_labels(my_breaks[c(2, 8)]), label = "3 SD \n 99%"), nudge_y = 0.003) +
+  # Change theme
+  theme_classic() +
+  theme(
+    axis.line.y = element_blank(), axis.text.y = element_blank(), 
+    axis.ticks.y = element_blank(), axis.title.y = element_blank()
+  )
+
+rm(mean, sd, limits, my_breaks, peak, shaded, y_labels)
+```
+
+Unfortunately, the current data is nowhere near normally distributed and does not make for a good example of this rule.
+
+## Comparing distributions
+
+Now that you understand what the different measures of distribution are and how they are calculated, let's further develop your "feel" for interpreting them. We can do this by comparing different simulated distributions.
+
+```{r}
+sim_data <- tibble(
+  all_68     = rep(68, 20),
+  half_58_78 = c(rep(58, 10), rep(78, 10)),
+  even_58_78 = seq(from = 58, to = 78, length.out = 20),
+  half_48_88 = c(rep(48, 10), rep(88, 10)),
+  even_48_88 = seq(from = 48, to = 88, length.out = 20)
+)
+sim_data
+```
+
+👆 **Here's what we did above:**
+
+* We created a data frame with 5 simulated distributions:
+
+  - all_68 has a value of 68 repeated 20 times
+  
+  - half_58_78 is made up of the values 58 and 78, each repeated 10 times (similar to our example above)
+  
+  - even_58_78 is 20 evenly distributed numbers between 58 and 78
+  
+  - half_48_88 is made up of the values 48 and 88, each repeated 10 times
+  
+  - even_48_88 is 20 evenly distributed numbers between 48 and 88
+
+We will use this simulated data to quickly demonstrate a couple of these concepts. Let’s use R to calculate and compare the mean, variance, and standard deviation of each variable.
+
+```{r}
+tibble(
+  Column   = names(sim_data),
+  Mean     = purrr::map_dbl(sim_data, mean),
+  Variance = purrr::map_dbl(sim_data, var),
+  SD       = purrr::map_dbl(sim_data, sd)
+)
+```
+
+👆 **Here's what we did above:**
+
+* We created a data frame to hold some summary statistics about each column in the "sim_data" data frame.
+
+* We used the `map_dbl()` function from the `purrr` package to iterate over each column in the data. Don't worry too much about this right now. We will talk more about iteration and the `purrr` package later in the book. 
+
+So, for all the columns the mean is 68 inches. And that makes sense, right? We set the middle value and/or most commonly occurring value to be 68 inches for each of these variables. However, the variance and standard deviation are quite different.
+
+For the column "all_68" the variance and standard deviation are both zero. If you think about it, this should make perfect sense: all the values are 68 – they don’t vary – and each observations distance from the mean (68) is zero.
+
+When comparing the rest of the columns notice that all of them have a non-zero variance. This is because not all people have the same value in that column – they vary. Additionally, we can see very clearly that variance (and standard deviation) are affected by at least two things:
+
+1. First is the distribution of values across the range of possible values. For example, half_58_78 and half_48_88 have a larger variance than even_58_78 and even_48_88 because all the values are clustered at the min and max - far away from the mean.
+
+2. The second property of the data that is clearly influencing variance is the width of the range of values included in the distribution. For example, even_48_88 has a larger variance and standard deviation than even_58_78, even though both are evenly distributed across the range of possible values. The reason is because the range of possible values is larger, and therefore the range of distances from the mean is larger too.
+
+In summary, although the variance and standard deviation don’t always have a really intuitive meaning all by themselves, we can get some useful information by __comparing__ them. Generally speaking, the variance is larger when values are clustered at very low or very high values away from the mean, or when values are spread across a wider range.
+

@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>30&nbsp; Conditional Operations – R 4 Epidemiology</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/multiple_data_frames/multiple_data_frames.html" rel="next">
+<link href="../../chapters/working_with_character_strings/working_with_character_strings.html" rel="prev">
+<link href="../../r4epi_favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_data_management/introduction.html">Data Management</a></li><li class="breadcrumb-item"><a href="../../chapters/conditional_operations/conditional_operations.html"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">R 4 Epidemiology</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/brad-cannell/r4epi_quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../../R-4-Epidemiology.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/contributing/contributing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Contributing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/about_the_authors/about_the_authors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Authors</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/installing_r_and_rstudio/installing_r_and_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Installing R and RStudio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/what_is_r/what_is_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">What is R?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/navigating_rstudio/navigating_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Navigating the RStudio Interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/speaking_r/speaking_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Speaking R’s Language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lets_get_programming/lets_get_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Let’s Get Programming</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/asking_questions/asking_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Asking Questions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Coding Tools and Best Practices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_scripts/r_scripts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/quarto_files/quarto_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quarto Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_projects/projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">R Projects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/best_practices/best_practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Coding Best Practices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_pipes/using_pipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Using Pipes</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Transfer</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data_transfer/data_transfer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Data Transfer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/file_paths/file_paths.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">File Paths</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_plain_text/importing_plain_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Importing Plain Text Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_binary_files/importing_binary_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Importing Binary Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/rstudio_import_tool/rstudio_import_tool.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">RStudio’s Data Import Tool</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/exporting_data_to_disk/exporting_data_to_disk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Exporting Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Descriptive Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_descriptive_analysis/intro_descriptive_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduction to Descriptive Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/categorical_variables/categorical_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Numerical Descriptions of Categorical Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/central_tendency/central_tendency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Measures of Central Tendency</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dispersion/dispersion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measures of Dispersion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cont_pred/cont_out_cont_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Continuous Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cat_pred/cont_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cat_out_cat_pred/cat_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Categorical Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Management</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_data_management/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Data Management</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_and_modifying_columns/creating_and_modifying_columns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Creating and Modifying Columns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Subsetting Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_dates/working_with_dates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Working with Dates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_character_strings/working_with_character_strings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Working with Character Strings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/conditional_operations/conditional_operations.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/multiple_data_frames/multiple_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/restructuring_data_frames/restructuring_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Restructuring Data frames</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Repeated Operations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_repeated_operations/intro_repeated_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Introduction to Repeated Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_functions/writing_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Writing Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dplyr_column_wise/dplyr_column_wise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Column-wise Operations in dplyr</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_for_loops/writing_for_loops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Writing For Loops</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_purrr/using_purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Using the purrr Package</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Collaboration</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_git_github/intro_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Introduction to git and GitHub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_git_github/using_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Presenting Results</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_word_tables/creating_word_tables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">References</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">References</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendices/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#operands-and-operators" id="toc-operands-and-operators" class="nav-link active" data-scroll-target="#operands-and-operators"><span class="header-section-number">30.1</span> Operands and operators</a></li>
+  <li><a href="#testing-multiple-conditions-simultaneously" id="toc-testing-multiple-conditions-simultaneously" class="nav-link" data-scroll-target="#testing-multiple-conditions-simultaneously"><span class="header-section-number">30.2</span> Testing multiple conditions simultaneously</a></li>
+  <li><a href="#testing-a-sequence-of-conditions" id="toc-testing-a-sequence-of-conditions" class="nav-link" data-scroll-target="#testing-a-sequence-of-conditions"><span class="header-section-number">30.3</span> Testing a sequence of conditions</a></li>
+  <li><a href="#recoding-variables" id="toc-recoding-variables" class="nav-link" data-scroll-target="#recoding-variables"><span class="header-section-number">30.4</span> Recoding variables</a></li>
+  <li><a href="#case_when-is-lazy" id="toc-case_when-is-lazy" class="nav-link" data-scroll-target="#case_when-is-lazy"><span class="header-section-number">30.5</span> case_when() is lazy</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/conditional_operations/conditional_operations.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_data_management/introduction.html">Data Management</a></li><li class="breadcrumb-item"><a href="../../chapters/conditional_operations/conditional_operations.html"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+- if_else()
+- case_when()
+- Different than ifelse()
+- Different than if {} else {} - not vectorized
+- Missing data - see script.
+-->
+<p>There will often be times that we want to modify the values in one column of our data based on the values in one or more other columns in our data. For example, maybe we want to create a column that contains the region of the country someone is from, based on another column that contains the state they are from.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="values.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>we don’t really have a way to do this with the tools we currently have in our toolbox. We can manually type out all the region values, but that isn’t very scalable. Wouldn’t it be nice if we could just give R some rules, or conditions (e.g., TX is in the South, CA is in the West), and have R fill in the region values for us? Well, that’s exactly what we are going to learn how to do in this chapter.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="conditions.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These kinds of operations are called conditional operations because we type in a set of conditions, R evaluates those conditions, and then executes a different process or procedure based on whether or not the condition is met.</p>
+<p>As a silly example, let’s say that we want our daughters to wear a raincoat if it’s raining outside, but we don’t want them to wear a raincoat if it is not raining outside. So, we give them a conditional request: “If it’s raining outside, then make sure to wear your raincoat, please. Otherwise, please don’t wear your raincoat.”</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rain.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this hypothetical scenario, they say, “yes, dad,” and then go to the window to see if it’s raining. Then, they choose their next action (i.e., raincoat wearing) depending on whether the condition (raining) is met or not.</p>
+<p>Just like we have to ask our daughters to put on a raincoat using conditional logic, we sometimes have to ask R to execute commands using conditional logic. Additionally, we have to do so in a way that R understands. For example, we can use <code>dplyr</code>’s <code>if_else()</code> function to ask R to execute commands conditionally. Let’s go ahead and take a look at an example now:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+    day weather
+  &lt;int&gt; &lt;chr&gt;  
+1     1 rain   
+2     2 rain   
+3     3 no rain
+4     4 rain   
+5     5 no rain</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>we simulated some data that contains information about whether or not it rained on each of 5 days.</li>
+</ul>
+<p>Now, let’s say that we want to create a new column in our data frame called <code>raincoat</code>. We want the value of <code>raincoat</code> to be <code>wear</code> on rainy days and <code>no wear</code> on days when it isn’t raining. Here’s how we can do that with the if_else() function:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+    day weather raincoat
+  &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   
+1     1 rain    wear    
+2     2 rain    wear    
+3     3 no rain no wear 
+4     4 rain    wear    
+5     5 no rain no wear </code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>if_else()</code> function to assign the values <code>wear</code> and <code>no wear</code> to the column <code>raincoat</code> conditional on the values in each row of the <code>weather</code> column.</p></li>
+<li><p>You can type <code>?if_else</code> into our R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>if_else()</code> function is the <code>condition</code> argument. The condition should typically be composed of a series of operands and operators (we’ll talk more about these soon) that tell R the condition(s) that we want it to test. For example, is the value of <code>weather</code> equal to <code>rain</code>?</p></li>
+<li><p>The second argument to the <code>if_else()</code> function is the <code>true</code> argument. The value passed to the <code>true</code> argument tells R what value the <code>if_else()</code> function should return when the condition is <code>TRUE</code>. In this case, we told <code>if_else()</code> to return the character value <code>wear</code>.</p></li>
+<li><p>The third argument to the <code>if_else()</code> function is the <code>false</code> argument. The value passed to the <code>false</code> argument tells R what value the <code>if_else()</code> function should return when the condition is <code>FALSE</code>. In this case, we told <code>if_else()</code> to return the character value <code>no wear</code>.</p></li>
+<li><p>Finally, we assigned all the values returned by the <code>if_else()</code> function to a new column that we named <code>raincoat</code>.</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> For the rest of the book, we will pass values to the <code>if_else()</code> function by position instead of name. In other words, we won’t write <code>condition =</code>, <code>true =</code>, or <code>false =</code> anymore. However, the first value passed to the <code>if_else()</code> function will always be passed to the <code>condition</code> argument, the second value will always be passed to the <code>true</code> argument, and the third value will always be passed to the <code>false</code> argument.</p>
+</div>
+</div>
+<p>Before moving on, let’s dive into this a little further. R must always be able to reduce whatever value we pass to the <code>condition</code> argument of <code>if_else()</code> to TRUE or FALSE. That’s how R views any expression we pass to the <code>condition</code> argument. We can literally even pass the value <code>TRUE</code> or the value <code>FALSE</code> (not that doing so has much practical application):</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "wear"</code></pre>
+</div>
+</div>
+<p>Because the value passed to the <code>condition</code> argument is <code>TRUE</code> (in this case, literally), the <code>if_else()</code> function returns the value <code>wear</code>. What happens if we use this code to assign values to the <code>raincoat</code> column?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+    day weather raincoat
+  &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   
+1     1 rain    wear    
+2     2 rain    wear    
+3     3 no rain wear    
+4     4 rain    wear    
+5     5 no rain wear    </code></pre>
+</div>
+</div>
+<p>Again, the <code>if_else()</code> function returns the value <code>wear</code> because the value passed to the <code>condition</code> argument is <code>TRUE</code>. Then, R uses its recycling rules to copy the value <code>wear</code> to every row of the <code>raincoat</code> column. What would do you think will happen if we pass the value <code>FALSE</code> to the <code>condition</code> argument instead?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+    day weather raincoat
+  &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   
+1     1 rain    no wear 
+2     2 rain    no wear 
+3     3 no rain no wear 
+4     4 rain    no wear 
+5     5 no rain no wear </code></pre>
+</div>
+</div>
+<p>Hopefully, that was the result you expected. The <code>if_else()</code> function returns the value <code>no wear</code> because the value passed to the <code>condition</code> argument is <code>FALSE</code>. Then, R uses its recycling rules to copy the value <code>no wear</code> to every row of the <code>raincoat</code> column.</p>
+<p>we can take this a step further and actually pass a vector of logical (<code>TRUE</code>/<code>FALSE</code>) values to the <code>condition</code> argument. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+    day weather raincoat
+  &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   
+1     1 rain    wear    
+2     2 rain    wear    
+3     3 no rain no wear 
+4     4 rain    wear    
+5     5 no rain no wear </code></pre>
+</div>
+</div>
+<p>In reality, that’s sort of what we did in the very first <code>if_else()</code> example above. But, instead of typing the values manually, we used an expression that returned a vector of logical values. Specifically, we used the equality operator (<code>==</code>) to check whether or not each value in the <code>weather</code> column was equal to the value “rain” or not.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE  TRUE FALSE  TRUE FALSE</code></pre>
+</div>
+</div>
+<p>That pretty much covers the basics of how the <code>if_else()</code> function works. Next, let’s take a look at some of the different combinations of operands and operators that we can combine and pass to the <code>condition</code> argument of the <code>if_else()</code> function.</p>
+<section id="operands-and-operators" class="level2" data-number="30.1">
+<h2 data-number="30.1" class="anchored" data-anchor-id="operands-and-operators"><span class="header-section-number">30.1</span> Operands and operators</h2>
+<p>Let’s start by taking a look at some commonly used operands:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="operands.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we can see in the table above, operands are the <em>values</em> we want to check, or test. Operands can be variables or they can be individual values (also called constants). The example above (<code>weather == "rain"</code>) contained two operands; the variable <code>weather</code> and the character constant <code>"rain"</code>. The operator we used in this case was the equality operator (<code>==</code>). Next, let’s take a look at some other commonly used operators.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="comparison-numeric.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="comparison-character.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="arithmetic.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="logical.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>we think that most of the operators above will be familiar, or a least intuitive, for most of you. However, we do want to provide a little bit of commentary for a few of them.</p>
+<ul>
+<li><p>we haven’t seen the <code>%in%</code> operator before, but we will wait to discuss it below.</p></li>
+<li><p>Some of you may have been a little surprised by the results we get from using less than (<code>&lt;</code>) and greater than (<code>&gt;</code>) with characters. It’s basically just testing alphabetical order. A comes before B in the alphabet, so A is less than B. Additionally, when two letters are the same, the upper-case letter is considered greater than the lowercase letter. However, alphabetical order takes precedence over case. So, b is still greater than A even though b is lowercase and A is upper case.</p></li>
+<li><p>Many of you may not have seen the modulus operator (<code>%%</code>) before. The modulus operator returns the remainder that is left after dividing two numbers. For example, 4 divided by 2 is 2 with a remainder of 0 because 2 goes into 4 <em>exactly</em> two times. Said another way, 2 * 2 = 4 and 4 - 4 = 0. So, <code>4 %% 2 = 0</code>. However, 3 divided by 2 is 1 with a remainder of 1 because 2 goes into 3 one time with 1 left over. Said another way, 2 * 1 = 2 and 3 - 2 = 1. So, <code>3 %% 2 = 1</code>. How is this useful? Well, the only times we can remember using the modulus operator have been when we needed to separate even and odd rows of a data frame. For example, let’s say that we have a data frame where each person has two rows. The first row always corresponds to treatment A and the second row always corresponds to treatment B. However, for some reason (maybe blinding?), there was no <code>treatment</code> column in the data when we received it. We could use the modulus operator to add a <code>treatment</code> column like this:</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+     id outcome
+  &lt;dbl&gt;   &lt;dbl&gt;
+1     1       0
+2     1       1
+3     2       1
+4     2       1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+     id outcome treatment
+  &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;    
+1     1       0 A        
+2     1       1 B        
+3     2       1 A        
+4     2       1 B        </code></pre>
+</div>
+</div>
+<ul>
+<li>we also want to remind you that we should always use the <code>is.na()</code> function to check for missing values. Not the equality operator (<code>==</code>). Using the equality operator when there are missing values can give results that may be unexpected. For example:</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  name1 name2 name_match
+  &lt;chr&gt; &lt;chr&gt; &lt;lgl&gt;     
+1 Jon   Jon   TRUE      
+2 John  Jon   FALSE     
+3 &lt;NA&gt;  Jon   NA        </code></pre>
+</div>
+</div>
+<p>Many of us would expect the third value of the <code>name_match</code> column to be <code>FALSE</code> instead of <code>NA</code>. There are a couple of different ways we can get <code>FALSE</code> in the third row instead of <code>NA</code>. One way, although not necessarily the best way, is to use the <code>if_else()</code> function:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  name1 name2 name_match
+  &lt;chr&gt; &lt;chr&gt; &lt;lgl&gt;     
+1 Jon   Jon   TRUE      
+2 John  Jon   FALSE     
+3 &lt;NA&gt;  Jon   FALSE     </code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>if_else()</code> function to assign the value <code>FALSE</code> to the column <code>name_match</code> where the original value of <code>name_match</code> was <code>NA</code>.</p></li>
+<li><p>The value we passed to the <code>condition</code> argument was <code>is.na(name_match)</code>. In doing so, we asked R to check each value of the <code>name_match</code> column and see if it was <code>NA</code>.</p></li>
+<li><p>If it was <code>NA</code>, then we wanted to return the value that we passed to the <code>true</code> argument. Somewhat confusingly, the value we passed to the <code>true</code> argument was <code>FALSE</code>. All that means is that we wanted <code>if_else()</code> to return the literal value <code>FALSE</code> when the value for <code>name_match</code> was <code>NA</code>.</p></li>
+<li><p>If the value in <code>name_match</code> was NOT <code>NA</code>, then we wanted to return the value that we passed to the <code>false</code> argument. In this case, we asked R to return the value that already exists in the <code>name_match</code> column.</p></li>
+<li><p>In more informal language, we asked R to replace missing values in the <code>name_match</code> column with <code>FALSE</code> and leave the rest of the values unchanged.</p></li>
+</ul>
+</section>
+<section id="testing-multiple-conditions-simultaneously" class="level2" data-number="30.2">
+<h2 data-number="30.2" class="anchored" data-anchor-id="testing-multiple-conditions-simultaneously"><span class="header-section-number">30.2</span> Testing multiple conditions simultaneously</h2>
+<p>So far, we have only ever passed one condition to the <code>condition</code> argument of the <code>if_else()</code> function. However, we can pass as many conditions as we want. Having said that, more than 2, or maybe 3, gets very convoluted. Let’s go ahead and take a look at a couple of examples now. We’ll start by simulating some blood pressure data:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+      id sysbp diasbp
+   &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1     1   152     78
+ 2     2   120     60
+ 3     3   119     88
+ 4     4   123     76
+ 5     5   135     85
+ 6     6    83     54
+ 7     7   191    116
+ 8     8   147     95
+ 9     9   209    100
+10    10   166    106</code></pre>
+</div>
+</div>
+<p>A person may be categorized as having normal blood pressure when their systolic blood pressure is less than 120 mmHG <em>AND</em> their diastolic blood pressure is less than 80 mmHG. We can use this information and the <code>if_else()</code> function to create a new column in our data frame that contains information about whether each person in our simulated data frame has normal blood pressure or not:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 4
+      id sysbp diasbp bp        
+   &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     
+ 1     1   152     78 Not Normal
+ 2     2   120     60 Not Normal
+ 3     3   119     88 Not Normal
+ 4     4   123     76 Not Normal
+ 5     5   135     85 Not Normal
+ 6     6    83     54 Normal    
+ 7     7   191    116 Not Normal
+ 8     8   147     95 Not Normal
+ 9     9   209    100 Not Normal
+10    10   166    106 Not Normal</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>if_else()</code> function to create a new column in our data frame (<code>bp</code>) that contains information about whether each person has normal blood pressure or not.</p></li>
+<li><p>we actually passed two conditions to the <code>condition</code> argument. The first condition was that the value of <code>sysbp</code> had to be less than <code>120</code>. The second condition was that the value of <code>diasbp</code> had to be less than <code>80</code>.</p></li>
+<li><p>Because we separated these conditions with the AND operator (<code>&amp;</code>), both conditions had to be true in order for the <code>if_else()</code> function to return the value we passed to the <code>true</code> argument – <code>Normal</code>. Otherwise, the <code>if_else()</code> function returned the value we passed to the <code>false</code> argument – <code>Not Normal</code>.</p></li>
+<li><p>Participant 2 had a systolic blood pressure of 120 and a diastolic blood pressure of 60. Although 60 is less than 80 (condition number 2), 120 is not less than 120 (condition number 1). So, the value returned by the <code>if_else()</code> function was <code>Not Normal</code>.</p></li>
+<li><p>Participant 3 had a systolic blood pressure of 119 and a diastolic blood pressure of 88 Although 119 is less than 120 (condition number 1), 88 is not less than 80 (condition number 2). So, the value returned by the <code>if_else()</code> function was <code>Not Normal</code>.</p></li>
+<li><p>Participant 6 had a systolic blood pressure of 83 and a diastolic blood pressure of 54. In this case, conditions 1 <em>and</em> 2 were met. So, the value returned by the <code>if_else()</code> function was <code>Normal</code>.</p></li>
+</ul>
+<p>This is useful! However, in some cases, we need to be able to test conditions sequentially, rather than simultaneously, and return a different value for each condition.</p>
+</section>
+<section id="testing-a-sequence-of-conditions" class="level2" data-number="30.3">
+<h2 data-number="30.3" class="anchored" data-anchor-id="testing-a-sequence-of-conditions"><span class="header-section-number">30.3</span> Testing a sequence of conditions</h2>
+<p>Let’s say that we wanted to create a new column in our <code>blood_pressure</code> data frame that contains each person’s blood pressure category according to the following scale:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="bp.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is the perfect opportunity to use <code>dplyr</code>’s <code>case_when()</code> function. Take a look:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 4
+      id sysbp diasbp bp                  
+   &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;               
+ 1     1   152     78 Hypertension Stage 2
+ 2     2   120     60 Elevated            
+ 3     3   119     88 Hypertension Stage 1
+ 4     4   123     76 Elevated            
+ 5     5   135     85 Hypertension Stage 1
+ 6     6    83     54 Normal              
+ 7     7   191    116 Hypertension Stage 2
+ 8     8   147     95 Hypertension Stage 2
+ 9     9   209    100 Hypertension Stage 2
+10    10   166    106 Hypertension Stage 2</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>case_when()</code> function to create a new column in our data frame (<code>bp</code>) that contains information about each person’s blood pressure category.</p></li>
+<li><p>You can type <code>?case_when</code> into our R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The <code>case_when()</code> function only has a single argument – the <code>...</code> argument. You should pass one or more two-sided formulas separated by commas to this argument. What in the heck does that mean?</p>
+<ul>
+<li><p>When the help documentation refers to a two-sided formula, it means this: <code>LHS ~ RHS</code>. Here, <code>LHS</code> means left-hand side and <code>RHS</code> means right-hand side.</p></li>
+<li><p>The <code>LHS</code> should be the condition or conditions that we want to test. You can think of this as being equivalent to the <code>condition</code> argument of the <code>if_else()</code> function.</p></li>
+<li><p>The <code>RHS</code> should be the value we want the <code>case_when()</code> function to return when the condition on the left-hand side is met. You can think of this as being equivalent to the <code>true</code> argument of the <code>if_else()</code> function.</p></li>
+<li><p>The tilde symbol (<code>~</code>) is used to separate the conditions on the left-hand side and the return values on the right-hand side.</p></li>
+</ul></li>
+<li><p>The <code>case_when()</code> function doesn’t have a direct equivalent to the <code>if_else()</code> function’s <code>false</code> argument. Instead, it evaluates each two-sided formula sequentially until if finds a condition that is met. If it never finds a condition that is met, then it returns an <code>NA</code>. We will expand on this more below.</p></li>
+<li><p>Finally, we assigned all the values returned by the <code>case_when()</code> function to a new column that we named <code>bp</code>.</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> Traditionally, the tilde symbol (<code>~</code>) is used to represent relationships in a statistical model. Here, it doesn’t have that meaning. We assume this symbol was picked somewhat out of necessity. Remember, any of the comparison operators, arithmetic operators, and logical operators may be used to define a condition in the left-hand side, and commas are used to separated multiple two-sided formulas. Therefore, there aren’t very many symbols left to choose from. Therefore, tilde it is. That’s our guess anyway.</p>
+</div>
+</div>
+<p>The <code>case_when()</code> function was really useful for creating the <code>bp</code> column above, but there was also a lot going on there. Next, we’ll take a look at a slightly less complex example and clarify a few things along the way.</p>
+</section>
+<section id="recoding-variables" class="level2" data-number="30.4">
+<h2 data-number="30.4" class="anchored" data-anchor-id="recoding-variables"><span class="header-section-number">30.4</span> Recoding variables</h2>
+<p>In epidemiology, recoding variables is really common. For example, we may collect information about people’s ages as a continuous variable, but decide that it makes more sense to <strong>collapse</strong> age into age categories for our analysis. Let’s say that our analysis plan calls for assigning each of our participants to one of the following age categories:</p>
+<p>1 = <code>child</code> when the participant is less than 12 years old<br>
+2 = <code>adolescent</code> when the participant is between the ages of 12 and less than 18<br>
+3 = <code>adult</code> when the participant is 18 years old or older</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> You may not have ever heard of <strong>collapsing</strong> variables before. It simply means combing two or more values of our variable. We can collapse continuous variables into categories, as we discussed in the example above, or we can collapse categories into broader categories (as we will see with the race category example below). After we collapse a variable, it always contains fewer (and broader) possible values than it contained before we collapsed it.</p>
+</div>
+</div>
+<p>we’re going to show you how to do this below using the <code>case_when()</code> function. However, we’re going to do it piecemeal so that we can highlight a few important concepts. First, let’s simulate some data that includes 10 participant’s ages.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+      id   age
+   &lt;int&gt; &lt;int&gt;
+ 1     1    15
+ 2     2    19
+ 3     3    14
+ 4     4     3
+ 5     5    10
+ 6     6    18
+ 7     7    22
+ 8     8    11
+ 9     9     5
+10    10    NA</code></pre>
+</div>
+</div>
+<p>Then, let’s start the process of collapsing the <code>age</code> column into a new column called <code>age_3cat</code> that contains the 3 age categories we discussed above:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+      id   age age_3cat
+   &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+ 1     1    15       NA
+ 2     2    19       NA
+ 3     3    14       NA
+ 4     4     3        1
+ 5     5    10        1
+ 6     6    18       NA
+ 7     7    22       NA
+ 8     8    11        1
+ 9     9     5        1
+10    10    NA       NA</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>case_when()</code> function to create a new column in our data frame (<code>age_3cat</code>) that will eventually categorize each participant into one of 3 categories depending on their continuous age value.</p></li>
+<li><p>Notice that we only passed one two-sided formula to the <code>case_when()</code> function – <code>age &lt; 12 ~ 1</code>.</p>
+<ul>
+<li><p>The <code>RHS</code> of the two-sided formula is <code>age &lt; 12</code>. This tells the <code>case_when()</code> function to check whether or not every value in the <code>age</code> column is less than <code>12</code> or not.</p></li>
+<li><p>The <code>LHS</code> of the two-sided formula is <code>1</code>. This tells the <code>case_when()</code> function what value to return each time it finds a value less than <code>12</code> in the <code>age</code> column.</p></li>
+<li><p>The tilde symbol is used to separate the <code>RHS</code> and the <code>LHS</code> of the two-sided formula.</p></li>
+</ul></li>
+<li><p>Here is how the <code>case_when()</code> function basically works. It will test the condition on the left-hand side for each value of the variable, or variables, passed to the left-hand side (i.e., <code>age</code>). If the condition is met (i.e., <code>&lt; 12</code>), then it will return the value on the right-hand side of the tilde (i.e., <code>1</code>). If the condition is not met, it will test the condition in the next two-sided formula. When there are no more two-sided formulas, then it will return an <code>NA</code>.</p>
+<ul>
+<li><p>Above, the first value in <code>age</code> is <code>15</code>. <code>15</code> is <em>NOT</em> less than <code>12</code>. So, <code>case_when()</code> tries to move on to the next two-sided formula. However, there is no next two-sided formula. So, the first value returned by the <code>case_when()</code> function is <code>NA</code>. The same is true for the next two values of age.</p></li>
+<li><p>The fourth value in <code>age</code> is <code>3</code>. <code>3</code> is less than <code>12</code>. So, the fourth value returned by the <code>case_when()</code> function is <code>1</code>. And so on…</p></li>
+<li><p>Finally, after the <code>case_when()</code> function has tested all conditions, the returned values are assigned to a new column that we named <code>age_3cat</code>.</p></li>
+</ul></li>
+<li><p>Notice that we named the new variable <code>age_3cat</code>. We’re not sure where we picked up this naming convention, but we use it a lot when we collapse variables. The basic format is the name of variable we’re collapsing, an underscore, and the number of categories in the collapsed variable. We like using this convention for two reasons. First, the resulting column names are meaningful and informative. Second, we don’t have to spend any time trying to think of a different meaningful or informative name for my new variable. It’s totally fine if you don’t adopt this naming convention, but we would recommend that you try to use names that are more informative than <code>age2</code> or something like that.</p></li>
+<li><p>Notice that we used a number (<code>1</code>) on the right-hand side of the two-sided formula above. We could have used a character value instead (i.e., <code>child</code>); however, for reasons we discussed in the section on factor variables, we prefer to recode my variables using numeric categories and then later creating a factor version of the variable using the <code>_f</code> naming convention.</p></li>
+</ul>
+<p>Now, let’s add a second two-sided formula to our <code>case_when()</code> function.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+      id   age age_3cat
+   &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+ 1     1    15        2
+ 2     2    19       NA
+ 3     3    14        2
+ 4     4     3        1
+ 5     5    10        1
+ 6     6    18       NA
+ 7     7    22       NA
+ 8     8    11        1
+ 9     9     5        1
+10    10    NA       NA</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used <code>dplyr</code>’s <code>case_when()</code> function to create a new column in our data frame (<code>age_3cat</code>) that will eventually categorize each participant into one of 3 categories depending on their continuous age value.</p></li>
+<li><p>Notice that this time we passed two two-sided formulas to the <code>case_when()</code> function – <code>age &lt; 12 ~ 1</code> and <code>age &gt;= 12 &amp; age &lt; 18 ~ 2</code>.</p>
+<ul>
+<li><p>Notice that we separated the two two-sided formulas with a comma (i.e., immediately after the <code>1</code> in <code>age &lt; 12 ~ 1</code>.</p></li>
+<li><p>Notice that the second two-sided formula is actually testing two conditions. First, it tests whether or not the value of age is greater than or equal to 12. Then, it tests whether or not the value of age is less than 18.</p></li>
+<li><p>Because we separated the two conditions with the and operator (<code>&amp;</code>), both must be TRUE for <code>case_when()</code> to return the value <code>2</code>. Otherwise, it will move on to the next two-sided formula.</p></li>
+<li><p>Above, the first value in <code>age</code> is <code>15</code>. <code>15</code> is <em>NOT</em> less than <code>12</code>. So, <code>case_when()</code> moves on to evaluate the next two-sided formula. <code>15</code> is greater than or equal to <code>12</code> <em>AND</em> <code>15</code> is less than <code>18</code>. Because both conditions of the second two-sided formula were met, <code>case-when()</code> returns the value on the right-hand side of the second two-sided formula – <code>2</code>. So, the first value returned by the <code>case_when()</code> function is <code>2</code>.</p></li>
+<li><p>The second value in <code>age</code> is <code>19</code>. <code>19</code> is <em>NOT</em> less than <code>12</code>. So, <code>case_when()</code> moves on to evaluate the next two-sided formula. <code>19</code> is greater than or equal to <code>12</code>, but <code>19</code> is <em>NOT</em> less than <code>18</code>. So, <code>case_when()</code> tries to move on to the next two-sided formula. However, there is no next two-sided formula. So, the second value returned by the <code>case_when()</code> function is <code>NA</code>.</p></li>
+<li><p>The fourth value in <code>age</code> is <code>3</code>. <code>3</code> is less than <code>12</code>. So, the fourth value returned by the <code>case_when()</code> function is <code>1</code>. <strong>At this point, because a condition was met, <code>case_when()</code> does not continue checking the current value of <code>age</code> against the remaining two-sided formulas. It returns a <code>1</code> and moves on to the next value of <code>age</code>.</strong></p></li>
+<li><p>Finally, after the <code>case_when()</code> function has tested all conditions, the returned values are assigned to a new column that we named <code>age_3cat</code>.</p></li>
+</ul></li>
+<li><p>In everyday speech, we may express the second two-sided condition above as “categorize all people between the ages of 12 and 18 as an adolescent.” we want to make two points about that before moving on.</p>
+<ul>
+<li><p>First, while that statement may be totally reasonable in everyday speech, it isn’t quite specific enough for what we are trying to do here. “Between 12 and 18” is a little bit ambiguous. What category is a person put in if they are exactly 12? What category are they put in if they are exactly 18? So, clearly we need to be more precise. We’re not aware of any hard and fast rules for making these kinds of decisions about categorization, but we tend to <em>include</em> the lower end of the range in the current category and <em>exclude</em> the value on the upper end of the range in the current category. So, in the example above, we would say, “categorize all people between the ages of 12 and less than 18 as an adolescent.”</p></li>
+<li><p>Second, when we are testing for a “between” condition like this one, we often see students write code like this: <code>age &gt;= 12 &amp; &lt; 18</code>. R won’t understand that. We have to use the column name in each condition to be tested (i.e., <code>age &gt;= 12 &amp; age &lt; 18</code>), even though it doesn’t change. Otherwise, we get an error that looks something like this:</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-error">
+<pre><code>Error in parse(text = input): &lt;text&gt;:5:19: unexpected '&lt;'
+4:       age &lt; 12             ~ 1,
+5:       age &gt;= 12 &amp; &lt;
+                     ^</code></pre>
+</div>
+</div>
+<p>Ok, let’s go ahead and wrap up this age category variable:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+      id   age age_3cat
+   &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+ 1     1    15        2
+ 2     2    19        3
+ 3     3    14        2
+ 4     4     3        1
+ 5     5    10        1
+ 6     6    18        3
+ 7     7    22        3
+ 8     8    11        1
+ 9     9     5        1
+10    10    NA       NA</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>we used <code>dplyr</code>’s <code>case_when()</code> function to create a new column in our data frame (<code>age_3cat</code>) that categorized each participant into one of 3 categories depending on their continuous age value.</li>
+</ul>
+</section>
+<section id="case_when-is-lazy" class="level2" data-number="30.5">
+<h2 data-number="30.5" class="anchored" data-anchor-id="case_when-is-lazy"><span class="header-section-number">30.5</span> case_when() is lazy</h2>
+<p>What do we mean when we say that <code>case_when()</code> is lazy? Well, it may not have registered when we mentioned it above, but <code>case_when()</code> stops evaluating two-sided functions for a value as soon as it finds one that is <code>TRUE</code>. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 1
+  number
+   &lt;dbl&gt;
+1      1
+2      2
+3      3</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  number size  
+   &lt;dbl&gt; &lt;chr&gt; 
+1      1 Small 
+2      2 Medium
+3      3 Large </code></pre>
+</div>
+</div>
+<p>Why wasn’t the value for the <code>size</code> column <code>Large</code> in every row of the data frame? After all, <code>1</code>, <code>2</code>, and <code>3</code> are all less than <code>4</code>, and <code>number &lt; 4</code> was the final possible two-sided formula that could have been evaluated for each value of <code>number</code>. The answer is that <code>case_when()</code> is lazy. The first value in <code>number</code> is <code>1</code>. <code>1</code> is less than <code>2</code>. So, the condition in the first two-sided formula evaluates to <code>TRUE</code>. So, <code>case_when()</code> immediately returns the value on the right-hand side (<code>Small</code>) and <strong>does not continue checking two-sided formulas. It moves on to the next value of <code>number</code>.</strong></p>
+<p>The fact that <code>case_when()</code> is lazy isn’t a bad thing. It’s just something to be aware of. In fact, we can often use it to our advantage. For example, we can use <code>case_when()</code>’s laziness to rewrite the <code>age_3cat</code> code from above a little more succinctly:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+      id   age age_3cat
+   &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+ 1     1    15        2
+ 2     2    19        3
+ 3     3    14        2
+ 4     4     3        1
+ 5     5    10        1
+ 6     6    18        3
+ 7     7    22        3
+ 8     8    11        1
+ 9     9     5        1
+10    10    NA       NA</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>Because <code>case_when()</code> is lazy, we were able to omit the <code>age &gt;= 12</code> condition from the second two-sided formula. It’s unnecessary because the value <code>1</code> is immediately returned for every person with an <code>age</code> value less than <code>12</code>. By definition, any value being evaluated in the second two-sided function (<code>age &lt; 18</code>) has an age value greater than</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/brad-cannell\.github\.io\/r4epi_quarto\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/working_with_character_strings/working_with_character_strings.html" class="pagination-link" aria-label="Working with Character Strings">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Working with Character Strings</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/multiple_data_frames/multiple_data_frames.html" class="pagination-link" aria-label="Working with Multiple Data Frames">
+        <span class="nav-page-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>R for Epidemiology</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/conditional_operations/conditional_operations.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://Quarto/.org/">Quarto/</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>28&nbsp; Working with Dates – R 4 Epidemiology</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/working_with_character_strings/working_with_character_strings.html" rel="next">
+<link href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" rel="prev">
+<link href="../../r4epi_favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_data_management/introduction.html">Data Management</a></li><li class="breadcrumb-item"><a href="../../chapters/working_with_dates/working_with_dates.html"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Working with Dates</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">R 4 Epidemiology</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/brad-cannell/r4epi_quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../../R-4-Epidemiology.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=|url|">
+              <i class="bi bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/contributing/contributing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Contributing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/about_the_authors/about_the_authors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Authors</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/installing_r_and_rstudio/installing_r_and_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Installing R and RStudio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/what_is_r/what_is_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">What is R?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/navigating_rstudio/navigating_rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Navigating the RStudio Interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/speaking_r/speaking_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Speaking R’s Language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lets_get_programming/lets_get_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Let’s Get Programming</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/asking_questions/asking_questions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Asking Questions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Coding Tools and Best Practices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_scripts/r_scripts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/quarto_files/quarto_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quarto Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/r_projects/projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">R Projects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/best_practices/best_practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Coding Best Practices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_pipes/using_pipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Using Pipes</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Transfer</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/data_transfer/data_transfer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Introduction to Data Transfer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/file_paths/file_paths.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">File Paths</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_plain_text/importing_plain_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Importing Plain Text Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/importing_binary_files/importing_binary_files.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Importing Binary Files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/rstudio_import_tool/rstudio_import_tool.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">RStudio’s Data Import Tool</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/exporting_data_to_disk/exporting_data_to_disk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Exporting Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Descriptive Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_descriptive_analysis/intro_descriptive_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduction to Descriptive Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/categorical_variables/categorical_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Numerical Descriptions of Categorical Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/central_tendency/central_tendency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Measures of Central Tendency</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dispersion/dispersion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Measures of Dispersion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cont_pred/cont_out_cont_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Continuous Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cont_out_cat_pred/cont_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Continuous Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cat_out_cat_pred/cat_out_cat_pred.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Describing the Relationship Between a Categorical Outcome and a Categorical Predictor</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Management</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_data_management/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Data Management</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_and_modifying_columns/creating_and_modifying_columns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Creating and Modifying Columns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Subsetting Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_dates/working_with_dates.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Working with Dates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/working_with_character_strings/working_with_character_strings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Working with Character Strings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/conditional_operations/conditional_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Conditional Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/multiple_data_frames/multiple_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Working with Multiple Data Frames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/restructuring_data_frames/restructuring_data_frames.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Restructuring Data frames</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Repeated Operations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_repeated_operations/intro_repeated_operations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Introduction to Repeated Operations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_functions/writing_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Writing Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dplyr_column_wise/dplyr_column_wise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Column-wise Operations in dplyr</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/writing_for_loops/writing_for_loops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Writing For Loops</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_purrr/using_purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Using the purrr Package</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Collaboration</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/intro_git_github/intro_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Introduction to git and GitHub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/using_git_github/using_git_github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Using git and GitHub</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Presenting Results</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/creating_word_tables/creating_word_tables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Creating Tables with R and Microsoft Word</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">References</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">References</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendices/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#date-vector-types" id="toc-date-vector-types" class="nav-link active" data-scroll-target="#date-vector-types"><span class="header-section-number">28.1</span> Date vector types</a></li>
+  <li><a href="#dates-under-the-hood" id="toc-dates-under-the-hood" class="nav-link" data-scroll-target="#dates-under-the-hood"><span class="header-section-number">28.2</span> Dates under the hood</a></li>
+  <li><a href="#coercing-date-times-to-dates" id="toc-coercing-date-times-to-dates" class="nav-link" data-scroll-target="#coercing-date-times-to-dates"><span class="header-section-number">28.3</span> Coercing date-times to dates</a></li>
+  <li><a href="#coercing-character-strings-to-dates" id="toc-coercing-character-strings-to-dates" class="nav-link" data-scroll-target="#coercing-character-strings-to-dates"><span class="header-section-number">28.4</span> Coercing character strings to dates</a></li>
+  <li><a href="#change-the-appearance-of-dates-with-format" id="toc-change-the-appearance-of-dates-with-format" class="nav-link" data-scroll-target="#change-the-appearance-of-dates-with-format"><span class="header-section-number">28.5</span> Change the appearance of dates with format()</a></li>
+  <li><a href="#some-useful-built-in-dates" id="toc-some-useful-built-in-dates" class="nav-link" data-scroll-target="#some-useful-built-in-dates"><span class="header-section-number">28.6</span> Some useful built-in dates</a>
+  <ul class="collapse">
+  <li><a href="#todays-date" id="toc-todays-date" class="nav-link" data-scroll-target="#todays-date"><span class="header-section-number">28.6.1</span> Today’s date</a></li>
+  <li><a href="#todays-date-time" id="toc-todays-date-time" class="nav-link" data-scroll-target="#todays-date-time"><span class="header-section-number">28.6.2</span> Today’s date-time</a></li>
+  <li><a href="#character-vector-of-full-month-names" id="toc-character-vector-of-full-month-names" class="nav-link" data-scroll-target="#character-vector-of-full-month-names"><span class="header-section-number">28.6.3</span> Character vector of full month names</a></li>
+  <li><a href="#character-vector-of-abbreviated-month-names" id="toc-character-vector-of-abbreviated-month-names" class="nav-link" data-scroll-target="#character-vector-of-abbreviated-month-names"><span class="header-section-number">28.6.4</span> Character vector of abbreviated month names</a></li>
+  <li><a href="#creating-a-vector-containing-a-sequence-of-dates" id="toc-creating-a-vector-containing-a-sequence-of-dates" class="nav-link" data-scroll-target="#creating-a-vector-containing-a-sequence-of-dates"><span class="header-section-number">28.6.5</span> Creating a vector containing a sequence of dates</a></li>
+  </ul></li>
+  <li><a href="#calculating-date-intervals" id="toc-calculating-date-intervals" class="nav-link" data-scroll-target="#calculating-date-intervals"><span class="header-section-number">28.7</span> Calculating date intervals</a>
+  <ul class="collapse">
+  <li><a href="#calculate-age-as-the-difference-in-time-between-dob-and-today" id="toc-calculate-age-as-the-difference-in-time-between-dob-and-today" class="nav-link" data-scroll-target="#calculate-age-as-the-difference-in-time-between-dob-and-today"><span class="header-section-number">28.7.1</span> Calculate age as the difference in time between dob and today</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/working_with_dates/working_with_dates.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/intro_data_management/introduction.html">Data Management</a></li><li class="breadcrumb-item"><a href="../../chapters/working_with_dates/working_with_dates.html"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Working with Dates</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Working with Dates</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+Date
+Posixct
+Lubridate
+-->
+<p>In epidemiology, it isn’t uncommon at all for the data we are analyzing to include important date values. Some common examples include date of birth, hospital admission date, date of symptom onset, and follow-up dates in longitudinal studies. In this chapter, we will learn about two new vector types that we can use to work with date and date-time data. Additionally, we will learn about a new package, <code>lubridate</code>, which provides a robust set of functions designed specifically for working with date and date-time data in R.</p>
+<section id="date-vector-types" class="level2" data-number="28.1">
+<h2 data-number="28.1" class="anchored" data-anchor-id="date-vector-types"><span class="header-section-number">28.1</span> Date vector types</h2>
+<p>In R, there are two different vector types that we can use to store, and work with, dates. They are:</p>
+<p>📅 <code>date</code> vectors for working with date values. By default, R will display dates in this format: 4-digit year, a dash, 2-digit month, a dash, and 2-digit day. For example, the date that the University of Florida won its last national football championship, January 8, 2009, looks like this as a date in R: <code>2009-01-08</code>. It’s about time for another championship!</p>
+<p>📅🕓 <code>POSIXct</code> vectors for working with date-time values. Date-time values are just dates with time values added to them. By default, R will display date-times in this format: 4-digit year, a dash, 2-digit month, a dash, 2-digit day, a space, 2-digit hour value, a colon, 2-digit minute value, a colon, and 2-digit second value. So, let’s say that kickoff for the previously mentioned national championship game was at 8:00 PM local time. In R, that looks like this: <code>2009-01-08 20:00:00</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> You were probably pretty confused when you saw the 20:00:00 above if you’ve never used 24-hour clock time (also called military time) before. We’ll let you read the details on <a href="https://en.wikipedia.org/wiki/24-hour_clock">Wikipedia</a>, but here’s a couple of simple tips to get you started working with 24-hour time. Any time before noon is written the same as you would write it if you were using 12-hour (AM/PM) time. So, 8:00 AM would be 8:00 in 24-hour time. After noon, just add 12 to whatever time you want to write. So, 1:00 PM is 13:00 (1 + 12 = 13) and 8:00 PM is 20:00 (8 + 12 = 20).</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> Base R does not have a built-in vector type for working with pure time (as opposed to date-time) values. If you need to work with pure time values only, then the <a href="https://hms.tidyverse.org/">hms</a> package is what you want to try first.</p>
+</div>
+</div>
+<p>In general, we try to work with date values, rather than date-time values, whenever possible. Working with date-time values is slightly more complicated than working with date values, and we rarely have time data anyway. However, that doesn’t stop some R functions from trying to store dates as POSIXct vectors by default, which can sometimes cause unexpected errors in our R code. But, don’t worry. We are going to show you how to coerce POSIXct vectors to date vectors below.</p>
+<p>Before we go any further, let’s go ahead and look at some data that we can use to help us learn to work with dates in R.</p>
+<p><a href="https://github.com/brad-cannell/r4epi/blob/master/data/birth_dates.csv">You can click here to download the data and import it into your R session, if you want to follow along.</a></p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 10 Columns: 6
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (4): name_first, name_last, dob_typical, dob_long
+dttm (1): dob_actual
+date (1): dob_default
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   name_first name_last dob_actual          dob_default dob_typical dob_long    
+   &lt;chr&gt;      &lt;chr&gt;     &lt;dttm&gt;              &lt;date&gt;      &lt;chr&gt;       &lt;chr&gt;       
+ 1 Nathaniel  Watts     1996-03-04 16:59:18 1996-03-04  03/04/1996  March 04, 1…
+ 2 Sophia     Gomez     1998-11-21 21:52:08 1998-11-21  11/21/1998  November 21…
+ 3 Emmett     Steele    1994-09-03 23:26:19 1994-09-03  09/03/1994  September 0…
+ 4 Levi       Sanchez   1996-08-03 17:18:50 1996-08-03  08/03/1996  August 03, …
+ 5 August     Murray    1980-06-13 18:27:13 1980-06-13  06/13/1980  June 13, 19…
+ 6 Juan       Clark     1996-12-09 05:33:24 1996-12-08  12/08/1996  December 08…
+ 7 Lilly      Levy      1992-11-27 17:36:43 1992-11-27  11/27/1992  November 27…
+ 8 Natalie    Rogers    1983-04-27 23:31:56 1983-04-27  04/27/1983  April 27, 1…
+ 9 Solomon    Harding   1988-06-28 16:13:46 1988-06-28  06/28/1988  June 28, 19…
+10 Olivia     House     1997-08-02 22:09:50 1997-08-02  08/02/1997  August 02, …</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we used the <code>read_csv()</code> function to import a csv file containing simulated data into R.</p></li>
+<li><p>The simulated data contains the first name, last name, and date of birth for 10 fictitious people.</p></li>
+<li><p>In this data, date of birth is recorded in the four most common formats that we typically come across.</p></li>
+</ul>
+<ol type="1">
+<li><p><code>dob_actual</code> is each person’s <em>actual</em> date of birth measured down to the second. Notice that this column’s type is <code>&lt;S3: POSIXct&gt;</code>. Again, that means that this vector contains date-time values. Also, notice that the format of these values matches the format we discussed for date-time vectors above: 4-digit year, a dash, 2-digit month, a dash, 2-digit day, a space, 2-digit hour value, a colon, 2-digit minute value, a colon, and 2-digit second value.</p></li>
+<li><p><code>dob_default</code> is each person’s date of birth without their time of birth included. Notice that this column’s type is <code>&lt;date&gt;</code>. Also, notice that the format of these values matches the format we discussed for date vectors above: 4-digit year, a dash, 2-digit month, a dash, and 2-digit day.</p></li>
+<li><p><code>dob_typical</code> is each person’s date of birth written in the format that is probably most often used in the United States: 2-digit month, a forward slash, 2-digit day, a forward slash, and 4-digit year.</p></li>
+<li><p><code>dob_long</code> is each person’s date of birth written out in a sometimes-used long format. That is, the month name written out, 2-digit day, a comma, and 4-digit year.</p></li>
+</ol>
+<ul>
+<li><p>Notice that <code>readr</code> did a good job of importing <code>dob_actual</code> and <code>dob_default</code> as date-time and date values respectively. It did so because the values were stored in the csv file in the default format that R expects to see date-time and date values have.</p></li>
+<li><p>Notice that <code>readr</code> imported <code>dob_typical</code> and <code>dob_long</code> as character strings. It does so because the values in these columns were not stored in a format that R recognizes as a date or date-time.</p></li>
+</ul>
+</section>
+<section id="dates-under-the-hood" class="level2" data-number="28.2">
+<h2 data-number="28.2" class="anchored" data-anchor-id="dates-under-the-hood"><span class="header-section-number">28.2</span> Dates under the hood</h2>
+<p>Under the hood, R actually stores dates as numbers. Specifically, the number of days before or after January 1st, 1970, 00:00:00 UTC.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🗒<strong>Side Note:</strong> Why January 1st, 1970, 00:00:00 UTC? Well, it’s not really important to know the answer for the purposes of this book, or for programming in R, but Kristina Hill (a former student) figured out the answer for those of you who are curious. New Year’s Day in 1970 was an easy date for early Unix developers to use as a uniform date for the start of time. So, January 1st, 1970 at 00:00:00 UTC is referred to as the “Unix epoch”, and it’s a popular epoch used by many (but not all) software platforms. The use of any epoch date is mostly arbitrary, and this one leads to some interesting situations (like the <a href="https://en.wikipedia.org/wiki/Year_2038_problem">Year 2038 Problem</a> and <a href="https://www.theguardian.com/technology/2016/feb/12/setting-the-date-to-1-january-1970-will-brick-your-iphone-ipad-or-ipod-touch#:~:text=6%20years%20old-,Setting%20the%20date%20to%201%20January%201970%20will,iPhone%2C%20iPad%20or%20iPod%20touch&amp;text=Manually%20setting%20the%20date%20of,up%20if%20it's%20switched%20off">this little issue that Apple had a few years ago (yikes!)</a>. Generally speaking, though, this is in no way likely to impact your day-to-day programming in R, or your life at all (unless you happen to also be a software developer in a platform that uses this epoch date).</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="timeline.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For example, let’s use base R’s <code>as.Date()</code> function to create a date value from the string “2000-01-01”.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2000-01-01"</code></pre>
+</div>
+</div>
+<p>On the surface, it doesn’t look like anything happened. However, we can use base R’s <code>unclass()</code> function to see R’s internal integer representation of the date.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10957</code></pre>
+</div>
+</div>
+<p>Specifically, January 1st, 2000 is apparently 10,957 days after January 1st, 1970. What number would you expect to be returned if we used the date “1970-01-01”?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>What number would you expect to be returned if we used the date “1970-01-02”?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>And finally, what number would you expect to be returned if we used the date “1969-12-31”?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1</code></pre>
+</div>
+</div>
+<p>This numeric representation of dates also works in the other direction. For example, we can pass the number 10,958 to the <code>as.Date()</code> function, along with the date origin, and R will return a human-readable date.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2000-01-02"</code></pre>
+</div>
+</div>
+<p>You may be wondering why we had to tell R the date origin. After all, didn’t we already say that the origin is January 1st, 1970? Well, not all programs and programming languages use the same date origin. For example, SAS uses the date January 1st, 1960 as its origin. In our experience, this differing origin value can occasionally give us incorrect dates. When that happens, one option is to strip the date value down to its numeric representation, and then tell R what the origin was for that numeric representation in the program you are importing the data from.</p>
+<p>For example, if we imported a data set from SAS, we could correctly produce human-readable dates in the manner shown below:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+   date new_date  
+  &lt;dbl&gt; &lt;date&gt;    
+1 10958 1990-01-01
+2 10959 1990-01-02
+3 10960 1990-01-03</code></pre>
+</div>
+</div>
+<p>Hopefully, you now have a good intuition about how R stores dates under the hood. This numeric representation of dates is what will allow us to perform calculations with dates later in the chapter.</p>
+</section>
+<section id="coercing-date-times-to-dates" class="level2" data-number="28.3">
+<h2 data-number="28.3" class="anchored" data-anchor-id="coercing-date-times-to-dates"><span class="header-section-number">28.3</span> Coercing date-times to dates</h2>
+<p>As we said above, it’s usually preferable to work with date values instead of date-time values. Fortunately, converting date-time values to dates is usually really easy. All we need to do is pass those values to the same <code>as.Date()</code> function we already saw above. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   dob_actual          posix_to_date
+   &lt;dttm&gt;              &lt;date&gt;       
+ 1 1996-03-04 16:59:18 1996-03-04   
+ 2 1998-11-21 21:52:08 1998-11-21   
+ 3 1994-09-03 23:26:19 1994-09-03   
+ 4 1996-08-03 17:18:50 1996-08-03   
+ 5 1980-06-13 18:27:13 1980-06-13   
+ 6 1996-12-09 05:33:24 1996-12-09   
+ 7 1992-11-27 17:36:43 1992-11-27   
+ 8 1983-04-27 23:31:56 1983-04-27   
+ 9 1988-06-28 16:13:46 1988-06-28   
+10 1997-08-02 22:09:50 1997-08-02   </code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created a new column in the <code>birth_dates</code> data frame called <code>posix_to_date</code>.</p></li>
+<li><p>we used the <code>as.Date()</code> function to coerce the date-time values in <code>dob_actual</code> to dates. In other words, we dropped the time part of the date-time. Make sure to capitalize the “D” in <code>as.Date()</code>.</p></li>
+<li><p>we used the <code>select()</code> function to keep only the columns we are interested in comparing side-by-side in our output.</p></li>
+<li><p>Notice that <code>dob_actual</code>’s column type is still <code>&lt;S3: POSIXct&gt;</code>, but <code>posix_to_date</code>’s column type is <code>&lt;date&gt;</code>.</p></li>
+</ul>
+</section>
+<section id="coercing-character-strings-to-dates" class="level2" data-number="28.4">
+<h2 data-number="28.4" class="anchored" data-anchor-id="coercing-character-strings-to-dates"><span class="header-section-number">28.4</span> Coercing character strings to dates</h2>
+<p>Converting character strings to dates can be slightly more complicated than converting date-times to dates. This is because we have to explicitly tell R which characters in the character string correspond to each date component. For example, let’s say we have a date value of <code>04-05-06</code>. Is that April 5th, 2006? Is it April 5th, 1906? Or perhaps it’s May 6th, 2004?</p>
+<p>we need to use a series of special symbols to tell R which characters in the character string correspond to each date component. We’ll list some of the most common ones first and then show you how to use them. The examples below assume that date each symbol is being applied to is <code>2000-01-15</code>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 83%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">%a</td>
+<td style="text-align: left;">Abbreviated weekday name</td>
+<td style="text-align: left;">Sat</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">%A</td>
+<td style="text-align: left;">Full weekday name</td>
+<td style="text-align: left;">Saturday</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">%b</td>
+<td style="text-align: left;">Abbreviated month name</td>
+<td style="text-align: left;">Jan</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">%B</td>
+<td style="text-align: left;">Full month name</td>
+<td style="text-align: left;">January</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">%d</td>
+<td style="text-align: left;">Day of the month as a number (01–31)</td>
+<td style="text-align: left;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">%m</td>
+<td style="text-align: left;">Month as a number</td>
+<td style="text-align: left;">01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">%u</td>
+<td style="text-align: left;">Weekday as a number (1–7, Monday is 1)</td>
+<td style="text-align: left;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">%U</td>
+<td style="text-align: left;">Week of the year as a number (00–53) using Sunday as the first day 1 of the week</td>
+<td style="text-align: left;">02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">%y</td>
+<td style="text-align: left;">Year without century (00-99)</td>
+<td style="text-align: left;">00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">%Y</td>
+<td style="text-align: left;">Year with century</td>
+<td style="text-align: left;">2000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Now that we have a list of useful symbols that we can use to communicate with R, let’s take another look at our birth date data.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   name_first name_last dob_actual          dob_default dob_typical dob_long    
+   &lt;chr&gt;      &lt;chr&gt;     &lt;dttm&gt;              &lt;date&gt;      &lt;chr&gt;       &lt;chr&gt;       
+ 1 Nathaniel  Watts     1996-03-04 16:59:18 1996-03-04  03/04/1996  March 04, 1…
+ 2 Sophia     Gomez     1998-11-21 21:52:08 1998-11-21  11/21/1998  November 21…
+ 3 Emmett     Steele    1994-09-03 23:26:19 1994-09-03  09/03/1994  September 0…
+ 4 Levi       Sanchez   1996-08-03 17:18:50 1996-08-03  08/03/1996  August 03, …
+ 5 August     Murray    1980-06-13 18:27:13 1980-06-13  06/13/1980  June 13, 19…
+ 6 Juan       Clark     1996-12-09 05:33:24 1996-12-08  12/08/1996  December 08…
+ 7 Lilly      Levy      1992-11-27 17:36:43 1992-11-27  11/27/1992  November 27…
+ 8 Natalie    Rogers    1983-04-27 23:31:56 1983-04-27  04/27/1983  April 27, 1…
+ 9 Solomon    Harding   1988-06-28 16:13:46 1988-06-28  06/28/1988  June 28, 19…
+10 Olivia     House     1997-08-02 22:09:50 1997-08-02  08/02/1997  August 02, …</code></pre>
+</div>
+</div>
+<p>For our first example, let’s try converting the character strings stored in the <code>dob_typical</code> to date values. Let’ start by passing the values to <code>as.Date()</code> exactly as we did above and see what happens:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   dob_typical dob_typical_to_date
+   &lt;chr&gt;       &lt;date&gt;             
+ 1 03/04/1996  0003-04-19         
+ 2 11/21/1998  NA                 
+ 3 09/03/1994  0009-03-19         
+ 4 08/03/1996  0008-03-19         
+ 5 06/13/1980  NA                 
+ 6 12/08/1996  0012-08-19         
+ 7 11/27/1992  NA                 
+ 8 04/27/1983  NA                 
+ 9 06/28/1988  NA                 
+10 08/02/1997  0008-02-19         </code></pre>
+</div>
+</div>
+<p>This is definitely not the result we wanted, right? Why didn’t it work? Well, R was looking for the values in <code>dob_typical</code> to have the format 4-digit year, a dash, 2-digit month, a dash, and 2-digit day. In reality, <code>dob_typical</code> has the format 2-digit month, a forward slash, 2-digit day, a forward slash, and 4-digit year. Now, all we have to do is tell R how to read this character string as a date using some of the symbols we learned about in the table above.</p>
+<p>Let’s try again:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   dob_typical dob_typical_to_date
+   &lt;chr&gt;       &lt;date&gt;             
+ 1 03/04/1996  NA                 
+ 2 11/21/1998  NA                 
+ 3 09/03/1994  NA                 
+ 4 08/03/1996  NA                 
+ 5 06/13/1980  NA                 
+ 6 12/08/1996  NA                 
+ 7 11/27/1992  NA                 
+ 8 04/27/1983  NA                 
+ 9 06/28/1988  NA                 
+10 08/02/1997  NA                 </code></pre>
+</div>
+</div>
+<p>Wait, what? We told R that the values were 2-digit month (<code>%m</code>), 2-digit day (<code>%d</code>), and 4-digit year (<code>%Y</code>). Why didn’t it work this time? It didn’t work because we didn’t pass the forward slashes to the format argument. Yes, it’s that literal. We even have to tell R that there are symbols mixed in with our date values in the character string we want to convert to a date.</p>
+<p>Let’s try one more time:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   dob_typical dob_typical_to_date
+   &lt;chr&gt;       &lt;date&gt;             
+ 1 03/04/1996  1996-03-04         
+ 2 11/21/1998  1998-11-21         
+ 3 09/03/1994  1994-09-03         
+ 4 08/03/1996  1996-08-03         
+ 5 06/13/1980  1980-06-13         
+ 6 12/08/1996  1996-12-08         
+ 7 11/27/1992  1992-11-27         
+ 8 04/27/1983  1983-04-27         
+ 9 06/28/1988  1988-06-28         
+10 08/02/1997  1997-08-02         </code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created a new column in the <code>birth_dates</code> data frame called <code>dob_typical_to_date</code>.</p></li>
+<li><p>we used the <code>as.Date()</code> function to coerce the character string values in <code>dob_typical</code> to dates.</p></li>
+<li><p>we did so by passing the value <code>"%m/%d/%Y"</code> to the <code>format</code> argument of the <code>as.Date()</code> function. These symbols tell R to read the character strings in <code>dob_typical</code> as 2-digit month (<code>%m</code>), a forward slash (<code>/</code>), 2-digit day (<code>%d</code>), a forward slash (<code>/</code>), and 4-digit year (<code>%Y</code>).</p></li>
+<li><p>we used the <code>select()</code> function to keep only the columns we are interested in comparing side-by-side in our output.</p></li>
+<li><p>Notice that <code>dob_typical</code>’s column type is still character (<code>&lt;chr&gt;</code>), but <code>dob_typical_to_date</code>’s column type is <code>&lt;date&gt;</code>.</p></li>
+</ul>
+<p>Let’s try one more example, just to make sure we’ve got this down. Take a look at the <code>dob_long</code> column. What value will we need to pass to <code>as.Date()</code>’s format argument in order to convert these character strings to dates?</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 1
+   dob_long          
+   &lt;chr&gt;             
+ 1 March 04, 1996    
+ 2 November 21, 1998 
+ 3 September 03, 1994
+ 4 August 03, 1996   
+ 5 June 13, 1980     
+ 6 December 08, 1996 
+ 7 November 27, 1992 
+ 8 April 27, 1983    
+ 9 June 28, 1988     
+10 August 02, 1997   </code></pre>
+</div>
+</div>
+<p>Did you figure it out? The solution is below:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   dob_long           dob_long_to_date
+   &lt;chr&gt;              &lt;date&gt;          
+ 1 March 04, 1996     1996-03-04      
+ 2 November 21, 1998  1998-11-21      
+ 3 September 03, 1994 1994-09-03      
+ 4 August 03, 1996    1996-08-03      
+ 5 June 13, 1980      1980-06-13      
+ 6 December 08, 1996  1996-12-08      
+ 7 November 27, 1992  1992-11-27      
+ 8 April 27, 1983     1983-04-27      
+ 9 June 28, 1988      1988-06-28      
+10 August 02, 1997    1997-08-02      </code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created a new column in the <code>birth_dates</code> data frame called <code>dob_long_to_date</code>.</p></li>
+<li><p>we used the <code>as.Date()</code> function to coerce the character string values in <code>dob_long</code> to dates.</p></li>
+<li><p>we did so by passing the value <code>"%B %d, %Y"</code> to the <code>format</code> argument of the <code>as.Date()</code> function. These symbols tell R to read the character strings in <code>dob_long</code> as full month name (<code>%B</code>), 2-digit day (<code>%d</code>), a comma (<code>,</code>), and 4-digit year (<code>%Y</code>).</p></li>
+<li><p>we used the <code>select()</code> function to keep only the columns we are interested in comparing side-by-side in our output.</p></li>
+<li><p>Notice that <code>dob_long</code>’s column type is still character (<code>&lt;chr&gt;</code>), but <code>dob_long_to_date</code>’s column type is <code>&lt;date&gt;</code>.</p></li>
+</ul>
+</section>
+<section id="change-the-appearance-of-dates-with-format" class="level2" data-number="28.5">
+<h2 data-number="28.5" class="anchored" data-anchor-id="change-the-appearance-of-dates-with-format"><span class="header-section-number">28.5</span> Change the appearance of dates with format()</h2>
+<p>So, far we’ve talked about transforming character strings into dates. However, the reverse is also possible. Meaning, we can transform date values into character strings that we can style (i.e., format) in just about any way you could possibly want to style a date. For example:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   dob_actual          dob_abbreviated
+   &lt;dttm&gt;              &lt;chr&gt;          
+ 1 1996-03-04 16:59:18 04 Mar 96      
+ 2 1998-11-21 21:52:08 21 Nov 98      
+ 3 1994-09-03 23:26:19 03 Sep 94      
+ 4 1996-08-03 17:18:50 03 Aug 96      
+ 5 1980-06-13 18:27:13 13 Jun 80      
+ 6 1996-12-09 05:33:24 09 Dec 96      
+ 7 1992-11-27 17:36:43 27 Nov 92      
+ 8 1983-04-27 23:31:56 27 Apr 83      
+ 9 1988-06-28 16:13:46 28 Jun 88      
+10 1997-08-02 22:09:50 02 Aug 97      </code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created a new column in the <code>birth_dates</code> data frame called <code>dob_abbreviated</code>.</p></li>
+<li><p>we used the <code>format()</code> function to coerce the date values in <code>dob_actual</code> to character string values in <code>dob_abbreviated</code>.</p></li>
+<li><p>we did so by passing the value <code>"%d %b %y"</code> to the <code>...</code> argument of the <code>format()</code> function. These symbols tell R to create a character string as 2-digit day (<code>%d</code>), a space (<code>" "</code>), abbreviated month name (<code>%b</code>), a space (<code>" "</code>), and 2-digit year (<code>%y</code>).</p></li>
+<li><p>we used the <code>select()</code> function to keep only the columns we are interested in comparing side-by-side in our output.</p></li>
+<li><p>Notice that <code>dob_actual</code>’s column type is still date_time (<code>&lt;S3: POSIXct&gt;</code>), but <code>dob_abbreviated</code>’s column type is character (<code>&lt;chr&gt;</code>). So, while <code>dob_abbreviated</code> <em>looks</em> like a date to us, <strong>it is no longer a date value to R.</strong> In other words, <code>dob_abbreviated</code> doesn’t have an integer representation under the hood. It is simply a character string.</p></li>
+</ul>
+</section>
+<section id="some-useful-built-in-dates" class="level2" data-number="28.6">
+<h2 data-number="28.6" class="anchored" data-anchor-id="some-useful-built-in-dates"><span class="header-section-number">28.6</span> Some useful built-in dates</h2>
+<p>Base R actually includes a few useful built-in dates that we can use. They can often be useful when doing calculations with dates. Here are a few examples:</p>
+<section id="todays-date" class="level3" data-number="28.6.1">
+<h3 data-number="28.6.1" class="anchored" data-anchor-id="todays-date"><span class="header-section-number">28.6.1</span> Today’s date</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2025-05-16"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2025-05-16"</code></pre>
+</div>
+</div>
+<p>These functions can be useful for calculating any length of time up to today. For example, your age today is just the length of time that spans between your birth date and today.</p>
+</section>
+<section id="todays-date-time" class="level3" data-number="28.6.2">
+<h3 data-number="28.6.2" class="anchored" data-anchor-id="todays-date-time"><span class="header-section-number">28.6.2</span> Today’s date-time</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2025-05-16 16:37:55 CDT"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2025-05-16 16:37:55 CDT"</code></pre>
+</div>
+</div>
+<p>Because these functions also return the current time, they can be useful for timing how long it takes your R code to run. As we’ve said many times, there is typically multiple ways to accomplish a given task in R. Sometimes, the difference between any to ways to accomplish the task is basically just a matter of preference. However, sometimes one way can be much faster than another way. All the examples we’ve seen so far in this book take a trivial amount of time to run – usually less than a second. However, we have written R programs that took several minutes to several hours to complete. For example, complex data simulations and multiple imputation procedures can both take a long time to run. In such cases, we will sometimes check to see if there any significant performance differences between two different approaches to accomplishing the coding task.</p>
+<p>As a silly example to show you how this works, let’s generate 1,000,000 random numbers.</p>
+<p>Now, let’s find the mean value of those numbers two different ways, and check to see if there is any time difference between the two:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0009259691</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 0.002338886 secs</code></pre>
+</div>
+</div>
+<p>So, finding the mean this way took less than a second. Let’s see how long using the <code>mean()</code> function takes:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0009259691</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 0.001853943 secs</code></pre>
+</div>
+</div>
+<p>Although both methods above took less than a second to complete the calculations we were interested in, the second method (i.e., using the <code>mean()</code> function) took only about a third as as much time as the first. Again, it obviously doesn’t matter in this scenario, but doing these kinds of checks can be useful when calculations take much longer. For example, that time savings we saw above would be pretty important if we were comparing two methods to accomplish a task where the longer method took an hour to complete and the shorter method took a third as much time (About 20 minutes).</p>
+</section>
+<section id="character-vector-of-full-month-names" class="level3" data-number="28.6.3">
+<h3 data-number="28.6.3" class="anchored" data-anchor-id="character-vector-of-full-month-names"><span class="header-section-number">28.6.3</span> Character vector of full month names</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "January"   "February"  "March"     "April"     "May"       "June"     
+ [7] "July"      "August"    "September" "October"   "November"  "December" </code></pre>
+</div>
+</div>
+</section>
+<section id="character-vector-of-abbreviated-month-names" class="level3" data-number="28.6.4">
+<h3 data-number="28.6.4" class="anchored" data-anchor-id="character-vector-of-abbreviated-month-names"><span class="header-section-number">28.6.4</span> Character vector of abbreviated month names</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"</code></pre>
+</div>
+</div>
+<p><code>month.name</code> and <code>month.abb</code> aren’t functions. They don’t <em>do</em> anything. Rather, they are just saved values that can save us some typing if you happen to be working with data that requires you create variables, or perform calculations, by month.</p>
+</section>
+<section id="creating-a-vector-containing-a-sequence-of-dates" class="level3" data-number="28.6.5">
+<h3 data-number="28.6.5" class="anchored" data-anchor-id="creating-a-vector-containing-a-sequence-of-dates"><span class="header-section-number">28.6.5</span> Creating a vector containing a sequence of dates</h3>
+<p>In the same way that we can simulate a sequence of numbers using the <code>seq()</code> function, we can simulate a sequence of dates using the <code>seq.Date()</code> function. We sometimes find this function useful for simulating data (including some of the data used in this book), and for filling in missing dates in longitudinal data. For example, we can use the <code>seq.Date()</code> function to return a vector of dates that includes all days between January 1st, 2020 and January 15th, 2020 like this:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "2020-01-01" "2020-01-02" "2020-01-03" "2020-01-04" "2020-01-05"
+ [6] "2020-01-06" "2020-01-07" "2020-01-08" "2020-01-09" "2020-01-10"
+[11] "2020-01-11" "2020-01-12" "2020-01-13" "2020-01-14" "2020-01-15"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="calculating-date-intervals" class="level2" data-number="28.7">
+<h2 data-number="28.7" class="anchored" data-anchor-id="calculating-date-intervals"><span class="header-section-number">28.7</span> Calculating date intervals</h2>
+<p>So far, we’ve learned how to create and format dates in R. However, the real value in being able to coerce character strings to date values is that doing so allows us to perform <em>calculations</em> with the dates that we could not perform with the character strings. In our experience, calculating intervals of time between dates is probably the most common type of calculation we will want to perform.</p>
+<p>Before we get into some examples, we are going to drop some of the columns from our <code>birth_dates</code> data frame because we won’t need them anymore.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   name_first dob       
+   &lt;chr&gt;      &lt;date&gt;    
+ 1 Nathaniel  1996-03-04
+ 2 Sophia     1998-11-21
+ 3 Emmett     1994-09-03
+ 4 Levi       1996-08-03
+ 5 August     1980-06-13
+ 6 Juan       1996-12-08
+ 7 Lilly      1992-11-27
+ 8 Natalie    1983-04-27
+ 9 Solomon    1988-06-28
+10 Olivia     1997-08-02</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created a new data frame called <code>ages</code> by subsetting the <code>birth_dates</code> data frame.</p></li>
+<li><p>we used the <code>select()</code> function to keep only the <code>name_first</code> and <code>dob_default</code> columns from <code>birth_dates</code>. We used a name-value pair (<code>dob = dob_default</code>) inside the <code>select()</code> function to rename <code>dob_default</code> to <code>dob</code>.</p></li>
+</ul>
+<p>Next, let’s create a variable in our data frame that is equal to today’s date. In reality, this would be a great time to use <code>Sys.Date()</code> to ask R to return today’s date.</p>
+<p>However, we are not going to do that here, because it would cause the value of the <code>today</code> variable to update every time we update the book. That would make it challenging to write about the results we get. So, we’re going to pretend that today is May 7th, 2020. We’ll add that to our data frame like so:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   name_first dob        today     
+   &lt;chr&gt;      &lt;date&gt;     &lt;date&gt;    
+ 1 Nathaniel  1996-03-04 2020-05-07
+ 2 Sophia     1998-11-21 2020-05-07
+ 3 Emmett     1994-09-03 2020-05-07
+ 4 Levi       1996-08-03 2020-05-07
+ 5 August     1980-06-13 2020-05-07
+ 6 Juan       1996-12-08 2020-05-07
+ 7 Lilly      1992-11-27 2020-05-07
+ 8 Natalie    1983-04-27 2020-05-07
+ 9 Solomon    1988-06-28 2020-05-07
+10 Olivia     1997-08-02 2020-05-07</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created a new column in the <code>ages</code> data frame called <code>today</code>.</p></li>
+<li><p>we made set the value of the <code>today</code> column to May 7th, 2020 by passing the value <code>"2020-05-07"</code> to the <code>as.Date()</code> function.</p></li>
+</ul>
+<section id="calculate-age-as-the-difference-in-time-between-dob-and-today" class="level3" data-number="28.7.1">
+<h3 data-number="28.7.1" class="anchored" data-anchor-id="calculate-age-as-the-difference-in-time-between-dob-and-today"><span class="header-section-number">28.7.1</span> Calculate age as the difference in time between dob and today</h3>
+<p>Calculating age from date of birth is a pretty common data management task. While you know what ages are, you probably don’t think much about their calculation. Age is just the difference between two points in time. The starting point is always the date of birth. However, because age is constantly changing the end point changes as well. For example, you’re one day older today than you were yesterday. So, to calculate age, we must always have a start date (i.e., date of birth) and an end date. In the example below, our end date will be May 7th, 2020.</p>
+<p>Once we have those two pieces of information, we can ask R to calculate age for us in a few different ways. We are going to suggest that you use the method below that uses functions from the <code>lubridate</code> package. We will show you why soon. However, we want to show you the base R way of calculating time intervals for comparison, and because a lot of the help documentation we’ve seen online uses the base R methods shown below.</p>
+<p>Let’s go ahead and load the <code>lubridate</code> package now.</p>
+<p>Next, let’s go ahead and calculate age 3 different ways:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   name_first dob        today      age_subtraction age_difftime
+   &lt;chr&gt;      &lt;date&gt;     &lt;date&gt;     &lt;drtn&gt;          &lt;drtn&gt;      
+ 1 Nathaniel  1996-03-04 2020-05-07  8830 days       8830 days  
+ 2 Sophia     1998-11-21 2020-05-07  7838 days       7838 days  
+ 3 Emmett     1994-09-03 2020-05-07  9378 days       9378 days  
+ 4 Levi       1996-08-03 2020-05-07  8678 days       8678 days  
+ 5 August     1980-06-13 2020-05-07 14573 days      14573 days  
+ 6 Juan       1996-12-08 2020-05-07  8551 days       8551 days  
+ 7 Lilly      1992-11-27 2020-05-07 10023 days      10023 days  
+ 8 Natalie    1983-04-27 2020-05-07 13525 days      13525 days  
+ 9 Solomon    1988-06-28 2020-05-07 11636 days      11636 days  
+10 Olivia     1997-08-02 2020-05-07  8314 days       8314 days  
+# ℹ 1 more variable: age_lubridate &lt;Interval&gt;</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created three new columns in the <code>ages</code> data frame called <code>age_subtraction</code>, <code>age_difftime</code>, and <code>age_lubridate</code>.</p>
+<ul>
+<li><p>we created <code>age_subtraction</code> using the subtraction operator (<code>-</code>). Remember, R stores dates values as numbers under the hood. So, we literally just asked R to subtract the value for <code>dob</code> from the value for <code>today</code>. The value returned to us was a vector of time differences measured in days.</p></li>
+<li><p>we created <code>age_difftime</code> base R’s <code>difftime()</code> function. The value returned to us was a vector of time differences measured in days. As you can see, the results returned by <code>today - dob</code> and <code>difftime(today, dob)</code> are identical.</p></li>
+<li><p>we created <code>age_lubridate</code> using <code>lubridate</code>’s time interval operator (<code>%--%</code>). Notice that the order of <code>dob</code> and <code>today</code> are switched here compared to the previous two methods. By itself, the <code>%--%</code> operator doesn’t return a time difference value. It returns a time interval value.</p></li>
+</ul></li>
+</ul>
+<p>Here is how we can convert the time difference and time interval values to age in years:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   name_first dob        today      age_subtraction age_difftime age_lubridate
+   &lt;chr&gt;      &lt;date&gt;     &lt;date&gt;               &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;
+ 1 Nathaniel  1996-03-04 2020-05-07            24.2         24.2          24.2
+ 2 Sophia     1998-11-21 2020-05-07            21.5         21.5          21.5
+ 3 Emmett     1994-09-03 2020-05-07            25.7         25.7          25.7
+ 4 Levi       1996-08-03 2020-05-07            23.8         23.8          23.8
+ 5 August     1980-06-13 2020-05-07            39.9         39.9          39.9
+ 6 Juan       1996-12-08 2020-05-07            23.4         23.4          23.4
+ 7 Lilly      1992-11-27 2020-05-07            27.4         27.4          27.4
+ 8 Natalie    1983-04-27 2020-05-07            37.0         37.0          37.0
+ 9 Solomon    1988-06-28 2020-05-07            31.9         31.9          31.9
+10 Olivia     1997-08-02 2020-05-07            22.8         22.8          22.8</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>we created three new columns in the <code>ages</code> data frame called <code>age_subtraction</code>, <code>age_difftime</code>, and <code>age_lubridate</code>.</p>
+<ul>
+<li><p>we used the <code>as.numeric()</code> function to convert the values of <code>age_subtraction</code> from a time differences to a number – the number of days. We then divided the number of days by 365.25 – roughly the number of days in a year. The result is age in years.</p></li>
+<li><p>we used the <code>as.numeric()</code> function to convert the values of <code>age_difftime</code> from a time differences to a number – the number of days. We then divided the number of days by 365.25 – roughly the number of days in a year. The result is age in years.</p></li>
+<li><p>Again, the results of the first two methods are identical.</p></li>
+<li><p>we asked R to show us the time interval values we created <code>age_lubridate</code> using <code>lubridate</code>’s time interval operator (<code>%--%</code>) as years of time. We did so by dividing the time interval into years. Specifically, we used the division operator (<code>/</code>) and <code>lubridate</code>’s <code>years()</code> function. The value we passed to the <code>years()</code> function was <code>1</code>. In other words, we asked R to tell us how many 1-year periods are in each time interval we created with <code>dob %--% today</code>.</p></li>
+<li><p>In case you’re wondering, here’s the value returned by the <code>years()</code> function alone:</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1y 0m 0d 0H 0M 0S"</code></pre>
+</div>
+</div>
+<p>So, why did the results of the first two methods differ from the results of the third method? Well, dates are much more complicated to work with than they may seem on the surface. Specifically, each day doesn’t have exactly 24 hours and each year doesn’t have exactly 365 days. Some have more and some have less – so called, leap years. You can find more details on the <a href="https://lubridate.tidyverse.org/">lubridate website</a>, but the short answer is that <code>lubridate</code>’s method gives us a more precise answer than the first two methods do because it accounts for date complexities in a different way.</p>
+<p>Here’s an example to quickly illustrate what we mean:</p>
+<p>Say we want to calculate the number of years between “2017-03-01” and “2018-03-01”.</p>
+<p>The most meaningful result in this situation is obviously 1 year.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9993155</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>Notice that <code>lubridate</code>’s method returns exactly one year, but the base R method returns an approximation of a year.</p>
+<p>To further illustrate this point, let’s look at what happens when the time interval includes a leap year. The year 2020 is a leap year, so let’s calculate the number of years between “2019-03-01” and “2020-03-01”. Again, a meaningful result here should be a year.</p>
+<p>#| echo: false # The base R way as.numeric(difftime(end, start)) / 36</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/brad-cannell\.github\.io\/r4epi_quarto\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/subsetting_data_frames/subsetting_data_frames.html" class="pagination-link" aria-label="Subsetting Data Frames">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Subsetting Data Frames</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/working_with_character_strings/working_with_character_strings.html" class="pagination-link" aria-label="Working with Character Strings">
+        <span class="nav-page-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Working with Character Strings</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>R for Epidemiology</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/brad-cannell/r4epi_quarto/edit/main/chapters/working_with_dates/working_with_dates.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi_quarto/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://Quarto/.org/">Quarto/</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

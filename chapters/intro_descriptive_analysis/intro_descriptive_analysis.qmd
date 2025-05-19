@@ -1,0 +1,84 @@
+# Introduction to Descriptive Analysis
+
+```{r}
+#| include: FALSE
+library(dplyr)
+```
+
+## What is descriptive analysis and why would we do it?
+
+So, we have all this data that tells us all this information about different traits or characteristics of the people for whom the data was collected. For example, if we collected data about the students in this course, we may have information about how tall you are, about what kind of insurance you have, and about what your favorite color is.
+
+
+```{r} 
+#| echo: FALSE
+#| warning: FALSE
+set.seed(123)
+df <- tibble(
+  student_id = c(1001, 1002, 1003),
+  height_in = rnorm(3, mean = 70, sd = 9) |> round(2),
+  insurance = c("private", "other", "none"),
+  color = c("blue", "yellow", "red")
+) 
+```
+
+::: {.content-visible when-format="html"}
+```{r}
+#| echo: FALSE
+df|>
+  knitr:: kable (
+    alight = 'c'
+  ) |>
+  kableExtra::kable_styling() |>
+  kableExtra::row_spec(
+    row = 2,
+    background = "yellow"
+  )
+```
+:::
+
+But, unless you’re a celebrity, or under investigation for some reason, it’s unlikely that many people outside of your friends and family care to know any of this information about you, _per se_. Usually they want to know this information about the typical person in the population, or subpopulation, to which you belong. Or, they want to know more about the _relationship_ between people who are like you in some way and some outcome that they are interested in.
+
+For example: We typically aren't interested in knowing that student 1002 (above) is 67.93 inches tall. We are typically more interested in knowing things like the average height of the class -- ['r mean(height_in) |> round(2)].
+
+Before we can make any inferences or draw any conclusions, we must (or at least should) begin by conducting descriptive analysis of our data. This is also sometimes referred to as exploratory analysis. There are at least three reasons why we want to start with a descriptive analysis:
+
+1. _We can use descriptive analysis to uncover errors in our data._   
+2. _It helps us understand the distribution of values in our variables._   
+3. _Descriptive analysis serve as a starting point for understanding relationships between our variables._   
+
+## What kind of descriptive analysis should we perform?
+
+When conducting descriptive analysis, the method you choose will depend on the _type_ of data you’re analyzing. At the most basic level, variables can be described as numerical or categorical.
+
+```{r}
+#| label: flowchart_num_and_cat
+#| echo: FALSE
+knitr::include_graphics("flowchart_num_and_cat.png")
+```
+
+Numeric variables can then be further divided into continuous and discrete - the distinction being whether the variable can take on a continuum of values, or only set of certain values.
+
+```{r}
+#| label: flowchart_num_only
+#| echo: FALSE
+knitr::include_graphics("flowchart_num_only.png")
+```
+
+Categorical variables can be subdivided into ordinal or nominal variables - depending on whether or not the categories can logically be ordered in a meaningful way.
+
+```{r}
+#| label: flowchart_cat_only
+#| echo: FALSE
+knitr::include_graphics("flowchart_cat_only.png")
+```
+
+Finally, for all types, and subtypes, of variables there are both numerical and graphical methods we can use for descriptive analysis.
+
+```{r}
+#| label: flowchart_full
+#| echo: FALSE
+knitr::include_graphics("flowchart_full.png")
+```
+
+In the exercises that follow you will be introduced to measures of frequency, measures of central tendency, and measures of dispersion. Then, you'll learn various methods for estimating and interpreting these measures using R.

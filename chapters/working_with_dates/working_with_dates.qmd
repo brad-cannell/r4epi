@@ -1,0 +1,551 @@
+# Working with Dates
+
+<!--
+Date
+Posixct
+Lubridate
+-->
+
+In epidemiology, it isn't uncommon at all for the data we are analyzing to include important date values. Some common examples include date of birth, hospital admission date, date of symptom onset, and follow-up dates in longitudinal studies. In this chapter, we will learn about two new vector types that we can use to work with date and date-time data. Additionally, we will learn about a new package, `lubridate`, which provides a robust set of functions designed specifically for working with date and date-time data in R.
+
+## Date vector types
+
+In R, there are two different vector types that we can use to store, and work with, dates. They are: 
+
+📅 `date` vectors for working with date values. By default, R will display dates in this format: 4-digit year, a dash, 2-digit month, a dash, and 2-digit day. For example, the date that the University of Florida won its last national football championship, January 8, 2009, looks like this as a date in R: `2009-01-08`. It's about time for another championship!
+
+📅🕓 `POSIXct` vectors for working with date-time values. Date-time values are just dates with time values added to them. By default, R will display date-times in this format: 4-digit year, a dash, 2-digit month, a dash, 2-digit day, a space, 2-digit hour value, a colon, 2-digit minute value, a colon, and 2-digit second value. So, let's say that kickoff for the previously mentioned national championship game was at 8:00 PM local time. In R, that looks like this: `2009-01-08 20:00:00`.
+
+::: {.callout-note}
+🗒**Side Note:** You were probably pretty confused when you saw the 20:00:00 above if you've never used 24-hour clock time (also called military time) before. We'll let you read the details on [Wikipedia](https://en.wikipedia.org/wiki/24-hour_clock), but here's a couple of simple tips to get you started working with 24-hour time. Any time before noon is written the same as you would write it if you were using 12-hour (AM/PM) time. So, 8:00 AM would be 8:00 in 24-hour time. After noon, just add 12 to whatever time you want to write. So, 1:00 PM is 13:00 (1 + 12 = 13) and 8:00 PM is 20:00 (8 + 12 = 20).
+:::
+
+::: {.callout-note}
+🗒**Side Note:** Base R does not have a built-in vector type for working with pure time (as opposed to date-time) values. If you need to work with pure time values only, then the [hms](https://hms.tidyverse.org/) package is what you want to try first.
+:::
+
+In general, we try to work with date values, rather than date-time values, whenever possible. Working with date-time values is slightly more complicated than working with date values, and we rarely have time data anyway. However, that doesn't stop some R functions from trying to store dates as POSIXct vectors by default, which can sometimes cause unexpected errors in our R code. But, don't worry. We are going to show you how to coerce POSIXct vectors to date vectors below.
+
+Before we go any further, let's go ahead and look at some data that we can use to help us learn to work with dates in R.
+
+[You can click here to download the data and import it into your R session, if you want to follow along.](https://github.com/brad-cannell/r4epi/blob/master/data/birth_dates.csv)
+
+```{r}
+#| echo: false
+#| message: false
+library(dplyr)
+library(lubridate)
+```
+
+```{r}
+#| echo: false
+birth_dates <- readr::read_csv("birth_dates.csv")
+```
+
+```{r}
+#| echo: false
+birth_dates
+```
+
+👆**Here's what we did above:**
+
+* we used the `read_csv()` function to import a csv file containing simulated data into R. 
+
+* The simulated data contains the first name, last name, and date of birth for 10 fictitious people. 
+
+* In this data, date of birth is recorded in the four most common formats that we typically come across.
+
+1. `dob_actual` is each person's _actual_ date of birth measured down to the second. Notice that this column's type is `<S3: POSIXct>`. Again, that means that this vector contains date-time values. Also, notice that the format of these values matches the format we discussed for date-time vectors above: 4-digit year, a dash, 2-digit month, a dash, 2-digit day, a space, 2-digit hour value, a colon, 2-digit minute value, a colon, and 2-digit second value.
+
+2. `dob_default` is each person's date of birth without their time of birth included. Notice that this column's type is `<date>`. Also, notice that the format of these values matches the format we discussed for date vectors above: 4-digit year, a dash, 2-digit month, a dash, and 2-digit day.
+
+3. `dob_typical` is each person's date of birth written in the format that is probably most often used in the United States: 2-digit month, a forward slash, 2-digit day, a forward slash, and 4-digit year.
+
+4. `dob_long` is each person's date of birth written out in a sometimes-used long format. That is, the month name written out, 2-digit day, a comma, and 4-digit year.
+
+* Notice that `readr` did a good job of importing `dob_actual` and `dob_default` as date-time and date values respectively. It did so because the values were stored in the csv file in the default format that R expects to see date-time and date values have.
+
+* Notice that `readr` imported `dob_typical` and `dob_long` as character strings. It does so because the values in these columns were not stored in a format that R recognizes as a date or date-time.
+
+## Dates under the hood
+
+Under the hood, R actually stores dates as numbers. Specifically, the number of days before or after January 1st, 1970, 00:00:00 UTC. 
+
+::: {.callout-note}
+🗒**Side Note:** Why January 1st, 1970, 00:00:00 UTC? Well, it's not really important to know the answer for the purposes of this book, or for programming in R, but Kristina Hill (a former student) figured out the answer for those of you who are curious. New Year's Day in 1970 was an easy date for early Unix developers to use as a uniform date for the start of time. So, January 1st, 1970 at 00:00:00 UTC is referred to as the "Unix epoch", and it's a popular epoch used by many (but not all) software platforms. The use of any epoch date is mostly arbitrary, and this one leads to some interesting situations (like the [Year 2038 Problem](https://en.wikipedia.org/wiki/Year_2038_problem) and [this little issue that Apple had a few years ago (yikes!)](https://www.theguardian.com/technology/2016/feb/12/setting-the-date-to-1-january-1970-will-brick-your-iphone-ipad-or-ipod-touch#:~:text=6%20years%20old-,Setting%20the%20date%20to%201%20January%201970%20will,iPhone%2C%20iPad%20or%20iPod%20touch&text=Manually%20setting%20the%20date%20of,up%20if%20it's%20switched%20off). Generally speaking, though, this is in no way likely to impact your day-to-day programming in R, or your life at all (unless you happen to also be a software developer in a platform that uses this epoch date). 
+:::
+
+```{r}
+#| label: 4_working_with_dates_timeline_chunk
+#| echo: false
+knitr::include_graphics("timeline.png")
+```
+
+For example, let's use base R's `as.Date()` function to create a date value from the string "2000-01-01".
+
+```{r}
+#| echo: false
+as.Date("2000-01-01")
+```
+
+On the surface, it doesn't look like anything happened. However, we can use base R's `unclass()` function to see R's internal integer representation of the date.
+
+```{r}
+#| echo: false
+unclass(as.Date("2000-01-01"))
+```
+
+Specifically, January 1st, 2000 is apparently 10,957 days after January 1st, 1970. What number would you expect to be returned if we used the date "1970-01-01"?
+
+```{r}
+#| echo: false
+unclass(as.Date("1970-01-01"))
+```
+
+What number would you expect to be returned if we used the date "1970-01-02"?
+
+```{r}
+#| echo: false
+unclass(as.Date("1970-01-02"))
+```
+
+And finally, what number would you expect to be returned if we used the date "1969-12-31"?
+
+```{r}
+#| echo: false
+unclass(as.Date("1969-12-31"))
+```
+
+This numeric representation of dates also works in the other direction. For example, we can pass the number 10,958 to the `as.Date()` function, along with the date origin, and R will return a human-readable date.
+
+```{r}
+#| echo: false
+as.Date(10958, origin = "1970-01-01")
+```
+
+You may be wondering why we had to tell R the date origin. After all, didn't we already say that the origin is January 1st, 1970? Well, not all programs and programming languages use the same date origin. For example, SAS uses the date January 1st, 1960 as its origin. In our experience, this differing origin value can occasionally give us incorrect dates. When that happens, one option is to strip the date value down to its numeric representation, and then tell R what the origin was for that numeric representation in the program you are importing the data from. 
+
+For example, if we imported a data set from SAS, we could correctly produce human-readable dates in the manner shown below:
+
+```{r}
+#| echo: false
+from_sas <- tibble(
+  date = c(10958, 10959, 10960)
+)
+```
+
+```{r}
+#| echo: false
+from_sas %>% 
+  mutate(new_date = as.Date(date, origin = "1960-01-01"))
+```
+
+Hopefully, you now have a good intuition about how R stores dates under the hood. This numeric representation of dates is what will allow us to perform calculations with dates later in the chapter.
+
+## Coercing date-times to dates
+
+As we said above, it's usually preferable to work with date values instead of date-time values. Fortunately, converting date-time values to dates is usually really easy. All we need to do is pass those values to the same `as.Date()` function we already saw above. For example:
+
+```{r}
+#| echo: false
+birth_dates %>% 
+  mutate(posix_to_date = as.Date(dob_actual)) %>% 
+  select(dob_actual, posix_to_date)
+```
+
+👆**Here's what we did above:**
+
+* we created a new column in the `birth_dates` data frame called `posix_to_date`. 
+
+* we used the `as.Date()` function to coerce the date-time values in `dob_actual` to dates. In other words, we dropped the time part of the date-time. Make sure to capitalize the "D" in `as.Date()`.
+
+* we used the `select()` function to keep only the columns we are interested in comparing side-by-side in our output.
+
+* Notice that `dob_actual`'s column type is still `<S3: POSIXct>`, but `posix_to_date`'s column type is `<date>`.
+
+## Coercing character strings to dates
+
+Converting character strings to dates can be slightly more complicated than converting date-times to dates. This is because we have to explicitly tell R which characters in the character string correspond to each date component. For example, let's say we have a date value of `04-05-06`. Is that April 5th, 2006? Is it April 5th, 1906? Or perhaps it's May 6th, 2004?
+
+we need to use a series of special symbols to tell R which characters in the character string correspond to each date component. We'll list some of the most common ones first and then show you how to use them. The examples below assume that date each symbol is being applied to is `2000-01-15`.
+
+```{r}
+#| echo: false
+tribble(
+  ~Symbol, ~Description, ~Example,
+  "%a", "Abbreviated weekday name", "Sat",
+  "%A", "Full weekday name", "Saturday",
+  "%b", "Abbreviated month name", "Jan",
+  "%B", "Full month name", "January",
+  "%d", "Day of the month as a number (01–31)", "15",
+  "%m", "Month as a number", "01",
+  "%u", "Weekday as a number (1–7, Monday is 1)", "6",
+  "%U", "Week of the year as a number (00–53) using Sunday as the first day 1 of the week", "02",
+  "%y", "Year without century (00-99)", "00",
+  "%Y", "Year with century", "2000"
+) %>% 
+  knitr::kable()
+```
+
+Now that we have a list of useful symbols that we can use to communicate with R, let's take another look at our birth date data.
+
+```{r}
+#| echo: false
+birth_dates
+```
+
+For our first example, let's try converting the character strings stored in the `dob_typical` to date values. Let' start by passing the values to `as.Date()` exactly as we did above and see what happens:
+
+```{r}
+#| echo: false
+birth_dates %>% 
+  mutate(dob_typical_to_date = as.Date(dob_typical)) %>% 
+  select(dob_typical, dob_typical_to_date)
+```
+
+This is definitely not the result we wanted, right? Why didn't it work? Well, R was looking for the values in `dob_typical` to have the format 4-digit year, a dash, 2-digit month, a dash, and 2-digit day. In reality, `dob_typical` has the format 2-digit month, a forward slash, 2-digit day, a forward slash, and 4-digit year. Now, all we have to do is tell R how to read this character string as a date using some of the symbols we learned about in the table above.
+
+Let's try again:
+
+```{r}
+#| echo: false
+birth_dates %>% 
+  mutate(dob_typical_to_date = as.Date(dob_typical, format = "%m %d %Y")) %>% 
+  select(dob_typical, dob_typical_to_date)
+```
+
+Wait, what? We told R that the values were 2-digit month (`%m`), 2-digit day (`%d`), and 4-digit year (`%Y`). Why didn't it work this time? It didn't work because we didn't pass the forward slashes to the format argument. Yes, it's that literal. We even have to tell R that there are symbols mixed in with our date values in the character string we want to convert to a date.
+
+Let's try one more time:
+
+```{r}
+#| echo: false
+birth_dates %>% 
+  mutate(dob_typical_to_date = as.Date(dob_typical, format = "%m/%d/%Y")) %>% 
+  select(dob_typical, dob_typical_to_date)
+```
+
+👆**Here's what we did above:**
+
+* we created a new column in the `birth_dates` data frame called `dob_typical_to_date`. 
+
+* we used the `as.Date()` function to coerce the character string values in `dob_typical` to dates. 
+
+* we did so by passing the value `"%m/%d/%Y"` to the `format` argument of the `as.Date()` function. These symbols tell R to read the character strings in `dob_typical` as 2-digit month (`%m`), a forward slash (`/`), 2-digit day (`%d`), a forward slash (`/`), and 4-digit year (`%Y`).
+
+* we used the `select()` function to keep only the columns we are interested in comparing side-by-side in our output.
+
+* Notice that `dob_typical`'s column type is still character (`<chr>`), but `dob_typical_to_date`'s column type is `<date>`.
+
+Let's try one more example, just to make sure we've got this down. Take a look at the `dob_long` column. What value will we need to pass to `as.Date()`'s format argument in order to convert these character strings to dates?
+
+```{r}
+#| echo: false
+select(birth_dates, dob_long)
+```
+
+Did you figure it out? The solution is below:
+
+```{r}
+#| echo: false
+birth_dates %>% 
+  mutate(dob_long_to_date = as.Date(dob_long, format = "%B %d, %Y")) %>% 
+  select(dob_long, dob_long_to_date)
+```
+
+👆**Here's what we did above:**
+
+* we created a new column in the `birth_dates` data frame called `dob_long_to_date`. 
+
+* we used the `as.Date()` function to coerce the character string values in `dob_long` to dates. 
+
+* we did so by passing the value `"%B %d, %Y"` to the `format` argument of the `as.Date()` function. These symbols tell R to read the character strings in `dob_long` as full month name (`%B`), 2-digit day (`%d`), a comma (`,`), and 4-digit year (`%Y`).
+
+* we used the `select()` function to keep only the columns we are interested in comparing side-by-side in our output.
+
+* Notice that `dob_long`'s column type is still character (`<chr>`), but `dob_long_to_date`'s column type is `<date>`.
+
+## Change the appearance of dates with format()
+
+So, far we've talked about transforming character strings into dates. However, the reverse is also possible. Meaning, we can transform date values into character strings that we can style (i.e., format) in just about any way you could possibly want to style a date. For example:
+
+```{r}
+#| echo: false
+birth_dates %>% 
+  mutate(dob_abbreviated = format(dob_actual, "%d %b %y")) %>% 
+  select(dob_actual, dob_abbreviated)
+```
+
+👆**Here's what we did above:**
+
+* we created a new column in the `birth_dates` data frame called `dob_abbreviated`. 
+
+* we used the `format()` function to coerce the date values in `dob_actual` to character string values in `dob_abbreviated`. 
+
+* we did so by passing the value `"%d %b %y"` to the `...` argument of the `format()` function. These symbols tell R to create a character string as 2-digit day (`%d`), a space (`" "`), abbreviated month name (`%b`), a space (`" "`), and 2-digit year (`%y`).
+
+* we used the `select()` function to keep only the columns we are interested in comparing side-by-side in our output.
+
+* Notice that `dob_actual`'s column type is still date_time (`<S3: POSIXct>`), but `dob_abbreviated`'s column type is character (`<chr>`). So, while `dob_abbreviated` _looks_ like a date to us, **it is no longer a date value to R.** In other words, `dob_abbreviated` doesn't have an integer representation under the hood. It is simply a character string. 
+
+## Some useful built-in dates
+
+Base R actually includes a few useful built-in dates that we can use. They can often be useful when doing calculations with dates. Here are a few examples:
+
+### Today's date
+
+```{r}
+#| echo: false
+Sys.Date()
+```
+
+```{r}
+#| echo: false
+lubridate::today()
+```
+
+These functions can be useful for calculating any length of time up to today. For example, your age today is just the length of time that spans between your birth date and today.
+
+### Today's date-time
+
+```{r}
+#| echo: false
+Sys.time()
+```
+
+```{r}
+#| echo: false
+lubridate::now()
+```
+
+Because these functions also return the current time, they can be useful for timing how long it takes your R code to run. As we've said many times, there is typically multiple ways to accomplish a given task in R. Sometimes, the difference between any to ways to accomplish the task is basically just a matter of preference. However, sometimes one way can be much faster than another way. All the examples we've seen so far in this book take a trivial amount of time to run -- usually less than a second. However, we have written R programs that took several minutes to several hours to complete. For example, complex data simulations and multiple imputation procedures can both take a long time to run. In such cases, we will sometimes check to see if there any significant performance differences between two different approaches to accomplishing the coding task.
+
+As a silly example to show you how this works, let's generate 1,000,000 random numbers.
+
+```{r}
+#| echo: false
+set.seed(703)
+rand_mill <- rnorm(1000000)
+```
+
+Now, let's find the mean value of those numbers two different ways, and check to see if there is any time difference between the two:
+
+```{r}
+#| echo: false
+# Save the start time
+start  <- lubridate::now()
+sum    <- sum(rand_mill)
+length <- length(rand_mill)
+mean   <- sum / length
+mean
+# Save the stop time
+stop   <- lubridate::now()
+```
+
+```{r}
+#| echo: false
+stop - start
+```
+
+```{r}
+#| echo: false
+rm(mean)
+```
+
+So, finding the mean this way took less than a second. Let's see how long using the `mean()` function takes:
+
+```{r}
+#| echo: false
+# Save the start time
+start  <- lubridate::now()
+mean(rand_mill)
+# Save the stop time
+stop   <- lubridate::now()
+```
+
+```{r}
+#| echo: false
+stop - start
+```
+
+Although both methods above took less than a second to complete the calculations we were interested in, the second method (i.e., using the `mean()` function) took only about a third as as much time as the first. Again, it obviously doesn't matter in this scenario, but doing these kinds of checks can be useful when calculations take much longer. For example, that time savings we saw above would be pretty important if we were comparing two methods to accomplish a task where the longer method took an hour to complete and the shorter method took a third as much time (About 20 minutes). 
+
+### Character vector of full month names
+
+```{r}
+#| echo: false
+month.name
+```
+
+### Character vector of abbreviated month names
+
+```{r}
+#| echo: false
+month.abb
+```
+
+`month.name` and `month.abb` aren't functions. They don't _do_ anything. Rather, they are just saved values that can save us some typing if you happen to be working with data that requires you create variables, or perform calculations, by month.
+
+### Creating a vector containing a sequence of dates
+
+In the same way that we can simulate a sequence of numbers using the `seq()` function, we can simulate a sequence of dates using the `seq.Date()` function. We sometimes find this function useful for simulating data (including some of the data used in this book), and for filling in missing dates in longitudinal data. For example, we can use the `seq.Date()` function to return a vector of dates that includes all days between January 1st, 2020 and January 15th, 2020 like this:
+
+```{r}
+#| echo: false
+seq.Date(
+  from = as.Date("2020-01-01"),
+  to   = as.Date("2020-01-15"),
+  by   = "days"
+)
+```
+
+## Calculating date intervals
+
+So far, we've learned how to create and format dates in R. However, the real value in being able to coerce character strings to date values is that doing so allows us to perform _calculations_ with the dates that we could not perform with the character strings. In our experience, calculating intervals of time between dates is probably the most common type of calculation we will want to perform.
+
+Before we get into some examples, we are going to drop some of the columns from our `birth_dates` data frame because we won't need them anymore.
+
+```{r}
+#| echo: false
+ages <- birth_dates %>% 
+  select(name_first, dob = dob_default) %>% 
+  print()
+```
+
+👆**Here's what we did above:**
+
+* we created a new data frame called `ages` by subsetting the `birth_dates` data frame. 
+
+* we used the `select()` function to keep only the `name_first` and `dob_default` columns from `birth_dates`. We used a name-value pair (`dob = dob_default`) inside the `select()` function to rename `dob_default` to `dob`.
+
+Next, let's create a variable in our data frame that is equal to today's date. In reality, this would be a great time to use `Sys.Date()` to ask R to return today's date. 
+
+```{r}
+#| echo: false
+#| eval: false
+ages %>% 
+  mutate(today = Sys.Date())
+```
+
+However, we are not going to do that here, because it would cause the value of the `today` variable to update every time we update the book. That would make it challenging to write about the results we get. So, we're going to pretend that today is May 7th, 2020. We'll add that to our data frame like so:
+
+```{r}
+#| echo: false
+ages <- ages %>% 
+  mutate(today = as.Date("2020-05-07")) %>% 
+  print()
+```
+
+👆**Here's what we did above:**
+
+* we created a new column in the `ages` data frame called `today`. 
+
+* we made set the value of the `today` column to May 7th, 2020 by passing the value `"2020-05-07"` to the `as.Date()` function.
+
+### Calculate age as the difference in time between dob and today
+
+Calculating age from date of birth is a pretty common data management task. While you know what ages are, you probably don't think much about their calculation. Age is just the difference between two points in time. The starting point is always the date of birth. However, because age is constantly changing the end point changes as well. For example, you're one day older today than you were yesterday. So, to calculate age, we must always have a start date (i.e., date of birth) and an end date. In the example below, our end date will be May 7th, 2020. 
+
+Once we have those two pieces of information, we can ask R to calculate age for us in a few different ways. We are going to suggest that you use the method below that uses functions from the `lubridate` package. We will show you why soon. However, we want to show you the base R way of calculating time intervals for comparison, and because a lot of the help documentation we've seen online uses the base R methods shown below.
+
+Let's go ahead and load the `lubridate` package now.
+
+```{r}
+#| echo: false
+#| message: false
+library(lubridate)
+```
+
+Next, let's go ahead and calculate age 3 different ways:
+
+```{r}
+#| echo: false
+ages %>% 
+  mutate(
+    age_subtraction = today - dob,
+    age_difftime    = difftime(today, dob),
+    age_lubridate   = dob %--% today # lubridate's %--% operator creates a time interval
+  )
+```
+
+👆**Here's what we did above:**
+
+* we created three new columns in the `ages` data frame called `age_subtraction`, `age_difftime`, and `age_lubridate`.
+
+  - we created `age_subtraction` using the subtraction operator (`-`). Remember, R stores dates values as numbers under the hood. So, we literally just asked R to subtract the value for `dob` from the value for `today`. The value returned to us was a vector of time differences measured in days.
+  
+  - we created `age_difftime` base R's `difftime()` function. The value returned to us was a vector of time differences measured in days. As you can see, the results returned by `today - dob` and `difftime(today, dob)` are identical.
+  
+  - we created `age_lubridate` using `lubridate`'s time interval operator (`%--%`). Notice that the order of `dob` and `today` are switched here compared to the previous two methods. By itself, the `%--%` operator doesn't return a time difference value. It returns a time interval value. 
+  
+Here is how we can convert the time difference and time interval values to age in years:
+
+```{r}
+#| echo: false
+ages %>% 
+  mutate(
+    age_subtraction = as.numeric(today - dob) / 365.25,
+    age_difftime    = as.numeric(difftime(today, dob)) / 365.25,
+    age_lubridate   = (dob %--% today) / years(1)
+  )
+```
+
+👆**Here's what we did above:**
+
+* we created three new columns in the `ages` data frame called `age_subtraction`, `age_difftime`, and `age_lubridate`.
+
+  - we used the `as.numeric()` function to convert the values of `age_subtraction` from a time differences to a number -- the number of days. We then divided the number of days by 365.25 -- roughly the number of days in a year. The result is age in years.
+  
+  - we used the `as.numeric()` function to convert the values of `age_difftime` from a time differences to a number -- the number of days. We then divided the number of days by 365.25 -- roughly the number of days in a year. The result is age in years.
+  
+  - Again, the results of the first two methods are identical.
+  
+  - we asked R to show us the time interval values we created `age_lubridate` using `lubridate`'s time interval operator (`%--%`) as years of time. We did so by dividing the time interval into years. Specifically, we used the division operator (`/`) and `lubridate`'s `years()` function. The value we passed to the `years()` function was `1`. In other words, we asked R to tell us how many 1-year periods are in each time interval we created with `dob %--% today`.
+  
+  - In case you're wondering, here's the value returned by the `years()` function alone:
+  
+```{r}
+#| echo: false
+years(1)
+```
+
+So, why did the results of the first two methods differ from the results of the third method? Well, dates are much more complicated to work with than they may seem on the surface. Specifically, each day doesn't have exactly 24 hours and each year doesn't have exactly 365 days. Some have more and some have less -- so called, leap years. You can find more details on the [lubridate website](https://lubridate.tidyverse.org/), but the short answer is that `lubridate`'s method gives us a more precise answer than the first two methods do because it accounts for date complexities in a different way.
+
+Here's an example to quickly illustrate what we mean:
+
+Say we want to calculate the number of years between “2017-03-01” and “2018-03-01”.
+
+```{r}
+#| echo: false
+start <- as.Date("2017-03-01")
+end   <- as.Date("2018-03-01")
+```
+
+The most meaningful result in this situation is obviously 1 year.
+
+```{r}
+#| echo: false
+# The base R way
+as.numeric(difftime(end, start)) / 365.25
+```
+
+```{r}
+#| echo: false
+# The lubridate way
+(start %--% end) / years(1)
+```
+
+Notice that `lubridate`'s method returns exactly one year, but the base R method returns an approximation of a year.
+
+To further illustrate this point, let's look at what happens when the time interval includes a leap year. The year 2020 is a leap year, so let's calculate the number of years between “2019-03-01” and “2020-03-01”. Again, a meaningful result here should be a year. 
+
+```{r}
+#| echo: false
+start <- as.Date("2019-03-01")
+end   <- as.Date("2020-03-01")
+```
+
+```{r}
+#| echo: false
+# The base R way
+as.numeric(difftime(end, start)) / 36

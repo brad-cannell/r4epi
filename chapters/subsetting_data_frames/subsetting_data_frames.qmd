@@ -1,0 +1,662 @@
+# Subsetting Data Frames
+
+<!--
+select
+  - tidy-select
+  - Subsetting by name and position
+rename
+filter
+  - missing data
+  - Delete all missing
+arrange
+deduplication
+  - numbering rows
+  - No difference - drop
+  - Obviously an error - drop
+  - Systematically do something and report it
+  - Don't pick and choose, or even give the appearance of picking and choosing, rows with values that are aligned with the results you want to see.
+
+Maybe modulo operator
+Maybe logical indexes
+-->
+
+Subsetting data frames is another one of the most common data management tasks we carryout in our data analysis projects. Subsetting data frames just refers to the process of deciding which columns and rows to keep in your data frame and which to drop.
+
+For example, we may need to subset the rows of a data frame because we're interested in understanding a subpopulation in our sample. Below, we only want to analyze the rows that correspond to participants from Texas.
+
+```{r}
+#| label: 1_subsetting_data_frames_rows_chunk
+#| echo: false
+knitr::include_graphics("rows.png")
+```
+
+Or, perhaps we're only interested in a subset of the statistics returned to me in a data frame of analysis results. Below, we only want to view and present the variable name, variable category, count, and percent.
+ 
+```{r}
+#| label: 2_subsetting_data_frames_columns_chunk
+#| echo: false
+knitr::include_graphics("columns.png")
+```
+
+Fortunately, the `dplyr` package includes functions that make it really easy for us to subset our data frames -- even in some fairly complicated ways. Let's start by simulating the same drug trial data we simulated in the last chapter and use it to work through some examples.
+
+```{r}
+#| echo: false
+#| message: false
+# Load dplyr
+library(dplyr)
+```
+
+```{r}
+#| echo: false
+set.seed(123)
+
+drug_trial <- tibble(
+  # Follow-up year, 0 = baseline, 1 = year one, 2 = year two.
+  year = rep(0:2, times = 20),
+  # Participant age a baseline. Must be between the ages of 35 and 75 at 
+  # baseline to be eligible for the study
+  age = sample(35:75, 20, TRUE) %>% rep(each = 3),
+  # Drug the participant received, Placebo or active
+  drug = sample(c("Placebo", "Active"), 20, TRUE) %>% 
+    rep(each = 3),
+  # Reported headaches side effect, Y/N
+  se_headache = if_else(
+    drug == "Placebo", 
+    sample(0:1, 60, TRUE, c(.95,.05)), 
+    sample(0:1, 60, TRUE, c(.10, .90))
+  ),
+  # Report diarrhea side effect, Y/N
+  se_diarrhea = if_else(
+    drug == "Placebo", 
+    sample(0:1, 60, TRUE, c(.98,.02)), 
+    sample(0:1, 60, TRUE, c(.20, .80))
+  ),
+  # Report dry mouth side effect, Y/N
+  se_dry_mouth = if_else(
+    drug == "Placebo", 
+    sample(0:1, 60, TRUE, c(.97,.03)), 
+    sample(0:1, 60, TRUE, c(.30, .70))
+  ),
+  # Participant had myocardial infarction in study year, Y/N
+  mi = if_else(
+    drug == "Placebo", 
+    sample(0:1, 60, TRUE, c(.85, .15)), 
+    sample(0:1, 60, TRUE, c(.80, .20))
+  )
+)
+```
+
+As a reminder, we are simulating some drug trial data that includes the following variables:
+
+* id: Study id, there are 20 people enrolled in the trial.
+  
+* year: Follow-up year, 0 = baseline, 1 = year one, 2 = year two.
+  
+* age: Participant age a baseline. Must be between the ages of 35 and 75 at baseline to be eligible for the study.
+  
+* drug: Drug the participant received, Placebo or active.
+  
+* se_headache: Reported headaches side effect, Y/N.
+  
+* se_diarrhea: Report diarrhea side effect, Y/N.
+  
+* se_dry_mouth: Report dry mouth side effect, Y/N.
+  
+* mi: Participant had myocardial infarction in study year, Y/N. 
+
+Actually, this data is slightly different than the data we used in the last chapter. Did you catch the difference? Take another look:
+
+```{r}
+#| echo: false
+drug_trial
+```
+
+we forgot to put a study id in our data. Because we simulated this data above, the best way to fix this oversite is to make the necessary change to the simulation code above. But, let's pretend that someone sent us this data instead, and we have to add a new study id column to it. Well, we now know how to use the `mutate()` function to columns to our data frame. We can do so like this:
+
+```{r}
+#| echo: false
+drug_trial <- drug_trial %>% 
+  mutate(
+    # Study id, there are 20 people enrolled in the trial.
+    id = rep(1:20, each = 3)
+  ) %>% 
+  print()
+```
+
+And now we have the study id in our data. But, by default R adds new columns as the rightmost column of the data frame. In terms of analysis, it doesn't really matter where this column is located in our data. R couldn't care less. However, when humans look at this data, they typically expect the study id (or some other identifier) to be the first column in the data frame. That is a job for `select()`.
+
+## The select() function
+
+```{r}
+#| echo: false
+drug_trial %>% 
+  select(id, year, age, se_headache, se_diarrhea, se_dry_mouth, mi)
+```
+
+👆**Here's what we did above:**
+
+* we used the `select()` function to change the order of the columns in the `drug_trial` data frame so that `id` would be the first variable in the data frame when reading from left to right.
+
+* You can type `?select` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* The first argument to the `select()` function is `.data`. The value passed to `.data` should always be a data frame. In this book, we will often pass data frames to the `.data` argument using the pipe operator (e.g., `df %>% select()`). 
+
+* The second argument to the `select()` function is `...`. The value passed to the `...` argument should column names or expressions that return column positions. We'll dive deeper into this soon.
+
+More generally, the `select()` function tells R which variables in your data frame to keep (or drop) and in what order.
+
+The code above gave us the result we wanted. 👏 But, it can be tedious and error prone to manually type every variable name inside the `select()` function. Did you notice that we forgot the `drug` column "by accident"? 
+
+Thankfully, the `select()` function is one of several `dplyr` functions that accept [tidy-select](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html) argument modifiers (i.e., functions and operators). In this chapter, we will show you some of the tidy-select argument modifiers we regularly use, but you can always type `?dplyr_tidy_select` into your console to see a complete list.
+
+In our little example above, we could have used the tidy-select `everything()` function to make our code easier to write and we wouldn't have accidently missed the `drug` column. We can do so like this:
+
+```{r}
+#| echo: false
+drug_trial <- drug_trial %>% 
+  select(id, everything()) %>% 
+  print()
+```
+
+👆**Here's what we did above:**
+
+* we used the `select()` function to change the order of the columns in the `drug_trial` data frame so that `id` would be the first variable in the data frame when reading from left to right. 
+
+* Rather than explicitly typing the other column names, we used the `everything()` tidy-select function. As you may have guessed, `everything()` tells R to do X (in this keep) to all the other variables not explicitly mentioned.
+
+For our next example, let's go ahead and add our mean-centered age variable to our `drug_trial` data again. We did this for the first time in the last chapter, in case you missed.
+
+```{r}
+#| echo: false
+drug_trial <- drug_trial %>% 
+  mutate(age_center = age - mean(age)) %>% 
+  print()
+```
+
+One way  we will often use `select()` is for performing quick little **data checks**. For example, let's say that we wanted to make sure the code we wrote above actually _did_ what we _intended_ it to do. If we print the entire data frame to the screen, `age` and `age_center` aren't directly side-by-side, and there's a lot of other visual clutter from the other variables. In a case like this, we would use `select()` to get a clearer picture:
+
+```{r}
+#| echo: false
+drug_trial %>% 
+  select(age, age_center)
+```
+
+👆**Here's what we did above:**
+
+* we used the `select()` function to view the `age` and `age_center` columns _only_.
+
+* we can type individual column names, separated by commas, into `select()` to return a data frame containing only those columns, and in that order.
+
+<p class="warning"> ⚠️**Warning:** Notice that we didn't assign our result above to anything (i.e., there's no `drug_trial <-`). If we had done so, the `drug_trial` data would have contained these two columns only. We didn't want to drop the other columns. We could have assigned the result of the code to a different R object (e.g., `check_age <-`, but it wasn't really necessary. We just wanted to quickly view `age` and `age_center` side-by-side for data checking purposes. When we're satisfied that we coded it correctly, we can move on. There's no need to save those results to an R object.</p>
+
+You may also recall that we wanted to subset the `drug_trial` data to include only the columns we needed for the rowwise demonstrations. Here is the code we used to do so:
+
+```{r}
+#| echo: false
+drug_trial %>% 
+  select(id, year, starts_with("se"))
+```
+
+👆**Here's what we did above:**
+
+* we used the `select()` function to view the `id` `year`, `se_headache`, `se_diarrhea`, and `se_dry_mouth` columns _only_.
+
+* we used the tidy-select `starts_with()` function to select all the side effect variables.
+
+we already know that we can use `everything()` to select _all_ of the other variables in a data frame, but what if we just want to grab a _range_ or _group_ of other variables in a data frame? tidy-select makes it easy for us. Above, we used the `starts_with()` function to select all the columns with names that literally start with the letters "se". Because all of the side effect columns are directly next to each other (i.e., no columns in between them) we could have also used the colon operator `:` like this:
+
+```{r}
+#| echo: false
+drug_trial %>% 
+  select(id, year, se_headache:se_dry_mouth)
+```
+
+While either method gets us the same result, we tend to prefer using `starts_with()` when possible. We think it makes your code easier to read (i.e., "Oh, he's selecting all the side effect columns here.").
+
+In addition to `starts_with()`, there is also an `ends_with()` tidy-select function that can also be useful. For example, we've named factors with the `_f` naming convention throughout the book. We could use that, along with the `ends-with()` function to create a subset of our data that includes only the factor versions of our side effects columns.
+
+```{r}
+#| echo: false
+# Add the side effect factor columns to our data frame again...
+yn_levs <- c(0, 1)
+yn_labs <- c("No", "Yes")
+
+drug_trial <- drug_trial %>% 
+  mutate(
+    se_headache_f  = factor(se_headache, yn_levs, yn_labs),
+    se_diarrhea_f  = factor(se_diarrhea, yn_levs, yn_labs),
+    se_dry_mouth_f = factor(se_dry_mouth, yn_levs, yn_labs)
+  )
+```
+
+```{r}
+#| echo: false
+drug_trial %>% 
+  select(id, year, ends_with("_f"))
+```
+
+::: {.callout-note}
+🗒**Side Note:** Variable names are important! Throughout this book, I've tried to repeatedly emphasize the importance of coding style -- including the way we name our R objects. Many people who are new to data management and analysis (and some who aren't, **MDL**) don't fully appreciate the importance of such things. We hope that the preceding two examples are helping you to see why the little details, like variable names, are important. Using consistent variable naming conventions, for example, allows us to write code that requires less typing, is easier for humans to skim and understand, and is less prone to typos and other related errors.
+:::
+
+we can also select columns we want to keep by position instead of name. We don't do this often. We think it's generally better to use column names or tidy-select argument modifiers when subsetting columns in your data frame. However, we do sometimes select columns by position when we're writing our own functions. Therefore, we want to quickly show you what this looks like:
+
+```{r}
+#| echo: false
+drug_trial %>% 
+  select(1:2, 4)
+```
+
+👆**Here's what we did above:**
+
+* we passed column numbers to the `select()` function to keep the 1st, 2nd, and 4th columns from our `drug_trial` data frame.
+
+Finally, in addition to using `select()` to _keep_ columns in our data frame, we can also use `select()` to explicitly _drop_ columns from our data frame. To do so, we just need to use either the subtraction symbol (`-`) or the Not operator (`!`).
+
+Think back to our example from the previous chapter. There we created some new variables that captured information about participants reporting _any_ and _all_ side effects. During that process we created a column that contained a count of the side effects experienced in each year -- `n_se_year`.
+
+```{r}
+#| echo: false
+drug_trial_sub <- drug_trial %>% 
+  rowwise() %>% 
+  mutate(
+    n_se_year   = sum(se_headache, se_diarrhea, se_dry_mouth),
+    any_se_year = n_se_year > 0,
+    all_se_year = n_se_year == 3
+  ) %>% 
+  group_by(id) %>% 
+  mutate(any_se = sum(any_se_year) > 0) %>% 
+  ungroup() %>% 
+  select(id:year, n_se_year:any_se) %>% 
+  print()
+```
+
+Let's say we decided we don't need `n_se_year` column now that we created `any_se_year`, `all_se_year`, and `any_se`. We can easily drop it from the data frame in a couple of ways:
+
+```{r}
+#| echo: false
+drug_trial_sub %>% 
+  select(-n_se_year)
+```
+
+```{r}
+#| echo: false
+drug_trial_sub %>% 
+  select(!n_se_year)
+```
+
+Note that we could have also dropped it indirectly by selecting everything else:
+
+```{r}
+#| echo: false
+drug_trial_sub %>% 
+  select(id:year, any_se_year:any_se)
+```
+
+But, we think this is generally a bad idea. Not only is it more typing, but skimming through your code doesn't really tell us (or future you) what you were trying to accomplish there.
+
+## The rename() function
+
+Sometimes, we want to change the names of some, or all, of the columns in our data frame. For me, this most commonly comes up with data I've imported from someone else. For example, let's say I'm importing data that uses column names that aren't super informative. We saw column names like that when we imported NHANES data. It looked something like this:
+
+```{r}
+#| echo: false
+nhanes <- tibble(
+  SEQN = c(1:4),
+  ALQ101 = c(1, 2, 1, 2),
+  ALQ110 = c(2, 2, 2, 1)
+) %>% 
+  print()
+```
+
+we previously learned how to change these column names on import (i.e., `col_names`), but let's say we didn't do that for whatever reason. We can rename columns in our data frame using the `rename()` function like so:
+
+```{r}
+#| echo: false
+nhanes %>% 
+  rename(
+    id = SEQN,
+    drinks_12_year = ALQ101,
+    drinks_12_life = ALQ110
+  )
+```
+
+👆**Here's what we did above:**
+
+* we used the `rename()` function to change the name of each column in the `drug_trial` data frame to be more informative.
+
+* You can type `?rename` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* The first argument to the `rename()` function is `.data`. The value passed to `.data` should always be a data frame. In this book, we will often pass data frames to the `.data` argument using the pipe operator (e.g., `df %>% rename()`). 
+
+* The second argument to the `rename()` function is `...`. The value passed to the `...` argument should be a name value pair, or series of name-value pairs separated by columns. The name-value pairs should be in the format `new name = original name`. 
+
+we think these names are much better, but for the sake of argument let's say that we wanted to keep the original names -- just coerce them to lowercase. We can do that using the `rename_with()` variation of the `rename()` function in combination with the `tolower()` function:
+
+```{r}
+#| echo: false
+nhanes %>% 
+  rename_with(tolower)
+```
+
+👆**Here's what we did above:**
+
+* we used the `rename_with()` function to coerce all column names in the `drug_trial` data frame to lowercase.
+
+* You can type `?rename` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* The first argument to the `rename_with()` function is `.data`. The value passed to `.data` should always be a data frame. In this book, we will often pass data frames to the `.data` argument using the pipe operator (e.g., `df %>% rename_with()`). 
+
+* The second argument to the `rename_with()` function is `.fn`. The value passed to the `.fn` argument should be a function that you want to apply to all the columns selected in the `.cols` argument (see below).
+
+* The third argument to the `rename_with()` function is `.cols`. The value passed to the `.cols` argument should be the columns you want to apply the function passed to the `.fn` argument to. You can select the columns using tidy-select argument modifiers.
+
+## The filter() function
+
+we just saw how to keep and drop _columns_ in our data frame using the `select()` function. We can keep and drop _rows_ in our data frame using the _filter()_ function or the _slice()_ function. 
+
+Similar to selecting columns by position instead of name:
+
+```{r}
+#| echo: false
+drug_trial %>% 
+  select(1:2, 4)
+```
+
+we can also select rows we want to keep by position. Again, we don't do this often, but it is sometimes useful when we're writing our own functions. Therefore, we want to quickly show you what this looks like:
+
+```{r}
+#| echo: false
+drug_trial %>% 
+  slice(1:5)
+```
+
+👆**Here's what we did above:**
+
+* we used the `slice()` function to keep only the first 5 rows in the `drug_trial` data frame.
+
+* You can type `?slice` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* The first argument to the `slice()` function is `.data`. The value passed to `.data` should always be a data frame. In this book, we will often pass data frames to the `.data` argument using the pipe operator (e.g., `df %>% slice()`). 
+
+* The second argument to the `slice()` function is `...`. The value passed to the `...` argument should be a row numbers you want returned to you. 
+
+Generally speaking, we're far more likely to use the `filter()` function to select only a subset of rows from our data frame. Two of the most common scenarios, of many possible scenarios, where want to subset rows include:
+
+* Performing a subgroup analysis. This is a situation where we want our analysis to include only some of the people (or places, or things) in our data frame.
+
+* Performing a complete case analysis. This is a situation where we want to remove rows that contain missing values from our data frame before performing an analysis.
+
+### Subgroup analysis
+
+Let's say that we want to count the number of people in the drug trial who reported having headaches in the baseline year by drug status (active vs. placebo). We would first use `filter()` to keep only the rows that contain data from the baseline year:
+
+```{r}
+#| echo: false
+drug_trial %>% 
+  filter(year == 0)
+```
+
+👆**Here's what we did above:**
+
+* we used the `filter()` function to keep only the rows in the `drug_trial` data frame that contain data from the baseline year.
+
+* You can type `?filter` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* The first argument to the `filter()` function is `.data`. The value passed to `.data` should always be a data frame. In this book, we will often pass data frames to the `.data` argument using the pipe operator (e.g., `df %>% filter()`). 
+
+* The second argument to the `filter()` function is `...`. The value passed to the `...` argument should be a name-value pair or multiple name value pairs separated by commas. The `...` argument is where you will tell `filter()` how to decide which rows to keep.
+
+::: {.callout-warning}
+⚠️**Warning:** Remember, that in the R language `=` (i.e., one equal sign) and `==` (i.e., two equal signs) are different things. The `=` operator _tells_ R to _make_ the thing on the left equal to the thing on the right. In other words, it _assigns_ values. The `==` _asks_ R if the thing on the left is equal to the thing on the right. In other words, it _test the equality_ of values.
+:::
+
+Now, we can use the descriptive analysis techniques we've already learned to answer our research question:
+
+```{r}
+#| echo: false
+#| message: false
+drug_trial %>% 
+  filter(year == 0) %>% 
+  group_by(drug, se_headache_f) %>% 
+  summarise(n = n())
+```
+
+So, 6 out of 7 (~ 86%) of the people in our active drug group reported headaches in the baseline year. Now, let's say that we have reason to suspect that the drug affects people differently based on their age. Let's go ahead and repeat this analysis, but only in a subgroup of people who are below age 65. Again, we can use the `filter()` function to do this:
+
+```{r}
+#| echo: false
+#| message: false
+drug_trial %>% 
+  filter(year == 0) %>% 
+  filter(age < 65) %>% 
+  group_by(drug, se_headache_f) %>% 
+  summarise(n = n())
+```
+
+Wow! It looks like everyone under age 65 who received active drug also reported headaches!
+
+we can show this more explicitly by using passing the value `FALSE` to the `.drop` argument of `group_by()`. This tells R to keep all factor levels in the output, even if they were _observed_ in the data zero times.
+
+```{r}
+#| echo: false
+#| message: false
+drug_trial %>% 
+  filter(year == 0) %>% 
+  filter(age < 65) %>% 
+  group_by(drug, se_headache_f, .drop = FALSE) %>% 
+  summarise(n = n())
+```
+
+Finally, we could make our code above more succinct by combining our two filter functions into one:
+
+```{r}
+#| echo: false
+#| message: false
+drug_trial %>% 
+  filter(year == 0 & age < 65) %>% 
+  group_by(drug, se_headache_f, .drop = FALSE) %>% 
+  summarise(n = n())
+```
+
+👆**Here's what we did above:**
+
+* we used the `filter()` function to keep only the rows in the `drug_trial` data frame that contain data from the baseline year _AND_ (`&`) contain data from rows with a value that is less than 65 in the `age` column. The _AND_ (`&`) here is important. A row must satisfy both of these conditions in order for R to keep it in the returned data frame. If we had used _OR_ instead (`filter(year == 0 | age < 65)`), then only one condition _OR_ the other would need to be met for R to keep the row in the returned data frame.
+
+::: {.callout-note}
+🗒**Side Note:** In the R language, we use the pipe operator to create _OR_ conditions. The pipe operator looks like `|` and is probably the key immediately to the right of your enter/return key on your keyboard.
+:::
+
+### Complete case analysis
+
+Now let's say that we want to compare age at baseline by drug status (active vs. placebo). Additionally, let's say that we have some missing values in our data. 
+
+Let's first simulate some new data with missing values:
+
+```{r}
+#| echo: false
+drug_trial_short <- drug_trial %>%
+  filter(year == 0) %>% 
+  slice(1:10) %>% 
+  mutate(
+    age  = replace(age, 1, NA),
+    drug = replace(drug, 4, NA)
+  ) %>% 
+  print()
+```
+
+👆**Here's what we did above:**
+
+* we used the `filter()` and `slice()` functions to create a new data frame that contains only a subset of our original `drug_trial` data frame. The subset includes only the first 10 rows of the data frame remaining after selecting only the baseline year rows from the original data frame.
+
+* we used the `replace()` function to replace the first value of age with `NA` and the fourth value of `drug` with `NA`.
+
+* You can type `?replace` into your R console to view the help documentation for this function.
+
+If we try to answer our research question above without dealing with the missing data, we get the following undesirable results:
+
+```{r}
+#| echo: false
+#| message: false
+drug_trial_short %>% 
+  group_by(drug) %>% 
+  summarise(mean_age = mean(age))
+```
+
+One way we can improve our result is by adding the `na.rm` argument to the `mean()` function. 
+
+```{r}
+#| echo: false
+#| message: false
+drug_trial_short %>% 
+  group_by(drug) %>% 
+  summarise(mean_age = mean(age, na.rm = TRUE))
+```
+
+But, we previously saw how it can sometimes be more efficient to drop the row with missing data from the data frame explicitly. This is called a **complete case analysis** or **list-wise deletion**. 
+
+```{r}
+#| echo: false
+#| message: false
+drug_trial_short %>% 
+  filter(!is.na(age)) %>% 
+  group_by(drug) %>% 
+  summarise(mean_age = mean(age))
+```
+
+However, we still have that missing value for `drug`. We can easily drop the row with the missing value by adding an additional value to the `...` argument of our `filter()` function:
+
+```{r}
+#| echo: false
+#| message: false
+drug_trial_short %>% 
+  filter(!is.na(age) & !is.na(drug)) %>% 
+  group_by(drug) %>% 
+  summarise(mean_age = mean(age))
+```
+
+## Deduplication
+
+Another common data management task that we want to discuss in this chapter is deduplicating data. Let's go ahead and simulate some data to illustrate what we mean:
+
+```{r}
+#| echo: false
+#| rows-print: 12
+df <- tribble(
+  ~id, ~day, ~x,
+	1, 1, 1,
+	1, 2, 11,
+	2, 1, 12,
+	2, 2, 13,
+	2, 2, 14,
+	3, 1, 12,
+	3, 1, 12,
+	3, 2, 13,
+	4, 1, 13,
+	5, 1, 10,
+	5, 2, 11,
+	5, 1, 10
+) %>% 
+  print()
+```
+
+* All id's but 4 have multiple observations.
+
+* ID 2 has row with duplicate values for `id` and `day`, but a non-duplicate value for `x`. These rows are partial duplicates. 
+
+* ID 3 has a row with duplicate values for all three columns (i.e., `3, 1, 12`). These rows are complete duplicates.
+
+* ID 5 has a row with duplicate values for all three columns (i.e., `5, 1, 10`). These rows are complete duplicates. However, they are not in sequential order in the dataset.
+
+### The distinct() function
+
+we can use `dplyr`'s `distinct()` function to remove all complete duplicates from the data frame:
+
+```{r}
+#| echo: false
+#| rows-print: 12
+df %>% 
+  distinct()
+```
+
+👆**Here's what we did above:**
+
+* we used the `distinct()` function to keep only one row from a group of complete duplicate rows in the `df` data frame.
+
+* You can type `?distinct` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* The first argument to the `distinct()` function is `.data`. The value passed to `.data` should always be a data frame. In this book, we will often pass data frames to the `.data` argument using the pipe operator (e.g., `df %>% distinct()`). 
+
+* The second argument to the `distinct()` function is `...`. The value passed to the `...` argument should be the variables to use when determining uniqueness. Passing no variables to the `...` argument is equivalent to pass all variables to the `...` argument.
+
+### Complete duplicate row add tag
+
+If want to identify the complete duplicate rows, without immediately dropping them, we can use the `duplicated()` function inside the `mutate()` function. This creates a new column in our data frame that has the value `TRUE` when the row is a complete duplicate and the value `FALSE` otherwise.
+
+```{r}
+#| echo: false
+#| rows-print: 12
+df %>% 
+  mutate(dup = duplicated(df))
+```
+
+Alternatively, we could get the same result using:
+
+```{r}
+#| echo: false
+df %>% 
+  group_by_all() %>% 
+  mutate(
+    n_row = row_number(),
+    dup   = n_row > 1
+  )
+```
+
+👆**Here's what we did above:**
+
+* we used the `group_by_all()` function to split our data frame into multiple data frames grouped by all the columns in `df`. 
+
+* we used the `row_number()` to sequentially count every row in each of the little data frames created by `group_by_all()`. We assigned the sequential count to a new column named `n_row`.
+
+* we created a new column named `dup` that has a value of `TRUE` when the value of `n_row` is greater than 1 and `FALSE` otherwise.
+
+Notice that R only tags the second in a set of duplicate rows as a duplicate. Below we tag both rows with complete duplicate values.
+
+```{r}
+#| echo: false
+df %>% 
+  mutate(dup = duplicated(.) | duplicated(., fromLast = TRUE))
+```
+
+### Partial duplicate rows
+
+```{r}
+#| echo: false
+df %>% 
+  distinct(id, day, .keep_all = TRUE)
+```
+
+👆**Here's what we did above:**
+
+* we used the `distinct()` function to keep only one row from a group of duplicate rows in the `df` data frame.
+
+* You can type `?distinct` into your R console to view the help documentation for this function and follow along with the explanation below.
+
+* This time we passed the column names `id` and `day` to the `...` argument. This tells R to consider any rows that have the same value of `id` _AND_ `day` to be duplicates -- even if they have different values in their other columns.
+
+* The `.keep_all` argument tells R to return all of the columns in `df` to us -- not just the columns that we are testing for uniqueness (i.e., `id` and `day`).
+
+### Partial duplicate rows - add tag
+
+we can tag partial duplicate rows in a similar fashion to the way we tagged complete duplicate rows above: 
+
+```{r}
+#| echo: false
+#| rows-print: 12
+df %>% 
+  group_by(id, day) %>% 
+  mutate(
+    count = row_number(), # Counts rows by group
+    dup   = count > 1     # TRUE if there is more than one row per group
+  )
