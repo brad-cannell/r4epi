@@ -1,11 +1,11 @@
 <img align="left" src="r4epi_icon.png" alt="R4Epi hex logo" width="250" height="289">
 
-# R4Epi Quarto
-
-A repository for the Quarto version of [R4Epi](www.r4epi.com).
+# [R4Epi Electronic Textbook](www.r4epi.com)
+This repository is for the R for Epidemiology electronic textbook. This electronic book was originally created to accompany my Introduction to R Programming for Epidemiologic Research course at the [University of Texas Health Science Center School of Public Health](https://sph.uth.edu/). However, I hope it will be useful to anyone who is interested in R and epidemiology.
 
 ## Useful websites:
 
+-   [R4Epi Project Board](https://github.com/orgs/brad-cannell/projects/3)
 -   [Quarto book documentation](https://quarto.org/docs/books/)
 -   [My test Quarto book repository](https://github.com/brad-cannell/test_quarto_book)
 -   [My test Quarto book](https://brad-cannell.github.io/test_quarto_book/)
@@ -20,20 +20,6 @@ quarto render
 ```
 ````
 
-You can also render Quarto files with a native R code chunk.
-
-- The input argument: The input file or project directory to be rendered (defaults to rendering the project in the current working directory).
-
-- The output_format argument: Target output format (defaults to "html"). The option "all" will render all formats defined within the file or project.
-
-````
-```{r}
-#| Render with R
-#| eval: false
-quarto::quarto_render(output_format = "all")
-```
-````
-
 ## Publishing to GitHub pages
 
 [This article is great](https://quarto.org/docs/publishing/github-pages.html). After committing, and making sure you are on the main branch, type `quarto publish gh-pages` in the terminal.
@@ -43,19 +29,6 @@ quarto::quarto_render(output_format = "all")
 quarto publish gh-pages
 ```
 ````
-
-## Publishing to Netlify
-
-[This article is great](https://quarto.org/docs/publishing/netlify.html). After committing, and making sure you are on the main branch, type `quarto publish netlify` in the terminal.
-
-````
-```{bash}
-quarto publish netlify
-```
-````
-## Where to publish
-
-I've used Netlify in the past and have been happy with it. However, I'm not sure that it is necessary or efficient to add the extra layer of using Netlify in GitHub Pages will work just as well. Why introduce a third site into the mix if we don't have to? For now, I may just stick with GitHub Pages.
 
 ## Textbook version Notes:
 - Major: physical copy editions
