@@ -38,6 +38,6 @@ quarto publish gh-pages
 - 3rd level: significant edits to existing chapters
 - Version number doesn’t change with typo (I.e., spelling and grammar) corrections. 
 
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/aa9881ba-321a-42b1-b274-283786675eef/deploy-status)](https://app.netlify.com/projects/inspiring-lamarr-72eb9f/deploys)
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
