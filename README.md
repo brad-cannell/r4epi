@@ -24,15 +24,9 @@ quarto render
 ```
 ````
 
-## Publishing to GitHub pages
+## Publishing to Netlify pages
 
-[This article is great](https://quarto.org/docs/publishing/github-pages.html). After committing, and making sure you are on the main branch, type `quarto publish gh-pages` in the terminal.
-
-````
-```{bash}
-quarto publish gh-pages
-```
-````
+[This article is great](https://quarto.org/docs/publishing/netlify.html). After committing, and making sure you are on the main branch, type `quarto publish netlify` in the terminal. The [Wiki](https://github.com/brad-cannell/r4epi/wiki/Publishing) contains additional details about publishing.
 
 ## Textbook version Notes:
 - Major: physical copy editions
