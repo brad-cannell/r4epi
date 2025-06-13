@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -572,6 +606,8 @@ cookieconsent.run({
   <li><a href="#complete-duplicate-row-add-tag" id="toc-complete-duplicate-row-add-tag" class="nav-link" data-scroll-target="#complete-duplicate-row-add-tag"><span class="header-section-number">27.4.2</span> Complete duplicate row add tag</a></li>
   <li><a href="#partial-duplicate-rows" id="toc-partial-duplicate-rows" class="nav-link" data-scroll-target="#partial-duplicate-rows"><span class="header-section-number">27.4.3</span> Partial duplicate rows</a></li>
   <li><a href="#partial-duplicate-rows---add-tag" id="toc-partial-duplicate-rows---add-tag" class="nav-link" data-scroll-target="#partial-duplicate-rows---add-tag"><span class="header-section-number">27.4.4</span> Partial duplicate rows - add tag</a></li>
+  <li><a href="#count-the-number-of-duplicates" id="toc-count-the-number-of-duplicates" class="nav-link" data-scroll-target="#count-the-number-of-duplicates"><span class="header-section-number">27.4.5</span> Count the number of duplicates</a></li>
+  <li><a href="#what-to-do-about-duplicates" id="toc-what-to-do-about-duplicates" class="nav-link" data-scroll-target="#what-to-do-about-duplicates"><span class="header-section-number">27.4.6</span> What to do about duplicates</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi/edit/main/chapters/subsetting_data_frames/subsetting_data_frames.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -623,7 +659,7 @@ Maybe logical indexes
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="rows.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="rows.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -633,12 +669,54 @@ Maybe logical indexes
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="columns.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="columns.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Fortunately, the <code>dplyr</code> package includes functions that make it really easy for us to subset our data frames – even in some fairly complicated ways. Let’s start by simulating the same drug trial data we simulated in the last chapter and use it to work through some examples.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dplyr</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Follow-up year, 0 = baseline, 1 = year one, 2 = year two.</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">times =</span> <span class="dv">20</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Participant age a baseline. Must be between the ages of 35 and 75 at </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># baseline to be eligible for the study</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">sample</span>(<span class="dv">35</span><span class="sc">:</span><span class="dv">75</span>, <span class="dv">20</span>, <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">rep</span>(<span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Drug the participant received, Placebo or active</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">drug =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Placebo"</span>, <span class="st">"Active"</span>), <span class="dv">20</span>, <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Reported headaches side effect, Y/N</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_headache =</span> <span class="fu">if_else</span>(</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">"Placebo"</span>, </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">95</span>,.<span class="dv">05</span>)), </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">10</span>, .<span class="dv">90</span>))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Report diarrhea side effect, Y/N</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_diarrhea =</span> <span class="fu">if_else</span>(</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">"Placebo"</span>, </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">98</span>,.<span class="dv">02</span>)), </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">20</span>, .<span class="dv">80</span>))</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Report dry mouth side effect, Y/N</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_dry_mouth =</span> <span class="fu">if_else</span>(</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">"Placebo"</span>, </span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">97</span>,.<span class="dv">03</span>)), </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">30</span>, .<span class="dv">70</span>))</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Participant had myocardial infarction in study year, Y/N</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">mi =</span> <span class="fu">if_else</span>(</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">"Placebo"</span>, </span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">85</span>, .<span class="dv">15</span>)), </span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">80</span>, .<span class="dv">20</span>))</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>As a reminder, we are simulating some drug trial data that includes the following variables:</p>
 <ul>
 <li><p>id: Study id, there are 20 people enrolled in the trial.</p></li>
@@ -652,6 +730,7 @@ Maybe logical indexes
 </ul>
 <p>Actually, this data is slightly different than the data we used in the last chapter. Did you catch the difference? Take another look:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>drug_trial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 7
     year   age drug    se_headache se_diarrhea se_dry_mouth    mi
@@ -671,6 +750,12 @@ Maybe logical indexes
 </div>
 <p>we forgot to put a study id in our data. Because we simulated this data above, the best way to fix this oversite is to make the necessary change to the simulation code above. But, let’s pretend that someone sent us this data instead, and we have to add a new study id column to it. Well, we now know how to use the <code>mutate()</code> function to columns to our data frame. We can do so like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Study id, there are 20 people enrolled in the trial.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">each =</span> <span class="dv">3</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 8
     year   age drug    se_headache se_diarrhea se_dry_mouth    mi    id
@@ -692,6 +777,8 @@ Maybe logical indexes
 <section id="the-select-function" class="level2" data-number="27.1">
 <h2 data-number="27.1" class="anchored" data-anchor-id="the-select-function"><span class="header-section-number">27.1</span> The select() function</h2>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, age, se_headache, se_diarrhea, se_dry_mouth, mi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 7
       id  year   age se_headache se_diarrhea se_dry_mouth    mi
@@ -721,6 +808,9 @@ Maybe logical indexes
 <p>Thankfully, the <code>select()</code> function is one of several <code>dplyr</code> functions that accept <a href="https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html">tidy-select</a> argument modifiers (i.e., functions and operators). In this chapter, we will show you some of the tidy-select argument modifiers we regularly use, but you can always type <code>?dplyr_tidy_select</code> into your console to see a complete list.</p>
 <p>In our little example above, we could have used the tidy-select <code>everything()</code> function to make our code easier to write and we wouldn’t have accidently missed the <code>drug</code> column. We can do so like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 8
       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
@@ -745,6 +835,9 @@ Maybe logical indexes
 </ul>
 <p>For our next example, let’s go ahead and add our mean-centered age variable to our <code>drug_trial</code> data again. We did this for the first time in the last chapter, in case you missed.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_center =</span> age <span class="sc">-</span> <span class="fu">mean</span>(age)) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 9
       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
@@ -764,6 +857,8 @@ Maybe logical indexes
 </div>
 <p>One way we will often use <code>select()</code> is for performing quick little <strong>data checks</strong>. For example, let’s say that we wanted to make sure the code we wrote above actually <em>did</em> what we <em>intended</em> it to do. If we print the entire data frame to the screen, <code>age</code> and <code>age_center</code> aren’t directly side-by-side, and there’s a lot of other visual clutter from the other variables. In a case like this, we would use <code>select()</code> to get a clearer picture:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(age, age_center)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 2
      age age_center
@@ -791,6 +886,8 @@ Maybe logical indexes
 </p>
 <p>You may also recall that we wanted to subset the <code>drug_trial</code> data to include only the columns we needed for the rowwise demonstrations. Here is the code we used to do so:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, <span class="fu">starts_with</span>(<span class="st">"se"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 5
       id  year se_headache se_diarrhea se_dry_mouth
@@ -815,6 +912,8 @@ Maybe logical indexes
 </ul>
 <p>we already know that we can use <code>everything()</code> to select <em>all</em> of the other variables in a data frame, but what if we just want to grab a <em>range</em> or <em>group</em> of other variables in a data frame? tidy-select makes it easy for us. Above, we used the <code>starts_with()</code> function to select all the columns with names that literally start with the letters “se”. Because all of the side effect columns are directly next to each other (i.e., no columns in between them) we could have also used the colon operator <code>:</code> like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, se_headache<span class="sc">:</span>se_dry_mouth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 5
       id  year se_headache se_diarrhea se_dry_mouth
@@ -835,6 +934,20 @@ Maybe logical indexes
 <p>While either method gets us the same result, we tend to prefer using <code>starts_with()</code> when possible. We think it makes your code easier to read (i.e., “Oh, he’s selecting all the side effect columns here.”).</p>
 <p>In addition to <code>starts_with()</code>, there is also an <code>ends_with()</code> tidy-select function that can also be useful. For example, we’ve named factors with the <code>_f</code> naming convention throughout the book. We could use that, along with the <code>ends-with()</code> function to create a subset of our data that includes only the factor versions of our side effects columns.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the side effect factor columns to our data frame again...</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>yn_levs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>yn_labs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_headache_f  =</span> <span class="fu">factor</span>(se_headache, yn_levs, yn_labs),</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_diarrhea_f  =</span> <span class="fu">factor</span>(se_diarrhea, yn_levs, yn_labs),</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, yn_levs, yn_labs)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, <span class="fu">ends_with</span>(<span class="st">"_f"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 5
       id  year se_headache_f se_diarrhea_f se_dry_mouth_f
@@ -867,6 +980,8 @@ Note
 </div>
 <p>we can also select columns we want to keep by position instead of name. We don’t do this often. We think it’s generally better to use column names or tidy-select argument modifiers when subsetting columns in your data frame. However, we do sometimes select columns by position when we’re writing our own functions. Therefore, we want to quickly show you what this looks like:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 3
       id  year drug   
@@ -891,6 +1006,18 @@ Note
 <p>Finally, in addition to using <code>select()</code> to <em>keep</em> columns in our data frame, we can also use <code>select()</code> to explicitly <em>drop</em> columns from our data frame. To do so, we just need to use either the subtraction symbol (<code>-</code>) or the Not operator (<code>!</code>).</p>
 <p>Think back to our example from the previous chapter. There we created some new variables that captured information about participants reporting <em>any</em> and <em>all</em> side effects. During that process we created a column that contained a count of the side effects experienced in each year – <code>n_se_year</code>.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_se_year   =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">any_se_year =</span> n_se_year <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">all_se_year =</span> n_se_year <span class="sc">==</span> <span class="dv">3</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se =</span> <span class="fu">sum</span>(any_se_year) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id<span class="sc">:</span>year, n_se_year<span class="sc">:</span>any_se) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 6
       id  year n_se_year any_se_year all_se_year any_se
@@ -910,6 +1037,8 @@ Note
 </div>
 <p>Let’s say we decided we don’t need <code>n_se_year</code> column now that we created <code>any_se_year</code>, <code>all_se_year</code>, and <code>any_se</code>. We can easily drop it from the data frame in a couple of ways:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n_se_year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 5
       id  year any_se_year all_se_year any_se
@@ -928,6 +1057,8 @@ Note
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span>n_se_year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 5
       id  year any_se_year all_se_year any_se
@@ -947,6 +1078,8 @@ Note
 </div>
 <p>Note that we could have also dropped it indirectly by selecting everything else:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id<span class="sc">:</span>year, any_se_year<span class="sc">:</span>any_se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 5
       id  year any_se_year all_se_year any_se
@@ -970,6 +1103,12 @@ Note
 <h2 data-number="27.2" class="anchored" data-anchor-id="the-rename-function"><span class="header-section-number">27.2</span> The rename() function</h2>
 <p>Sometimes, we want to change the names of some, or all, of the columns in our data frame. For me, this most commonly comes up with data I’ve imported from someone else. For example, let’s say I’m importing data that uses column names that aren’t super informative. We saw column names like that when we imported NHANES data. It looked something like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>nhanes <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">SEQN =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>),</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ALQ101 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ALQ110 =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
    SEQN ALQ101 ALQ110
@@ -982,6 +1121,12 @@ Note
 </div>
 <p>we previously learned how to change these column names on import (i.e., <code>col_names</code>), but let’s say we didn’t do that for whatever reason. We can rename columns in our data frame using the <code>rename()</code> function like so:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>nhanes <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> SEQN,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">drinks_12_year =</span> ALQ101,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">drinks_12_life =</span> ALQ110</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
      id drinks_12_year drinks_12_life
@@ -1001,6 +1146,8 @@ Note
 </ul>
 <p>we think these names are much better, but for the sake of argument let’s say that we wanted to keep the original names – just coerce them to lowercase. We can do that using the <code>rename_with()</code> variation of the <code>rename()</code> function in combination with the <code>tolower()</code> function:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>nhanes <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(tolower)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
    seqn alq101 alq110
@@ -1025,6 +1172,8 @@ Note
 <p>we just saw how to keep and drop <em>columns</em> in our data frame using the <code>select()</code> function. We can keep and drop <em>rows</em> in our data frame using the <em>filter()</em> function or the <em>slice()</em> function.</p>
 <p>Similar to selecting columns by position instead of name:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 3
       id  year drug   
@@ -1044,6 +1193,8 @@ Note
 </div>
 <p>we can also select rows we want to keep by position. Again, we don’t do this often, but it is sometimes useful when we’re writing our own functions. Therefore, we want to quickly show you what this looks like:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 12
      id  year   age drug   se_headache se_diarrhea se_dry_mouth    mi age_center
@@ -1073,6 +1224,8 @@ Note
 <h3 data-number="27.3.1" class="anchored" data-anchor-id="subgroup-analysis"><span class="header-section-number">27.3.1</span> Subgroup analysis</h3>
 <p>Let’s say that we want to count the number of people in the drug trial who reported having headaches in the baseline year by drug status (active vs.&nbsp;placebo). We would first use <code>filter()</code> to keep only the rows that contain data from the baseline year:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 20 × 12
       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
@@ -1123,6 +1276,10 @@ Warning
 </div>
 <p>Now, we can use the descriptive analysis techniques we’ve already learned to answer our research question:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
 # Groups:   drug [2]
@@ -1136,6 +1293,11 @@ Warning
 </div>
 <p>So, 6 out of 7 (~ 86%) of the people in our active drug group reported headaches in the baseline year. Now, let’s say that we have reason to suspect that the drug affects people differently based on their age. Let’s go ahead and repeat this analysis, but only in a subgroup of people who are below age 65. Again, we can use the <code>filter()</code> function to do this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;</span> <span class="dv">65</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
 # Groups:   drug [2]
@@ -1149,6 +1311,11 @@ Warning
 <p>Wow! It looks like everyone under age 65 who received active drug also reported headaches!</p>
 <p>we can show this more explicitly by using passing the value <code>FALSE</code> to the <code>.drop</code> argument of <code>group_by()</code>. This tells R to keep all factor levels in the output, even if they were <em>observed</em> in the data zero times.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;</span> <span class="dv">65</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f, <span class="at">.drop =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
 # Groups:   drug [2]
@@ -1162,6 +1329,10 @@ Warning
 </div>
 <p>Finally, we could make our code above more succinct by combining our two filter functions into one:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> age <span class="sc">&lt;</span> <span class="dv">65</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug, se_headache_f, <span class="at">.drop =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
 # Groups:   drug [2]
@@ -1196,6 +1367,14 @@ Note
 <p>Now let’s say that we want to compare age at baseline by drug status (active vs.&nbsp;placebo). Additionally, let’s say that we have some missing values in our data.</p>
 <p>Let’s first simulate some new data with missing values:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age  =</span> <span class="fu">replace</span>(age, <span class="dv">1</span>, <span class="cn">NA</span>),</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">drug =</span> <span class="fu">replace</span>(drug, <span class="dv">4</span>, <span class="cn">NA</span>)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 12
       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
@@ -1222,6 +1401,9 @@ Note
 </ul>
 <p>If we try to answer our research question above without dealing with the missing data, we get the following undesirable results:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
   drug    mean_age
@@ -1233,6 +1415,9 @@ Note
 </div>
 <p>One way we can improve our result is by adding the <code>na.rm</code> argument to the <code>mean()</code> function.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
   drug    mean_age
@@ -1244,6 +1429,10 @@ Note
 </div>
 <p>But, we previously saw how it can sometimes be more efficient to drop the row with missing data from the data frame explicitly. This is called a <strong>complete case analysis</strong> or <strong>list-wise deletion</strong>.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(age)) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
   drug    mean_age
@@ -1255,6 +1444,10 @@ Note
 </div>
 <p>However, we still have that missing value for <code>drug</code>. We can easily drop the row with the missing value by adding an additional value to the <code>...</code> argument of our <code>filter()</code> function:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>drug_trial_short <span class="sc">%&gt;%</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(age) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(drug)) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(drug) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   drug    mean_age
@@ -1269,6 +1462,22 @@ Note
 <h2 data-number="27.4" class="anchored" data-anchor-id="deduplication"><span class="header-section-number">27.4</span> Deduplication</h2>
 <p>Another common data management task that we want to discuss in this chapter is deduplicating data. Let’s go ahead and simulate some data to illustrate what we mean:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>id, <span class="sc">~</span>day, <span class="sc">~</span>x,</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">11</span>,</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">12</span>,</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">13</span>,</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">14</span>,</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">12</span>,</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">12</span>,</span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">13</span>,</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>    <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">13</span>,</span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">10</span>,</span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">11</span>,</span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">10</span></span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 3
       id   day     x
@@ -1297,6 +1506,8 @@ Note
 <h3 data-number="27.4.1" class="anchored" data-anchor-id="the-distinct-function"><span class="header-section-number">27.4.1</span> The distinct() function</h3>
 <p>we can use <code>dplyr</code>’s <code>distinct()</code> function to remove all complete duplicates from the data frame:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
       id   day     x
@@ -1325,6 +1536,8 @@ Note
 <h3 data-number="27.4.2" class="anchored" data-anchor-id="complete-duplicate-row-add-tag"><span class="header-section-number">27.4.2</span> Complete duplicate row add tag</h3>
 <p>If want to identify the complete duplicate rows, without immediately dropping them, we can use the <code>duplicated()</code> function inside the <code>mutate()</code> function. This creates a new column in our data frame that has the value <code>TRUE</code> when the row is a complete duplicate and the value <code>FALSE</code> otherwise.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">duplicated</span>(df))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 4
       id   day     x dup  
@@ -1345,6 +1558,12 @@ Note
 </div>
 <p>Alternatively, we could get the same result using:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by_all</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_row =</span> <span class="fu">row_number</span>(),</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">dup   =</span> n_row <span class="sc">&gt;</span> <span class="dv">1</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 5
 # Groups:   id, day, x [10]
@@ -1372,6 +1591,8 @@ Note
 </ul>
 <p>Notice that R only tags the second in a set of duplicate rows as a duplicate. Below we tag both rows with complete duplicate values.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dup =</span> <span class="fu">duplicated</span>(.) <span class="sc">|</span> <span class="fu">duplicated</span>(., <span class="at">fromLast =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 4
       id   day     x dup  
@@ -1394,6 +1615,8 @@ Note
 <section id="partial-duplicate-rows" class="level3" data-number="27.4.3">
 <h3 data-number="27.4.3" class="anchored" data-anchor-id="partial-duplicate-rows"><span class="header-section-number">27.4.3</span> Partial duplicate rows</h3>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(id, day, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9 × 3
      id   day     x
@@ -1420,7 +1643,62 @@ Note
 <section id="partial-duplicate-rows---add-tag" class="level3" data-number="27.4.4">
 <h3 data-number="27.4.4" class="anchored" data-anchor-id="partial-duplicate-rows---add-tag"><span class="header-section-number">27.4.4</span> Partial duplicate rows - add tag</h3>
 <p>we can tag partial duplicate rows in a similar fashion to the way we tagged complete duplicate rows above:</p>
-<p>#| echo: false #| rows-print: 12 df %&gt;% group_by(id, day) %&gt;% mutate( count = row_number(), # Counts rows by group dup = count &gt; 1 # TRUE if there is more than one row per group )</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id, day) <span class="sc">%&gt;%</span> </span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">row_number</span>(), <span class="co"># Counts rows by group</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">dup   =</span> count <span class="sc">&gt;</span> <span class="dv">1</span>     <span class="co"># TRUE if there is more than one row per group</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 5
+# Groups:   id, day [9]
+      id   day     x count dup  
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt;
+ 1     1     1     1     1 FALSE
+ 2     1     2    11     1 FALSE
+ 3     2     1    12     1 FALSE
+ 4     2     2    13     1 FALSE
+ 5     2     2    14     2 TRUE 
+ 6     3     1    12     1 FALSE
+ 7     3     1    12     2 TRUE 
+ 8     3     2    13     1 FALSE
+ 9     4     1    13     1 FALSE
+10     5     1    10     1 FALSE
+11     5     2    11     1 FALSE
+12     5     1    10     2 TRUE </code></pre>
+</div>
+</div>
+</section>
+<section id="count-the-number-of-duplicates" class="level3" data-number="27.4.5">
+<h3 data-number="27.4.5" class="anchored" data-anchor-id="count-the-number-of-duplicates"><span class="header-section-number">27.4.5</span> Count the number of duplicates</h3>
+<p>Finally, sometimes it can be useful to get a count of the number of duplicate rows. The code below returns a data frame that summarizes the number of rows that contain duplicate values for <code>id</code> and <code>day</code>, and what those duplicate values are.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id, day) <span class="sc">%&gt;%</span> </span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+# Groups:   id, day [3]
+     id   day     n
+  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+1     2     2     2
+2     3     1     2
+3     5     1     2</code></pre>
+</div>
+</div>
+</section>
+<section id="what-to-do-about-duplicates" class="level3" data-number="27.4.6">
+<h3 data-number="27.4.6" class="anchored" data-anchor-id="what-to-do-about-duplicates"><span class="header-section-number">27.4.6</span> What to do about duplicates</h3>
+<p>Finding duplicates is only half the battle. After finding them, you have to decide what to do about them. In some ways it’s hard to give clear-cut advice on this because different situations require different decisions. However, here are some things you may want to consider:</p>
+<ul>
+<li><p>If two or more rows are complete duplicates, then the additional rows provide no additional information. I have a hard time thinking of a scenario where dropping them would be a problem. Additionally, because they are completely identical, it doesn’t matter which row you drop.</p></li>
+<li><p>If have two more rows that are partial duplicates, then you will want to look for obvious errors in the other variables. When you have two rows that are partial duplicates, and one row has very obvious errors in it, then keeping the row without the obvious errors is <em>usually</em> the correct decision. Having said that, you should meticulously document which rows you dropped and why, and make that information known to anyone consuming the results of your analysis.</p></li>
+<li><p>When there are no obvious errors, deciding which rows to keep and which to drop can be really tricky. In this situation the best advice I can give is to be systematic in your approach. What I mean by that is to choose a strategy that seems least likely to introduce bias into your data and then apply that strategy consistently throughout your data. So, something like always keeping the first row among a group of duplicate rows. However, keep in mind that if rows are ordered by data, this strategy could easily introduce bias. In that case, some other strategy may be more appropriate. And again, you should meticulously document which rows you dropped and why, and make that information known to anyone consuming the results of your analysis.</p></li>
+<li><p>Finally, I can definitively tell you a strategy that you should <em>never</em> use. That is, you should never pick and choose, or even give the appearance of picking and choosing, rows with values that are aligned with the results you want to see. I hope the unethical nature of this strategy is blatantly obvious to you.</p></li>
+</ul>
+<p>Congratulations! 🎉 At this point, you are well-versed in all of the <code>dplyr</code> verbs. More importantly, you now have a foundation of tools you can call upon to complete the many of basic data management tasks that you will encounter. In the rest of the data management part of the book we will build on these tools, and learn some new tools, we can use to solve more complex data management problems.</p>
 
 
 </section>

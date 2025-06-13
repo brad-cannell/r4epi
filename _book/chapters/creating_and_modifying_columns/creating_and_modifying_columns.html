@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -570,6 +604,7 @@ cookieconsent.run({
   <li><a href="#using-existing-variables-in-name-value-pairs" id="toc-using-existing-variables-in-name-value-pairs" class="nav-link" data-scroll-target="#using-existing-variables-in-name-value-pairs"><span class="header-section-number">26.5.3</span> Using existing variables in name-value pairs</a></li>
   <li><a href="#adding-or-modifying-multiple-columns" id="toc-adding-or-modifying-multiple-columns" class="nav-link" data-scroll-target="#adding-or-modifying-multiple-columns"><span class="header-section-number">26.5.4</span> Adding or modifying multiple columns</a></li>
   <li><a href="#rowwise-mutations" id="toc-rowwise-mutations" class="nav-link" data-scroll-target="#rowwise-mutations"><span class="header-section-number">26.5.5</span> Rowwise mutations</a></li>
+  <li><a href="#group_by-mutations" id="toc-group_by-mutations" class="nav-link" data-scroll-target="#group_by-mutations"><span class="header-section-number">26.5.6</span> Group_by mutations</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi/edit/main/chapters/creating_and_modifying_columns/creating_and_modifying_columns.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -616,6 +651,11 @@ mutate already in the book.
 <h2 data-number="26.1" class="anchored" data-anchor-id="creating-data-frames"><span class="header-section-number">26.1</span> Creating data frames</h2>
 <p>Very early on, in the <a href="../../chapters/lets_get_programming/lets_get_programming.html">Let’s get programming</a> chapter, we learned how to create data frame columns using name-value pairs passed directly into the <code>tibble()</code> function.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">names   =</span> <span class="fu">c</span>(<span class="st">"John"</span>, <span class="st">"Sally"</span>, <span class="st">"Brad"</span>, <span class="st">"Anne"</span>),</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">63</span>, <span class="dv">71</span>, <span class="dv">72</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 2
   names heights
@@ -632,12 +672,15 @@ mutate already in the book.
 <h2 data-number="26.2" class="anchored" data-anchor-id="dollar-sign-notation"><span class="header-section-number">26.2</span> Dollar sign notation</h2>
 <p>Later in the <a href="../../chapters/lets_get_programming/lets_get_programming.html">Let’s get programming</a> chapter, we learned about <strong>dollar sign notation</strong>. At that time, we used dollar sign notation to access or “get” values from a column.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>heights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 68 63 71 72</code></pre>
 </div>
 </div>
 <p>However, we can also use dollar sign notation to create and/or modify columns in our data frame. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>heights <span class="ot">&lt;-</span> class<span class="sc">$</span>heights <span class="sc">/</span> <span class="dv">12</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 2
   names heights
@@ -667,6 +710,8 @@ Note
 </div>
 <p>we can also create a <em>new</em> variable in our data frame in a similar way. All we have to do is use a valid column name (that doesn’t already exist in the data frame) on the left side of our assignment arrow. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>grades <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">89</span>, <span class="dv">92</span>, <span class="dv">86</span>, <span class="dv">98</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
   names heights grades
@@ -686,12 +731,14 @@ Note
 <h2 data-number="26.3" class="anchored" data-anchor-id="bracket-notation"><span class="header-section-number">26.3</span> Bracket notation</h2>
 <p>we also learned how to access or “get” values from a column using bracket notation in the <a href="../../chapters/lets_get_programming/lets_get_programming.html">Let’s get programming</a> chapter. There, we actually used a combination of dollar sign and bracket notation to access single individual values from a data frame column. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>heights[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5.916667</code></pre>
 </div>
 </div>
 <p>But, we can also use bracket notation to access or “get” the entire column. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>class[[<span class="st">"heights"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5.666667 5.250000 5.916667 6.000000</code></pre>
 </div>
@@ -703,6 +750,8 @@ Note
 <p>we’d like you to notice a couple of things about the example above. First, notice that this is the exact same result we got from (<code>class$heights</code>). Well, technically, the heights are now in feet instead of inches, but you know what we mean. R returned a numeric vector containing the values from the <code>heights</code> column to us. Second, notice that we used double brackets (i.e., two brackets on each side of the column name), and that the column name is wrapped in quotation marks. Both are required to get this result.</p>
 <p>Similar to dollar sign notation, we can also create and/or modify columns in our data frame using bracket notation. For example, let’s convert those heights back to inches using bracket notation:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>class[[<span class="st">"heights"</span>]] <span class="ot">&lt;-</span> class[[<span class="st">"heights"</span>]] <span class="sc">*</span> <span class="dv">12</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
   names heights grades
@@ -715,6 +764,8 @@ Note
 </div>
 <p>And, let’s go ahead and add one more variable to our data frame using bracket notation.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>class[[<span class="st">"rank"</span>]] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 4
   names heights grades  rank
@@ -727,6 +778,7 @@ Note
 </div>
 <p>Somewhat confusingly, we can also access, create, and modify data frame columns using single brackets. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>class[<span class="st">"heights"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 1
   heights
@@ -744,12 +796,14 @@ Note
 <h2 data-number="26.4" class="anchored" data-anchor-id="modify-individual-values"><span class="header-section-number">26.4</span> Modify individual values</h2>
 <p>Before moving on to the <code>mutate()</code> function, we wanted to quickly discuss using dollar sign and bracket notation for modifying individual values in a column. Recall that we already learned how to access individual column values in the <a href="../../chapters/lets_get_programming/lets_get_programming.html">Let’s get programming</a> chapter.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>class<span class="sc">$</span>heights[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 71</code></pre>
 </div>
 </div>
 <p>As you may have guessed, we can also get the result above using only bracket notation.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>class[[<span class="st">"heights"</span>]][<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 71</code></pre>
 </div>
@@ -760,6 +814,12 @@ Note
 <li><p>The second circumstance is when there are little one-off typos in the data. For example, let’s say we imported a data frame that looked like this:</p></li>
 </ul>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>study_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">site =</span> <span class="fu">c</span>(<span class="st">"TX"</span>, <span class="st">"CA"</span>, <span class="st">"tx"</span>, <span class="st">"CA"</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>study_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 2
      id site 
@@ -772,6 +832,8 @@ Note
 </div>
 <p>Notice that <code>tx</code> in the third row of data isn’t capitalized. Remember, R is a case-sensitive language, so this will likely cause us problems down the road if we don’t fix it. The easiest way to do so is probably:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>study_data<span class="sc">$</span>site[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"TX"</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>study_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 2
      id site 
@@ -786,6 +848,10 @@ Note
 </section>
 <section id="the-mutate-function" class="level2" data-number="26.5">
 <h2 data-number="26.5" class="anchored" data-anchor-id="the-mutate-function"><span class="header-section-number">26.5</span> The mutate() function</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dplyr for the mutate function</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>we first discussed <code>mutate()</code> in the <a href="../../chapters/exporting_data_to_disk/exporting_data_to_disk.html">chapter on exporting data</a>, and again in the <a href="../../chapters/intro_data_management/introduction.html">Introduction to data management chapter</a>. As we said there, the first two arguments to <code>mutate()</code> are <code>.data</code> and <code>...</code>.</p>
 <p>The value passed to <code>.data</code> should always be a data frame. In this book, we will often pass data frames to the <code>.data</code> argument using the pipe operator (e.g., <code>df %&gt;% mutate()</code>).</p>
 <p>The value passed to the <code>...</code> argument should be a name-value pair or multiple name value pairs separated by commas. The <code>...</code> argument is where you will tell <code>mutate()</code> to create or modify columns in your data frame and how.</p>
@@ -793,6 +859,46 @@ Note
 <li>Name-value pairs look like this: <code>column name = value</code>. The only thing that distinguishes whether you are creating or modifying a column is the column name in the name-value pair. If the column name in the name-value pair matches the name of an existing column in the data frame, then <code>mutate()</code> will modify that existing column. If the column name in the name-value pair does NOT match the name of an existing column in the data frame, then <code>mutate()</code> will create a <em>new</em> column in the data frame with a matching column name.</li>
 </ul>
 <p>Let’s take a look at a couple of examples. To get us started, let’s simulate some data that is a little more interesting than the class data we used above.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Study id, there are 20 people enrolled in the trial.</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Follow-up year, 0 = baseline, 1 = year one, 2 = year two.</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">times =</span> <span class="dv">20</span>),</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Participant age a baseline. Must be between the ages of 35 and 75 at </span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># baseline to be eligible for the study</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">sample</span>(<span class="dv">35</span><span class="sc">:</span><span class="dv">75</span>, <span class="dv">20</span>, <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">rep</span>(<span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Drug the participant received, Placebo or active</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">drug =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Placebo"</span>, <span class="st">"Active"</span>), <span class="dv">20</span>, <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Reported headaches side effect, Y/N</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_headache =</span> <span class="fu">if_else</span>(</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">"Placebo"</span>, </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">95</span>,.<span class="dv">05</span>)), </span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">10</span>, .<span class="dv">90</span>))</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Report diarrhea side effect, Y/N</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_diarrhea =</span> <span class="fu">if_else</span>(</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">"Placebo"</span>, </span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">98</span>,.<span class="dv">02</span>)), </span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">20</span>, .<span class="dv">80</span>))</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Report dry mouth side effect, Y/N</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_dry_mouth =</span> <span class="fu">if_else</span>(</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">"Placebo"</span>, </span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">97</span>,.<span class="dv">03</span>)), </span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">30</span>, .<span class="dv">70</span>))</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Participant had myocardial infarction in study year, Y/N</span></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">mi =</span> <span class="fu">if_else</span>(</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>    drug <span class="sc">==</span> <span class="st">"Placebo"</span>, </span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">85</span>, .<span class="dv">15</span>)), </span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">60</span>, <span class="cn">TRUE</span>, <span class="fu">c</span>(.<span class="dv">80</span>, .<span class="dv">20</span>))</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>we are simulating some drug trial data that includes the following variables:</p>
@@ -819,26 +925,39 @@ Note
 </ul></li>
 </ul>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No set.seed - Random values</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  5 29 50 70 74 26 73 11  6 96</code></pre>
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No set.seed - Different random values</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 76 83 91 56 96 27 94 68 88 28</code></pre>
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use set.seed - Random values</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 35 38 85 27 25 78 31 73 79 90</code></pre>
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use set.seed again - Same random values</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 35 38 85 27 25 78 31 73 79 90</code></pre>
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use set.seed with different value - Different random values</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">789</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">10</span>, <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  45  12  42  26  99  37 100  43  67  70</code></pre>
 </div>
@@ -850,6 +969,12 @@ Note
 <h3 data-number="26.5.1" class="anchored" data-anchor-id="adding-or-modifying-a-single-column"><span class="header-section-number">26.5.1</span> Adding or modifying a single column</h3>
 <p>This is probably the simplest case of adding a new column. We are going to use <code>mutate()</code> to add a single new column to the <code>drug_trial</code> data frame. Let’s say we want to add a column called <code>complete</code> that is equal to <code>1</code> if the participant showed up for all follow-up visits and equal to <code>0</code> if they didn’t. In this case, we simulated our data in such a way that we have complete follow-up for every participant. So, the value for complete should be <code>0</code> in all 60 rows of the data frame. We can do this in a few different ways.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">complete =</span> <span class="fu">c</span>(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 9
       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
@@ -869,6 +994,8 @@ Note
 </div>
 <p>So, that works, but typing that out is no fun. Not to mention, this isn’t scalable at all. What if we needed 1,000 zeros? There’s actually a much easier way to get the result above, which may surprise you. Take a look 👀:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">complete =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 9
       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
@@ -892,6 +1019,8 @@ Note
 <h3 data-number="26.5.2" class="anchored" data-anchor-id="recycling-rules"><span class="header-section-number">26.5.2</span> Recycling rules</h3>
 <p>♻️The recycling rules work as long as the length of the longer vector is an integer multiple of the length of the shorter vector. For example, every vector (column) in R data frames must have the same length. In this case, 60. The length of the value we used in the name-value pair above was 1 (i.e., a single <code>0</code>). Therefore, the longer vector had a length of 60 and the shorter vector had a length of 1. Because 60 * 1 = But, what if we had tried to pass the values 0 and 1 to the column instead of just zero?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">complete =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `mutate()`:
 ℹ In argument: `complete = c(0, 1)`.
@@ -901,6 +1030,7 @@ Caused by error:
 </div>
 <p>This doesn’t work, but it actually isn’t for the reason you may be thinking. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). However, <code>tidyverse</code> functions throw errors when you try to recycle anything other than a single number. They are designed this way to protect you from accidentally getting unexpected results. So, we’re going to switch back over to using base R to round out our discussion of the recycling rules. Let’s try our example above again using base R:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>drug_trial<span class="sc">$</span>complete <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `$&lt;-`:
 ! Assigned data `c(0, 1)` must be compatible with existing data.
@@ -910,6 +1040,7 @@ Caused by error:
 Caused by error in `vectbl_recycle_rhs_rows()`:
 ! Can't recycle input of size 2 to size 60.</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>drug_trial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 8
       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
@@ -929,18 +1060,23 @@ Caused by error in `vectbl_recycle_rhs_rows()`:
 </div>
 <p>Wait, why are we still getting an error? Well, take a look at the output below and see if you can figure it out.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(drug_trial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "tbl_df"     "tbl"        "data.frame"</code></pre>
 </div>
 </div>
 <p>It may not be totally obvious, but this is telling us that <code>drug_trial</code> is a tibble – an enhanced data frame. Remember, we created <code>drug_trial</code> using the <code>tibble()</code> function instead of the <code>tibble()</code> function. Because tibbles are part of the <code>tidyverse</code> they throw the same recycling errors that the <code>mutate()</code> function did above. So, we’ll need to create a non-tibble version of <code>drug_trial</code> to finish our discussion of recycling rules.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>drug_trial_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(drug_trial)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(drug_trial_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data.frame"</code></pre>
 </div>
 </div>
 <p>There we go! A regular old data frame.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>drug_trial_df<span class="sc">$</span>complete <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>drug_trial_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   id year age    drug se_headache se_diarrhea se_dry_mouth mi complete
 1   1    0  65  Active           0           1            1  0        0
@@ -1007,6 +1143,7 @@ Caused by error in `vectbl_recycle_rhs_rows()`:
 </div>
 <p>As you can see, the values 0 and 1 are now recycled as expected. Because 30 * 2 = 60, the length of the longer vector (60) is an integer multiple (30) of the length of the shorter vector (2). Now, what happens in a situation where the length of the longer vector is <em>not</em> an integer multiple of the length of the shorter vector.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>drug_trial_df<span class="sc">$</span>complete <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>) <span class="co"># 7 values</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `$&lt;-.data.frame`(`*tmp*`, complete, value = c(0, 1, 2, 3, 4, : replacement has 7 rows, data has 60</code></pre>
 </div>
@@ -1014,12 +1151,15 @@ Caused by error in `vectbl_recycle_rhs_rows()`:
 <p>60 / 7 = 8.571429 – not an integer. Because there is no integer value that we can multiply by 7 to get the number 60, R throws us an error telling us that it isn’t able to use the recycling rules.</p>
 <p>Finally, the recycling rules don’t only apply to creating new data frame columns. It applies in all cases where R is using two vectors to perform an operation. For example, R uses the recycling rules in mathematical operations.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>nums <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>nums</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
 </div>
 </div>
 <p>To demonstrate, we create a simple numeric vector above. This vector just contains the numbers 1 through 10. Now, we can add 1 to each of those numbers like so:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>nums <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  2  3  4  5  6  7  8  9 10 11</code></pre>
 </div>
@@ -1027,12 +1167,14 @@ Caused by error in `vectbl_recycle_rhs_rows()`:
 <p>Notice how R used the recycling rules to add 1 to every number in the <code>nums</code> vector. We didn’t have to explicitly tell R to add 1 to each number. This is sometimes referred to as <strong>vectorization</strong>. Functions that perform an action on <em>all</em> elements of a vector, rather than having to be explicitly programmed to perform an action on <em>each</em> element of a vector, is a <strong>vectorized</strong> function. Remember, that mathematical operators – including <code>+</code> – <em>are functions</em> in R. More specifically, <code>+</code> is a <strong>vectorized</strong> function. In fact, most built-in R functions are vectorized. Why are we telling you this? It isn’t intended to confuse you, but when I was learning R I came across this term all the time in R resources and help pages, and I had no idea what it meant. We hope that this very simple example above makes it easy to understand what vectorization means, and you won’t be intimidated when it pops up while you’re trying to get help with your R programs.</p>
 <p>Ok, so what happens when we add a longer vector and a shorter vector?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>nums <span class="sc">+</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  2  4  4  6  6  8  8 10 10 12</code></pre>
 </div>
 </div>
 <p>As expected, R uses the recycling rules to change the length of the short vector to match the length of the longer vector, and then performs the operation – in this case, addition. So, the net result is 1 + 1 = <code>2</code>, 2 + 2 = <code>4</code>, 3 + 1 = <code>4</code>, 4 + 2 = <code>6</code>, etc. You probably already guessed what’s going to happen if we try to add a length 3 vector to <code>nums</code>, but let’s go ahead and take a look for the sake of completeness:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>nums <span class="sc">+</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in nums + c(1, 2, 3): longer object length is not a multiple of shorter
 object length</code></pre>
@@ -1044,6 +1186,8 @@ object length</code></pre>
 <p>Yep, we get an error. 10 / 3 = 3.333333 – not an integer. Because there is no integer value that we can multiply by 3 to get the number 10, R throws us an error telling us that it isn’t able to use the recycling rules.</p>
 <p>Now that you understand R’s recycling rules, let’s return to our motivating example.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">complete =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 9
       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
@@ -1063,6 +1207,8 @@ object length</code></pre>
 </div>
 <p>This method works, but not always. And, it can sometimes give us intended results. You may have originally thought to yourself, “we’ve already learned the <code>rep()</code> function. Let’s use that.” In fact, that’s a great idea!</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">complete =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">60</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 9
       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi complete
@@ -1086,6 +1232,8 @@ object length</code></pre>
 <h3 data-number="26.5.3" class="anchored" data-anchor-id="using-existing-variables-in-name-value-pairs"><span class="header-section-number">26.5.3</span> Using existing variables in name-value pairs</h3>
 <p>In the example above, we create a new column called <code>complete</code> by directly supplying values for that column in the name-value pair. In our experience, it is probably more common to create new columns in our data frames by combining or transforming the values of columns that already exist in our data frame. You’ve already seen an example of doing so when <a href="../../chapters/lets_get_programming/lets_get_programming.html">we created factor versions of variables</a>. As an additional example, we could create a factor version of our <code>mi</code> variable like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mi_f =</span> <span class="fu">factor</span>(mi, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 9
       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi mi_f 
@@ -1106,6 +1254,8 @@ object length</code></pre>
 <p>Notice that in the code above, we didn’t tell R what values to use for <code>mi_f</code> by typing them explicitly in the name-value pair. Instead, we told R to go get the values of the column <code>mi</code>, do some stuff to those values, and then assign those modified values to a column in the data frame and name that column <code>mi_f</code>.</p>
 <p>Here’s another example. It’s common to mean-center numeric values for many different kinds of analyses. For example, this is often done in regression analysis to aid in the interpretation of regression coefficients. We can easily mean-center numeric variables inside our <code>mutate()</code> function like so:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_center =</span> age <span class="sc">-</span> <span class="fu">mean</span>(age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 9
       id  year   age drug  se_headache se_diarrhea se_dry_mouth    mi age_center
@@ -1129,6 +1279,12 @@ object length</code></pre>
 <h3 data-number="26.5.4" class="anchored" data-anchor-id="adding-or-modifying-multiple-columns"><span class="header-section-number">26.5.4</span> Adding or modifying multiple columns</h3>
 <p>In all of the examples above, we passed a single name-value pair to the <code>...</code> argument of the <code>mutate()</code> function. If we want to create or modify multiple columns, we don’t need to keep typing the <code>mutate()</code> function over and over. We can simply pass multiple name-value pairs, separated by columns, to the <code>...</code> argument. And, there is no limit to the number of pairs we can pass. This is part of the beauty of the <code>...</code> argument in R. For example, we have three variables in <code>drug_trial</code> that capture information about whether or not the participant reported side effects including headache, diarrhea, and dry mouth. Currently, those are all stored as integer vectors that can take the values <code>0</code> and <code>1</code>. Let’s say that we want to also create factor versions of those vectors:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_headache_f  =</span> <span class="fu">factor</span>(se_headache, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)),</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_diarrhea_f  =</span> <span class="fu">factor</span>(se_diarrhea, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="st">"N0"</span>, <span class="st">"Yes"</span>)),</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 11
       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
@@ -1157,6 +1313,17 @@ object length</code></pre>
 <p>So, adding or modifying multiple columns is really easy with <code>mutate()</code>. But, did any of you notice an error? Take a look at the structure of the data the line of code that creates <code>se_diarrhea_f</code>. Instead of writing the “No” label with an “N” and an “o”, we accidently wrote it with an “N” and a zero. We find that when we have to type something over and over like this, we are more likely to make a mistake. Further, if we ever need to change the levels or labels, we will have to change them in every <code>factor()</code> function in the code above.</p>
 <p>For these reasons (and others), programmers of many languages – including R – are taught <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">the DRY principle</a>. DRY is an acronym for don’t repeat yourself. We will discuss the DRY principle again in the chapter on <a href="#introduction-to-repeated-operations">repeated operations</a>, but for now, it just means that you typically don’t want to type code that is the same (or nearly the same) over and over in your programs. Here’s one way we could reduce the repetition in the code above:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector of 0/1 levels that can be reused below.</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>yn_levs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector of "No"/"Yes" labels that can be reused below.</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>yn_labs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_headache_f  =</span> <span class="fu">factor</span>(se_headache, yn_levs, yn_labs),</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_diarrhea_f  =</span> <span class="fu">factor</span>(se_diarrhea, yn_levs, yn_labs),</span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth_f =</span> <span class="fu">factor</span>(se_dry_mouth, yn_levs, yn_labs)</span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 11
       id  year   age drug    se_headache se_diarrhea se_dry_mouth    mi
@@ -1183,6 +1350,9 @@ object length</code></pre>
 <p>In all the examples above we used the values from <em>a single</em> already existing variable in our name-value pair. However, we can also use the values from <em>multiple</em> variables in our name-value pairs.</p>
 <p>For example, we have three variables in our <code>drug_trial</code> data that capture information about whether or not the participant reported side effects including headache, diarrhea, and dry mouth (sounds like every drug commercial that exists 😂). What if we want to know if our participants reported <em>any</em> side effect at each follow-up? That requires us to combine and transform data from across three different columns! This is one of those situations where there are many different ways we could accomplish this task, but we’re going to use <code>dplyr</code>’s <code>rowwise()</code> function to do so in the following code:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se_year =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth) <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 60 × 9
 # Rowwise: 
@@ -1205,8 +1375,371 @@ object length</code></pre>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>we created a new column in the <code>drug_trial</code> data called <code>any_se_year</code> using the <code>mutate()</code> function.</p></li>
-<li><p>we used the <code>rowwise()</code> function to tell R to group the data frame by rows. Said another way</p></li>
+<li><p>we used the <code>rowwise()</code> function to tell R to group the data frame by rows. Said another way <code>rowwise()</code> tells R to do any calculations that follow <em>across</em> columns instead <em>within</em> columns. Don’t worry, there are more examples below.</p></li>
+<li><p>The value we passed to the name-value pair inside <code>mutate()</code> was actually the result of two calculations.</p>
+<ul>
+<li><p>First, R summed the values of se_headache, se_diarrhea, and se_dry_mouth (i.e., <code>sum(se_headache, se_diarrhea, se_dry_mouth)</code>).</p></li>
+<li><p>Next, R compared that the summed value to <code>0</code>. If the summed value was greater than 0, then the value assigned to <code>any_se_year</code> was <code>TRUE</code>. Otherwise, the value assigned to <code>any_se_year</code> was <code>FALSE</code>.</p></li>
+</ul></li>
 </ul>
+<p>Because there is some new stuff in the code above, I’m going break it down a little bit further. We’ll start with <code>rowwise()</code>. And, to reduce distractions a much as possible, I’m going to create a new data frame with only the columns we need for this example (sneak peek at the next chapter):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="ot">&lt;-</span> drug_trial <span class="sc">%&gt;%</span> </span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year, <span class="fu">starts_with</span>(<span class="st">"se"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 5
+      id  year se_headache se_diarrhea se_dry_mouth
+   &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;
+ 1     1     0           0           1            1
+ 2     1     1           1           1            1
+ 3     1     2           1           1            0
+ 4     2     0           1           1            1
+ 5     2     1           0           0            1
+ 6     2     2           1           1            1
+ 7     3     0           0           0            0
+ 8     3     1           0           0            0
+ 9     3     2           0           0            0
+10     4     0           0           0            0
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>Let’s start by discussing what <code>rowwise()</code> does. As we discussed above, most built-in R functions are vectorized. They <em>do things</em> to entire vectors, and data frame columns <em>are</em> vectors. So, without using <code>rowwise()</code> the <code>sum()</code> function would have returned the value <code>54</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se_year =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 6
+      id  year se_headache se_diarrhea se_dry_mouth any_se_year
+   &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;       &lt;int&gt;
+ 1     1     0           0           1            1          54
+ 2     1     1           1           1            1          54
+ 3     1     2           1           1            0          54
+ 4     2     0           1           1            1          54
+ 5     2     1           0           0            1          54
+ 6     2     2           1           1            1          54
+ 7     3     0           0           0            0          54
+ 8     3     1           0           0            0          54
+ 9     3     2           0           0            0          54
+10     4     0           0           0            0          54
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>Any guesses why it returns 54? Here’s a hint:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p>When we pass a single numeric vector to the <code>sum()</code> function, it adds together all the numbers in that function. When we pass two or more numeric vectors to the <code>sum()</code> function, it adds together all the numbers in all the vectors combined. Our data frame columns are no different:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(drug_trial_sub<span class="sc">$</span>se_headache)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 20</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(drug_trial_sub<span class="sc">$</span>se_diarrhea)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(drug_trial_sub<span class="sc">$</span>se_dry_mouth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  drug_trial_sub<span class="sc">$</span>se_headache,</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  drug_trial_sub<span class="sc">$</span>se_diarrhea,</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  drug_trial_sub<span class="sc">$</span>se_dry_mouth</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 54</code></pre>
+</div>
+</div>
+<p>Hopefully, you see that the <code>sum()</code> function is taking the total of all three vectors added together, which is a single number (<code>54</code>), and then using recycling rules to assign that value to every row of <code>any_se_year</code>.</p>
+<p>Using <code>rowwise()</code> tells R to add <em>across</em> the columns instead of <em>within</em> the columns. So, add the first value for <code>se_headache</code> to the first value for <code>se_diarrhea</code> to the first value for <code>se_dry_mouth</code>, assign that value to the first value of <code>any_se_year</code>, and then repeat for each subsequent row. This is what that result looks like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se_year =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 6
+# Rowwise: 
+      id  year se_headache se_diarrhea se_dry_mouth any_se_year
+   &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;       &lt;int&gt;
+ 1     1     0           0           1            1           2
+ 2     1     1           1           1            1           3
+ 3     1     2           1           1            0           2
+ 4     2     0           1           1            1           3
+ 5     2     1           0           0            1           1
+ 6     2     2           1           1            1           3
+ 7     3     0           0           0            0           0
+ 8     3     1           0           0            0           0
+ 9     3     2           0           0            0           0
+10     4     0           0           0            0           0
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>Because the value for each side effect could only be 0 (if not reported) or 1 (if reported) then the rowwise sum of those numbers is a count of the number of side effects reported in each row. For example, person 1 reported not having headaches (<code>0</code>), having diarrhea (<code>1</code>), and having dry mouth (<code>1</code>) at baseline (<code>year</code> == <code>0</code>). And, 0 + 1 + 1 = 2 – the same value you see for <code>any_se_year</code> in that row. For instructional purposes, let’s run the code above again, but change the name of the variable to <code>n_se_year</code> (i.e., the count of side effects a participant reported in a given year).</p>
+<p>This may be a useful result in and of itself. However, we said we wanted a variable that captured whether a participant reported <em>any</em> side effect at each follow-up. Well, because <code>any_se_year</code> is currently a count of side effects reported for that participant in that year, then where the value of <code>any_se_year</code> is <code>0</code> no side effects were reported. If the current value of <code>any_se_year</code> is greater than <code>0</code>, then one or more side effects were reported. Generally, we can test inequalities like this in the following way:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Is 0 greater than 0?</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span> <span class="sc">&gt;</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Is 2 greater than 0?</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">&gt;</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>In our specific situation, instead of using a number on the left side of the inequality, we can use our calculated <code>n_se_year</code> variable values on the left side of the inequality:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_se_year   =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">any_se_year =</span> n_se_year <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 7
+# Rowwise: 
+      id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
+   &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
+ 1     1     0           0           1            1         2 TRUE       
+ 2     1     1           1           1            1         3 TRUE       
+ 3     1     2           1           1            0         2 TRUE       
+ 4     2     0           1           1            1         3 TRUE       
+ 5     2     1           0           0            1         1 TRUE       
+ 6     2     2           1           1            1         3 TRUE       
+ 7     3     0           0           0            0         0 FALSE      
+ 8     3     1           0           0            0         0 FALSE      
+ 9     3     2           0           0            0         0 FALSE      
+10     4     0           0           0            0         0 FALSE      
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>In this way, <code>any_se_year</code> is TRUE if the participant reported any side effect in that year and false if they reported no side effects in that year. We could write the code more succinctly like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se_year =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth) <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 6
+# Rowwise: 
+      id  year se_headache se_diarrhea se_dry_mouth any_se_year
+   &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;lgl&gt;      
+ 1     1     0           0           1            1 TRUE       
+ 2     1     1           1           1            1 TRUE       
+ 3     1     2           1           1            0 TRUE       
+ 4     2     0           1           1            1 TRUE       
+ 5     2     1           0           0            1 TRUE       
+ 6     2     2           1           1            1 TRUE       
+ 7     3     0           0           0            0 FALSE      
+ 8     3     1           0           0            0 FALSE      
+ 9     3     2           0           0            0 FALSE      
+10     4     0           0           0            0 FALSE      
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>But, is that really what we want to do? The answer is it depends. If we are going to stop here, then the succinct code may be what we want. But, what if we want to also know if the participant reported <em>all</em> side effects in each year. Perhaps, you’ve already worked out what that code would look like. Perhaps you’re thinking something like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">any_se_year =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth) <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">all_se_year =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth) <span class="sc">==</span> <span class="dv">3</span></span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 7
+# Rowwise: 
+      id  year se_headache se_diarrhea se_dry_mouth any_se_year all_se_year
+   &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;      
+ 1     1     0           0           1            1 TRUE        FALSE      
+ 2     1     1           1           1            1 TRUE        TRUE       
+ 3     1     2           1           1            0 TRUE        FALSE      
+ 4     2     0           1           1            1 TRUE        TRUE       
+ 5     2     1           0           0            1 TRUE        FALSE      
+ 6     2     2           1           1            1 TRUE        TRUE       
+ 7     3     0           0           0            0 FALSE       FALSE      
+ 8     3     1           0           0            0 FALSE       FALSE      
+ 9     3     2           0           0            0 FALSE       FALSE      
+10     4     0           0           0            0 FALSE       FALSE      
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>That works, and hopefully, you’re able to reason out why it works. But, there we go repeating code again! So, in this case, we have to choose between more succinct code and the DRY principle. When presented with that choice, I will typically favor the DRY principle. Therefore, my code would look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_se_year   =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">any_se_year =</span> n_se_year <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">all_se_year =</span> n_se_year <span class="sc">==</span> <span class="dv">3</span></span>
+<span id="cb110-7"><a href="#cb110-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 8
+# Rowwise: 
+      id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
+   &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
+ 1     1     0           0           1            1         2 TRUE       
+ 2     1     1           1           1            1         3 TRUE       
+ 3     1     2           1           1            0         2 TRUE       
+ 4     2     0           1           1            1         3 TRUE       
+ 5     2     1           0           0            1         1 TRUE       
+ 6     2     2           1           1            1         3 TRUE       
+ 7     3     0           0           0            0         0 FALSE      
+ 8     3     1           0           0            0         0 FALSE      
+ 9     3     2           0           0            0         0 FALSE      
+10     4     0           0           0            0         0 FALSE      
+# ℹ 50 more rows
+# ℹ 1 more variable: all_se_year &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>Not only am I less like to make a typing error in this code, but I think the differences between each line of code (i.e., what that line of code is doing) stands out more. In other words, the intent of the code isn’t buried in unneeded words.</p>
+<p>Before moving on, I also want to point out that the method above would not have worked on factors. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_headache  =</span> <span class="fu">factor</span>(se_headache, yn_levs, yn_labs),</span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_diarrhea  =</span> <span class="fu">factor</span>(se_diarrhea, yn_levs, yn_labs),</span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_dry_mouth =</span> <span class="fu">factor</span>(se_dry_mouth, yn_levs, yn_labs)</span>
+<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb112-8"><a href="#cb112-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb112-9"><a href="#cb112-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_se_year   =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb112-10"><a href="#cb112-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">any_se_year =</span> n_se_year <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb112-11"><a href="#cb112-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">all_se_year =</span> n_se_year <span class="sc">==</span> <span class="dv">3</span></span>
+<span id="cb112-12"><a href="#cb112-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `mutate()`:
+ℹ In argument: `n_se_year = sum(se_headache, se_diarrhea,
+  se_dry_mouth)`.
+ℹ In row 1.
+Caused by error in `Summary.factor()`:
+! 'sum' not meaningful for factors</code></pre>
+</div>
+</div>
+<p>The <code>sum()</code> function cannot add factors. Back when I <a href="../lets_get_programming/lets_get_programming.html#factor-vectors">first introduced factors in this book</a>, I suggested that you keep the numeric version of your variables in your data frames and create factors as new variables. I said that I thought this was a good idea because I often find that it can be useful to have both versions of the variable hanging around during the analysis process. The situation above is an example of what I was talking about.</p>
+</section>
+<section id="group_by-mutations" class="level3" data-number="26.5.6">
+<h3 data-number="26.5.6" class="anchored" data-anchor-id="group_by-mutations"><span class="header-section-number">26.5.6</span> Group_by mutations</h3>
+<p>So far, we’ve created variables that tell us if our participants reported <em>any</em> side effects in a given and if they reported <em>all 3</em> side effects in a given year. The next logical question might be to ask if each participant experienced <em>any</em> side effect in <em>any year</em>. For that, we will need <code>dplyr</code>’s <code>group_by()</code> function. Before discussing <code>group_by()</code>, I’m going to show you the code I would use to accomplish this task:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_se_year   =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">any_se_year =</span> n_se_year <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">all_se_year =</span> n_se_year <span class="sc">==</span> <span class="dv">3</span></span>
+<span id="cb114-7"><a href="#cb114-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb114-8"><a href="#cb114-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> </span>
+<span id="cb114-9"><a href="#cb114-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se =</span> <span class="fu">sum</span>(any_se_year) <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 9
+# Groups:   id [20]
+      id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
+   &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
+ 1     1     0           0           1            1         2 TRUE       
+ 2     1     1           1           1            1         3 TRUE       
+ 3     1     2           1           1            0         2 TRUE       
+ 4     2     0           1           1            1         3 TRUE       
+ 5     2     1           0           0            1         1 TRUE       
+ 6     2     2           1           1            1         3 TRUE       
+ 7     3     0           0           0            0         0 FALSE      
+ 8     3     1           0           0            0         0 FALSE      
+ 9     3     2           0           0            0         0 FALSE      
+10     4     0           0           0            0         0 FALSE      
+# ℹ 50 more rows
+# ℹ 2 more variables: all_se_year &lt;lgl&gt;, any_se &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created a new column in the <code>drug_trial_sub</code> data called <code>any_se</code> using the <code>mutate()</code> function. The <code>any_se</code> column is TRUE if the participant reported <em>any</em> side effect in <em>any year</em> and FALSE if they <em>never</em> reported a side effect in <em>any year</em>.</p></li>
+<li><p>We first grouped the data by <code>id</code> using the <code>group_by()</code> function. Note that grouping the data by <code>id</code> with <code>group_by()</code> overrides grouping the data by row with <code>rowwise()</code> as soon as R gets to that point in the code. In other words, the data is grouped by row from <code>rowwise() %&gt;%</code> to <code>group_by(id) %&gt;%</code> and grouped by <code>id</code> after.</p></li>
+</ul>
+<p class="note">
+🗒<strong>Side Note:</strong> You can use <code>dplyr::ungroup()</code> to ungroup your data frames. This works regardless of whether you grouped them with <code>rowwise()</code> or <code>group_by()</code>.
+</p>
+<p>I already introduced <code>group_by()</code> in the chapter on <a href="../categorical_variables/categorical_variables.html#the-tidyverse-way">numerical descriptions of categorical variables</a>. I also said that <code>group_by()</code> operationalizes the <strong>Split - Apply - Combine</strong> strategy for data analysis. That means is that we split our data frame up into smaller data frames, apply our calculation separately to each smaller data frame, and then combine those individual results back together as a single result.</p>
+<p>So, in the example above, the <code>drug_trial_sub</code> data frame was split into twenty separate little data frames (i.e., one for each study id). Because there are 3 rows for each study id, each of these 20 little data frames had three rows.</p>
+<p>Each of those 20 little data frames was then passed to the <code>mutate()</code> function. The name-value pair inside the <code>mutate()</code> function <code>any_se = sum(any_se_year) &gt; 0</code> told R to add up all the values for the column <code>any_se_year</code> (i.e., <code>sum(any_se_year)</code>), compare that summed value to <code>0</code> (i.e., <code>sum(any_se_year) &gt; 0</code>), and then assign <code>TRUE</code> to <code>any_se</code> if the summed value is greater than zero and <code>FALSE</code> otherwise. Then, all 20 of the little data frames are combined back together and returned to us as a single data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>drug_trial_sub <span class="sc">%&gt;%</span> </span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_se_year   =</span> <span class="fu">sum</span>(se_headache, se_diarrhea, se_dry_mouth),</span>
+<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">any_se_year =</span> n_se_year <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">all_se_year =</span> n_se_year <span class="sc">==</span> <span class="dv">3</span></span>
+<span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb116-8"><a href="#cb116-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">any_se =</span> <span class="fu">sum</span>(any_se_year) <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 9
+# Rowwise: 
+      id  year se_headache se_diarrhea se_dry_mouth n_se_year any_se_year
+   &lt;int&gt; &lt;int&gt;       &lt;int&gt;       &lt;int&gt;        &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;      
+ 1     1     0           0           1            1         2 TRUE       
+ 2     1     1           1           1            1         3 TRUE       
+ 3     1     2           1           1            0         2 TRUE       
+ 4     2     0           1           1            1         3 TRUE       
+ 5     2     1           0           0            1         1 TRUE       
+ 6     2     2           1           1            1         3 TRUE       
+ 7     3     0           0           0            0         0 FALSE      
+ 8     3     1           0           0            0         0 FALSE      
+ 9     3     2           0           0            0         0 FALSE      
+10     4     0           0           0            0         0 FALSE      
+# ℹ 50 more rows
+# ℹ 2 more variables: all_se_year &lt;lgl&gt;, any_se &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>You may be wondering why I used the <code>sum()</code> function when the values for <code>any_se_year</code> are not numbers. The way R treats logical vectors can actually be pretty useful in situations like this. That is, when mathematical operations are applied to logical vectors, R treats FALSE as a 0 and TRUE as a 1. So, for participant 1, R calculated the value for <code>any_se</code> something like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>any_se_year <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>any_se_year</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE TRUE TRUE</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>sum_any_se_year <span class="ot">&lt;-</span> <span class="fu">sum</span>(any_se_year)</span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>sum_any_se_year</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>any_se <span class="ot">&lt;-</span> sum_any_se_year <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>any_se</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>R used the recycling rules to copy that result to the other two rows of data from participant 1. R then repeated that process for every other participant, and then returned the combined data frame to us.</p>
+<p>I hope you found the example above useful. I think it’s fairly representative of the kinds of data management stuff I tend to do on a day-to-day basis. Of course, missing data always complicates things (more to come on that!). In the next chapter, we will round out our introduction to the basics of data management by learning how to subset rows and columns of a data frame.</p>
 
 
 </section>

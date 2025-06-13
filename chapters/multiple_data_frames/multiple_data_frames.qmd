@@ -90,7 +90,6 @@ You want to add the observations about the participants recruited in 2020 to the
 Let's go ahead and load `dplyr`:
 
 ```{r}
-#| echo: false
 #| message: false
 library(dplyr)
 ```
@@ -98,7 +97,6 @@ library(dplyr)
 And simulate our data frames:
 
 ```{r}
-#| echo: false
 trial <- tibble(
   year    = c(2016, 2017, 2018, 2019),
   n       = c(501, 499, 498, 502),
@@ -108,7 +106,6 @@ trial <- tibble(
 ```
 
 ```{r}
-#| echo: false
 trial_2020 <- tibble(
   year    = 2020,
   n       = 500,
@@ -120,7 +117,6 @@ trial_2020 <- tibble(
 we can see above that column names and types in both data frames are identical. In this case, we can easily bind them together vertically with `dplyr`'s `bind_rows()` function:
 
 ```{r}
-#| echo: false
 trial %>% 
   bind_rows(trial_2020)
 ```
@@ -138,7 +134,6 @@ trial %>%
 What if we want to vertically combine more than two data frames? This isn't a problem. Thankfully, `bind_rows()` lets us pass as many data frames as we want to the `...` argument. For example:
 
 ```{r}
-#| echo: false
 trial_2021 <- tibble(
   year      = 2021,
   n         = 598,
@@ -148,7 +143,6 @@ trial_2021 <- tibble(
 ```
 
 ```{r}
-#| echo: false
 trial %>% 
   bind_rows(trial_2020, trial_2021)
 ```
@@ -158,7 +152,6 @@ trial %>%
 What happens when the data frames we want to combine don't have identical sets of columns? For example, let's say that we started collecting data on adverse events for the first time in 2020. In this case, `trials_2020` would contain a column that `trials` doesn't contain. Can we still row bind our two data frames? Let's see:
 
 ```{r}
-#| echo: false
 trial_2020 <- tibble(
   year      = 2020,
   n         = 500,
@@ -169,7 +162,6 @@ trial_2020 <- tibble(
 ```
 
 ```{r}
-#| echo: false
 trial %>% 
   bind_rows(trial_2020)
 ```
@@ -181,7 +173,6 @@ we sure can! R just sets the value of `adv_event` to `NA` in the rows that came 
 Next, let's say that the person doing data entry accidently put the columns in a different order in 2020. Is `bind_rows()` able to figure out which columns go together?
 
 ```{r}
-#| echo: false
 trial_2020 <- tibble(
   year      = 2020,
   n         = 500,
@@ -192,7 +183,6 @@ trial_2020 <- tibble(
 ```
 
 ```{r}
-#| echo: false
 trial %>% 
   bind_rows(trial_2020)
 ```
@@ -204,7 +194,6 @@ Yes! The `bind_rows()` function binds the data frames together based on column n
 As a final wrinkle, let's say that the person doing data entry started using different column names in 2020 as well. For example, below, the `n` column is now named `count` and the `outcome` column is now named `outcomes`. Will `bind_rows()` still be able to vertically combine these data frames?
 
 ```{r}
-#| echo: false
 trial_2020 <- tibble(
   year      = 2020,
   count     = 500,
@@ -215,7 +204,6 @@ trial_2020 <- tibble(
 ```
 
 ```{r}
-#| echo: false
 trial %>% 
   bind_rows(trial_2020)
 ```
@@ -223,7 +211,6 @@ trial %>%
 In this case, `bind_rows()` plays it safe and doesn't make any assumptions about whether columns with different names belong together or not. However, we only need to rename the columns in one data frame or the other to fix this problem. We could do this in separate steps like this:
 
 ```{r}
-#| echo: false
 trial_2020_rename <- trial_2020 %>% 
   rename(
     n = count,
@@ -237,7 +224,6 @@ trial %>%
 Or, we could rename and bind in a single step by nesting functions like this:
 
 ```{r}
-#| echo: false
 trial %>% 
   bind_rows(
     trial_2020 %>% 
@@ -295,7 +281,6 @@ knitr::include_graphics("position.png")
 Combining data frames horizontally by position is very easy in R. We just use `dplyr`'s `bind_cols()` function similarly to the way used `bind_rows()` above. Just remember that when we horizontally combine data frames by position both data frames must have the same number of rows. For example:
 
 ```{r}
-#| echo: false
 df1 <- tibble(
   color = c("red", "green", "blue"),
   size  = c("small", "medium", "large")
@@ -304,7 +289,6 @@ df1 <- tibble(
 ```
 
 ```{r}
-#| echo: false
 df2 <- tibble(
   amount = c(1, 4, 3),
   dose   = c(10, 20, 30)
@@ -313,7 +297,6 @@ df2 <- tibble(
 ```
 
 ```{r}
-#| echo: false
 df1 %>% 
   bind_cols(df2)
 ```
@@ -419,7 +402,6 @@ Now that we have a common vocabulary, let's take a look at some more concrete ex
 Suppose we are analyzing data from a study of aging and functional ability. At baseline, we assigned a study id to each of our participants. We then ask them their date of birth and their race and ethnicity. We saved that information in a data frame called `demographics`. 
 
 ```{r}
-#| echo: false
 demographics <- tibble(
   id       = c("1001", "1002", "1003", "1004"),
   dob      = as.Date(c("1968-12-14", "1952-08-03", "1949-05-27", "1955-03-12")),
@@ -431,7 +413,6 @@ demographics <- tibble(
 Then, we asked our participants to do a series of functional tests. The functional tests included measuring grip strength in their right hand (`grip_r`) and grip strength in their left hand (`grip_l`). We saved each measure, along with their study id, in a separate data frame called `grip_strength`.
 
 ```{r}
-#| echo: false
 grip_strength <- tibble(
   id     = c("1002", "1001", "1003", "1004"),
   grip_r = c(32, 28, 32, 22),
@@ -449,7 +430,6 @@ Let's first ask ourselves, “what is the relationship between the observations 
 It's a one-to-one relationship because each participant in `demographics` has no more than one corresponding row in `grip_strength`. Since both data frames have exactly four rows, we can go ahead hand combine them horizontally using `bind_cols()` like this:
 
 ```{r}
-#| echo: false
 demographics %>% 
   bind_cols(grip_strength)
 ```
@@ -465,7 +445,6 @@ demographics %>%
 Now, let's learn a better way to merge these two data frames -- `dplyr`'s `left_join()` function:
 
 ```{r}
-#| echo: false
 demographics %>% 
   left_join(grip_strength, by = "id")
 ```
@@ -489,21 +468,18 @@ demographics %>%
 The merge we did above is about as simple as it gets. It was a one-to-one merge where every key value in the `x` data frame had one, and only one, matching key value in the `y` data frame. Therefore, in this simple case, all four join types give us the same result:
 
 ```{r}
-#| echo: false
 # Right join
 demographics %>% 
   right_join(grip_strength, by = "id")
 ```
 
 ```{r}
-#| echo: false
 # Full join
 demographics %>% 
   full_join(grip_strength, by = "id")
 ```
 
 ```{r}
-#| echo: false
 # Inner join
 demographics %>% 
   inner_join(grip_strength, by = "id")
@@ -512,7 +488,6 @@ demographics %>%
 Additionally, aside from the order of the rows and columns in the resulting combined data frame, it makes no difference which data frame you pass to the `x` and `y` arguments in this case:
 
 ```{r}
-#| echo: false
 # Switching order
 grip_strength %>% 
   left_join(demographics, by = "id")
@@ -525,7 +500,6 @@ As our merges get more complex, we will get different results depending on which
 In the real world, participants don't always attend scheduled visits. Let's suppose that there was actually a fifth participant that we collected baseline data from:
 
 ```{r}
-#| echo: false
 demographics <- tibble(
   id       = c("1001", "1002", "1003", "1004", "1005"),
   dob      = as.Date(c(
@@ -539,7 +513,6 @@ demographics <- tibble(
 However, participant 1005 never made it back in for a grip strength test. Now, what do you think will happen when we merge `demographics` and `grip_strength` using `left_join()`?
 
 ```{r}
-#| echo: false
 demographics %>% 
   left_join(grip_strength, by = "id")
 ```
@@ -549,28 +522,24 @@ The resulting data frame includes _all_ rows from the `demographics` data frame 
 This scenario is a little a different than the one above. It's still a one-to-one relationship because each participant in `demographics` has no more than one corresponding row in `grip_strength`. However, every key value in the `x` data frame no longer has one, and only one, matching key value in the `y` data frame. Therefore, we will now get different results depending on which join function we choose, and the order in which we pass our data frames to the `x` and `y` arguments. Before reading further, think about what you expect the results from each join function to look like. Think about what you expect the results of switching the data frame order to look like.
 
 ```{r}
-#| echo: false
 # Right join
 demographics %>% 
   right_join(grip_strength, by = "id")
 ```
 
 ```{r}
-#| echo: false
 # Full join
 demographics %>% 
   full_join(grip_strength, by = "id")
 ```
 
 ```{r}
-#| echo: false
 # Inner join
 demographics %>% 
   inner_join(grip_strength, by = "id")
 ```
 
 ```{r}
-#| echo: false
 # Switching order
 grip_strength %>% 
   left_join(demographics, by = "id")
@@ -583,7 +552,6 @@ Well, were those the results you expected? In practice, the "correct" result dep
 Sometimes the key columns will have different names across data frames. For example, let's imagine that the team collecting the grip strength data named the participant id column `pid` instead of `id`:
 
 ```{r}
-#| echo: false
 grip_strength <- tibble(
   pid    = c("1002", "1001", "1003", "1004"),
   grip_r = c(32, 28, 32, 22),
@@ -595,7 +563,6 @@ grip_strength <- tibble(
 If we try to merge `demographics` and `grip_strength` as we did before, we will get an error.
 
 ```{r}
-#| echo: false
 #| error: true
 demographics %>% 
   left_join(grip_strength, by = "id")
@@ -604,7 +571,6 @@ demographics %>%
 This error is `left_join()` telling us that it couldn't find a column named `id` in both data frames. To get around this error, we can simply tell `left_join()` which column is the matching key column in the opposite data frame using a named vector like this:
 
 ```{r}
-#| echo: false
 demographics %>% 
   left_join(grip_strength, by = c("id" = "pid"))
 ```
@@ -616,14 +582,12 @@ Just make sure that the first column name you pass to the named vector (i.e., `"
 Now suppose that our grip strength study has a longitudinal design. The demographics data was only collected at enrollment into the study. After all, race and dob don't change. There's no need to ask our participants about them at every follow-up interview. 
 
 ```{r}
-#| echo: false
 demographics
 ```
 
 Grip strength, however, was measured pre and post some intervention. 
 
 ```{r}
-#| echo: false
 grip_strength <- tibble(
   id     = rep(c("1001", "1002", "1003", "1004"), each = 2),
   visit  = rep(c("pre", "post"), 4),
@@ -637,4 +601,72 @@ Now what is the relationship of these two data frames?
 
 These data frames have a one-to-many relationship because at least one observation in one data frame is related to multiple observations in the other data frame. The `demographics` data frame has one observation for each value of `id`. The `grip_strength` data frame has two observations for each value of the `id`'s `1001` through `1004`.
 
-Now, to conduct our analysis, we need to combine the data in `demographics` with the data in the longitudinal `grip_strength` data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to
+Now, to conduct our analysis, we need to combine the data in `demographics` with the data in the longitudinal `grip_strength` data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to-many merge, we use the exact same syntax that we used to perform a one-to-one merge. R will figure out the relationship between the data frames automatically. Take a look:
+
+```{r}
+demographics %>% 
+  left_join(grip_strength, by = "id")
+```
+
+#### Multiple key columns
+
+Let's throw one more little wrinkle into our analysis. Let's say that each participant had a medical exam prior to being sent into the gym to do their functional assessments. The results of that medical exam, along with the participant's study id, were recorded in the university hospital system's electronic medical records. As part of that medical exam, each participant's weight was recorded. Luckily, we were given access to the electronic medical records, which look like this:
+
+```{r}
+emr <- tibble(
+  id     = rep(c("1001", "1002", "1003", "1004"), each = 2),
+  visit  = rep(c("pre", "post"), 4),
+  weight = c(105, 99, 200, 201, 136, 133, 170, 175)
+) %>% 
+  print()
+```
+
+Now, we would like to add participant weight to our analysis. Our first attempt might look something like this:
+
+```{r}
+demographics %>% 
+  left_join(grip_strength, emr, by = "id")
+```
+
+Of course, that doesn't work because `left_join()` can only merge two data frames at a time -- `x` and `y`. The `emr` data frame was ignored. Then we think, "hmmm, maybe we should try merging them sequentially." In other words, merge `demographics` and `grip_strength` first. Then merge the combined `demographics`/`grip_strength` data frame with `emr`. So, our next attempt might look like this:
+
+```{r}
+demographics %>% 
+  left_join(grip_strength, by = "id") %>% 
+  left_join(emr, by = "id")
+```
+
+But, if you look closely, that isn't what we want either. Each participant didn't have four visits. They only had two. Here's the problem. Each participant in the combined `demographics`/`grip_strength` data frame has two rows (i.e., one for pre and one for post). Each participant in the `emr` data frame also has two rows (i.e., one for pre and one for post). Above, we told `left_join()` to join by `id`. So, `left_join()` aligns all rows with matching key values -- `id`’s. 
+
+For example, row one in the combined `demographics`/`grip_strength` data frame has the key value `1001`. So, `left_join()` aligns row one in the combined `demographics`/`grip_strength` data frame with rows one _and_ two in the `emr` data frame. Next, row _two_ in the combined `demographics`/`grip_strength` data frame has the key value `1001`. So, `left_join()` aligns row _two_ in the combined `demographics`/`grip_strength` data frame with rows one _and_ two in the `emr` data frame. This results in 2 * 2 = 4 rows for each id - a **many-to-many** merge.
+ 
+
+```{r}
+#| label: 38_many_to_many_emr_chunk
+#| echo: false
+knitr::include_graphics("many_to_many_emr.png")
+```
+
+But in reality, study id alone no longer uniquely identifies observations in our data. Now, observations are uniquely identified by study id and visit. For example, `1001` _and_ `pre` are a unique observation, `1001` _and_ `post` are a unique observation, `1002` _and_ `pre` are a unique observation, and so on. We now have two key columns that identify unique observations. And once we give that information to `left_join`, the relationship between the data frames becomes a one-to-one relationship. In other words, each observation (defined by `id` _and_ `visit`) in one data frame is related to no more than one observation (defined by `id` _and_ `visit`) in the other data frame.
+
+```{r}
+#| label: 39_one_to_one_emr_chunk
+#| echo: false
+knitr::include_graphics("one_to_one_emr.png")
+```
+
+Here is how we tell `left_join()` to merge our data frames by `id` _and_ `visit`:
+
+```{r}
+demographics %>% 
+  left_join(grip_strength, by = "id") %>% 
+  left_join(emr, by = c("id", "visit"))
+```
+
+👆**Here's what we did above:**
+
+* We used `dplyr`'s `left_join()` function to perform a one-to-many merge of the `demographics` data frame with the `grip_strength` data frame. Then, we used `left_join()` again to perform a one-to-one merge of the combined `demographics`/`grip_strength` data frame with the `emr` data frame.
+
+* We told `left_join()` that it needed to match the values in the `id` key column _and_ the values in the `visit` key column in order to align the rows in the combined `demographics`/`grip_strength` data frame with the `emr` data frame.
+
+We now have a robust set of tools we can use to work with data that is stored in more than one data frame – a common occurrence in epidemiology!

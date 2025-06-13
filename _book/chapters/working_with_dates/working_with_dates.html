@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -575,7 +609,10 @@ cookieconsent.run({
   <li><a href="#calculating-date-intervals" id="toc-calculating-date-intervals" class="nav-link" data-scroll-target="#calculating-date-intervals"><span class="header-section-number">28.7</span> Calculating date intervals</a>
   <ul class="collapse">
   <li><a href="#calculate-age-as-the-difference-in-time-between-dob-and-today" id="toc-calculate-age-as-the-difference-in-time-between-dob-and-today" class="nav-link" data-scroll-target="#calculate-age-as-the-difference-in-time-between-dob-and-today"><span class="header-section-number">28.7.1</span> Calculate age as the difference in time between dob and today</a></li>
+  <li><a href="#rounding-time-intervals" id="toc-rounding-time-intervals" class="nav-link" data-scroll-target="#rounding-time-intervals"><span class="header-section-number">28.7.2</span> Rounding time intervals</a></li>
   </ul></li>
+  <li><a href="#extracting-out-date-parts" id="toc-extracting-out-date-parts" class="nav-link" data-scroll-target="#extracting-out-date-parts"><span class="header-section-number">28.8</span> Extracting out date parts</a></li>
+  <li><a href="#sorting-dates" id="toc-sorting-dates" class="nav-link" data-scroll-target="#sorting-dates"><span class="header-section-number">28.9</span> Sorting dates</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi/edit/main/chapters/working_with_dates/working_with_dates.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -708,43 +745,49 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="timeline.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="timeline.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>For example, let’s use base R’s <code>as.Date()</code> function to create a date value from the string “2000-01-01”.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.Date</span>(<span class="st">"2000-01-01"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "2000-01-01"</code></pre>
 </div>
 </div>
 <p>On the surface, it doesn’t look like anything happened. However, we can use base R’s <code>unclass()</code> function to see R’s internal integer representation of the date.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unclass</span>(<span class="fu">as.Date</span>(<span class="st">"2000-01-01"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 10957</code></pre>
 </div>
 </div>
 <p>Specifically, January 1st, 2000 is apparently 10,957 days after January 1st, 1970. What number would you expect to be returned if we used the date “1970-01-01”?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unclass</span>(<span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
 </div>
 <p>What number would you expect to be returned if we used the date “1970-01-02”?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unclass</span>(<span class="fu">as.Date</span>(<span class="st">"1970-01-02"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
 </div>
 <p>And finally, what number would you expect to be returned if we used the date “1969-12-31”?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unclass</span>(<span class="fu">as.Date</span>(<span class="st">"1969-12-31"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -1</code></pre>
 </div>
 </div>
 <p>This numeric representation of dates also works in the other direction. For example, we can pass the number 10,958 to the <code>as.Date()</code> function, along with the date origin, and R will return a human-readable date.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.Date</span>(<span class="dv">10958</span>, <span class="at">origin =</span> <span class="st">"1970-01-01"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "2000-01-02"</code></pre>
 </div>
@@ -752,6 +795,13 @@ Note
 <p>You may be wondering why we had to tell R the date origin. After all, didn’t we already say that the origin is January 1st, 1970? Well, not all programs and programming languages use the same date origin. For example, SAS uses the date January 1st, 1960 as its origin. In our experience, this differing origin value can occasionally give us incorrect dates. When that happens, one option is to strip the date value down to its numeric representation, and then tell R what the origin was for that numeric representation in the program you are importing the data from.</p>
 <p>For example, if we imported a data set from SAS, we could correctly produce human-readable dates in the manner shown below:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>from_sas <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="fu">c</span>(<span class="dv">10958</span>, <span class="dv">10959</span>, <span class="dv">10960</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>from_sas <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">new_date =</span> <span class="fu">as.Date</span>(date, <span class="at">origin =</span> <span class="st">"1960-01-01"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
    date new_date  
@@ -767,6 +817,9 @@ Note
 <h2 data-number="28.3" class="anchored" data-anchor-id="coercing-date-times-to-dates"><span class="header-section-number">28.3</span> Coercing date-times to dates</h2>
 <p>As we said above, it’s usually preferable to work with date values instead of date-time values. Fortunately, converting date-time values to dates is usually really easy. All we need to do is pass those values to the same <code>as.Date()</code> function we already saw above. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>birth_dates <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">posix_to_date =</span> <span class="fu">as.Date</span>(dob_actual)) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dob_actual, posix_to_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    dob_actual          posix_to_date
@@ -796,6 +849,20 @@ Note
 <p>Converting character strings to dates can be slightly more complicated than converting date-times to dates. This is because we have to explicitly tell R which characters in the character string correspond to each date component. For example, let’s say we have a date value of <code>04-05-06</code>. Is that April 5th, 2006? Is it April 5th, 1906? Or perhaps it’s May 6th, 2004?</p>
 <p>we need to use a series of special symbols to tell R which characters in the character string correspond to each date component. We’ll list some of the most common ones first and then show you how to use them. The examples below assume that date each symbol is being applied to is <code>2000-01-15</code>.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tribble</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Symbol, <span class="sc">~</span>Description, <span class="sc">~</span>Example,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%a"</span>, <span class="st">"Abbreviated weekday name"</span>, <span class="st">"Sat"</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%A"</span>, <span class="st">"Full weekday name"</span>, <span class="st">"Saturday"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%b"</span>, <span class="st">"Abbreviated month name"</span>, <span class="st">"Jan"</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%B"</span>, <span class="st">"Full month name"</span>, <span class="st">"January"</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%d"</span>, <span class="st">"Day of the month as a number (01–31)"</span>, <span class="st">"15"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%m"</span>, <span class="st">"Month as a number"</span>, <span class="st">"01"</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%u"</span>, <span class="st">"Weekday as a number (1–7, Monday is 1)"</span>, <span class="st">"6"</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%U"</span>, <span class="st">"Week of the year as a number (00–53) using Sunday as the first day 1 of the week"</span>, <span class="st">"02"</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%y"</span>, <span class="st">"Year without century (00-99)"</span>, <span class="st">"00"</span>,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"%Y"</span>, <span class="st">"Year with century"</span>, <span class="st">"2000"</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -867,6 +934,7 @@ Note
 </div>
 <p>Now that we have a list of useful symbols that we can use to communicate with R, let’s take another look at our birth date data.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>birth_dates</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 6
    name_first name_last dob_actual          dob_default dob_typical dob_long    
@@ -885,6 +953,9 @@ Note
 </div>
 <p>For our first example, let’s try converting the character strings stored in the <code>dob_typical</code> to date values. Let’ start by passing the values to <code>as.Date()</code> exactly as we did above and see what happens:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>birth_dates <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob_typical_to_date =</span> <span class="fu">as.Date</span>(dob_typical)) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dob_typical, dob_typical_to_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    dob_typical dob_typical_to_date
@@ -904,6 +975,9 @@ Note
 <p>This is definitely not the result we wanted, right? Why didn’t it work? Well, R was looking for the values in <code>dob_typical</code> to have the format 4-digit year, a dash, 2-digit month, a dash, and 2-digit day. In reality, <code>dob_typical</code> has the format 2-digit month, a forward slash, 2-digit day, a forward slash, and 4-digit year. Now, all we have to do is tell R how to read this character string as a date using some of the symbols we learned about in the table above.</p>
 <p>Let’s try again:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>birth_dates <span class="sc">%&gt;%</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob_typical_to_date =</span> <span class="fu">as.Date</span>(dob_typical, <span class="at">format =</span> <span class="st">"%m %d %Y"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dob_typical, dob_typical_to_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    dob_typical dob_typical_to_date
@@ -923,6 +997,9 @@ Note
 <p>Wait, what? We told R that the values were 2-digit month (<code>%m</code>), 2-digit day (<code>%d</code>), and 4-digit year (<code>%Y</code>). Why didn’t it work this time? It didn’t work because we didn’t pass the forward slashes to the format argument. Yes, it’s that literal. We even have to tell R that there are symbols mixed in with our date values in the character string we want to convert to a date.</p>
 <p>Let’s try one more time:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>birth_dates <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob_typical_to_date =</span> <span class="fu">as.Date</span>(dob_typical, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dob_typical, dob_typical_to_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    dob_typical dob_typical_to_date
@@ -949,6 +1026,7 @@ Note
 </ul>
 <p>Let’s try one more example, just to make sure we’ve got this down. Take a look at the <code>dob_long</code> column. What value will we need to pass to <code>as.Date()</code>’s format argument in order to convert these character strings to dates?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(birth_dates, dob_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 1
    dob_long          
@@ -967,6 +1045,9 @@ Note
 </div>
 <p>Did you figure it out? The solution is below:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>birth_dates <span class="sc">%&gt;%</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob_long_to_date =</span> <span class="fu">as.Date</span>(dob_long, <span class="at">format =</span> <span class="st">"%B %d, %Y"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dob_long, dob_long_to_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    dob_long           dob_long_to_date
@@ -996,6 +1077,9 @@ Note
 <h2 data-number="28.5" class="anchored" data-anchor-id="change-the-appearance-of-dates-with-format"><span class="header-section-number">28.5</span> Change the appearance of dates with format()</h2>
 <p>So, far we’ve talked about transforming character strings into dates. However, the reverse is also possible. Meaning, we can transform date values into character strings that we can style (i.e., format) in just about any way you could possibly want to style a date. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>birth_dates <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob_abbreviated =</span> <span class="fu">format</span>(dob_actual, <span class="st">"%d %b %y"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dob_actual, dob_abbreviated)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    dob_actual          dob_abbreviated
@@ -1027,13 +1111,15 @@ Note
 <section id="todays-date" class="level3" data-number="28.6.1">
 <h3 data-number="28.6.1" class="anchored" data-anchor-id="todays-date"><span class="header-section-number">28.6.1</span> Today’s date</h3>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.Date</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "2025-05-28"</code></pre>
+<pre><code>[1] "2025-06-12"</code></pre>
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>lubridate<span class="sc">::</span><span class="fu">today</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "2025-05-28"</code></pre>
+<pre><code>[1] "2025-06-12"</code></pre>
 </div>
 </div>
 <p>These functions can be useful for calculating any length of time up to today. For example, your age today is just the length of time that spans between your birth date and today.</p>
@@ -1041,37 +1127,61 @@ Note
 <section id="todays-date-time" class="level3" data-number="28.6.2">
 <h3 data-number="28.6.2" class="anchored" data-anchor-id="todays-date-time"><span class="header-section-number">28.6.2</span> Today’s date-time</h3>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "2025-05-28 09:30:51 CDT"</code></pre>
+<pre><code>[1] "2025-06-12 20:14:23 CDT"</code></pre>
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>lubridate<span class="sc">::</span><span class="fu">now</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "2025-05-28 09:30:51 CDT"</code></pre>
+<pre><code>[1] "2025-06-12 20:14:23 CDT"</code></pre>
 </div>
 </div>
 <p>Because these functions also return the current time, they can be useful for timing how long it takes your R code to run. As we’ve said many times, there is typically multiple ways to accomplish a given task in R. Sometimes, the difference between any to ways to accomplish the task is basically just a matter of preference. However, sometimes one way can be much faster than another way. All the examples we’ve seen so far in this book take a trivial amount of time to run – usually less than a second. However, we have written R programs that took several minutes to several hours to complete. For example, complex data simulations and multiple imputation procedures can both take a long time to run. In such cases, we will sometimes check to see if there any significant performance differences between two different approaches to accomplishing the coding task.</p>
 <p>As a silly example to show you how this works, let’s generate 1,000,000 random numbers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">703</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>rand_mill <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1000000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Now, let’s find the mean value of those numbers two different ways, and check to see if there is any time difference between the two:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the start time</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>start  <span class="ot">&lt;-</span> lubridate<span class="sc">::</span><span class="fu">now</span>()</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>sum    <span class="ot">&lt;-</span> <span class="fu">sum</span>(rand_mill)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>length <span class="ot">&lt;-</span> <span class="fu">length</span>(rand_mill)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>mean   <span class="ot">&lt;-</span> sum <span class="sc">/</span> length</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>mean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0009259691</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the stop time</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>stop   <span class="ot">&lt;-</span> lubridate<span class="sc">::</span><span class="fu">now</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>stop <span class="sc">-</span> start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 0.003290176 secs</code></pre>
+<pre><code>Time difference of 0.002330065 secs</code></pre>
 </div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>So, finding the mean this way took less than a second. Let’s see how long using the <code>mean()</code> function takes:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the start time</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>start  <span class="ot">&lt;-</span> lubridate<span class="sc">::</span><span class="fu">now</span>()</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(rand_mill)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0009259691</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the stop time</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>stop   <span class="ot">&lt;-</span> lubridate<span class="sc">::</span><span class="fu">now</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>stop <span class="sc">-</span> start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 0.001876116 secs</code></pre>
+<pre><code>Time difference of 0.001876831 secs</code></pre>
 </div>
 </div>
 <p>Although both methods above took less than a second to complete the calculations we were interested in, the second method (i.e., using the <code>mean()</code> function) took only about a third as as much time as the first. Again, it obviously doesn’t matter in this scenario, but doing these kinds of checks can be useful when calculations take much longer. For example, that time savings we saw above would be pretty important if we were comparing two methods to accomplish a task where the longer method took an hour to complete and the shorter method took a third as much time (About 20 minutes).</p>
@@ -1079,6 +1189,7 @@ Note
 <section id="character-vector-of-full-month-names" class="level3" data-number="28.6.3">
 <h3 data-number="28.6.3" class="anchored" data-anchor-id="character-vector-of-full-month-names"><span class="header-section-number">28.6.3</span> Character vector of full month names</h3>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>month.name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "January"   "February"  "March"     "April"     "May"       "June"     
  [7] "July"      "August"    "September" "October"   "November"  "December" </code></pre>
@@ -1088,6 +1199,7 @@ Note
 <section id="character-vector-of-abbreviated-month-names" class="level3" data-number="28.6.4">
 <h3 data-number="28.6.4" class="anchored" data-anchor-id="character-vector-of-abbreviated-month-names"><span class="header-section-number">28.6.4</span> Character vector of abbreviated month names</h3>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>month.abb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"</code></pre>
 </div>
@@ -1098,6 +1210,11 @@ Note
 <h3 data-number="28.6.5" class="anchored" data-anchor-id="creating-a-vector-containing-a-sequence-of-dates"><span class="header-section-number">28.6.5</span> Creating a vector containing a sequence of dates</h3>
 <p>In the same way that we can simulate a sequence of numbers using the <code>seq()</code> function, we can simulate a sequence of dates using the <code>seq.Date()</code> function. We sometimes find this function useful for simulating data (including some of the data used in this book), and for filling in missing dates in longitudinal data. For example, we can use the <code>seq.Date()</code> function to return a vector of dates that includes all days between January 1st, 2020 and January 15th, 2020 like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">seq.Date</span>(</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="fu">as.Date</span>(<span class="st">"2020-01-01"</span>),</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">to   =</span> <span class="fu">as.Date</span>(<span class="st">"2020-01-15"</span>),</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">by   =</span> <span class="st">"days"</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "2020-01-01" "2020-01-02" "2020-01-03" "2020-01-04" "2020-01-05"
  [6] "2020-01-06" "2020-01-07" "2020-01-08" "2020-01-09" "2020-01-10"
@@ -1111,6 +1228,9 @@ Note
 <p>So far, we’ve learned how to create and format dates in R. However, the real value in being able to coerce character strings to date values is that doing so allows us to perform <em>calculations</em> with the dates that we could not perform with the character strings. In our experience, calculating intervals of time between dates is probably the most common type of calculation we will want to perform.</p>
 <p>Before we get into some examples, we are going to drop some of the columns from our <code>birth_dates</code> data frame because we won’t need them anymore.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> birth_dates <span class="sc">%&gt;%</span> </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name_first, <span class="at">dob =</span> dob_default) <span class="sc">%&gt;%</span> </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    name_first dob       
@@ -1133,8 +1253,15 @@ Note
 <li><p>we used the <code>select()</code> function to keep only the <code>name_first</code> and <code>dob_default</code> columns from <code>birth_dates</code>. We used a name-value pair (<code>dob = dob_default</code>) inside the <code>select()</code> function to rename <code>dob_default</code> to <code>dob</code>.</p></li>
 </ul>
 <p>Next, let’s create a variable in our data frame that is equal to today’s date. In reality, this would be a great time to use <code>Sys.Date()</code> to ask R to return today’s date.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">today =</span> <span class="fu">Sys.Date</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>However, we are not going to do that here, because it would cause the value of the <code>today</code> variable to update every time we update the book. That would make it challenging to write about the results we get. So, we’re going to pretend that today is May 7th, 2020. We’ll add that to our data frame like so:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> ages <span class="sc">%&gt;%</span> </span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">today =</span> <span class="fu">as.Date</span>(<span class="st">"2020-05-07"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
    name_first dob        today     
@@ -1161,8 +1288,17 @@ Note
 <p>Calculating age from date of birth is a pretty common data management task. While you know what ages are, you probably don’t think much about their calculation. Age is just the difference between two points in time. The starting point is always the date of birth. However, because age is constantly changing the end point changes as well. For example, you’re one day older today than you were yesterday. So, to calculate age, we must always have a start date (i.e., date of birth) and an end date. In the example below, our end date will be May 7th, 2020.</p>
 <p>Once we have those two pieces of information, we can ask R to calculate age for us in a few different ways. We are going to suggest that you use the method below that uses functions from the <code>lubridate</code> package. We will show you why soon. However, we want to show you the base R way of calculating time intervals for comparison, and because a lot of the help documentation we’ve seen online uses the base R methods shown below.</p>
 <p>Let’s go ahead and load the <code>lubridate</code> package now.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Next, let’s go ahead and calculate age 3 different ways:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_subtraction =</span> today <span class="sc">-</span> dob,</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_difftime    =</span> <span class="fu">difftime</span>(today, dob),</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_lubridate   =</span> dob <span class="sc">%--%</span> today <span class="co"># lubridate's %--% operator creates a time interval</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 6
    name_first dob        today      age_subtraction age_difftime
@@ -1191,6 +1327,12 @@ Note
 </ul>
 <p>Here is how we can convert the time difference and time interval values to age in years:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_subtraction =</span> <span class="fu">as.numeric</span>(today <span class="sc">-</span> dob) <span class="sc">/</span> <span class="fl">365.25</span>,</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_difftime    =</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(today, dob)) <span class="sc">/</span> <span class="fl">365.25</span>,</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_lubridate   =</span> (dob <span class="sc">%--%</span> today) <span class="sc">/</span> <span class="fu">years</span>(<span class="dv">1</span>)</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 6
    name_first dob        today      age_subtraction age_difftime age_lubridate
@@ -1219,6 +1361,7 @@ Note
 </ul></li>
 </ul>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">years</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "1y 0m 0d 0H 0M 0S"</code></pre>
 </div>
@@ -1226,23 +1369,263 @@ Note
 <p>So, why did the results of the first two methods differ from the results of the third method? Well, dates are much more complicated to work with than they may seem on the surface. Specifically, each day doesn’t have exactly 24 hours and each year doesn’t have exactly 365 days. Some have more and some have less – so called, leap years. You can find more details on the <a href="https://lubridate.tidyverse.org/">lubridate website</a>, but the short answer is that <code>lubridate</code>’s method gives us a more precise answer than the first two methods do because it accounts for date complexities in a different way.</p>
 <p>Here’s an example to quickly illustrate what we mean:</p>
 <p>Say we want to calculate the number of years between “2017-03-01” and “2018-03-01”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2017-03-01"</span>)</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>end   <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2018-03-01"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>The most meaningful result in this situation is obviously 1 year.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The base R way</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">difftime</span>(end, start)) <span class="sc">/</span> <span class="fl">365.25</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9993155</code></pre>
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The lubridate way</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>(start <span class="sc">%--%</span> end) <span class="sc">/</span> <span class="fu">years</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
 </div>
 <p>Notice that <code>lubridate</code>’s method returns exactly one year, but the base R method returns an approximation of a year.</p>
 <p>To further illustrate this point, let’s look at what happens when the time interval includes a leap year. The year 2020 is a leap year, so let’s calculate the number of years between “2019-03-01” and “2020-03-01”. Again, a meaningful result here should be a year.</p>
-<p>#| echo: false # The base R way as.numeric(difftime(end, start)) / 36</p>
-
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2019-03-01"</span>)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>end   <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2020-03-01"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The base R way</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">difftime</span>(end, start)) <span class="sc">/</span> <span class="dv">36</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10.16667</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The lubridate way</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>(start <span class="sc">%--%</span> end) <span class="sc">/</span> <span class="fu">years</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>Notice that <code>lubridate</code>’s method returns exactly one year, but the base R method returns an approximation of a year.</p>
+<p>To further illustrate this point, let’s look at what happens when the time interval includes a leap year. The year 2020 is a leap year, so let’s calculate the number of years between “2019-03-01” and “2020-03-01”. Again, a meaningful result here should be a year.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2019-03-01"</span>)</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>end   <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2020-03-01"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The base R way</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">difftime</span>(end, start)) <span class="sc">/</span> <span class="fl">365.25</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.002053</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The lubridate way</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>(start <span class="sc">%--%</span> end) <span class="sc">/</span> <span class="fu">years</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>Once again, the <code>lubridate</code> method returns exactly one year, while the base R method returns an approximation of a year.</p>
 </section>
+<section id="rounding-time-intervals" class="level3" data-number="28.7.2">
+<h3 data-number="28.7.2" class="anchored" data-anchor-id="rounding-time-intervals"><span class="header-section-number">28.7.2</span> Rounding time intervals</h3>
+<p>Okay, so now we know how to get age in years, and hopefully I convinced you that using functions from the <code>lubridate</code> package can help us do so in the most precise way possible. However, in most situations we would want to take our calculations one step further and round to whole years. There are actually a couple different ways to do so. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_years =</span> (dob <span class="sc">%--%</span> today) <span class="sc">/</span> <span class="fu">years</span>(<span class="dv">1</span>),</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you want the age (in years) as of the person's last birthday</span></span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_last  =</span> <span class="fu">trunc</span>(age_years),</span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you want to round the age to the nearest year</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_near  =</span> <span class="fu">round</span>(age_years)</span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   name_first dob        today      age_years age_last age_near
+   &lt;chr&gt;      &lt;date&gt;     &lt;date&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1 Nathaniel  1996-03-04 2020-05-07      24.2       24       24
+ 2 Sophia     1998-11-21 2020-05-07      21.5       21       21
+ 3 Emmett     1994-09-03 2020-05-07      25.7       25       26
+ 4 Levi       1996-08-03 2020-05-07      23.8       23       24
+ 5 August     1980-06-13 2020-05-07      39.9       39       40
+ 6 Juan       1996-12-08 2020-05-07      23.4       23       23
+ 7 Lilly      1992-11-27 2020-05-07      27.4       27       27
+ 8 Natalie    1983-04-27 2020-05-07      37.0       37       37
+ 9 Solomon    1988-06-28 2020-05-07      31.9       31       32
+10 Olivia     1997-08-02 2020-05-07      22.8       22       23</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created two new columns in the <code>ages</code> data frame called <code>age_last</code>, and <code>age_near</code>.</p>
+<ul>
+<li><p>We created <code>age_last</code> using the <code>trunc()</code> (for truncate) function. The value returned by the <code>trunc()</code> function can be interpreted as each person’s age in years at their last birthday.</p></li>
+<li><p>We created <code>age_near</code> using the <code>round()</code> function. The value returned by the <code>round()</code> function can be interpreted as each person’s age in years at their nearest birthday – which may not have occurred yet. This is probably not the value that you will typically be looking for. So, just make sure you choose the correct function for the type of rounding you want to do.</p></li>
+</ul></li>
+</ul>
+<p>As a shortcut, we can use the integer division operator (<code>%/%</code>) to calculate each person’s age in years at their nearest birthday without the <code>trunc()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you want the age (in years) as of the person's last birthday</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_years =</span> (dob <span class="sc">%--%</span> today) <span class="sc">%/%</span> <span class="fu">years</span>(<span class="dv">1</span>)</span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 4
+   name_first dob        today      age_years
+   &lt;chr&gt;      &lt;date&gt;     &lt;date&gt;         &lt;dbl&gt;
+ 1 Nathaniel  1996-03-04 2020-05-07        24
+ 2 Sophia     1998-11-21 2020-05-07        21
+ 3 Emmett     1994-09-03 2020-05-07        25
+ 4 Levi       1996-08-03 2020-05-07        23
+ 5 August     1980-06-13 2020-05-07        39
+ 6 Juan       1996-12-08 2020-05-07        23
+ 7 Lilly      1992-11-27 2020-05-07        27
+ 8 Natalie    1983-04-27 2020-05-07        37
+ 9 Solomon    1988-06-28 2020-05-07        31
+10 Olivia     1997-08-02 2020-05-07        22</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="extracting-out-date-parts" class="level2" data-number="28.8">
+<h2 data-number="28.8" class="anchored" data-anchor-id="extracting-out-date-parts"><span class="header-section-number">28.8</span> Extracting out date parts</h2>
+<p>Sometimes it can be useful to store parts of a date in separate columns. For example, it is common to break date values up into their component parts when linking records across multiple data frames. We will learn how to link data frames a little later in the book. For now, we’re just going to learn how separate dates into their component parts.</p>
+<p>We won’t need the <code>today</code> column anymore, so I’ll go ahead a drop it here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> ages <span class="sc">%&gt;%</span> </span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>today) <span class="sc">%&gt;%</span> </span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   name_first dob       
+   &lt;chr&gt;      &lt;date&gt;    
+ 1 Nathaniel  1996-03-04
+ 2 Sophia     1998-11-21
+ 3 Emmett     1994-09-03
+ 4 Levi       1996-08-03
+ 5 August     1980-06-13
+ 6 Juan       1996-12-08
+ 7 Lilly      1992-11-27
+ 8 Natalie    1983-04-27
+ 9 Solomon    1988-06-28
+10 Olivia     1997-08-02</code></pre>
+</div>
+</div>
+<p>Typically, separating the date will include creating separate columns for the day, the month, and the year. Fortunately, lubridate includes intuitively named functions that make this really easy:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">day   =</span> <span class="fu">day</span>(dob),</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">month =</span> <span class="fu">month</span>(dob),</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">year  =</span> <span class="fu">year</span>(dob)</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 5
+   name_first dob          day month  year
+   &lt;chr&gt;      &lt;date&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 Nathaniel  1996-03-04     4     3  1996
+ 2 Sophia     1998-11-21    21    11  1998
+ 3 Emmett     1994-09-03     3     9  1994
+ 4 Levi       1996-08-03     3     8  1996
+ 5 August     1980-06-13    13     6  1980
+ 6 Juan       1996-12-08     8    12  1996
+ 7 Lilly      1992-11-27    27    11  1992
+ 8 Natalie    1983-04-27    27     4  1983
+ 9 Solomon    1988-06-28    28     6  1988
+10 Olivia     1997-08-02     2     8  1997</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li>We created three new columns in the <code>ages</code> data frame called <code>day</code>, <code>month</code>, and <code>year</code>. We created them by passing the <code>dob</code> column to the <code>x</code> argument of <code>lubridate</code>’s <code>day()</code>, <code>month()</code>, and <code>year()</code> functions respectively.</li>
+</ul>
+<p><code>lubridate</code> also includes functions for extracting other information from date values. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">wday         =</span> <span class="fu">wday</span>(dob),</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">day_full     =</span> <span class="fu">wday</span>(dob, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">day_abb      =</span> <span class="fu">wday</span>(dob, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">week_of_year =</span> <span class="fu">week</span>(dob),</span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">week_cdc     =</span> <span class="fu">epiweek</span>(dob)</span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 7
+   name_first dob         wday day_full  day_abb week_of_year week_cdc
+   &lt;chr&gt;      &lt;date&gt;     &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt;          &lt;dbl&gt;    &lt;dbl&gt;
+ 1 Nathaniel  1996-03-04     2 Monday    Mon               10       10
+ 2 Sophia     1998-11-21     7 Saturday  Sat               47       46
+ 3 Emmett     1994-09-03     7 Saturday  Sat               36       35
+ 4 Levi       1996-08-03     7 Saturday  Sat               31       31
+ 5 August     1980-06-13     6 Friday    Fri               24       24
+ 6 Juan       1996-12-08     1 Sunday    Sun               49       50
+ 7 Lilly      1992-11-27     6 Friday    Fri               48       48
+ 8 Natalie    1983-04-27     4 Wednesday Wed               17       17
+ 9 Solomon    1988-06-28     3 Tuesday   Tue               26       26
+10 Olivia     1997-08-02     7 Saturday  Sat               31       31</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We created five new columns in the <code>ages</code> data frame called <code>wday</code>, <code>day_abb</code>,<code>day_full</code>, <code>week_of_year</code>, and <code>week_cdc</code>. We created them by passing the <code>dob</code> column to the <code>x</code> argument of <code>lubridate</code>’s <code>wday()</code>, <code>week()</code>, and <code>epiweek()</code> functions respectively.</p></li>
+<li><p>The <code>wday()</code> function returns the day of the week the given date falls on. By default, the <code>wday()</code> returns an integer value between 1 and 7. We can adjust the values passed to <code>wday()</code>’s <code>label</code> and <code>abbr</code> arguments to return full day names (<code>day_full</code>) and abbreviated day names (<code>day_abb</code>).</p></li>
+<li><p>The <code>week()</code> function returns the week of the year the given date falls in. More formally, the <code>week()</code> function “returns the number of complete seven-day periods that have occurred between the date and January 1st, plus one.” You can see this information by typing <code>?week</code> in your console.</p></li>
+<li><p>The <code>epiweek()</code> function also returns the week of the year the given date falls in. However, it calculates the week in a slightly different way. Specifically, “it uses the US CDC version of epidemiological week. It follows same rules as isoweek() but starts on Sunday. In other parts of the world the convention is to start epidemiological weeks on Monday, which is the same as isoweek.” Again, you can see this information by typing <code>?week</code> in your console.</p></li>
+</ul>
+</section>
+<section id="sorting-dates" class="level2" data-number="28.9">
+<h2 data-number="28.9" class="anchored" data-anchor-id="sorting-dates"><span class="header-section-number">28.9</span> Sorting dates</h2>
+<p>Another really common thing we might want to do with date values is sort them chronologically. Fortunately, this is really easy to do with <code>dplyr</code>’s <code>arrange()</code> function. If we want to sort our dates in ascending order (i.e., oldest to most recent), we just pass the date column to the <code>...</code> argument of the <code>arrange()</code> function like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Oldest (top) to most recent (bottom)</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ascending order</span></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(dob)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   name_first dob       
+   &lt;chr&gt;      &lt;date&gt;    
+ 1 August     1980-06-13
+ 2 Natalie    1983-04-27
+ 3 Solomon    1988-06-28
+ 4 Lilly      1992-11-27
+ 5 Emmett     1994-09-03
+ 6 Nathaniel  1996-03-04
+ 7 Levi       1996-08-03
+ 8 Juan       1996-12-08
+ 9 Olivia     1997-08-02
+10 Sophia     1998-11-21</code></pre>
+</div>
+</div>
+<p>If we want to sort our dates in descending order (i.e., most recent to oldest), we just pass the date column to the <code>desc()</code> function before passing it to the <code>...</code> argument of the <code>arrange()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Most recent (top) to oldest (bottom)</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Descending order</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(dob))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   name_first dob       
+   &lt;chr&gt;      &lt;date&gt;    
+ 1 Sophia     1998-11-21
+ 2 Olivia     1997-08-02
+ 3 Juan       1996-12-08
+ 4 Levi       1996-08-03
+ 5 Nathaniel  1996-03-04
+ 6 Emmett     1994-09-03
+ 7 Lilly      1992-11-27
+ 8 Solomon    1988-06-28
+ 9 Natalie    1983-04-27
+10 August     1980-06-13</code></pre>
+</div>
+</div>
+<p>Much of the data we work with in epidemiology includes dates. In fact, it isn’t uncommon for the length of time that passes between to events to be the primary outcome that we are trying to understand. Hopefully, the tools we’ve learned in this chapter will give you a solid foundation for working with dates in R. For more information on dates, including a handy cheat sheet, I recommend visiting the <a href="https://lubridate.tidyverse.org/">lubridate website</a>.</p>
+
+
 </section>
 
 </main> <!-- /main -->

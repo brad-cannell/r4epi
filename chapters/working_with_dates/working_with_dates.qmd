@@ -84,42 +84,36 @@ knitr::include_graphics("timeline.png")
 For example, let's use base R's `as.Date()` function to create a date value from the string "2000-01-01".
 
 ```{r}
-#| echo: false
 as.Date("2000-01-01")
 ```
 
 On the surface, it doesn't look like anything happened. However, we can use base R's `unclass()` function to see R's internal integer representation of the date.
 
 ```{r}
-#| echo: false
 unclass(as.Date("2000-01-01"))
 ```
 
 Specifically, January 1st, 2000 is apparently 10,957 days after January 1st, 1970. What number would you expect to be returned if we used the date "1970-01-01"?
 
 ```{r}
-#| echo: false
 unclass(as.Date("1970-01-01"))
 ```
 
 What number would you expect to be returned if we used the date "1970-01-02"?
 
 ```{r}
-#| echo: false
 unclass(as.Date("1970-01-02"))
 ```
 
 And finally, what number would you expect to be returned if we used the date "1969-12-31"?
 
 ```{r}
-#| echo: false
 unclass(as.Date("1969-12-31"))
 ```
 
 This numeric representation of dates also works in the other direction. For example, we can pass the number 10,958 to the `as.Date()` function, along with the date origin, and R will return a human-readable date.
 
 ```{r}
-#| echo: false
 as.Date(10958, origin = "1970-01-01")
 ```
 
@@ -128,14 +122,12 @@ You may be wondering why we had to tell R the date origin. After all, didn't we 
 For example, if we imported a data set from SAS, we could correctly produce human-readable dates in the manner shown below:
 
 ```{r}
-#| echo: false
 from_sas <- tibble(
   date = c(10958, 10959, 10960)
 )
 ```
 
 ```{r}
-#| echo: false
 from_sas %>% 
   mutate(new_date = as.Date(date, origin = "1960-01-01"))
 ```
@@ -147,7 +139,6 @@ Hopefully, you now have a good intuition about how R stores dates under the hood
 As we said above, it's usually preferable to work with date values instead of date-time values. Fortunately, converting date-time values to dates is usually really easy. All we need to do is pass those values to the same `as.Date()` function we already saw above. For example:
 
 ```{r}
-#| echo: false
 birth_dates %>% 
   mutate(posix_to_date = as.Date(dob_actual)) %>% 
   select(dob_actual, posix_to_date)
@@ -170,7 +161,6 @@ Converting character strings to dates can be slightly more complicated than conv
 we need to use a series of special symbols to tell R which characters in the character string correspond to each date component. We'll list some of the most common ones first and then show you how to use them. The examples below assume that date each symbol is being applied to is `2000-01-15`.
 
 ```{r}
-#| echo: false
 tribble(
   ~Symbol, ~Description, ~Example,
   "%a", "Abbreviated weekday name", "Sat",
@@ -190,14 +180,12 @@ tribble(
 Now that we have a list of useful symbols that we can use to communicate with R, let's take another look at our birth date data.
 
 ```{r}
-#| echo: false
 birth_dates
 ```
 
 For our first example, let's try converting the character strings stored in the `dob_typical` to date values. Let' start by passing the values to `as.Date()` exactly as we did above and see what happens:
 
 ```{r}
-#| echo: false
 birth_dates %>% 
   mutate(dob_typical_to_date = as.Date(dob_typical)) %>% 
   select(dob_typical, dob_typical_to_date)
@@ -208,7 +196,6 @@ This is definitely not the result we wanted, right? Why didn't it work? Well, R 
 Let's try again:
 
 ```{r}
-#| echo: false
 birth_dates %>% 
   mutate(dob_typical_to_date = as.Date(dob_typical, format = "%m %d %Y")) %>% 
   select(dob_typical, dob_typical_to_date)
@@ -219,7 +206,6 @@ Wait, what? We told R that the values were 2-digit month (`%m`), 2-digit day (`%
 Let's try one more time:
 
 ```{r}
-#| echo: false
 birth_dates %>% 
   mutate(dob_typical_to_date = as.Date(dob_typical, format = "%m/%d/%Y")) %>% 
   select(dob_typical, dob_typical_to_date)
@@ -240,14 +226,12 @@ birth_dates %>%
 Let's try one more example, just to make sure we've got this down. Take a look at the `dob_long` column. What value will we need to pass to `as.Date()`'s format argument in order to convert these character strings to dates?
 
 ```{r}
-#| echo: false
 select(birth_dates, dob_long)
 ```
 
 Did you figure it out? The solution is below:
 
 ```{r}
-#| echo: false
 birth_dates %>% 
   mutate(dob_long_to_date = as.Date(dob_long, format = "%B %d, %Y")) %>% 
   select(dob_long, dob_long_to_date)
@@ -270,7 +254,6 @@ birth_dates %>%
 So, far we've talked about transforming character strings into dates. However, the reverse is also possible. Meaning, we can transform date values into character strings that we can style (i.e., format) in just about any way you could possibly want to style a date. For example:
 
 ```{r}
-#| echo: false
 birth_dates %>% 
   mutate(dob_abbreviated = format(dob_actual, "%d %b %y")) %>% 
   select(dob_actual, dob_abbreviated)
@@ -295,12 +278,10 @@ Base R actually includes a few useful built-in dates that we can use. They can o
 ### Today's date
 
 ```{r}
-#| echo: false
 Sys.Date()
 ```
 
 ```{r}
-#| echo: false
 lubridate::today()
 ```
 
@@ -309,12 +290,10 @@ These functions can be useful for calculating any length of time up to today. Fo
 ### Today's date-time
 
 ```{r}
-#| echo: false
 Sys.time()
 ```
 
 ```{r}
-#| echo: false
 lubridate::now()
 ```
 
@@ -323,7 +302,6 @@ Because these functions also return the current time, they can be useful for tim
 As a silly example to show you how this works, let's generate 1,000,000 random numbers.
 
 ```{r}
-#| echo: false
 set.seed(703)
 rand_mill <- rnorm(1000000)
 ```
@@ -331,7 +309,6 @@ rand_mill <- rnorm(1000000)
 Now, let's find the mean value of those numbers two different ways, and check to see if there is any time difference between the two:
 
 ```{r}
-#| echo: false
 # Save the start time
 start  <- lubridate::now()
 sum    <- sum(rand_mill)
@@ -343,19 +320,16 @@ stop   <- lubridate::now()
 ```
 
 ```{r}
-#| echo: false
 stop - start
 ```
 
 ```{r}
-#| echo: false
 rm(mean)
 ```
 
 So, finding the mean this way took less than a second. Let's see how long using the `mean()` function takes:
 
 ```{r}
-#| echo: false
 # Save the start time
 start  <- lubridate::now()
 mean(rand_mill)
@@ -364,7 +338,6 @@ stop   <- lubridate::now()
 ```
 
 ```{r}
-#| echo: false
 stop - start
 ```
 
@@ -373,14 +346,12 @@ Although both methods above took less than a second to complete the calculations
 ### Character vector of full month names
 
 ```{r}
-#| echo: false
 month.name
 ```
 
 ### Character vector of abbreviated month names
 
 ```{r}
-#| echo: false
 month.abb
 ```
 
@@ -391,7 +362,6 @@ month.abb
 In the same way that we can simulate a sequence of numbers using the `seq()` function, we can simulate a sequence of dates using the `seq.Date()` function. We sometimes find this function useful for simulating data (including some of the data used in this book), and for filling in missing dates in longitudinal data. For example, we can use the `seq.Date()` function to return a vector of dates that includes all days between January 1st, 2020 and January 15th, 2020 like this:
 
 ```{r}
-#| echo: false
 seq.Date(
   from = as.Date("2020-01-01"),
   to   = as.Date("2020-01-15"),
@@ -406,7 +376,6 @@ So far, we've learned how to create and format dates in R. However, the real val
 Before we get into some examples, we are going to drop some of the columns from our `birth_dates` data frame because we won't need them anymore.
 
 ```{r}
-#| echo: false
 ages <- birth_dates %>% 
   select(name_first, dob = dob_default) %>% 
   print()
@@ -421,7 +390,6 @@ ages <- birth_dates %>%
 Next, let's create a variable in our data frame that is equal to today's date. In reality, this would be a great time to use `Sys.Date()` to ask R to return today's date. 
 
 ```{r}
-#| echo: false
 #| eval: false
 ages %>% 
   mutate(today = Sys.Date())
@@ -430,7 +398,6 @@ ages %>%
 However, we are not going to do that here, because it would cause the value of the `today` variable to update every time we update the book. That would make it challenging to write about the results we get. So, we're going to pretend that today is May 7th, 2020. We'll add that to our data frame like so:
 
 ```{r}
-#| echo: false
 ages <- ages %>% 
   mutate(today = as.Date("2020-05-07")) %>% 
   print()
@@ -451,7 +418,6 @@ Once we have those two pieces of information, we can ask R to calculate age for 
 Let's go ahead and load the `lubridate` package now.
 
 ```{r}
-#| echo: false
 #| message: false
 library(lubridate)
 ```
@@ -459,7 +425,6 @@ library(lubridate)
 Next, let's go ahead and calculate age 3 different ways:
 
 ```{r}
-#| echo: false
 ages %>% 
   mutate(
     age_subtraction = today - dob,
@@ -481,7 +446,6 @@ ages %>%
 Here is how we can convert the time difference and time interval values to age in years:
 
 ```{r}
-#| echo: false
 ages %>% 
   mutate(
     age_subtraction = as.numeric(today - dob) / 365.25,
@@ -505,7 +469,6 @@ ages %>%
   - In case you're wondering, here's the value returned by the `years()` function alone:
   
 ```{r}
-#| echo: false
 years(1)
 ```
 
@@ -516,7 +479,6 @@ Here's an example to quickly illustrate what we mean:
 Say we want to calculate the number of years between “2017-03-01” and “2018-03-01”.
 
 ```{r}
-#| echo: false
 start <- as.Date("2017-03-01")
 end   <- as.Date("2018-03-01")
 ```
@@ -524,13 +486,11 @@ end   <- as.Date("2018-03-01")
 The most meaningful result in this situation is obviously 1 year.
 
 ```{r}
-#| echo: false
 # The base R way
 as.numeric(difftime(end, start)) / 365.25
 ```
 
 ```{r}
-#| echo: false
 # The lubridate way
 (start %--% end) / years(1)
 ```
@@ -540,12 +500,142 @@ Notice that `lubridate`'s method returns exactly one year, but the base R method
 To further illustrate this point, let's look at what happens when the time interval includes a leap year. The year 2020 is a leap year, so let's calculate the number of years between “2019-03-01” and “2020-03-01”. Again, a meaningful result here should be a year. 
 
 ```{r}
-#| echo: false
 start <- as.Date("2019-03-01")
 end   <- as.Date("2020-03-01")
 ```
 
 ```{r}
-#| echo: false
 # The base R way
 as.numeric(difftime(end, start)) / 36
+```
+
+```{r}
+# The lubridate way
+(start %--% end) / years(1)
+```
+
+Notice that `lubridate`'s method returns exactly one year, but the base R method returns an approximation of a year.
+
+To further illustrate this point, let's look at what happens when the time interval includes a leap year. The year 2020 is a leap year, so let's calculate the number of years between “2019-03-01” and “2020-03-01”. Again, a meaningful result here should be a year. 
+
+```{r}
+start <- as.Date("2019-03-01")
+end   <- as.Date("2020-03-01")
+```
+
+```{r}
+# The base R way
+as.numeric(difftime(end, start)) / 365.25
+```
+
+```{r}
+# The lubridate way
+(start %--% end) / years(1)
+```
+
+Once again, the `lubridate` method returns exactly one year, while the base R method returns an approximation of a year. 
+
+### Rounding time intervals
+
+Okay, so now we know how to get age in years, and hopefully I convinced you that using functions from the `lubridate` package can help us do so in the most precise way possible. However, in most situations we would want to take our calculations one step further and round to whole years. There are actually a couple different ways to do so. For example:
+
+```{r}
+ages %>% 
+  mutate(
+    age_years = (dob %--% today) / years(1),
+    # If you want the age (in years) as of the person's last birthday
+    age_last  = trunc(age_years),
+    # If you want to round the age to the nearest year
+    age_near  = round(age_years)
+  )
+```
+
+👆**Here's what we did above:**
+
+* We created two new columns in the `ages` data frame called `age_last`, and `age_near`.
+
+  - We created `age_last` using the `trunc()` (for truncate) function. The value returned by the `trunc()` function can be interpreted as each person's age in years at their last birthday.
+  
+  - We created `age_near` using the `round()` function. The value returned by the `round()` function can be interpreted as each person's age in years at their nearest birthday -- which may not have occurred yet. This is probably not the value that you will typically be looking for. So, just make sure you choose the correct function for the type of rounding you want to do.
+  
+As a shortcut, we can use the integer division operator (`%/%`) to calculate each person's age in years at their nearest birthday without the `trunc()` function.
+
+```{r}
+ages %>% 
+  mutate(
+    # If you want the age (in years) as of the person's last birthday
+    age_years = (dob %--% today) %/% years(1)
+  )
+```
+
+## Extracting out date parts
+
+Sometimes it can be useful to store parts of a date in separate columns. For example, it is common to break date values up into their component parts when linking records across multiple data frames. We will learn how to link data frames a little later in the book. For now, we're just going to learn how separate dates into their component parts.
+
+We won't need the `today` column anymore, so I'll go ahead a drop it here.
+
+```{r}
+ages <- ages %>% 
+  select(-today) %>% 
+  print()
+```
+
+Typically, separating the date will include creating separate columns for the day, the month, and the year. Fortunately, lubridate includes intuitively named functions that make this really easy:
+
+```{r}
+ages %>% 
+  mutate(
+    day   = day(dob),
+    month = month(dob),
+    year  = year(dob)
+  )
+```
+
+👆**Here's what we did above:**
+
+* We created three new columns in the `ages` data frame called `day`, `month`, and `year`. We created them by passing the `dob` column to the `x` argument of `lubridate`'s `day()`, `month()`, and `year()` functions respectively. 
+
+`lubridate` also includes functions for extracting other information from date values. For example:
+
+```{r}
+ages %>% 
+  mutate(
+    wday         = wday(dob),
+    day_full     = wday(dob, label = TRUE, abbr = FALSE),
+    day_abb      = wday(dob, label = TRUE, abbr = TRUE),
+    week_of_year = week(dob),
+    week_cdc     = epiweek(dob)
+  )
+```
+
+👆**Here's what we did above:**
+
+* We created five new columns in the `ages` data frame called `wday`, `day_abb`,`day_full`, `week_of_year`, and `week_cdc`. We created them by passing the `dob` column to the `x` argument of `lubridate`'s `wday()`, `week()`, and `epiweek()` functions respectively.
+
+* The `wday()` function returns the day of the week the given date falls on. By default, the `wday()` returns an integer value between 1 and 7. We can adjust the values passed to `wday()`'s `label` and `abbr` arguments to return full day names (`day_full`) and abbreviated day names (`day_abb`).
+
+* The `week()` function returns the week of the year the given date falls in. More formally, the `week()` function "returns the number of complete seven-day periods that have occurred between the date and January 1st, plus one." You can see this information by typing `?week` in your console.
+
+* The `epiweek()` function also returns the week of the year the given date falls in. However, it calculates the week in a slightly different way. Specifically, "it uses the US CDC version of epidemiological week. It follows same rules as isoweek() but starts on Sunday. In other parts of the world the convention is to start epidemiological weeks on Monday, which is the same as isoweek." Again, you can see this information by typing `?week` in your console.
+
+## Sorting dates
+
+Another really common thing we might want to do with date values is sort them chronologically. Fortunately, this is really easy to do with `dplyr`'s `arrange()` function. If we want to sort our dates in ascending order (i.e., oldest to most recent), we just pass the date column to the `...` argument of the `arrange()` function like so:
+
+```{r}
+# Oldest (top) to most recent (bottom)
+# Ascending order
+ages %>% 
+  arrange(dob)
+```
+
+If we want to sort our dates in descending order (i.e., most recent to oldest), we just pass the date column to the `desc()` function before passing it to the `...` argument of the `arrange()` function.
+
+```{r}
+# Most recent (top) to oldest (bottom)
+# Descending order
+ages %>% 
+  arrange(desc(dob))
+```
+
+Much of the data we work with in epidemiology includes dates. In fact, it isn't uncommon for the length of time that passes between to events to be the primary outcome that we are trying to understand. Hopefully, the tools we've learned in this chapter will give you a solid foundation for working with dates in R. For more information on dates, including a handy cheat sheet, I recommend visiting the [lubridate website](https://lubridate.tidyverse.org/).

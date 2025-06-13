@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -564,6 +598,7 @@ cookieconsent.run({
   <li><a href="#testing-a-sequence-of-conditions" id="toc-testing-a-sequence-of-conditions" class="nav-link" data-scroll-target="#testing-a-sequence-of-conditions"><span class="header-section-number">30.3</span> Testing a sequence of conditions</a></li>
   <li><a href="#recoding-variables" id="toc-recoding-variables" class="nav-link" data-scroll-target="#recoding-variables"><span class="header-section-number">30.4</span> Recoding variables</a></li>
   <li><a href="#case_when-is-lazy" id="toc-case_when-is-lazy" class="nav-link" data-scroll-target="#case_when-is-lazy"><span class="header-section-number">30.5</span> case_when() is lazy</a></li>
+  <li><a href="#recode-missing" id="toc-recode-missing" class="nav-link" data-scroll-target="#recode-missing"><span class="header-section-number">30.6</span> Recode missing</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/brad-cannell/r4epi/edit/main/chapters/conditional_operations/conditional_operations.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/brad-cannell/r4epi/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -601,7 +636,7 @@ cookieconsent.run({
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="values.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="values.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -611,7 +646,7 @@ cookieconsent.run({
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="conditions.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="conditions.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -622,7 +657,7 @@ cookieconsent.run({
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="rain.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="rain.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -630,6 +665,14 @@ cookieconsent.run({
 <p>In this hypothetical scenario, they say, “yes, dad,” and then go to the window to see if it’s raining. Then, they choose their next action (i.e., raincoat wearing) depending on whether the condition (raining) is met or not.</p>
 <p>Just like we have to ask our daughters to put on a raincoat using conditional logic, we sometimes have to ask R to execute commands using conditional logic. Additionally, we have to do so in a way that R understands. For example, we can use <code>dplyr</code>’s <code>if_else()</code> function to ask R to execute commands conditionally. Let’s go ahead and take a look at an example now:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">day     =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">weather =</span> <span class="fu">c</span>(<span class="st">"rain"</span>, <span class="st">"rain"</span>, <span class="st">"no rain"</span>, <span class="st">"rain"</span>, <span class="st">"no rain"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 2
     day weather
@@ -647,6 +690,14 @@ cookieconsent.run({
 </ul>
 <p>Now, let’s say that we want to create a new column in our data frame called <code>raincoat</code>. We want the value of <code>raincoat</code> to be <code>wear</code> on rainy days and <code>no wear</code> on days when it isn’t raining. Here’s how we can do that with the if_else() function:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">condition =</span> weather <span class="sc">==</span> <span class="st">"rain"</span>, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">true      =</span> <span class="st">"wear"</span>, </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">false     =</span> <span class="st">"no wear"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 3
     day weather raincoat
@@ -682,12 +733,17 @@ Note
 </div>
 <p>Before moving on, let’s dive into this a little further. R must always be able to reduce whatever value we pass to the <code>condition</code> argument of <code>if_else()</code> to TRUE or FALSE. That’s how R views any expression we pass to the <code>condition</code> argument. We can literally even pass the value <code>TRUE</code> or the value <code>FALSE</code> (not that doing so has much practical application):</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">if_else</span>(<span class="cn">TRUE</span>, <span class="st">"wear"</span>, <span class="st">"no wear"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "wear"</code></pre>
 </div>
 </div>
 <p>Because the value passed to the <code>condition</code> argument is <code>TRUE</code> (in this case, literally), the <code>if_else()</code> function returns the value <code>wear</code>. What happens if we use this code to assign values to the <code>raincoat</code> column?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(<span class="cn">TRUE</span>, <span class="st">"wear"</span>, <span class="st">"no wear"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 3
     day weather raincoat
@@ -701,6 +757,10 @@ Note
 </div>
 <p>Again, the <code>if_else()</code> function returns the value <code>wear</code> because the value passed to the <code>condition</code> argument is <code>TRUE</code>. Then, R uses its recycling rules to copy the value <code>wear</code> to every row of the <code>raincoat</code> column. What would do you think will happen if we pass the value <code>FALSE</code> to the <code>condition</code> argument instead?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(<span class="cn">FALSE</span>, <span class="st">"wear"</span>, <span class="st">"no wear"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 3
     day weather raincoat
@@ -715,6 +775,10 @@ Note
 <p>Hopefully, that was the result you expected. The <code>if_else()</code> function returns the value <code>no wear</code> because the value passed to the <code>condition</code> argument is <code>FALSE</code>. Then, R uses its recycling rules to copy the value <code>no wear</code> to every row of the <code>raincoat</code> column.</p>
 <p>we can take this a step further and actually pass a vector of logical (<code>TRUE</code>/<code>FALSE</code>) values to the <code>condition</code> argument. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>rainy_days <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">raincoat =</span> <span class="fu">if_else</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="st">"wear"</span>, <span class="st">"no wear"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 3
     day weather raincoat
@@ -728,6 +792,7 @@ Note
 </div>
 <p>In reality, that’s sort of what we did in the very first <code>if_else()</code> example above. But, instead of typing the values manually, we used an expression that returned a vector of logical values. Specifically, we used the equality operator (<code>==</code>) to check whether or not each value in the <code>weather</code> column was equal to the value “rain” or not.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rainy_days<span class="sc">$</span>weather <span class="sc">==</span> <span class="st">"rain"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  TRUE  TRUE FALSE  TRUE FALSE</code></pre>
 </div>
@@ -740,7 +805,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="operands.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="operands.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -750,7 +815,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="comparison-numeric.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="comparison-numeric.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -759,7 +824,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="comparison-character.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="comparison-character.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -768,7 +833,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="arithmetic.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="arithmetic.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -777,7 +842,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="logical.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="logical.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -789,6 +854,11 @@ Note
 <li><p>Many of you may not have seen the modulus operator (<code>%%</code>) before. The modulus operator returns the remainder that is left after dividing two numbers. For example, 4 divided by 2 is 2 with a remainder of 0 because 2 goes into 4 <em>exactly</em> two times. Said another way, 2 * 2 = 4 and 4 - 4 = 0. So, <code>4 %% 2 = 0</code>. However, 3 divided by 2 is 1 with a remainder of 1 because 2 goes into 3 one time with 1 left over. Said another way, 2 * 1 = 2 and 3 - 2 = 1. So, <code>3 %% 2 = 1</code>. How is this useful? Well, the only times we can remember using the modulus operator have been when we needed to separate even and odd rows of a data frame. For example, let’s say that we have a data frame where each person has two rows. The first row always corresponds to treatment A and the second row always corresponds to treatment B. However, for some reason (maybe blinding?), there was no <code>treatment</code> column in the data when we received it. We could use the modulus operator to add a <code>treatment</code> column like this:</p></li>
 </ul>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id        =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 2
      id outcome
@@ -800,6 +870,12 @@ Note
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Odd rows are treatment A</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Even rows are treatment B</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">if_else</span>(<span class="fu">row_number</span>() <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"A"</span>, <span class="st">"B"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
      id outcome treatment
@@ -814,6 +890,16 @@ Note
 <li>we also want to remind you that we should always use the <code>is.na()</code> function to check for missing values. Not the equality operator (<code>==</code>). Using the equality operator when there are missing values can give results that may be unexpected. For example:</li>
 </ul>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name1 =</span> <span class="fu">c</span>(<span class="st">"Jon"</span>, <span class="st">"John"</span>, <span class="cn">NA</span>),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name2 =</span> <span class="fu">c</span>(<span class="st">"Jon"</span>, <span class="st">"Jon"</span>, <span class="st">"Jon"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_match =</span> name1 <span class="sc">==</span> name2</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   name1 name2 name_match
@@ -825,6 +911,11 @@ Note
 </div>
 <p>Many of us would expect the third value of the <code>name_match</code> column to be <code>FALSE</code> instead of <code>NA</code>. There are a couple of different ways we can get <code>FALSE</code> in the third row instead of <code>NA</code>. One way, although not necessarily the best way, is to use the <code>if_else()</code> function:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_match =</span> name1 <span class="sc">==</span> name2,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name_match =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(name_match), <span class="cn">FALSE</span>, name_match)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   name1 name2 name_match
@@ -847,6 +938,12 @@ Note
 <h2 data-number="30.2" class="anchored" data-anchor-id="testing-multiple-conditions-simultaneously"><span class="header-section-number">30.2</span> Testing multiple conditions simultaneously</h2>
 <p>So far, we have only ever passed one condition to the <code>condition</code> argument of the <code>if_else()</code> function. However, we can pass as many conditions as we want. Having said that, more than 2, or maybe 3, gets very convoluted. Let’s go ahead and take a look at a couple of examples now. We’ll start by simulating some blood pressure data:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>blood_pressure <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sysbp  =</span> <span class="fu">c</span>(<span class="dv">152</span>, <span class="dv">120</span>, <span class="dv">119</span>, <span class="dv">123</span>, <span class="dv">135</span>, <span class="dv">83</span>, <span class="dv">191</span>, <span class="dv">147</span>, <span class="dv">209</span>, <span class="dv">166</span>),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">diasbp =</span> <span class="fu">c</span>(<span class="dv">78</span>, <span class="dv">60</span>, <span class="dv">88</span>, <span class="dv">76</span>, <span class="dv">85</span>, <span class="dv">54</span>, <span class="dv">116</span>, <span class="dv">95</span>, <span class="dv">100</span>, <span class="dv">106</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
       id sysbp diasbp
@@ -865,6 +962,8 @@ Note
 </div>
 <p>A person may be categorized as having normal blood pressure when their systolic blood pressure is less than 120 mmHG <em>AND</em> their diastolic blood pressure is less than 80 mmHG. We can use this information and the <code>if_else()</code> function to create a new column in our data frame that contains information about whether each person in our simulated data frame has normal blood pressure or not:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>blood_pressure <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bp =</span> <span class="fu">if_else</span>(sysbp <span class="sc">&lt;</span> <span class="dv">120</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">80</span>, <span class="st">"Normal"</span>, <span class="st">"Not Normal"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 4
       id sysbp diasbp bp        
@@ -899,13 +998,22 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="bp.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="bp.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>This is the perfect opportunity to use <code>dplyr</code>’s <code>case_when()</code> function. Take a look:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>blood_pressure <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">bp =</span> <span class="fu">case_when</span>(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&lt;</span> <span class="dv">120</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">80</span>                               <span class="sc">~</span> <span class="st">"Normal"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&gt;=</span> <span class="dv">120</span> <span class="sc">&amp;</span> sysbp <span class="sc">&lt;</span> <span class="dv">130</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">80</span>                <span class="sc">~</span> <span class="st">"Elevated"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&gt;=</span> <span class="dv">130</span> <span class="sc">&amp;</span> sysbp <span class="sc">&lt;</span> <span class="dv">140</span> <span class="sc">|</span> diasbp <span class="sc">&gt;=</span> <span class="dv">80</span> <span class="sc">&amp;</span> diasbp <span class="sc">&lt;</span> <span class="dv">90</span> <span class="sc">~</span> <span class="st">"Hypertension Stage 1"</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>      sysbp <span class="sc">&gt;=</span> <span class="dv">140</span> <span class="sc">|</span> diasbp <span class="sc">&gt;=</span> <span class="dv">90</span>                             <span class="sc">~</span> <span class="st">"Hypertension Stage 2"</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 4
       id sysbp diasbp bp                  
@@ -967,11 +1075,18 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>🗒<strong>Side Note:</strong> You may not have ever heard of <strong>collapsing</strong> variables before. It simply means combing two or more values of our variable. We can collapse continuous variables into categories, as we discussed in the example above, or we can collapse categories into broader categories (as we will see with the race category example below). After we collapse a variable, it always contains fewer (and broader) possible values than it contained before we collapsed it.</p>
+<p>You may not have ever heard of <strong>collapsing</strong> variables before. It simply means combing two or more values of our variable. We can collapse continuous variables into categories, as we discussed in the example above, or we can collapse categories into broader categories (as we will see with the race category example below). After we collapse a variable, it always contains fewer (and broader) possible values than it contained before we collapsed it.</p>
 </div>
 </div>
 <p>we’re going to show you how to do this below using the <code>case_when()</code> function. However, we’re going to do it piecemeal so that we can highlight a few important concepts. First, let’s simulate some data that includes 10 participant’s ages.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate some age data</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">id  =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">c</span>(<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="dv">9</span>, <span class="cn">TRUE</span>), <span class="cn">NA</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
       id   age
@@ -990,6 +1105,12 @@ Note
 </div>
 <p>Then, let’s start the process of collapsing the <code>age</code> column into a new column called <code>age_3cat</code> that contains the 3 age categories we discussed above:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span> <span class="sc">~</span> <span class="dv">1</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
       id   age age_3cat
@@ -1026,6 +1147,13 @@ Note
 </ul>
 <p>Now, let’s add a second two-sided formula to our <code>case_when()</code> function.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>             <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> age <span class="sc">&lt;</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">2</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
       id   age age_3cat
@@ -1062,6 +1190,13 @@ Note
 </ul></li>
 </ul>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>             <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> <span class="er">&lt;</span> <span class="dv">18</span>     <span class="sc">~</span> <span class="dv">2</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in parse(text = input): &lt;text&gt;:5:19: unexpected '&lt;'
 4:       age &lt; 12             ~ 1,
@@ -1071,6 +1206,14 @@ Note
 </div>
 <p>Ok, let’s go ahead and wrap up this age category variable:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>             <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> age <span class="sc">&lt;</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">18</span>            <span class="sc">~</span> <span class="dv">3</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
       id   age age_3cat
@@ -1096,6 +1239,10 @@ Note
 <h2 data-number="30.5" class="anchored" data-anchor-id="case_when-is-lazy"><span class="header-section-number">30.5</span> case_when() is lazy</h2>
 <p>What do we mean when we say that <code>case_when()</code> is lazy? Well, it may not have registered when we mentioned it above, but <code>case_when()</code> stops evaluating two-sided functions for a value as soon as it finds one that is <code>TRUE</code>. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 1
   number
@@ -1106,6 +1253,14 @@ Note
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fu">case_when</span>(</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>      number <span class="sc">&lt;</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Small"</span>,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>      number <span class="sc">&lt;</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Medium"</span>,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>      number <span class="sc">&lt;</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">"Large"</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
   number size  
@@ -1118,6 +1273,14 @@ Note
 <p>Why wasn’t the value for the <code>size</code> column <code>Large</code> in every row of the data frame? After all, <code>1</code>, <code>2</code>, and <code>3</code> are all less than <code>4</code>, and <code>number &lt; 4</code> was the final possible two-sided formula that could have been evaluated for each value of <code>number</code>. The answer is that <code>case_when()</code> is lazy. The first value in <code>number</code> is <code>1</code>. <code>1</code> is less than <code>2</code>. So, the condition in the first two-sided formula evaluates to <code>TRUE</code>. So, <code>case_when()</code> immediately returns the value on the right-hand side (<code>Small</code>) and <strong>does not continue checking two-sided formulas. It moves on to the next value of <code>number</code>.</strong></p>
 <p>The fact that <code>case_when()</code> is lazy isn’t a bad thing. It’s just something to be aware of. In fact, we can often use it to our advantage. For example, we can use <code>case_when()</code>’s laziness to rewrite the <code>age_3cat</code> code from above a little more succinctly:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>ages <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>  <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">18</span>  <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">3</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
       id   age age_3cat
@@ -1136,8 +1299,256 @@ Note
 </div>
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
-<li>Because <code>case_when()</code> is lazy, we were able to omit the <code>age &gt;= 12</code> condition from the second two-sided formula. It’s unnecessary because the value <code>1</code> is immediately returned for every person with an <code>age</code> value less than <code>12</code>. By definition, any value being evaluated in the second two-sided function (<code>age &lt; 18</code>) has an age value greater than</li>
+<li>Because <code>case_when()</code> is lazy, we were able to omit the <code>age &gt;= 12</code> condition from the second two-sided formula. It’s unnecessary because the value <code>1</code> is immediately returned for every person with an <code>age</code> value less than <code>12</code>. By definition, any value being evaluated in the second two-sided function (<code>age &lt; 18</code>) has an age value greater than or equal to 12.</li>
 </ul>
+</section>
+<section id="recode-missing" class="level2" data-number="30.6">
+<h2 data-number="30.6" class="anchored" data-anchor-id="recode-missing"><span class="header-section-number">30.6</span> Recode missing</h2>
+<p>We’ve already talked about how R uses the special <code>NA</code> value to represent missing data. We’ve also learned how to convert other representations of missing data (e.g., “.”) to <code>NA</code> when we are importing data. However, It is extremely common for data sets that we use in epidemiology to include “don’t know” and “refused” answer options in addition to true “missing”. By convention, those options are often coded as <code>7</code> and <code>9</code>. For questions that include 7 or more response options (e.g., month), then <code>77</code> and <code>99</code> are commonly used to represent “don’t know” and “refused”. For questions that include 77 or more response options (e.g., age), then <code>777</code> and <code>999</code> are commonly used to represent “don’t know” and “refused”.</p>
+<p>Differentiating between true missing (i.e., the respondent was never asked the question or just left the response blank on a written questionnaire), don’t know (i.e., the respondent doesn’t know the answer), and refused (i.e., the respondent knows the answer, but doesn’t want to reveille it – possibly out of shame, fear, or embarrassment) can be of some interest for survey design purposes. However, all three of the values described above typically just amount to missing data by the time we get around to the substantive analyses. In other words, knowing that a person refused to give their age doesn’t help me figure out how old they are any more than if they had never been asked at all. Therefore, we commonly use conditional operations in epidemiology to recode these kinds of values to explicitly missing values (<code>NA</code>).</p>
+<p>We’ll walk through an example below, but first we will simulate some additional data. Specifically, we’ll add a <code>race</code> column and a <code>hispanic</code> column to our <code>ages</code> data frame, and name the new data frame <code>demographics</code>.</p>
+<p>Let’s assume that we have a survey that asks people what race they most identify with. For the moment, let’s assume that they can only select one race. Further, let’s say that the options they are given to select from are:</p>
+<p>1 = White<br>
+2 = Black or African American<br>
+3 = American Indian or Alaskan Native<br>
+4 = Asian<br>
+5 = Pacific Islander<br>
+7 = Don’t know<br>
+9 = Refused</p>
+<p>Let’s say that we also ask if they self-identify their ethnicity as Hispanic or not. The options they are given to select from are:</p>
+<p>0 = No, not Hispanic<br>
+1 = Yes, Hispanic<br>
+7 = Don’t know<br>
+9 = Refused</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="ot">&lt;-</span> ages <span class="sc">%&gt;%</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">race     =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">9</span>, <span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">9</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 4
+      id   age  race hispanic
+   &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;
+ 1     1    15     1        7
+ 2     2    19     2        0
+ 3     3    14     1        1
+ 4     4     3     4        0
+ 5     5    10     7        1
+ 6     6    18     1        0
+ 7     7    22     2        1
+ 8     8    11     9        9
+ 9     9     5     1        0
+10    10    NA     3        1</code></pre>
+</div>
+</div>
+<p>A very common way that we may want to transform data like this is to collapse race and ethnicity into as single combined race and ethnicity column. Further, notice that American Indian or Alaskan Native race and Asian race are only observed once each, and Pacific Islander race is not observed at all. When values are observed very few times in the data like this, it is common to collapse them into an “other” category. Therefore, our new combined race and ethnicity column will have the following possible values:</p>
+<p>1 = White, non-Hispanic<br>
+2 = Black, non-Hispanic<br>
+3 = Hispanic, any race<br>
+4 = Other race, non-Hispanic</p>
+<p>There are multiple ways that we can create this new column. We could start by using <code>if_else()</code> to recode <code>7</code> and <code>9</code> to missing:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recode 7 and 9 to missing</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_recode =</span> <span class="fu">if_else</span>(race <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA</span>, race),</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic_recode =</span> <span class="fu">if_else</span>(hispanic <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> hispanic <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA</span>, hispanic)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+      id   age  race hispanic race_recode hispanic_recode
+   &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+ 1     1    15     1        7           1              NA
+ 2     2    19     2        0           2               0
+ 3     3    14     1        1           1               1
+ 4     4     3     4        0           4               0
+ 5     5    10     7        1          NA               1
+ 6     6    18     1        0           1               0
+ 7     7    22     2        1           2               1
+ 8     8    11     9        9          NA              NA
+ 9     9     5     1        0           1               0
+10    10    NA     3        1           3               1</code></pre>
+</div>
+</div>
+<p>We intentionally made this error because it’s a really easy one to make, and you will probably make it too. If we look back to the <a href="../lets_get_programming/lets_get_programming.html#missing-data">Let’s get programming chapter</a>, we will see that we briefly discussed the <code>NA</code> value being type logical by default. We also talked about “type coercion” and how most of the time we don’t have to worry about it. We said that R generally coerces <code>NA</code> to <code>NA_character</code>, <code>NA_double</code>, or whatever specific version of <code>NA</code> is most appropriate for the data type automatically. We also said that there are some exceptions. Notably, when using the <code>if_else()</code> and <code>case_when()</code> functions, R will throw an error instead of automatically type coercing. Finally, we said we would discuss it later. It’s later now. Long story short, the developers of the <code>if_else()</code> function do this on purpose to make the function’s returned result more predictable and slightly faster.</p>
+<p>For us, this just means that we have to remember to use <code>NA_character</code>, <code>NA_integer</code>, or <code>NA_real</code> as appropriate. For example, the error message above says, “<code>false</code> must be a logical vector, not a double vector.” This means that the value we passed to the <code>false</code> argument was type double, but <code>if_else()</code> was expecting it to be type logical. Why? Well, <code>if_else()</code> was expecting it to be type logical because the value we passed to the <code>true</code> argument (<code>NA</code>) is type logical, and vectors can only ever have one type. To fix this error, we simply need to change the value we are passing to the <code>true</code> argument from logical (<code>NA</code>) to double (<code>NA_real</code>) so that it matches the values we are passing to the <code>false</code> argument.</p>
+<p>Let’s try again using <code>NA_real</code> instead of <code>NA</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recode 7 and 9 to missing</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_recode =</span> <span class="fu">if_else</span>(race <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, race),</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic_recode =</span> <span class="fu">if_else</span>(hispanic <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> hispanic <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, hispanic)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+      id   age  race hispanic race_recode hispanic_recode
+   &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+ 1     1    15     1        7           1              NA
+ 2     2    19     2        0           2               0
+ 3     3    14     1        1           1               1
+ 4     4     3     4        0           4               0
+ 5     5    10     7        1          NA               1
+ 6     6    18     1        0           1               0
+ 7     7    22     2        1           2               1
+ 8     8    11     9        9          NA              NA
+ 9     9     5     1        0           1               0
+10    10    NA     3        1           3               1</code></pre>
+</div>
+</div>
+<p>Great! We can move on with creating our new race and ethnicity column now that we’ve explicitly transformed <code>7</code>’s and <code>9</code>’s to <code>NA</code>. There’s nothing “new” in the code below, so we’re not going to explain it line-by-line. However, it’s a little bit dense, so we recommend that you take a few minutes to review it thoroughly and make sure you understand what each line is doing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recode 7 and 9 to missing</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_recode     =</span> <span class="fu">if_else</span>(race <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, race),</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hispanic_recode =</span> <span class="fu">if_else</span>(hispanic <span class="sc">==</span> <span class="dv">7</span> <span class="sc">|</span> hispanic <span class="sc">==</span> <span class="dv">9</span>, <span class="cn">NA_real_</span>, hispanic),</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat   =</span> <span class="fu">case_when</span>(</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>      <span class="co"># White, non-Hispanic</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Black, non-Hispanic</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>      <span class="co"># American Indian or Alaskan Native to Other race, non-Hispanic</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">3</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Asian to Other race, non-Hispanic</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">4</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Pacific Islander to Other race, non-Hispanic</span></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>      race_recode <span class="sc">==</span> <span class="dv">4</span> <span class="sc">&amp;</span> hispanic_recode <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Hispanic, any race</span></span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>      hispanic_recode <span class="sc">==</span> <span class="dv">1</span>                    <span class="sc">~</span> <span class="dv">3</span></span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 7
+      id   age  race hispanic race_recode hispanic_recode race_eth_4cat
+   &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;
+ 1     1    15     1        7           1              NA            NA
+ 2     2    19     2        0           2               0             2
+ 3     3    14     1        1           1               1             3
+ 4     4     3     4        0           4               0             4
+ 5     5    10     7        1          NA               1             3
+ 6     6    18     1        0           1               0             1
+ 7     7    22     2        1           2               1             3
+ 8     8    11     9        9          NA              NA            NA
+ 9     9     5     1        0           1               0             1
+10    10    NA     3        1           3               1             3</code></pre>
+</div>
+</div>
+<p>The code above works, and it is very explicit. However, we can definitely make it more succinct and easier to read. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(hispanic) <span class="sc">|</span> hispanic <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>) <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># Unknown ethnicity</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>      hispanic <span class="sc">==</span> <span class="dv">1</span>                           <span class="sc">~</span> <span class="dv">3</span>,        <span class="co"># Hispanic, any race</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(race) <span class="sc">|</span> race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>)         <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># non-Hispanic, unknown race</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">1</span>                               <span class="sc">~</span> <span class="dv">1</span>,        <span class="co"># White, non-Hispanic</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">2</span>                               <span class="sc">~</span> <span class="dv">2</span>,        <span class="co"># Black, non-Hispanic</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>                                    <span class="sc">~</span> <span class="dv">4</span>         <span class="co"># Other race, non-Hispanic</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 5
+      id   age  race hispanic race_eth_4cat
+   &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;         &lt;dbl&gt;
+ 1     1    15     1        7            NA
+ 2     2    19     2        0             2
+ 3     3    14     1        1             3
+ 4     4     3     4        0             4
+ 5     5    10     7        1             3
+ 6     6    18     1        0             1
+ 7     7    22     2        1             3
+ 8     8    11     9        9            NA
+ 9     9     5     1        0             1
+10    10    NA     3        1             3</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>dplyr</code>’s <code>case_when()</code> function to create a new column in our data frame (<code>race_eth_4cat</code>) that categorized each participant into one of 4 race and ethnicity categories depending on their values in the <code>race</code> column and the <code>hispanic</code> column.</p></li>
+<li><p>Compared to the first method we used, the second method doesn’t explicitly create new <code>race</code> and <code>hispanic</code> columns with the <code>7</code>’s and <code>9</code>’s recoded to <code>NA</code>. In the second method, those columns aren’t needed.</p></li>
+<li><p>The very first two-sided formula tells <code>case_when()</code> to set the value of <code>race_eth_4cat</code> to <code>NA_real_</code> when the value of <code>hispanic</code> is missing.</p>
+<ul>
+<li><p>We put this two-sided formula first because if we don’t know a person’s Hispanic ethnicity, then we can’t put them into any category of <code>race_eth_4cat</code>. All categories of <code>race_eth_4cat</code> are dependent on a known value for <code>hispanic</code>. For example, look at participant number 1. They reported being white, but they don’t give their ethnicity. Which category do we put them in? We can’t put them in <code>White, non-Hispanic</code> because they very well could be Hispanic. We can’t put them in <code>Hispanic, any race</code> because they very well could be non-Hispanic. We don’t know. We never will. We code them as missing and don’t evaluate any further. And because <code>case_when()</code> is lazy, any other participants with a missing value for <code>hispanic</code> would also only have this first two-sided formula evaluated.</p></li>
+<li><p>There were no actual <code>NA</code> values in the <code>hispanic</code> column, but we put it in the code for completeness. There will be some true missing (<code>NA</code>) values in most real-world data sets.</p></li>
+<li><p>Notice that we finally used the <code>%in%</code> operator above (<code>hispanic %in% c(7, 9)</code>). This is equivalent to typing <code>hispanic == 7 | hispanic == 9</code>. Notice that’s an <em>OR</em>. In this case, it doesn’t save us a ton of typing and visual clutter, but in many cases it can.</p></li>
+</ul></li>
+<li><p>The second two-sided formula tells <code>case_when()</code> to set the value of <code>race_eth_4cat</code> to <code>3</code> (i.e., Hispanic any-race) when the value of <code>hispanic</code> is <code>1</code>. Why did we put this second? If we know that someone is Hispanic, does it matter what race they reported? Nope! No matter what race they reported (even missing race) they get coded as <code>Hispanic, any race</code>. And because <code>case_when()</code> is lazy, putting this two-sided formula second has two advantages:</p>
+<ul>
+<li><p>Any other participants with a value of <code>1</code> for <code>hispanic</code> would only have the first two two-sided formulas evaluated. In other words, for each Hispanic participant, R would only evaluate 2 two-sided formulas instead of the 6 we used in the first method. With only 10 participants in the data, we won’t notice any performance improvement. But, this performance improvement can add up when we have thousands or millions of rows.</p></li>
+<li><p>It allows us to remove the <code>hispanic == 0</code> from the remaining two-sided formulas. Think about it. All participants with a missing value for <code>hispanic</code> were accounted for in the first two-sided formula. All participants with a <code>1</code> for <code>hispanic</code> were accounted for in the second two-sided formula. By definition, any participant left in the data must have a value of <code>0</code> for <code>hispanic</code>. There’s no need to write that code and there’s no need for R to evaluate that condition. Less typing for us and further performance improvements to boot.</p></li>
+</ul></li>
+<li><p>The third two-sided formula tells <code>case_when()</code> to set the value of <code>race_eth_4cat</code> to <code>NA_real_</code> when the value of <code>race</code> is missing. At this point in the code, there are no participants left with a value of <code>1</code> for <code>hispanic</code>. Therefore, if they are missing a value for <code>race</code> we won’t be able to assign them a value for <code>race_eth_4cat</code>. We code them as missing and don’t evaluate any further.</p></li>
+<li><p>The fourth and fifth two-sided formulas tell <code>case_when()</code> to set the value of <code>race_eth_4cat</code> to <code>1</code> and <code>2</code> respectively when the value of <code>race</code> is <code>1</code> and <code>2</code>.</p></li>
+<li><p>The final two-sided formula is simply <code>TRUE ~ 4</code>. This tells <code>case_when()</code> to set the value of <code>race_eth_4cat</code> to <code>4</code> when none of the other two-sided formulas above evaluated to <code>TRUE</code>. Why did we do this? Well, every participant with missing data has been accounted for, every <code>Hispanic</code> participant has been accounted for, every <code>White, non-Hispanic</code> participant has been accounted for, and every <code>Black, non-Hispanic</code> participant has been accounted for. Because case_when() is lazy, we know that any participant that makes it to this part of the code must fall into the <code>Other race, non-Hispanic</code> category.</p>
+<ul>
+<li>Notice that there is nothing at all about <code>race</code> or <code>hispanic</code> in this two-sided formula. It just says <code>TRUE</code>. What does <code>case_when()</code> do when a condition on the left-hand side evaluates to <code>TRUE</code>? It returns the value on the right-hand side. In this case <code>4</code>.</li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Sometimes, adding an a final <code>TRUE</code> condition like the one above can be really useful. However, we have to be really careful. We can easily get unintended results if we aren’t absolutely sure that we’ve already accounted for every possible combination of relevant conditions in the two-sided formulas that come before.</p>
+</div>
+</div>
+<p>Let’s go ahead and wrap up this chapter with one consolidated code chunk that cleans our demographics data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Recode variables</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Collapse continuous age into 3 categories</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">12</span>  <span class="sc">~</span> <span class="dv">1</span>, <span class="co"># child</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&lt;</span> <span class="dv">18</span>  <span class="sc">~</span> <span class="dv">2</span>, <span class="co"># adolescent</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">&gt;=</span> <span class="dv">18</span> <span class="sc">~</span> <span class="dv">3</span>  <span class="co"># adult</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_3cat_f =</span> <span class="fu">factor</span>(</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>      age_3cat, </span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"child"</span>, <span class="st">"adolescent"</span>, <span class="st">"adult"</span>)</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine race and ethnicity</span></span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat =</span> <span class="fu">case_when</span>(</span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(hispanic) <span class="sc">|</span> hispanic <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>) <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># Unknown ethnicity</span></span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>      hispanic <span class="sc">==</span> <span class="dv">1</span>                           <span class="sc">~</span> <span class="dv">3</span>,        <span class="co"># Hispanic, any race</span></span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(race) <span class="sc">|</span> race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">9</span>)         <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="co"># non-Hispanic, unknown race</span></span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">1</span>                               <span class="sc">~</span> <span class="dv">1</span>,        <span class="co"># White, non-Hispanic</span></span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>      race <span class="sc">==</span> <span class="dv">2</span>                               <span class="sc">~</span> <span class="dv">2</span>,        <span class="co"># Black, non-Hispanic</span></span>
+<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>                                    <span class="sc">~</span> <span class="dv">4</span>         <span class="co"># Other race, non-Hispanic</span></span>
+<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_eth_4cat_f =</span> <span class="fu">factor</span>(</span>
+<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a>      race_eth_4cat,</span>
+<span id="cb57-25"><a href="#cb57-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb57-26"><a href="#cb57-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"White, non-Hispanic"</span>, <span class="st">"Black, non-Hispanic"</span>, <span class="st">"Hispanic, any race"</span>,</span>
+<span id="cb57-27"><a href="#cb57-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Other race, non-Hispanic"</span></span>
+<span id="cb57-28"><a href="#cb57-28" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb57-29"><a href="#cb57-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb57-30"><a href="#cb57-30" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 8
+      id   age  race hispanic age_3cat age_3cat_f race_eth_4cat race_eth_4cat_f 
+   &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;fct&gt;              &lt;dbl&gt; &lt;fct&gt;           
+ 1     1    15     1        7        2 adolescent            NA &lt;NA&gt;            
+ 2     2    19     2        0        3 adult                  2 Black, non-Hisp…
+ 3     3    14     1        1        2 adolescent             3 Hispanic, any r…
+ 4     4     3     4        0        1 child                  4 Other race, non…
+ 5     5    10     7        1        1 child                  3 Hispanic, any r…
+ 6     6    18     1        0        3 adult                  1 White, non-Hisp…
+ 7     7    22     2        1        3 adult                  3 Hispanic, any r…
+ 8     8    11     9        9        1 child                 NA &lt;NA&gt;            
+ 9     9     5     1        0        1 child                  1 White, non-Hisp…
+10    10    NA     3        1       NA &lt;NA&gt;                   3 Hispanic, any r…</code></pre>
+</div>
+</div>
+<p>Now that we’ve mastered conditional operations, we can use them to help us navigate another common data collection technique in epidemiology – skip patterns.</p>
 
 
 </section>

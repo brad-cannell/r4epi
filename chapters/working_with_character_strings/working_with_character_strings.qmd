@@ -13,7 +13,6 @@ In previous chapters, we learned how to create character vectors, which can be u
 To get started, feel free to [download the simulated electronic health record that we will use in the following examples](https://github.com/brad-cannell/r4epi/blob/master/data/ehr.Rds). Additionally, we will use the `readr`, `dplyr`, and `stringr` packages in the code below. You will be able to recognize functions from the `stringr` package because they will all begin with `str_`.
 
 ```{r}
-#| echo: false
 #| message: false
 library(readr)
 library(dplyr)
@@ -21,13 +20,11 @@ library(stringr) # All stringr functions begin with "str_"
 ```
 
 ```{r}
-#| echo: false
 #| cache: true
 ehr <- read_rds("ehr.Rds")
 ```
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr 
 ```
@@ -43,7 +40,6 @@ ehr
 A common initial question we may need to ask of this kind of data is, _"how many unique people are represented in this data?"_ Well, there are 15 rows, so a good first guess might be 15 unique people. However, let's arrange the data by the `name` column and see if that guess still looks reasonable.
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr %>% 
   group_by(name) %>% 
@@ -55,7 +51,6 @@ ehr %>%
 Clearly, some of these people are the same. However, little data entry discrepancies in their name values would prevent us from calculating the number of unique people in a programmatic way. Let's take a closer look at the values in the `name` column and see if we can figure out exactly what these data entry discrepancies are:
 
 ```{r}
-#| echo: false
 ehr %>% 
   arrange(name) %>% 
   pull(name)
@@ -82,7 +77,6 @@ A good place to start cleaning these character strings is by coercing them all t
 ### Lowercase
 
 ```{r}
-#| echo: false
 ehr %>% 
   arrange(name) %>% 
   pull(name) %>% 
@@ -92,7 +86,6 @@ ehr %>%
 ### Upper case
 
 ```{r}
-#| echo: false
 ehr %>% 
   arrange(name) %>% 
   pull(name) %>% 
@@ -102,7 +95,6 @@ ehr %>%
 ### Title case
 
 ```{r}
-#| echo: false
 ehr %>% 
   arrange(name) %>% 
   pull(name) %>% 
@@ -112,7 +104,6 @@ ehr %>%
 ### Sentence case
 
 ```{r}
-#| echo: false
 ehr %>% 
   arrange(name) %>% 
   pull(name) %>% 
@@ -122,8 +113,6 @@ ehr %>%
 Each of the function above can come in handy from time-to-time. So, you may just want to keep them in your back pocket. Let's go ahead and use the `str_to_lower()` function now as the first step in cleaning our data:
 
 ```{r}
-#| echo: false
-#| rows-print: 15
 ehr <- ehr %>% 
   mutate(name = str_to_lower(name)) %>% 
   print()
@@ -136,7 +125,6 @@ ehr <- ehr %>%
 Now, let's check and see how many unique people R finds in our data?
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr %>% 
   group_by(name) %>% 
@@ -152,14 +140,12 @@ In the output above, there are 15 rows. R has identified 1 row with a duplicate 
 we can use `stringr`'s `str_trim()` function to "trim" white space from the beginning and end of character strings. For example:
 
 ```{r}
-#| echo: false
 str_trim("Ryan Edwards  ")
 ```
 
 Let's go ahead and use the `str_trim()` function now as the next step in cleaning our data:
 
 ```{r}
-#| echo: false
 ehr <- ehr %>% 
   mutate(name = str_trim(name))
 ```
@@ -167,7 +153,6 @@ ehr <- ehr %>%
 Now, let's check and see how many unique people R finds in our data?
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr %>% 
   group_by(name) %>% 
@@ -194,7 +179,6 @@ In the examples that follow, we hope
 For our first example, let's remove the comma from Weston Fox's last name.
 
 ```{r}
-#| echo: false
 str_replace(
   string      = "weston fox,", 
   pattern     = ",",
@@ -219,7 +203,6 @@ Notice that our regular expressions above are wrapped in quotes. Regular express
 Let's go ahead and use the `str_replace()` function now as the next step in cleaning our data:
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr <- ehr %>% 
   mutate(name = str_replace(name, ",", ""))
@@ -228,7 +211,6 @@ ehr <- ehr %>%
 Now, let's check and see how many unique people R finds in our data?
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr %>% 
   group_by(name) %>% 
@@ -244,7 +226,6 @@ In the output above, there are 15 rows. R has identified 3 rows with a duplicate
 Next, let's remove the middle initial from Tatum Chavez's name.
 
 ```{r}
-#| echo: false
 str_replace(
   string      = "tatum s chavez",
   pattern     = " \\w ",
@@ -273,7 +254,6 @@ str_replace(
 Let's go ahead and use the `str_replace()` function now as the next step in cleaning our data:
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr <- ehr %>% 
   mutate(name = str_replace(name, " \\w ", " "))
@@ -282,7 +262,6 @@ ehr <- ehr %>%
 And, let's once again check and see how many unique people R finds in our data?
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr %>% 
   group_by(name) %>% 
@@ -298,7 +277,6 @@ In the output above, there are 15 rows. R has identified 4 rows with a duplicate
 Finally, let's remove the double space from Ivy Mccann's name.
 
 ```{r}
-#| echo: false
 str_replace(
   string      = "Ivy   Mccann",
   pattern     = "\\s{2,}",
@@ -325,7 +303,6 @@ str_replace(
 Let's go ahead and use the `str_replace()` function now as the final step in cleaning our `name` column:
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr <- ehr %>% 
   mutate(name = str_replace(name, "\\s{2,}", " "))
@@ -334,7 +311,6 @@ ehr <- ehr %>%
 Let's check one final time to see how many unique people R finds in our data.
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr %>% 
   group_by(name) %>% 
@@ -348,7 +324,6 @@ In the output above, there are 15 rows. R has identified 5 rows with a duplicate
 If our data frame was too big to count unique people manually, we could have R calculate the number of unique people for us like this:
 
 ```{r}
-#| echo: false
 ehr %>% 
   group_by(name) %>% 
   filter(row_number() == 1) %>% 
@@ -367,7 +342,6 @@ Now that we know how many unique people are in our data, let's say we want to kn
 First, we will subset our data to include one row only for each person:
 
 ```{r}
-#| echo: false
 ehr_unique <- ehr %>% 
   group_by(name) %>% 
   filter(row_number() == 1) %>% 
@@ -378,7 +352,6 @@ ehr_unique <- ehr %>%
 Let's go ahead and get an initial count of how many people live in each city:
 
 ```{r}
-#| echo: false
 #| message: false
 ehr %>% 
   group_by(city) %>% 
@@ -390,7 +363,6 @@ I'm sure you saw this coming, but we have more data entry discrepancies that are
 Hopefully, your first instinct by now is to coerce all the letters to lowercase. In fact, one of the first things we typically do is coerce all character columns to lowercase. Let's do that now.
 
 ```{r}
-#| echo: false
 ehr <- ehr %>% 
   mutate(
     address = tolower(address),
@@ -401,7 +373,6 @@ ehr <- ehr %>%
 Now how many people live in each city?
 
 ```{r}
-#| echo: false
 #| message: false
 ehr %>% 
   group_by(city) %>% 
@@ -411,7 +382,6 @@ ehr %>%
 we're getting closer to the right answer, but we still need to remove "city of" from some of the values. This sounds like another job for `str_replace()`.
 
 ```{r}
-#| echo: false
 str_replace(
   string      = "city of fort worth",
   pattern     = "city of ",
@@ -422,7 +392,6 @@ str_replace(
 That regular expression looks like it will work. Let's go ahead and use it to remove "city of" from the values in the `address_city` column now.
 
 ```{r}
-#| echo: false
 ehr <- ehr %>% 
   mutate(city = str_replace(city, "city of ", ""))
 ```
@@ -430,7 +399,6 @@ ehr <- ehr %>%
 One last time, how many people live in each city?
 
 ```{r}
-#| echo: false
 #| message: false
 ehr %>% 
   group_by(city) %>% 
@@ -442,7 +410,6 @@ ehr %>%
 Another common task that I perform on character strings is to separate the strings into multiple parts. For example, sometimes we may want to separate full names into two columns. One for fist name and one for last name. To complete this task, we will once again use regular expressions. We will also learn how to use the `str_extract()` function to pull values out of a character string when the match a pattern we create with a regular expression.
 
 ```{r}
-#| echo: false
 str_extract("zariah hernandez", "^\\w+")
 ```
 
@@ -469,7 +436,6 @@ str_extract("zariah hernandez", "^\\w+")
 we can pull the last name from the character string in a similar way:
 
 ```{r}
-#| echo: false
 str_extract("zariah hernandez", "\\w+$")
 ```
 
@@ -496,7 +462,6 @@ str_extract("zariah hernandez", "\\w+$")
 Now, let's use `str_extract()` to separate full name into `name_first` and `name_last`.
 
 ```{r}
-#| echo: false
 ehr <- ehr %>% 
   mutate(
     # Separate name into first name and last name
@@ -506,7 +471,6 @@ ehr <- ehr %>%
 ```
 
 ```{r}
-#| echo: false
 ehr %>% 
   select(name, name_first, name_last)
 ```
@@ -542,7 +506,6 @@ Any categorical variable can be transformed into dummy variables. Not just the v
 :::
 
 ```{r}
-#| echo: false
 #| rows-print: 15
 ehr %>% 
   select(name_first, name_last, symptoms)
@@ -551,7 +514,6 @@ ehr %>%
 Notice that some people didn't report their symptoms (`NA`), some people reported only one symptom, and some people reported multiple symptoms. The way the data is currently formatted is not ideal for analysis. For example, if I asked you to tell me how many people ever came in complaining of headache, how would you do that? Maybe like this:
 
 ```{r}
-#| echo: false
 #| message: false
 ehr %>% 
   group_by(symptoms) %>% 
@@ -561,7 +523,6 @@ ehr %>%
 In this case, you could probably count manually and get the right answer. But what if we had many more possible symptoms and many more rows. Counting would quickly become tedious and error prone. The solution is to create dummy variables. We can create dummy variables like this:
 
 ```{r}
-#| echo: false
 ehr <- ehr %>% 
   mutate(
     pain     = str_detect(symptoms, "Pain"),
@@ -572,7 +533,6 @@ ehr <- ehr %>%
 
 
 ```{r}
-#| echo: false
 ehr %>% 
   select(symptoms, pain, headache, nausea)
 ```
@@ -592,14 +552,12 @@ ehr %>%
 Now, we can much more easily figure out how many people had each symptom.
 
 ```{r}
-#| echo: false
 table(ehr$headache)
 ```
 
 we should acknowledge that dummy variables typically take the values 0 and 1 instead of FALSE and TRUE. We can easily coerce our dummy variable values to 0/1 using the `as.numeric()` function. For example:
 
 ```{r}
-#| echo: false
 ehr %>% 
   select(pain) %>% 
   mutate(pain_01 = as.numeric(pain))

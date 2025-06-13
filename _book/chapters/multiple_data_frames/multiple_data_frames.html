@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -609,7 +643,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="agencies.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="agencies.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -619,7 +653,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="sites.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="sites.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -629,7 +663,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="time.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="time.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -639,7 +673,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="instruments.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="instruments.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -649,7 +683,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="datasets.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="datasets.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -660,7 +694,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="two_data_sets1.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="two_data_sets1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -670,7 +704,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="two_data_sets2.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="two_data_sets2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -686,15 +720,24 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="trial.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="trial.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>You want to add the observations about the participants recruited in 2020 to the master data frame so that it contains the information about all years. To do this, you bind the rows in the <code>trial_2020</code> data frame to the <code>trial</code> data frame.</p>
 <p>Let’s go ahead and load <code>dplyr</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>And simulate our data frames:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>trial <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year    =</span> <span class="fu">c</span>(<span class="dv">2016</span>, <span class="dv">2017</span>, <span class="dv">2018</span>, <span class="dv">2019</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n       =</span> <span class="fu">c</span>(<span class="dv">501</span>, <span class="dv">499</span>, <span class="dv">498</span>, <span class="dv">502</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="fu">c</span>(<span class="dv">51</span>, <span class="dv">52</span>, <span class="dv">49</span>, <span class="dv">50</span>) </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
    year     n outcome
@@ -706,6 +749,12 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year    =</span> <span class="dv">2020</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n       =</span> <span class="dv">500</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="dv">48</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
    year     n outcome
@@ -715,6 +764,8 @@ Add link to cheat sheet
 </div>
 <p>we can see above that column names and types in both data frames are identical. In this case, we can easily bind them together vertically with <code>dplyr</code>’s <code>bind_rows()</code> function:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 3
    year     n outcome
@@ -736,6 +787,12 @@ Add link to cheat sheet
 <h3 data-number="31.1.1" class="anchored" data-anchor-id="combining-more-than-2-data-frames"><span class="header-section-number">31.1.1</span> Combining more than 2 data frames</h3>
 <p>What if we want to vertically combine more than two data frames? This isn’t a problem. Thankfully, <code>bind_rows()</code> lets us pass as many data frames as we want to the <code>...</code> argument. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>trial_2021 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2021</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n         =</span> <span class="dv">598</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="dv">57</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
    year     n outcome
@@ -744,6 +801,8 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020, trial_2021)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
    year     n outcome
@@ -761,6 +820,13 @@ Add link to cheat sheet
 <h3 data-number="31.1.2" class="anchored" data-anchor-id="adding-rows-with-differing-columns"><span class="header-section-number">31.1.2</span> Adding rows with differing columns</h3>
 <p>What happens when the data frames we want to combine don’t have identical sets of columns? For example, let’s say that we started collecting data on adverse events for the first time in 2020. In this case, <code>trials_2020</code> would contain a column that <code>trials</code> doesn’t contain. Can we still row bind our two data frames? Let’s see:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2020</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n         =</span> <span class="dv">500</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="dv">48</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">adv_event =</span> <span class="dv">3</span> <span class="co"># Here is the new column</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
    year     n outcome adv_event
@@ -769,6 +835,8 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 4
    year     n outcome adv_event
@@ -786,6 +854,13 @@ Add link to cheat sheet
 <h3 data-number="31.1.3" class="anchored" data-anchor-id="differing-column-positions"><span class="header-section-number">31.1.3</span> Differing column positions</h3>
 <p>Next, let’s say that the person doing data entry accidently put the columns in a different order in 2020. Is <code>bind_rows()</code> able to figure out which columns go together?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2020</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n         =</span> <span class="dv">500</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">adv_event =</span> <span class="dv">3</span>, <span class="co"># This was previously the fourth column</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome   =</span> <span class="dv">48</span> <span class="co"># This is the thrid column in trial</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
    year     n adv_event outcome
@@ -794,6 +869,8 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 4
    year     n outcome adv_event
@@ -811,6 +888,13 @@ Add link to cheat sheet
 <h3 data-number="31.1.4" class="anchored" data-anchor-id="differing-column-names"><span class="header-section-number">31.1.4</span> Differing column names</h3>
 <p>As a final wrinkle, let’s say that the person doing data entry started using different column names in 2020 as well. For example, below, the <code>n</code> column is now named <code>count</code> and the <code>outcome</code> column is now named <code>outcomes</code>. Will <code>bind_rows()</code> still be able to vertically combine these data frames?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>trial_2020 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">year      =</span> <span class="dv">2020</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">count     =</span> <span class="dv">500</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">adv_event =</span> <span class="dv">3</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcomes  =</span> <span class="dv">48</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
    year count adv_event outcomes
@@ -819,6 +903,8 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 6
    year     n outcome count adv_event outcomes
@@ -832,6 +918,14 @@ Add link to cheat sheet
 </div>
 <p>In this case, <code>bind_rows()</code> plays it safe and doesn’t make any assumptions about whether columns with different names belong together or not. However, we only need to rename the columns in one data frame or the other to fix this problem. We could do this in separate steps like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>trial_2020_rename <span class="ot">&lt;-</span> trial_2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> count,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> outcomes</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(trial_2020_rename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 4
    year     n outcome adv_event
@@ -845,6 +939,14 @@ Add link to cheat sheet
 </div>
 <p>Or, we could rename and bind in a single step by nesting functions like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>trial <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    trial_2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rename</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> count,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">outcome =</span> outcomes</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 4
    year     n outcome adv_event
@@ -871,7 +973,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="two_data_sets_horiz.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="two_data_sets_horiz.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -881,7 +983,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="goal.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="goal.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -891,7 +993,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="flow_chart.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="flow_chart.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -903,13 +1005,18 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="position.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="position.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Combining data frames horizontally by position is very easy in R. We just use <code>dplyr</code>’s <code>bind_cols()</code> function similarly to the way used <code>bind_rows()</code> above. Just remember that when we horizontally combine data frames by position both data frames must have the same number of rows. For example:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"blue"</span>),</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">size  =</span> <span class="fu">c</span>(<span class="st">"small"</span>, <span class="st">"medium"</span>, <span class="st">"large"</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
   color size  
@@ -920,6 +1027,11 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">amount =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>),</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dose   =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
   amount  dose
@@ -930,6 +1042,8 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 4
   color size   amount  dose
@@ -954,7 +1068,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="flow_chart_key_value.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="flow_chart_key_value.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -968,7 +1082,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="one_to_one.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="one_to_one.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -980,7 +1094,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="one_to_many.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="one_to_many.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -990,7 +1104,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="many_to_many.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="many_to_many.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1009,7 +1123,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="left_join.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="left_join.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1021,7 +1135,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="right_join.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="right_join.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1033,7 +1147,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="full_join.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="full_join.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1045,7 +1159,7 @@ Add link to cheat sheet
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="inner_join.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="inner_join.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1053,6 +1167,12 @@ Add link to cheat sheet
 <p>Now that we have a common vocabulary, let’s take a look at some more concrete examples.</p>
 <p>Suppose we are analyzing data from a study of aging and functional ability. At baseline, we assigned a study id to each of our participants. We then ask them their date of birth and their race and ethnicity. We saved that information in a data frame called <code>demographics</code>.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id       =</span> <span class="fu">c</span>(<span class="st">"1001"</span>, <span class="st">"1002"</span>, <span class="st">"1003"</span>, <span class="st">"1004"</span>),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dob      =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"1968-12-14"</span>, <span class="st">"1952-08-03"</span>, <span class="st">"1949-05-27"</span>, <span class="st">"1955-03-12"</span>)),</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">race_eth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
   id    dob        race_eth
@@ -1065,6 +1185,12 @@ Add link to cheat sheet
 </div>
 <p>Then, we asked our participants to do a series of functional tests. The functional tests included measuring grip strength in their right hand (<code>grip_r</code>) and grip strength in their left hand (<code>grip_l</code>). We saved each measure, along with their study id, in a separate data frame called <code>grip_strength</code>.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">c</span>(<span class="st">"1002"</span>, <span class="st">"1001"</span>, <span class="st">"1003"</span>, <span class="st">"1004"</span>),</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_r =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">28</span>, <span class="dv">32</span>, <span class="dv">22</span>),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_l =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">28</span>, <span class="dv">22</span>)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
   id    grip_r grip_l
@@ -1082,6 +1208,8 @@ Add link to cheat sheet
 <h4 data-number="31.2.2.3" class="anchored" data-anchor-id="one-to-one-relationship-merge"><span class="header-section-number">31.2.2.3</span> One-to-one relationship merge</h4>
 <p>It’s a one-to-one relationship because each participant in <code>demographics</code> has no more than one corresponding row in <code>grip_strength</code>. Since both data frames have exactly four rows, we can go ahead hand combine them horizontally using <code>bind_cols()</code> like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(grip_strength)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>New names:
 • `id` -&gt; `id...1`
@@ -1105,6 +1233,8 @@ Add link to cheat sheet
 </ul>
 <p>Now, let’s learn a better way to merge these two data frames – <code>dplyr</code>’s <code>left_join()</code> function:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 5
   id    dob        race_eth grip_r grip_l
@@ -1127,6 +1257,9 @@ Add link to cheat sheet
 </ul>
 <p>The merge we did above is about as simple as it gets. It was a one-to-one merge where every key value in the <code>x</code> data frame had one, and only one, matching key value in the <code>y</code> data frame. Therefore, in this simple case, all four join types give us the same result:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Right join</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 5
   id    dob        race_eth grip_r grip_l
@@ -1138,6 +1271,9 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Full join</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 5
   id    dob        race_eth grip_r grip_l
@@ -1149,6 +1285,9 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inner join</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 5
   id    dob        race_eth grip_r grip_l
@@ -1161,6 +1300,9 @@ Add link to cheat sheet
 </div>
 <p>Additionally, aside from the order of the rows and columns in the resulting combined data frame, it makes no difference which data frame you pass to the <code>x</code> and <code>y</code> arguments in this case:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switching order</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="sc">%&gt;%</span> </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(demographics, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 5
   id    grip_r grip_l dob        race_eth
@@ -1177,6 +1319,14 @@ Add link to cheat sheet
 <h4 data-number="31.2.2.4" class="anchored" data-anchor-id="differing-rows"><span class="header-section-number">31.2.2.4</span> Differing rows</h4>
 <p>In the real world, participants don’t always attend scheduled visits. Let’s suppose that there was actually a fifth participant that we collected baseline data from:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id       =</span> <span class="fu">c</span>(<span class="st">"1001"</span>, <span class="st">"1002"</span>, <span class="st">"1003"</span>, <span class="st">"1004"</span>, <span class="st">"1005"</span>),</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dob      =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1968-12-14"</span>, <span class="st">"1952-08-03"</span>, <span class="st">"1949-05-27"</span>, <span class="st">"1955-03-12"</span>, <span class="st">"1942-06-07"</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  )),</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">race_eth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">3</span>)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 3
   id    dob        race_eth
@@ -1190,6 +1340,8 @@ Add link to cheat sheet
 </div>
 <p>However, participant 1005 never made it back in for a grip strength test. Now, what do you think will happen when we merge <code>demographics</code> and <code>grip_strength</code> using <code>left_join()</code>?</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 5
   id    dob        race_eth grip_r grip_l
@@ -1204,6 +1356,9 @@ Add link to cheat sheet
 <p>The resulting data frame includes <em>all</em> rows from the <code>demographics</code> data frame <em>and all</em> the rows from the <code>grip_strength</code> data frame. Because participant 1005 never had their grip strength measured, and therefore, had no rows in the <code>grip_strength</code> data frame, their values for <code>grip_r</code> and <code>grip_l</code> are set to missing.</p>
 <p>This scenario is a little a different than the one above. It’s still a one-to-one relationship because each participant in <code>demographics</code> has no more than one corresponding row in <code>grip_strength</code>. However, every key value in the <code>x</code> data frame no longer has one, and only one, matching key value in the <code>y</code> data frame. Therefore, we will now get different results depending on which join function we choose, and the order in which we pass our data frames to the <code>x</code> and <code>y</code> arguments. Before reading further, think about what you expect the results from each join function to look like. Think about what you expect the results of switching the data frame order to look like.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Right join</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 5
   id    dob        race_eth grip_r grip_l
@@ -1215,6 +1370,9 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Full join</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 5
   id    dob        race_eth grip_r grip_l
@@ -1227,6 +1385,9 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inner join</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 5
   id    dob        race_eth grip_r grip_l
@@ -1238,6 +1399,9 @@ Add link to cheat sheet
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switching order</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="sc">%&gt;%</span> </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(demographics, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 5
   id    grip_r grip_l dob        race_eth
@@ -1254,6 +1418,12 @@ Add link to cheat sheet
 <h4 data-number="31.2.2.5" class="anchored" data-anchor-id="differing-key-column-names"><span class="header-section-number">31.2.2.5</span> Differing key column names</h4>
 <p>Sometimes the key columns will have different names across data frames. For example, let’s imagine that the team collecting the grip strength data named the participant id column <code>pid</code> instead of <code>id</code>:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">pid    =</span> <span class="fu">c</span>(<span class="st">"1002"</span>, <span class="st">"1001"</span>, <span class="st">"1003"</span>, <span class="st">"1004"</span>),</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_r =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">28</span>, <span class="dv">32</span>, <span class="dv">22</span>),</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_l =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">28</span>, <span class="dv">22</span>)</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
   pid   grip_r grip_l
@@ -1266,6 +1436,8 @@ Add link to cheat sheet
 </div>
 <p>If we try to merge <code>demographics</code> and <code>grip_strength</code> as we did before, we will get an error.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `left_join()`:
 ! Join columns in `y` must be present in the data.
@@ -1274,6 +1446,8 @@ Add link to cheat sheet
 </div>
 <p>This error is <code>left_join()</code> telling us that it couldn’t find a column named <code>id</code> in both data frames. To get around this error, we can simply tell <code>left_join()</code> which column is the matching key column in the opposite data frame using a named vector like this:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"id"</span> <span class="ot">=</span> <span class="st">"pid"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 5
   id    dob        race_eth grip_r grip_l
@@ -1291,6 +1465,7 @@ Add link to cheat sheet
 <h4 data-number="31.2.2.6" class="anchored" data-anchor-id="one-to-many-relationship-merge"><span class="header-section-number">31.2.2.6</span> One-to-many relationship merge</h4>
 <p>Now suppose that our grip strength study has a longitudinal design. The demographics data was only collected at enrollment into the study. After all, race and dob don’t change. There’s no need to ask our participants about them at every follow-up interview.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>demographics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 3
   id    dob        race_eth
@@ -1304,6 +1479,13 @@ Add link to cheat sheet
 </div>
 <p>Grip strength, however, was measured pre and post some intervention.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>grip_strength <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"1001"</span>, <span class="st">"1002"</span>, <span class="st">"1003"</span>, <span class="st">"1004"</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"pre"</span>, <span class="st">"post"</span>), <span class="dv">4</span>),</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_r =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">33</span>, <span class="dv">28</span>, <span class="dv">27</span>, <span class="dv">32</span>, <span class="dv">34</span>, <span class="dv">22</span>, <span class="dv">27</span>),</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grip_l =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">32</span>, <span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">28</span>, <span class="dv">30</span>, <span class="dv">22</span>, <span class="dv">26</span>)</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 4
   id    visit grip_r grip_l
@@ -1320,7 +1502,151 @@ Add link to cheat sheet
 </div>
 <p>Now what is the relationship of these two data frames?</p>
 <p>These data frames have a one-to-many relationship because at least one observation in one data frame is related to multiple observations in the other data frame. The <code>demographics</code> data frame has one observation for each value of <code>id</code>. The <code>grip_strength</code> data frame has two observations for each value of the <code>id</code>’s <code>1001</code> through <code>1004</code>.</p>
-<p>Now, to conduct our analysis, we need to combine the data in <code>demographics</code> with the data in the longitudinal <code>grip_strength</code> data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to</p>
+<p>Now, to conduct our analysis, we need to combine the data in <code>demographics</code> with the data in the longitudinal <code>grip_strength</code> data frame. And how will we ask R to merge these two data frames? Well, here is some good news. To perform a one-to-many or many-to-many merge, we use the exact same syntax that we used to perform a one-to-one merge. R will figure out the relationship between the data frames automatically. Take a look:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 6
+  id    dob        race_eth visit grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1 pre       32     30
+2 1001  1968-12-14        1 post      33     32
+3 1002  1952-08-03        2 pre       28     30
+4 1002  1952-08-03        2 post      27     30
+5 1003  1949-05-27        2 pre       32     28
+6 1003  1949-05-27        2 post      34     30
+7 1004  1955-03-12        4 pre       22     22
+8 1004  1955-03-12        4 post      27     26
+9 1005  1942-06-07        3 &lt;NA&gt;      NA     NA</code></pre>
+</div>
+</div>
+</section>
+<section id="multiple-key-columns" class="level4" data-number="31.2.2.7">
+<h4 data-number="31.2.2.7" class="anchored" data-anchor-id="multiple-key-columns"><span class="header-section-number">31.2.2.7</span> Multiple key columns</h4>
+<p>Let’s throw one more little wrinkle into our analysis. Let’s say that each participant had a medical exam prior to being sent into the gym to do their functional assessments. The results of that medical exam, along with the participant’s study id, were recorded in the university hospital system’s electronic medical records. As part of that medical exam, each participant’s weight was recorded. Luckily, we were given access to the electronic medical records, which look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>emr <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id     =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"1001"</span>, <span class="st">"1002"</span>, <span class="st">"1003"</span>, <span class="st">"1004"</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"pre"</span>, <span class="st">"post"</span>), <span class="dv">4</span>),</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> <span class="fu">c</span>(<span class="dv">105</span>, <span class="dv">99</span>, <span class="dv">200</span>, <span class="dv">201</span>, <span class="dv">136</span>, <span class="dv">133</span>, <span class="dv">170</span>, <span class="dv">175</span>)</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 3
+  id    visit weight
+  &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
+1 1001  pre      105
+2 1001  post      99
+3 1002  pre      200
+4 1002  post     201
+5 1003  pre      136
+6 1003  post     133
+7 1004  pre      170
+8 1004  post     175</code></pre>
+</div>
+</div>
+<p>Now, we would like to add participant weight to our analysis. Our first attempt might look something like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, emr, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 6
+  id    dob        race_eth visit grip_r grip_l
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1 pre       32     30
+2 1001  1968-12-14        1 post      33     32
+3 1002  1952-08-03        2 pre       28     30
+4 1002  1952-08-03        2 post      27     30
+5 1003  1949-05-27        2 pre       32     28
+6 1003  1949-05-27        2 post      34     30
+7 1004  1955-03-12        4 pre       22     22
+8 1004  1955-03-12        4 post      27     26
+9 1005  1942-06-07        3 &lt;NA&gt;      NA     NA</code></pre>
+</div>
+</div>
+<p>Of course, that doesn’t work because <code>left_join()</code> can only merge two data frames at a time – <code>x</code> and <code>y</code>. The <code>emr</code> data frame was ignored. Then we think, “hmmm, maybe we should try merging them sequentially.” In other words, merge <code>demographics</code> and <code>grip_strength</code> first. Then merge the combined <code>demographics</code>/<code>grip_strength</code> data frame with <code>emr</code>. So, our next attempt might look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in left_join(., emr, by = "id"): Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 1 of `x` matches multiple rows in `y`.
+ℹ Row 1 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 17 × 8
+   id    dob        race_eth visit.x grip_r grip_l visit.y weight
+   &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
+ 1 1001  1968-12-14        1 pre         32     30 pre        105
+ 2 1001  1968-12-14        1 pre         32     30 post        99
+ 3 1001  1968-12-14        1 post        33     32 pre        105
+ 4 1001  1968-12-14        1 post        33     32 post        99
+ 5 1002  1952-08-03        2 pre         28     30 pre        200
+ 6 1002  1952-08-03        2 pre         28     30 post       201
+ 7 1002  1952-08-03        2 post        27     30 pre        200
+ 8 1002  1952-08-03        2 post        27     30 post       201
+ 9 1003  1949-05-27        2 pre         32     28 pre        136
+10 1003  1949-05-27        2 pre         32     28 post       133
+11 1003  1949-05-27        2 post        34     30 pre        136
+12 1003  1949-05-27        2 post        34     30 post       133
+13 1004  1955-03-12        4 pre         22     22 pre        170
+14 1004  1955-03-12        4 pre         22     22 post       175
+15 1004  1955-03-12        4 post        27     26 pre        170
+16 1004  1955-03-12        4 post        27     26 post       175
+17 1005  1942-06-07        3 &lt;NA&gt;        NA     NA &lt;NA&gt;        NA</code></pre>
+</div>
+</div>
+<p>But, if you look closely, that isn’t what we want either. Each participant didn’t have four visits. They only had two. Here’s the problem. Each participant in the combined <code>demographics</code>/<code>grip_strength</code> data frame has two rows (i.e., one for pre and one for post). Each participant in the <code>emr</code> data frame also has two rows (i.e., one for pre and one for post). Above, we told <code>left_join()</code> to join by <code>id</code>. So, <code>left_join()</code> aligns all rows with matching key values – <code>id</code>’s.</p>
+<p>For example, row one in the combined <code>demographics</code>/<code>grip_strength</code> data frame has the key value <code>1001</code>. So, <code>left_join()</code> aligns row one in the combined <code>demographics</code>/<code>grip_strength</code> data frame with rows one <em>and</em> two in the <code>emr</code> data frame. Next, row <em>two</em> in the combined <code>demographics</code>/<code>grip_strength</code> data frame has the key value <code>1001</code>. So, <code>left_join()</code> aligns row <em>two</em> in the combined <code>demographics</code>/<code>grip_strength</code> data frame with rows one <em>and</em> two in the <code>emr</code> data frame. This results in 2 * 2 = 4 rows for each id - a <strong>many-to-many</strong> merge.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="many_to_many_emr.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>But in reality, study id alone no longer uniquely identifies observations in our data. Now, observations are uniquely identified by study id and visit. For example, <code>1001</code> <em>and</em> <code>pre</code> are a unique observation, <code>1001</code> <em>and</em> <code>post</code> are a unique observation, <code>1002</code> <em>and</em> <code>pre</code> are a unique observation, and so on. We now have two key columns that identify unique observations. And once we give that information to <code>left_join</code>, the relationship between the data frames becomes a one-to-one relationship. In other words, each observation (defined by <code>id</code> <em>and</em> <code>visit</code>) in one data frame is related to no more than one observation (defined by <code>id</code> <em>and</em> <code>visit</code>) in the other data frame.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="one_to_one_emr.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here is how we tell <code>left_join()</code> to merge our data frames by <code>id</code> <em>and</em> <code>visit</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>demographics <span class="sc">%&gt;%</span> </span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(grip_strength, <span class="at">by =</span> <span class="st">"id"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emr, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"visit"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 7
+  id    dob        race_eth visit grip_r grip_l weight
+  &lt;chr&gt; &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 1001  1968-12-14        1 pre       32     30    105
+2 1001  1968-12-14        1 post      33     32     99
+3 1002  1952-08-03        2 pre       28     30    200
+4 1002  1952-08-03        2 post      27     30    201
+5 1003  1949-05-27        2 pre       32     28    136
+6 1003  1949-05-27        2 post      34     30    133
+7 1004  1955-03-12        4 pre       22     22    170
+8 1004  1955-03-12        4 post      27     26    175
+9 1005  1942-06-07        3 &lt;NA&gt;      NA     NA     NA</code></pre>
+</div>
+</div>
+<p>👆<strong>Here’s what we did above:</strong></p>
+<ul>
+<li><p>We used <code>dplyr</code>’s <code>left_join()</code> function to perform a one-to-many merge of the <code>demographics</code> data frame with the <code>grip_strength</code> data frame. Then, we used <code>left_join()</code> again to perform a one-to-one merge of the combined <code>demographics</code>/<code>grip_strength</code> data frame with the <code>emr</code> data frame.</p></li>
+<li><p>We told <code>left_join()</code> that it needed to match the values in the <code>id</code> key column <em>and</em> the values in the <code>visit</code> key column in order to align the rows in the combined <code>demographics</code>/<code>grip_strength</code> data frame with the <code>emr</code> data frame.</p></li>
+</ul>
+<p>We now have a robust set of tools we can use to work with data that is stored in more than one data frame – a common occurrence in epidemiology!</p>
 
 
 </section>
