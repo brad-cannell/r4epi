@@ -28,7 +28,7 @@ For our purposes, you can think of the `purrr::map` functions as a replacement f
 We also want to mention that the `purrr` package is closely related to base R's `apply` functions (i.e., `apply()`, `lapply()`, `sapply()`, `tapply()`). We aren't going to discuss those functions any further, but you will often see them mentioned side-by-side as solutions to a given coding challenge on websites like Stack Overflow. The `purrr` package is partially meant to be an improved replacement for the `apply` functions.
 :::
 
-As usual, let's start by taking a look at a simple example -- the same one we used to start the [chapter on column-wise operations](#column-wise-operations-in-dplyr) and the [chapter on writing for loops](#writing-for-loops). Afterwards, we will compare the basic structure of `purrr::map` functions to the basic structure of for loops. Finally, we will work through a number of the examples we've already worked through in this part of the book using the `purrr` approach.
+As usual, let's start by taking a look at a simple example -- the same one we used to start the [chapter on column-wise operations](../dplyr_column_wise/dplyr_column_wise.qmd#column-wise-operations-in-dplyr) and the [chapter on writing for loops](../writing_for_loops/writing_for_loops.qmd#writing-for-loops). Afterwards, we will compare the basic structure of `purrr::map` functions to the basic structure of for loops. Finally, we will work through a number of the examples we've already worked through in this part of the book using the `purrr` approach.
 
 At this point, we will go ahead and load `dplyr` and `purrr` and simulate our data:
 
@@ -48,7 +48,7 @@ df_xyz <- tibble(
   print()
 ```
 
-In the [chapter on column-wise operations](#column-wise-operations-in-dplyr) we used `dplyr`'s `across()` function to efficiently find the mean of each column in the `df_xyz` data frame:
+In the [chapter on column-wise operations](../dplyr_column_wise/dplyr_column_wise.qmd#column-wise-operations-in-dplyr) we used `dplyr`'s `across()` function to efficiently find the mean of each column in the `df_xyz` data frame:
 
 ```{r}
 df_xyz %>%
@@ -61,7 +61,7 @@ df_xyz %>%
   )
 ```
 
-In the [chapter on writing for loops](#writing-for-loops), we learned an alternative approach that would also work:
+In the [chapter on writing for loops](../writing_for_loops/writing_for_loops.qmd#writing-for-loops), we learned an alternative approach that would also work:
 
 ```{r}
 xyz_means <- vector("double", ncol(df_xyz))
@@ -94,7 +94,7 @@ xyz_means
 
 * The second argument to all of the `map` functions is the `.f` argument. You should pass the name of function, or functions, you want to apply iteratively to the object you passed to the `.x` argument. In the example above, we passed the mean function to the `.f` argument. Notice that we typed `mean` without the parentheses.
 
-* The third argument to all of the `map` functions is the `...` argument. In this case, the `...` argument is where we pass any additional arguments to the function we passed to the `.f` argument. For example, we passed the `mean` function to the `.f` argument above. If the data frame above had missing values, we could have passed `na.rm = TRUE` to the `mean()` function using the `...` argument. We saw a similar [example of this when we were learning about `across()`](#the-across-function).
+* The third argument to all of the `map` functions is the `...` argument. In this case, the `...` argument is where we pass any additional arguments to the function we passed to the `.f` argument. For example, we passed the `mean` function to the `.f` argument above. If the data frame above had missing values, we could have passed `na.rm = TRUE` to the `mean()` function using the `...` argument. We saw a similar [example of this when we were learning about `across()`](../dplyr_column_wise/dplyr_column_wise.qmd).
 
 As you can see, using the `map_dbl()` package requires far less code than the for loop did, which has at least two potential advantages. First, it's less typing, which means less opportunity for typos. Second, many people in the R community feel as though this _functional_ (i.e., use of a function) approach to iteration is much easier to read and understand than the traditional for loop approach. 
 
@@ -241,9 +241,9 @@ Next, the object we pass to the `.x` function of the `map` function replaces the
 knitr::include_graphics("compare_function.png")
 ```
 
-Finally, the function passed to the `.f` argument can replace the rest of the "stuff" going on in the for loop body. We can pass a single function (e.g., mean) to the `.f` argument as we did above. However, we can also pass anonymous functions to the `.f` argument. We pass anonymous functions to the `.f` function in basically the exact same way passed anonymous functions to the `.fns` argument of the `across()` function in the [chapter on column-wise operations](#column-wise-operations-in-dplyr). And, yes, we can also write our anonymous functions using purrr-style lambdas. In fact, the purrr-style lambda syntax is called the purrr-style lambda syntax because it was first created for the `purrr` package and later adopted by `dplyr::across()`. That name probably makes a lot more sense than it did a couple of chapters ago!
+Finally, the function passed to the `.f` argument can replace the rest of the "stuff" going on in the for loop body. We can pass a single function (e.g., mean) to the `.f` argument as we did above. However, we can also pass anonymous functions to the `.f` argument. We pass anonymous functions to the `.f` function in basically the exact same way passed anonymous functions to the `.fns` argument of the `across()` function in the [chapter on column-wise operations](../dplyr_column_wise/dplyr_column_wise.qmd#column-wise-operations-in-dplyr). And, yes, we can also write our anonymous functions using purrr-style lambdas. In fact, the purrr-style lambda syntax is called the purrr-style lambda syntax because it was first created for the `purrr` package and later adopted by `dplyr::across()`. That name probably makes a lot more sense than it did a couple of chapters ago!
 
-That pretty much covers the basics of using the `purrr::map` functions. If you've been reading this book in sequence, there won't really be any conceptually new material in this chapter. We're basically going to do the same things we've been doing for the last couple of chapters. We'll just be using a slightly different (and perhaps preferable) syntax. If you haven't been reading the book in sequence, you might want to read the chapters on [writing functions](#writing-functions), [column-wise operations](#column-wise-operations-in-dplyr), and [writing for loops](#writing-for-loops) to get the most of the examples below.
+That pretty much covers the basics of using the `purrr::map` functions. If you've been reading this book in sequence, there won't really be any conceptually new material in this chapter. We're basically going to do the same things we've been doing for the last couple of chapters. We'll just be using a slightly different (and perhaps preferable) syntax. If you haven't been reading the book in sequence, you might want to read the chapters on [writing functions](../writing_functions/writing_functions.qmd#writing-functions), [column-wise operations](../dplyr_column_wise/dplyr_column_wise.qmd#column-wise-operations-in-dplyr), and [writing for loops](../writing_for_loops/writing_for_loops.qmd#writing-for-loops) to get the most of the examples below.
 
 ```{r}
 #| echo: FALSE
@@ -254,7 +254,7 @@ rm(n_letters, names)
 
 ### Example 1: Importing multiple sheets from an Excel workbook
 
-In the [chapter on writing functions](#writing-functions) we used a for loop to help us import data from an Excel workbook that was stored across multiple sheets. We will once again go through this example using the `purrr` approach. 
+In the [chapter on writing functions](../writing_functions/writing_functions.qmd#writing-functions) we used a for loop to help us import data from an Excel workbook that was stored across multiple sheets. We will once again go through this example using the `purrr` approach. 
 
 The simulated data contains some demographic information about three different cities: Houston, Atlanta, and Charlotte. In this scenario, we need to import each sheet, clean the data, and combine them into a single data frame in order to complete our analysis. First, we will load the `readxl` package:
 
@@ -357,7 +357,7 @@ charlotte
 
 * Second, we passed the return value of the `excel_sheets()` function, which is a character vector containing each sheet name, to the `.x` argument of the `walk()` function. We didn't have to do this. We could have typed each sheet name manually. However, there shouldn't be any accidental typos if we use the `excel_sheets()` function, and we don't have to make any changes to our code if more sheets are added to the Workbook in the future. 
 
-* Third, we passed an anonymous function to the `walk()`'s `.f` argument. Inside the anonymous function, we assigned each data frame created by the `read_excel()` function to our global environment using the `assign()` function. Notice that because we are using the `assign()` _inside_ of another function, we have to explicitly tell the `assign()` function to assign the data frames being imported to the global environment using `envir = .GlobalEnv`. Without getting too technical, keep in mind that functions create their own little enclosed environments ([see a discussion here](#lexical-scoping-and-functions)), which makes the `envir = .GlobalEnv` part necessary.
+* Third, we passed an anonymous function to the `walk()`'s `.f` argument. Inside the anonymous function, we assigned each data frame created by the `read_excel()` function to our global environment using the `assign()` function. Notice that because we are using the `assign()` _inside_ of another function, we have to explicitly tell the `assign()` function to assign the data frames being imported to the global environment using `envir = .GlobalEnv`. Without getting too technical, keep in mind that functions create their own little enclosed environments ([see a discussion here](../writing_functions/writing_functions.qmd#lexical-scoping-and-functions)), which makes the `envir = .GlobalEnv` part necessary.
 
 Additionally, you may have some questions swirling around your head right now about the `walk()` function itself. In particular, you might be wondering why we used `walk()` instead of `map()` and why we didn't assign the return value of `walk()` to an object. We'll answer both questions next.
 
@@ -474,7 +474,7 @@ rm(atlanta, charlotte, houston, path)
 
 ### Example 1: Adding NA at multiple positions
 
-We'll start this section with a relatively simple example using the same data we used to start the [chapter on column-wise operations](#column-wise-operations-in-dplyr) and the [chapter on writing for loops](#writing-for-loops).
+We'll start this section with a relatively simple example using the same data we used to start the [chapter on column-wise operations](../dplyr_column_wise/dplyr_column_wise.qmd#column-wise-operations-in-dplyr) and the [chapter on writing for loops](../writing_for_loops/writing_for_loops.qmd#writing-for-loops).
 
 ```{r}
 set.seed(123)
@@ -497,7 +497,7 @@ df_xyz
 
 _Dealing_ with those missing values, rather than _adding_ those missing values was the point of the previously mentioned examples. So, we ignored the unnecessary repetition in the code above. But, for all the reasons we've been discussing, we should strive to write more robust code. Imagine, for example, that you were adding missing data to hundreds or thousands of rows as part of a simulation study. Using the method above would become problematic pretty quickly.
 
-In this case, it might be useful to start our solution with writing a function ([click here to review function writing](#writing-functions)). Let's name our function `add_na_at()` because it helps us add an `NA` value to a vector at a position of our choosing. Logically, then, it follows that we will need to be able to pass our function a _vector_ that we want to add the `NA` value to, and a _position_ to add the `NA` value at. So, our first attempt might look something like this:
+In this case, it might be useful to start our solution with writing a function ([click here to review function writing](../writing_functions/writing_functions.qmd#writing-functions)). Let's name our function `add_na_at()` because it helps us add an `NA` value to a vector at a position of our choosing. Logically, then, it follows that we will need to be able to pass our function a _vector_ that we want to add the `NA` value to, and a _position_ to add the `NA` value at. So, our first attempt might look something like this:
 
 ```{r}
 add_na_at <- function(vect, pos) {
@@ -511,7 +511,7 @@ Let's test it out:
 add_na_at(df_xyz$x, 2) %>% print()
 ```
 
-Is a single `NA` the result we wanted? Nope! If this result is surprising to you, please review the [section of the writing functions chapter on return values](#the-values-your-functions-return). Briefly, the last line of our function body is the single value `df_xyz$x[[2]]`, which was set to be equal to `NA`. But, we don't want our function to return just one position of the vector -- we want it to return the entire vector. So, let's reference the entire vector on the last line of the function body:
+Is a single `NA` the result we wanted? Nope! If this result is surprising to you, please review the [section of the writing functions chapter on return values](../writing_functions/writing_functions.qmd#the-values-your-functions-return). Briefly, the last line of our function body is the single value `df_xyz$x[[2]]`, which was set to be equal to `NA`. But, we don't want our function to return just one position of the vector -- we want it to return the entire vector. So, let's reference the entire vector on the last line of the function body:
 
 ```{r}
 add_na_at <- function(vect, pos) {
@@ -571,7 +571,7 @@ map(
 )
 ```
 
-Notice that we have to use the special `.x` symbol inside the function call where we would normally want to type the name of the column we want the function to operate on. We saw something similar before in the [chapter on column-wise operations](#column-wise-operations-in-dplyr). 
+Notice that we have to use the special `.x` symbol inside the function call where we would normally want to type the name of the column we want the function to operate on. We saw something similar before in the [chapter on column-wise operations](../dplyr_column_wise/dplyr_column_wise.qmd#column-wise-operations-in-dplyr). 
 
 Now, let's discuss the result we are getting. The result you see above is a list, which is what `map()` will always return to us. Specifically, this is a list with three elements -- `x`, `y`, and `z`. Each element of the list is a vector of numbers. Does this feel familiar? Does it seem sort of similar to a data frame? If so, good intuition! In R, a data frame _is_ a list. It's simply a special case of a list. It's a special case because all vectors in the data frame must have the length, and because R knows to print each vector to the screen as a column. In fact, we can easily convert the list above to a data frame by passing it to the `as.data.frame()` function:
 
@@ -698,7 +698,7 @@ rm(add_na_at)
 
 ### Example 2. Detecting matching values by position
 
-In the [chapter on writing functions](#the-function-writing-process), we created an `is_match()` function. In that scenario, we wanted to see if first name, last name, and street name matched at each ID between our data frames. More specifically, we wanted to combine the two data frames into a single data frame and create three new dummy variables that indicated whether first name, last name, and address matched respectively. 
+In the [chapter on writing functions](../writing_functions/writing_functions.qmd#the-function-writing-process), we created an `is_match()` function. In that scenario, we wanted to see if first name, last name, and street name matched at each ID between our data frames. More specifically, we wanted to combine the two data frames into a single data frame and create three new dummy variables that indicated whether first name, last name, and address matched respectively. 
 
 Here are the data frames we simulated and combined:
 
@@ -778,7 +778,6 @@ people %>%
 ```
 
 ```{r}
-#| echo: FALSE
 people <- people %>% select(-ends_with("_match"))
 ```
 
@@ -807,7 +806,7 @@ rm(people, people_1, people_2, col_1, col_2, cols, i, new_col, is_match)
 
 ## Using purrr for analysis
 
-Let's return to the examples from the [column-wise operations chapter](#across-with-summarise) and the [chapter on writing for loops](#using-for-loops-for-analysis) for our discussion of using the `purrr` package to remove unnecessary repetition from our analyses. We will once again use the simulated for the examples below.
+Let's return to the examples from the [column-wise operations chapter](../dplyr_column_wise/dplyr_column_wise.qmd#across-with-summarise) and the [chapter on writing for loops](../writing_for_loops/writing_for_loops.qmd#using-for-loops-for-analysis) for our discussion of using the `purrr` package to remove unnecessary repetition from our analyses. We will once again use the simulated for the examples below.
 
 ```{r}
 study <- tibble(
@@ -858,7 +857,7 @@ study <- tibble(
 
 ### Example 1: Continuous statistics
 
-In this first example, we will use `purrr` to calculate a set of statistics for multiple continuous variables in our data frame. We will start by creating the same function we created at the beginning of the [chapter on writing functions](#writing-functions).
+In this first example, we will use `purrr` to calculate a set of statistics for multiple continuous variables in our data frame. We will start by creating the same function we created at the beginning of the [chapter on writing functions](../writing_functions/writing_functions.qmd#writing-functions).
 
 ```{r}
 continuous_stats <- function(var) {

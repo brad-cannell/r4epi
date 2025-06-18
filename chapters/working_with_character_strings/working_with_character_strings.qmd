@@ -8,7 +8,7 @@ Save reggex for advanced
 Link to complete reggex
 -->
 
-In previous chapters, we learned how to create character vectors, which can be useful on their own. We also learned how to coerce character vectors to factor vectors that we can use for categorical data analysis. However, up to this point, we haven't done a lot of manipulation of the values stored inside of the character strings themselves. Sometimes, however, we will need to manipulate the character string before we can complete other data management tasks or analysis. Some common examples from my projects include separating character strings into multiple parts and creating dummy variables from character strings that can take multiple values. In this chapter, we'll see some specific example of both, and we'll learn a few new tools for working with character strings along the way.
+In previous chapters, we learned how to create character vectors, which can be useful on their own. We also learned how to coerce character vectors to factor vectors that we can use for categorical data analysis. However, up to this point, we haven't done a lot of manipulation of the values stored inside of the character strings themselves. Sometimes, however, we will need to manipulate the character string before we can complete other data management tasks or analysis. Some common examples from our projects include separating character strings into multiple parts and creating dummy variables from character strings that can take multiple values. In this chapter, we'll see some specific example of both, and we'll learn a few new tools for working with character strings along the way.
 
 To get started, feel free to [download the simulated electronic health record that we will use in the following examples](https://github.com/brad-cannell/r4epi/blob/master/data/ehr.Rds). Additionally, we will use the `readr`, `dplyr`, and `stringr` packages in the code below. You will be able to recognize functions from the `stringr` package because they will all begin with `str_`.
 
@@ -35,7 +35,7 @@ ehr
 
 * The simulated data contains admission date (`admit_date`), the patient's name (`name`), the patient's date of birth (`dob`), the patient's address (`address`), the city the patient lives in (`city`), and column that contains the symptoms each patient was experiencing at admission (`symptoms`).
 
-* In this data, date of birth is recorded in the four most common formats that I typically come across.
+* In this data, date of birth is recorded in the four most common formats that we typically come across.
 
 A common initial question we may need to ask of this kind of data is, _"how many unique people are represented in this data?"_ Well, there are 15 rows, so a good first guess might be 15 unique people. However, let's arrange the data by the `name` column and see if that guess still looks reasonable.
 
@@ -137,7 +137,7 @@ In the output above, there are 15 rows. R has identified 1 row with a duplicate 
 
 ## Trim white space
 
-we can use `stringr`'s `str_trim()` function to "trim" white space from the beginning and end of character strings. For example:
+We can use `stringr`'s `str_trim()` function to "trim" white space from the beginning and end of character strings. For example:
 
 ```{r}
 str_trim("Ryan Edwards  ")
@@ -165,13 +165,13 @@ In the output above, there are 15 rows. R has identified 2 rows with a duplicate
 
 ## Regular expressions
 
-Regular expressions, also called **regex** or **regexps**, can be really intimidating at first. In fact, I debated whether or not to even include a discussion of regular expressions at this point in the book. However, regular expressions are _the_ most powerful and flexible tool for manipulating character strings that I are aware of. So, I think it's important for you to get a little exposure to regular expressions, even if you aren't a regular expressions expert by the end of this chapter. 
+Regular expressions, also called **regex** or **regexps**, can be really intimidating at first. In fact, we debated whether or not to even include a discussion of regular expressions at this point in the book. However, regular expressions are _the_ most powerful and flexible tool for manipulating character strings that we are aware of. So, we think it's important for you to get a little exposure to regular expressions, even if you aren't a regular expressions expert by the end of this chapter. 
 
-The first time you see regular expressions, you will probably think they look like gibberish. For example, here's a regular expression that I recently used to clean a data set `(\d{1,2}\/\d{1,2}\/\d{2})`. You can think of regular expressions as an entirely different programming language that the R interpreter can also understand. Regular expressions aren't unique to R. Many programming languages can accept regular expressions as a way to manipulate character strings. 
+The first time you see regular expressions, you will probably think they look like gibberish. For example, here's a regular expression that we recently used to clean a data set `(\d{1,2}\/\d{1,2}\/\d{2})`. You can think of regular expressions as an entirely different programming language that the R interpreter can also understand. Regular expressions aren't unique to R. Many programming languages can accept regular expressions as a way to manipulate character strings. 
 
 In the examples that follow, we hope   
   1. To give you a feel for how regular expression can be useful.    
-  2. Provide you with some specific regular expressions that you may want to save for your epi work (or your class assignments).   
+  2. Provide you with some specific regular expressions that you may want to save for your epwe work (or your class assignments).   
   3. Provide you with some resources to help you take your regular expression skills to the next level when you are ready.   
 
 ### Remove the comma
@@ -358,7 +358,7 @@ ehr %>%
   summarise(n = n())
 ```
 
-I'm sure you saw this coming, but we have more data entry discrepancies that are preventing us from completing our analysis. Now that you've gotten your feet wet with character string manipulation and regular expressions, what do we need to do in order to complete our analysis?
+We're sure you saw this coming, but we have more data entry discrepancies that are preventing us from completing our analysis. Now that you've gotten your feet wet with character string manipulation and regular expressions, what do we need to do in order to complete our analysis?
 
 Hopefully, your first instinct by now is to coerce all the letters to lowercase. In fact, one of the first things we typically do is coerce all character columns to lowercase. Let's do that now.
 
@@ -407,7 +407,7 @@ ehr %>%
 
 ## Separate values into component parts
 
-Another common task that I perform on character strings is to separate the strings into multiple parts. For example, sometimes we may want to separate full names into two columns. One for fist name and one for last name. To complete this task, we will once again use regular expressions. We will also learn how to use the `str_extract()` function to pull values out of a character string when the match a pattern we create with a regular expression.
+Another common task that we perform on character strings is to separate the strings into multiple parts. For example, sometimes we may want to separate full names into two columns. One for fist name and one for last name. To complete this task, we will once again use regular expressions. We will also learn how to use the `str_extract()` function to pull values out of a character string when the match a pattern we create with a regular expression.
 
 ```{r}
 str_extract("zariah hernandez", "^\\w+")
@@ -433,7 +433,7 @@ str_extract("zariah hernandez", "^\\w+")
   
   - The first word character at the start of the string is "z", then "a", then "riah". Finally, R gets to the space between "zariah" and "hernandez", which isn't a word character, and stops the extraction. The result is "zariah".
 
-we can pull the last name from the character string in a similar way:
+We can pull the last name from the character string in a similar way:
 
 ```{r}
 str_extract("zariah hernandez", "\\w+$")
@@ -475,9 +475,9 @@ ehr %>%
   select(name, name_first, name_last)
 ```
 
-The regular expressions we used in the examples above weren't super complex. We hope that leaves you feeling like you can use regular expression to complete data cleaning tasks that are actually useful, even if you haven't totally mastered them yet (I haven't totally mastered them either). 
+The regular expressions we used in the examples above weren't super complex. We hope that leaves you feeling like you can use regular expression to complete data cleaning tasks that are actually useful, even if you haven't totally mastered them yet (we haven't totally mastered them either). 
 
-Before moving on, we want to introduce you to a free tool I use when I have to do more complex character string manipulations with regular expressions. It is the [regular expressions 101 online regex tester and debugger](https://regex101.com/#python).
+Before moving on, we want to introduce you to a free tool we use when we have to do more complex character string manipulations with regular expressions. It is the [regular expressions 101 online regex tester and debugger](https://regex101.com/#python).
 
 ```{r}
 #| label: 36_working_with_character_strings_regex101_chunk
@@ -485,9 +485,9 @@ Before moving on, we want to introduce you to a free tool I use when I have to d
 knitr::include_graphics("regex101.png")
 ```
 
-In the screenshot above, I highlight some of the really cool features of the regex tester and debugger.
+In the screenshot above, we highlight some of the really cool features of the regex tester and debugger.
 
-* First, you can use the regex tester without logging in. However, I typically do log in because that allows me to save regular expressions and use them again later. 
+* First, you can use the regex tester without logging in. However, we typically do log in because that allows us to save regular expressions and use them again later. 
 
 * The top input box on the screen corresponds to what you would type into the `pattern` argument of the `str_replace()` function.
 
@@ -511,7 +511,7 @@ ehr %>%
   select(name_first, name_last, symptoms)
 ```
 
-Notice that some people didn't report their symptoms (`NA`), some people reported only one symptom, and some people reported multiple symptoms. The way the data is currently formatted is not ideal for analysis. For example, if I asked you to tell me how many people ever came in complaining of headache, how would you do that? Maybe like this:
+Notice that some people didn't report their symptoms (`NA`), some people reported only one symptom, and some people reported multiple symptoms. The way the data is currently formatted is not ideal for analysis. For example, if we asked you to tell us how many people ever came in complaining of headache, how would you do that? Maybe like this:
 
 ```{r}
 #| message: false
@@ -555,7 +555,7 @@ Now, we can much more easily figure out how many people had each symptom.
 table(ehr$headache)
 ```
 
-we should acknowledge that dummy variables typically take the values 0 and 1 instead of FALSE and TRUE. We can easily coerce our dummy variable values to 0/1 using the `as.numeric()` function. For example:
+We should acknowledge that dummy variables typically take the values 0 and 1 instead of FALSE and TRUE. We can easily coerce our dummy variable values to 0/1 using the `as.numeric()` function. For example:
 
 ```{r}
 ehr %>% 

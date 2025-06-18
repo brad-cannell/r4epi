@@ -569,7 +569,7 @@ xyz_means
 
 Our for loop now gives us the result we want no matter how many columns are in the data frame. Having the flexibility to loop over an arbitrary number of columns wasn't that important in this case -- we knew exactly how many columns we wanted to loop over. However, what if we wanted to add more columns in the future? Using the second method, we wouldn't have to make any changes to our code. This is often an important consideration when we embed for loops inside of functions that we write ourselves.
 
-For example, maybe we think, "that for loop above was really useful. I want to write it into a function so that I can use it again in my other projects." Well, we've already seen how to take our working code, embed it inside of a function, make it more general, and assign it a name. If you forgot how to do this, please review [the function writing process](#the-function-writing-process). In this case, that process would result in something like this:
+For example, maybe we think, "that for loop above was really useful. I want to write it into a function so that I can use it again in our other projects." Well, we've already seen how to take our working code, embed it inside of a function, make it more general, and assign it a name. If you forgot how to do this, please review [the function writing process](../writing_functions/writing_functions.qmd#the-function-writing-process). In this case, that process would result in something like this:
 
 ```{r}
 multi_means <- function(data) {
@@ -790,7 +790,7 @@ rm(atlanta, charlotte, houston, i, new_nm, path, sheets, import_cities)
 
 ## Using for loops for data management
 
-In the [chapter on writing functions](#the-function-writing-process), we created an `is_match()` function. In that scenario, we wanted to see if first name, last name, and street name matched at each ID between our data frames. More specifically, we wanted to combine the two data frames into a single data frame and create three new dummy variables that indicated whether first name, last name, and address matched respectively. 
+In the [chapter on writing functions](../writing_functions/writing_functions.qmd#the-function-writing-process), we created an `is_match()` function. In that scenario, we wanted to see if first name, last name, and street name matched at each ID between our data frames. More specifically, we wanted to combine the two data frames into a single data frame and create three new dummy variables that indicated whether first name, last name, and address matched respectively. 
 
 Here are the data frames we simulated and combined:
 
@@ -965,7 +965,7 @@ rm(people, people_1, people_2, col_1, col_2, i, new_col, is_match)
 
 ## Using for loops for analysis
 
-For our final example of this chapter, let's return to the final example from the [column-wise operations chapter](#across-with-summarise). We started with some simulated study data:
+For our final example of this chapter, let's return to the final example from the [column-wise operations chapter](../dplyr_column_wise/dplyr_column_wise.qmd#across-with-summarise). We started with some simulated study data:
 
 ```{r}
 study <- tibble(
@@ -1206,7 +1206,7 @@ cat_stats <- study %>%
   print()
 ```
 
-It's a data frame with two columns. The first column actually has two different kinds of information that we need. It contains the name of the variable being analyzed as the column name, and it contains all the categories of that variable as the column values. We want to separate those two pieces of information into two columns. This task is similar to some of the "tidy data" tasks we worked through in the [chapter on restructuring data frames](#tidy-data). In fact, we can also use `pivot_longer()` to get the result we want:
+It's a data frame with two columns. The first column actually has two different kinds of information that we need. It contains the name of the variable being analyzed as the column name, and it contains all the categories of that variable as the column values. We want to separate those two pieces of information into two columns. This task is similar to some of the "tidy data" tasks we worked through in the [chapter on restructuring data frames](../restructuring_data_frames/restructuring_data_frames.qmd#tidy-data). In fact, we can also use `pivot_longer()` to get the result we want:
 
 ```{r}
 study %>% 
@@ -1269,7 +1269,7 @@ cat_stats <- study %>%
   print()
 ```
 
-Now, we have all the variables we wanted for our final results table. Keep in mind, however, that we will eventually be stacking similar results from our other variables (i.e., `gender` and `bmi_3cat`) below these results using `bind_rows()`. You may remember from the [chapter on working with multiple data frames](#combining-data-frames-vertically-adding-rows) that the `bind_rows()` function matches columns together by _name_, not by position. So, we need to change the `age_group` column name to `category`. If we don't, we will end up with something that looks like this:
+Now, we have all the variables we wanted for our final results table. Keep in mind, however, that we will eventually be stacking similar results from our other variables (i.e., `gender` and `bmi_3cat`) below these results using `bind_rows()`. You may remember from the [chapter on working with multiple data frames](../multiple_data_frames/multiple_data_frames.qmd#combining-data-frames-vertically-adding-rows) that the `bind_rows()` function matches columns together by _name_, not by position. So, we need to change the `age_group` column name to `category`. If we don't, we will end up with something that looks like this:
 
 ```{r}
 study %>% 
@@ -1388,7 +1388,7 @@ for(i in c("age_group", "gender", "bmi_3cat")) {
 }
 ```
 
-Unfortunately, that just gives us a different error. In the code above, `count()` is looking for a column named `i` in the `study` data frame. You may be wondering why `i` is not being converted to `"age_group"`, `"gender"`, and `"bmi_3cat"` in the code above. The short answer is that it's because of [tidy evaluation and data masking](#tidy-evaluation).
+Unfortunately, that just gives us a different error. In the code above, `count()` is looking for a column named `i` in the `study` data frame. You may be wondering why `i` is not being converted to `"age_group"`, `"gender"`, and `"bmi_3cat"` in the code above. The short answer is that it's because of [tidy evaluation and data masking](../writing_functions/writing_functions.qmd#tidy-evaluation).
 
 So, we need a way to iteratively pass each quoted column name to the `count()` function inside our for loop body, but also let `dplyr` know that they _are column names_, not just random character strings. Fortunately, the `rlang` package (which is partially imported with `dplyr`), provides us with a special construct that can help us solve this problem. It's called the `.data` pronoun. Here's how we can use it:
 

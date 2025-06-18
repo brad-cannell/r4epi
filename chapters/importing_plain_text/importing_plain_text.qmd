@@ -19,7 +19,7 @@ Copy and paste:
 
 We previously learned how to manually create a data frame in RStudio with the `data.frame()` function, the `tibble()` function, or the `tribble()` function. This will get the job done, but it’s not always very practical -- particularly when you have larger data sets. 
 
-Additionally, others will usually share data with you that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In my experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the **.csv** file extension and Excel files end with the **.xls** or **.xlsx** file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, you will learn how to take data stored in several different common types of files import them into R for use.
+Additionally, others will usually share data with you that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In our experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the **.csv** file extension and Excel files end with the **.xls** or **.xlsx** file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, you will learn how to take data stored in several different common types of files import them into R for use.
 
 There are many different file types that one can use to store data. In this book, we will divide those file types into two categories: [plain text files](../appendices/glossary.qmd#plain-text-files) and [binary files](../appendices/glossary.qmd#binary-files). Plain text files are simple files that you (<i>a human</i>) can directly read using only your operating system's plain text editor (i.e., Notepad on Windows or TextEdit on Mac). These files usually end with the **.txt** file extension -- one exception being the **.csv** extension. Specifically, in this chapter we will learn to import the following variations of plain text files:
 
@@ -43,7 +43,7 @@ knitr::include_graphics("files.png")
 
 ## Packages for importing data
 
-Base R contains several functions that can be used to import plain text files; however, I'm going to use the [readr](https://readr.tidyverse.org/) package to import data in the examples that follow. Compared to base R functions for importing plain text files, `readr`: 
+Base R contains several functions that can be used to import plain text files; however, we are going to use the [readr](https://readr.tidyverse.org/) package to import data in the examples that follow. Compared to base R functions for importing plain text files, `readr`: 
 
 * Is roughly 10 times faster.
 
@@ -51,7 +51,7 @@ Base R contains several functions that can be used to import plain text files; h
 
 * Behaves more consistently across operating systems and geographic locations.
 
-If you would like to follow along, I suggest that you go ahead and install and load `readr` now. 
+If you would like to follow along, we suggest that you go ahead and install and load `readr` now. 
 
 ```{r}
 library(readr)
@@ -59,7 +59,7 @@ library(readr)
 
 ## Importing space delimited files
 
-We will start by importing data with values are separated by a single space. Not necessarily because this is the most common format you will encounter; in my experience it is not. But it’s about as simple as it gets, and other types of data are often considered special cases of files separated with a single space. So, it seems like a good place to start.
+We will start by importing data with values are separated by a single space. Not necessarily because this is the most common format you will encounter; in our experience it is not. But it’s about as simple as it gets, and other types of data are often considered special cases of files separated with a single space. So, it seems like a good place to start.
 
 :::callout-note
 In programming lingo, it is common to use the word **delimited** interchangeably with the word **separated.** For example, you might say "values separated by a single space" or you might say "a file with space delimited values."
@@ -180,7 +180,7 @@ tab
 
 * To tell R that the values are now separated by tabs, we changed the value we passed to the `delim` argument to `"\t"`. This is a special symbol that means "tab" to R.
 
-I don't personally receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the `readr` package. That is, instead of using the `read_delim()` function with the value of the `delim` argument set to `"\t"`, we can simply pass our file path to the `read_tsv()` function. Under the hood, the `read_tsv()` function does exactly the same thing as the `read_delim()` function with the value of the `delim` argument set to `"\t"`.
+We don't personally receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the `readr` package. That is, instead of using the `read_delim()` function with the value of the `delim` argument set to `"\t"`, we can simply pass our file path to the `read_tsv()` function. Under the hood, the `read_tsv()` function does exactly the same thing as the `read_delim()` function with the value of the `delim` argument set to `"\t"`.
 
 ```{r}
 #| cache: TRUE
@@ -193,7 +193,7 @@ tab
 
 ## Importing fixed width format files
 
-Yet another type of plain text file we will discuss is called a **fixed width format** or **fwf** file. Again, these files aren't super common in my experience, but they can be sort of tricky when you do encounter them. Take a look at this example:
+Yet another type of plain text file we will discuss is called a **fixed width format** or **fwf** file. Again, these files aren't super common in our experience, but they can be sort of tricky when you do encounter them. Take a look at this example:
 
 ```{r}
 #| label: fixed-width
@@ -203,7 +203,7 @@ Yet another type of plain text file we will discuss is called a **fixed width fo
 knitr::include_graphics("fixed_width.png")
 ```
 
-As you can see, a hallmark of fixed width format files is inconsistent spacing between values. For example, there is only one single space between the values `004` and `Female` in the fourth row. But, there are multiple spaces between the values `65` and `154`. Therefore, we can't tell R to look for a single space or tab to separate values. So, how do we tell R which characters (including spaces) go with which variable? Well, if you look closely you will notice that all variable values start in the same column. If you are wondering what I mean, try to imagine a number line along the top of the data:
+As you can see, a hallmark of fixed width format files is inconsistent spacing between values. For example, there is only one single space between the values `004` and `Female` in the fourth row. But, there are multiple spaces between the values `65` and `154`. Therefore, we can't tell R to look for a single space or tab to separate values. So, how do we tell R which characters (including spaces) go with which variable? Well, if you look closely you will notice that all variable values start in the same column. If you are wondering what we mean, try to imagine a number line along the top of the data:
 
 ```{r}
 #| lable: number_line_spaces
@@ -395,7 +395,7 @@ read_fwf(
 
 ## Importing comma separated values files
 
-The final type of plain text file that we will discuss is by far the most common type used in my experience. I'm talking about the **comma separated values** or **csv** file. Unlike space and tab separated values files, csv file names end with the **.csv** file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, or Google Sheets. 
+The final type of plain text file that we will discuss is by far the most common type used in our experience. We are talking about the **comma separated values** or **csv** file. Unlike space and tab separated values files, csv file names end with the **.csv** file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, or Google Sheets. 
 
 ```{r}
 #| label: csv_plain_text
@@ -438,9 +438,9 @@ csv
 
 ## Additional arguments
 
-For the most part, the data we imported in all of the examples above was relatively well behaved. What I mean by that is that the data basically "looked" like each of the `read_` functions were expecting it to "look". Therefore, we didn't have to adjust many of the various `read_` functions' default values. The exception was changing the default value of the `na` argument to the `read_delim()` function. However, all of the `read_` functions above have additional arguments that you may need to tweak on occasion. The two that I tend to adjust most often are the `col_names` and `col_types` arguments. It's impossible for me to think of every scenario where you may need to do this, but I'll walk through a basic example below, which should be sufficient for you to get the idea.
+For the most part, the data we imported in all of the examples above was relatively well behaved. What we mean by that is that the data basically "looked" like each of the `read_` functions were expecting it to "look". Therefore, we didn't have to adjust many of the various `read_` functions' default values. The exception was changing the default value of the `na` argument to the `read_delim()` function. However, all of the `read_` functions above have additional arguments that you may need to tweak on occasion. The two that we tend to adjust most often are the `col_names` and `col_types` arguments. It's impossible for us to think of every scenario where you may need to do this, but we will walk through a basic example below, which should be sufficient for you to get the idea.
 
-Take a look at this csv file for a few seconds. It started as the same exact height and weight data we've been using, but I made a few changes. See if you can spot them all.
+Take a look at this csv file for a few seconds. It started as the same exact height and weight data we've been using, but we made a few changes. See if you can spot them all.
 
 ```{r}
 #| lable: csv_complex
@@ -450,11 +450,11 @@ Take a look at this csv file for a few seconds. It started as the same exact hei
 knitr::include_graphics("csv_complex.png")
 ```
 
-When people record data in Microsoft Excel, they do all kinds of crazy things. In the screenshot above, I've included just a few examples of things I see all the time. For example:
+When people record data in Microsoft Excel, they do all kinds of crazy things. In the screenshot above, we have included just a few examples of things we see all the time. For example:
 
 * Row one contains generic variable names that don't really serve much of a purpose. 
 
-* Row two is a blank line. I'm not sure why it's there. Maybe the study staff finds it aesthetically pleasing?
+* Row two is a blank line. We are not sure why it's there. Maybe the study staff finds it aesthetically pleasing?
 
 * Row three contains some variable descriptions. These are actually useful, but they aren't currently formatted in a way that makes for good variable names.
 
@@ -465,11 +465,11 @@ When people record data in Microsoft Excel, they do all kinds of crazy things. I
 All of the issues listed above are things we will have to deal with before we can analyze our data. Now, in this small data set we could just fix these issues directly in Microsoft Excel and then import the altered data into R with a simple call to `read_csv()` without adjusting any options. However, that this is generally a really bad idea. 
 
 ::: callout-warning
-* I suggest that you don't **EVER** alter your raw data. All kinds of crazy things happen with data and data files. If you keep your raw data untouched and in a safe place, worst case scenario you can always come back to it and start over. If you start messing with the raw data, then you may lose the ability to recover what it looked like in its original form forever. If you import the data into R before altering it then your raw data stays preserved
+* We suggest that you don't **EVER** alter your raw data. All kinds of crazy things happen with data and data files. If you keep your raw data untouched and in a safe place, worst case scenario you can always come back to it and start over. If you start messing with the raw data, then you may lose the ability to recover what it looked like in its original form forever. If you import the data into R before altering it then your raw data stays preserved
 
-* If you are going to make alterations in Excel prior to importing the data, I **strongly** suggest making a copy of the raw data first. Then, alter the copy before importing into R. But, even this can be a bad idea.
+* If you are going to make alterations in Excel prior to importing the data, we **strongly** suggest making a copy of the raw data first. Then, alter the copy before importing into R. But, even this can be a bad idea.
 
-* If you make alterations to the data in Excel then there is generally no record of those alterations. For example, let's say you click in a cell and delete a value (maybe even by accident), and then send me the csv file. I will have no way of knowing that a value was deleted. When you alter the data directly in Excel (or any program that doesn't require writing code), it can be really difficult for others (including future you) to know what was done to the data. You may be able manually compare the altered data to the original data if you have access to both, but who wants to do that -- especially if the file is large? However, if you import the data into R as-is and programmatically make alterations with R code, then your R code will, by definition, serve a record of all alterations that were made.
+* If you make alterations to the data in Excel then there is generally no record of those alterations. For example, let's say you click in a cell and delete a value (maybe even by accident), and then send us the csv file. We will have no way of knowing that a value was deleted. When you alter the data directly in Excel (or any program that doesn't require writing code), it can be really difficult for others (including future you) to know what was done to the data. You may be able manually compare the altered data to the original data if you have access to both, but who wants to do that -- especially if the file is large? However, if you import the data into R as-is and programmatically make alterations with R code, then your R code will, by definition, serve a record of all alterations that were made.
 
 * Often data is updated. You could spend a significant amount of time altering your data in Excel only to be sent an updated file next week. Often, the manual alterations you made in one Excel file are not transferable to another. However, if all alterations are made in R, then you can often just run the exact same code again on the updated data.
 :::

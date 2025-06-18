@@ -22,7 +22,7 @@ In this book, we are actually going to learn 4 different methods for creating an
 
 2. Dollar sign notation. This is probably the most commonly used base R way of creating and modifying columns in a data frame. In this book, we won't use it as much as we use `dplyr::mutate()`, but you will see it all over the place in the R community.
 
-3. Bracket notation. Again, we won't use bracket notation very often in this book. However, we will use it later on when we learn about [for loops](../writing_for_loops/writing_for_loops.qmd). Therefore, we're going to introduce you to using bracket notation to create and modify data frame columns now.
+3. Bracket notation. Again, we won't use bracket notation very often in this book. However, we will use it later on when we learn about [for loops](../writing_for_loops/writing_for_loops.qmd#writing-for-loops). Therefore, we're going to introduce you to using bracket notation to create and modify data frame columns now.
 
 4. The `mutate()` function from the `dplyr` package. This is the method that we will use the vast majority of the time in this book (and in our real-life projects). We're going to recommend that you do the same.
 
@@ -249,7 +249,7 @@ drug_trial <- tibble(
   
   - The fourth argument to the `sample()` function is the `prob` argument. The default value passed to the `prob` argument is `NULL`. This just means that this argument is _optional_. Passing a vector of probabilities to this argument allows you to adjust how likely it is that R will choose certain values from the vector of possible values passed to the `x` argument.
   
-  - Finally, notice that we also used the `set.seed()` function at the very top of the code chunk. We did this because, the `sample()` function chooses values at random. That means, every time we run the code above, we get different values. That makes it difficult for me to write about the data because it's constantly changing. When we use the `set.seed()` function, the values will still be randomly selected, but they will be the _same_ randomly selected values every time. It doesn't matter what numbers you pass to the `set.seed()` function as long as you pass the same numbers every time you want to get the same random values. For example:
+  - Finally, notice that we also used the `set.seed()` function at the very top of the code chunk. We did this because, the `sample()` function chooses values at random. That means, every time we run the code above, we get different values. That makes it difficult for us to write about the data because it's constantly changing. When we use the `set.seed()` function, the values will still be randomly selected, but they will be the _same_ randomly selected values every time. It doesn't matter what numbers you pass to the `set.seed()` function as long as you pass the same numbers every time you want to get the same random values. For example:
   
 ```{r}
 # No set.seed - Random values
@@ -363,7 +363,7 @@ To demonstrate, we create a simple numeric vector above. This vector just contai
 nums + 1
 ```
 
-Notice how R used the recycling rules to add 1 to every number in the `nums` vector. We didn't have to explicitly tell R to add 1 to each number. This is sometimes referred to as **vectorization**. Functions that perform an action on _all_ elements of a vector, rather than having to be explicitly programmed to perform an action on _each_ element of a vector, is a **vectorized** function. Remember, that mathematical operators -- including `+` -- _are functions_ in R. More specifically, `+` is a **vectorized** function. In fact, most built-in R functions are vectorized. Why are we telling you this? It isn't intended to confuse you, but when I was learning R I came across this term all the time in R resources and help pages, and I had no idea what it meant. We hope that this very simple example above makes it easy to understand what vectorization means, and you won't be intimidated when it pops up while you’re trying to get help with your R programs.
+Notice how R used the recycling rules to add 1 to every number in the `nums` vector. We didn't have to explicitly tell R to add 1 to each number. This is sometimes referred to as **vectorization**. Functions that perform an action on _all_ elements of a vector, rather than having to be explicitly programmed to perform an action on _each_ element of a vector, is a **vectorized** function. Remember, that mathematical operators -- including `+` -- _are functions_ in R. More specifically, `+` is a **vectorized** function. In fact, most built-in R functions are vectorized. Why are we telling you this? It isn't intended to confuse you, but when learning R, this is a term often encountered in R resources and help pages. We hope that this very simple example above makes it easy to understand what vectorization means, and you won't be intimidated when it pops up while you’re trying to get help with your R programs.
 
 Ok, so what happens when we add a longer vector and a shorter vector?
 
@@ -438,7 +438,7 @@ drug_trial %>%
 
 So, adding or modifying multiple columns is really easy with `mutate()`. But, did any of you notice an error? Take a look at the structure of the data the line of code that creates `se_diarrhea_f`. Instead of writing the "No" label with an "N" and an "o", we accidently wrote it with an "N" and a zero. We find that when we have to type something over and over like this, we are more likely to make a mistake. Further, if we ever need to change the levels or labels, we will have to change them in every `factor()` function in the code above.
 
-For these reasons (and others), programmers of many languages -- including R -- are taught [the DRY principle](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself). DRY is an acronym for don't repeat yourself. We will discuss the DRY principle again in the chapter on [repeated operations](#introduction-to-repeated-operations), but for now, it just means that you typically don't want to type code that is the same (or nearly the same) over and over in your programs. Here's one way we could reduce the repetition in the code above:
+For these reasons (and others), programmers of many languages -- including R -- are taught [the DRY principle](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself). DRY is an acronym for don't repeat yourself. We will discuss the DRY principle again in the chapter on [repeated operations](../intro_repeated_operations/intro_repeated_operations.qmd), but for now, it just means that you typically don't want to type code that is the same (or nearly the same) over and over in your programs. Here's one way we could reduce the repetition in the code above:
 
 ```{r}
 # Create a vector of 0/1 levels that can be reused below.
@@ -480,7 +480,7 @@ drug_trial %>%
   
   - Next, R compared that the summed value to `0`. If the summed value was greater than 0, then the value assigned to `any_se_year` was `TRUE`. Otherwise, the value assigned to `any_se_year` was `FALSE`.
 
-Because there is some new stuff in the code above, I'm going break it down a little bit further. We'll start with `rowwise()`. And, to reduce distractions a much as possible, I'm going to create a new data frame with only the columns we need for this example (sneak peek at the next chapter):
+Because there is some new stuff in the code above, we're going break it down a little bit further. We'll start with `rowwise()`. And, to reduce distractions a much as possible, we're going to create a new data frame with only the columns we need for this example (sneak peek at the next chapter):
 
 ```{r}
 drug_trial_sub <- drug_trial %>% 
@@ -588,7 +588,7 @@ drug_trial_sub %>%
   )
 ```
 
-That works, and hopefully, you're able to reason out why it works. But, there we go repeating code again! So, in this case, we have to choose between more succinct code and the DRY principle. When presented with that choice, I will typically favor the DRY principle. Therefore, my code would look like this:
+That works, and hopefully, you're able to reason out why it works. But, there we go repeating code again! So, in this case, we have to choose between more succinct code and the DRY principle. When presented with that choice, we will typically favor the DRY principle. Therefore, our code would look like this:
 
 ```{r}
 drug_trial_sub %>% 
@@ -600,9 +600,9 @@ drug_trial_sub %>%
   )
 ```
 
-Not only am I less like to make a typing error in this code, but I think the differences between each line of code (i.e., what that line of code is doing) stands out more. In other words, the intent of the code isn't buried in unneeded words.
+Not only are we less likely to make a typing error in this code, but the differences between each line of code (i.e., what that line of code is doing) stand out more. In other words, the intent of the code isn't buried in unneeded words.
 
-Before moving on, I also want to point out that the method above would not have worked on factors. For example:
+Before moving on, we also want to point out that the method above would not have worked on factors. For example:
 
 ```{r}
 #| error: true
@@ -620,11 +620,11 @@ drug_trial_sub %>%
   )
 ```
 
-The `sum()` function cannot add factors. Back when I [first introduced factors in this book](#factor-vectors), I suggested that you keep the numeric version of your variables in your data frames and create factors as new variables. I said that I thought this was a good idea because I often find that it can be useful to have both versions of the variable hanging around during the analysis process. The situation above is an example of what I was talking about.
+The `sum()` function cannot add factors. Back when we [first introduced factors in this book](../lets_get_programming/lets_get_programming.qmd#factor-vectors), we suggested that you keep the numeric version of your variables in your data frames and create factors as new variables. We said that we thought this was a good idea because we often find that it can be useful to have both versions of the variable hanging around during the analysis process. The situation above is an example of what we were talking about.
 
 ### Group_by mutations
 
-So far, we've created variables that tell us if our participants reported _any_ side effects in a given and if they reported _all 3_ side effects in a given year. The next logical question might be to ask if each participant experienced _any_ side effect in _any year_. For that, we will need `dplyr`'s `group_by()` function. Before discussing `group_by()`, I'm going to show you the code I would use to accomplish this task:
+So far, we've created variables that tell us if our participants reported _any_ side effects in a given and if they reported _all 3_ side effects in a given year. The next logical question might be to ask if each participant experienced _any_ side effect in _any year_. For that, we will need `dplyr`'s `group_by()` function. Before discussing `group_by()`, we're going to show you the code we would use to accomplish this task:
 
 ```{r}
 drug_trial_sub %>% 
@@ -646,7 +646,7 @@ drug_trial_sub %>%
 
 <p class="note"> 🗒**Side Note:** You can use `dplyr::ungroup()` to ungroup your data frames. This works regardless of whether you grouped them with `rowwise()` or `group_by()`.</p>
 
-I already introduced `group_by()` in the chapter on [numerical descriptions of categorical variables](#the-tidyverse-way). I also said that `group_by()` operationalizes the **Split - Apply - Combine** strategy for data analysis. That means is that we split our data frame up into smaller data frames, apply our calculation separately to each smaller data frame, and then combine those individual results back together as a single result. 
+We already introduced `group_by()` in the chapter on [numerical descriptions of categorical variables](../categorical_variables/categorical_variables.qmd#the-tidyverse-way). We also said that `group_by()` operationalizes the **Split - Apply - Combine** strategy for data analysis. That means is that we split our data frame up into smaller data frames, apply our calculation separately to each smaller data frame, and then combine those individual results back together as a single result. 
 
 So, in the example above, the `drug_trial_sub` data frame was split into twenty separate little data frames (i.e., one for each study id). Because there are 3 rows for each study id, each of these 20 little data frames had three rows. 
 
@@ -663,7 +663,7 @@ drug_trial_sub %>%
   mutate(any_se = sum(any_se_year) > 0)
 ```
 
-You may be wondering why I used the `sum()` function when the values for `any_se_year` are not numbers. The way R treats logical vectors can actually be pretty useful in situations like this. That is, when mathematical operations are applied to logical vectors, R treats FALSE as a 0 and TRUE as a 1. So, for participant 1, R calculated the value for `any_se` something like this:
+You may be wondering why we used the `sum()` function when the values for `any_se_year` are not numbers. The way R treats logical vectors can actually be pretty useful in situations like this. That is, when mathematical operations are applied to logical vectors, R treats FALSE as a 0 and TRUE as a 1. So, for participant 1, R calculated the value for `any_se` something like this:
 
 ```{r}
 any_se_year <- c(TRUE, TRUE, TRUE)
@@ -682,4 +682,4 @@ any_se
 
 R used the recycling rules to copy that result to the other two rows of data from participant 1. R then repeated that process for every other participant, and then returned the combined data frame to us.
 
-I hope you found the example above useful. I think it's fairly representative of the kinds of data management stuff I tend to do on a day-to-day basis. Of course, missing data always complicates things (more to come on that!). In the next chapter, we will round out our introduction to the basics of data management by learning how to subset rows and columns of a data frame.
+We hope you found the example above useful. We think it's fairly representative of the kinds of data management stuff we tend to do on a day-to-day basis. Of course, missing data always complicates things (more to come on that!). In the next chapter, we will round out our introduction to the basics of data management by learning how to subset rows and columns of a data frame.

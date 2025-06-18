@@ -16,7 +16,7 @@ There will often be times that we want to modify the values in one column of our
 knitr::include_graphics("values.png")
 ```
 
-we don't really have a way to do this with the tools we currently have in our toolbox. We can manually type out all the region values, but that isn't very scalable. Wouldn't it be nice if we could just give R some rules, or conditions (e.g., TX is in the South, CA is in the West), and have R fill in the region values for us? Well, that's exactly what we are going to learn how to do in this chapter.
+We don't really have a way to do this with the tools we currently have in our toolbox. We can manually type out all the region values, but that isn't very scalable. Wouldn't it be nice if we could just give R some rules, or conditions (e.g., TX is in the South, CA is in the West), and have R fill in the region values for us? Well, that's exactly what we are going to learn how to do in this chapter.
 
 ```{r}
 #| label: 2_conditional_operations_conditions_chunk
@@ -112,7 +112,7 @@ rainy_days %>%
 
 Hopefully, that was the result you expected. The `if_else()` function returns the value `no wear` because the value passed to the `condition` argument is `FALSE`. Then, R uses its recycling rules to copy the value `no wear` to every row of the `raincoat` column.
 
-we can take this  a step further and actually pass a vector of logical (`TRUE`/`FALSE`) values to the `condition` argument. For example:
+We can take this  a step further and actually pass a vector of logical (`TRUE`/`FALSE`) values to the `condition` argument. For example:
 
 ```{r}
 rainy_days %>% 
@@ -165,7 +165,7 @@ knitr::include_graphics("arithmetic.png")
 knitr::include_graphics("logical.png")
 ```
 
-we think that most of the operators above will be familiar, or a least intuitive, for most of you. However, we do want to provide a little bit of commentary for a few of them.
+We think that most of the operators above will be familiar, or a least intuitive, for most of you. However, we do want to provide a little bit of commentary for a few of them.
 
 * we haven't seen the `%in%` operator before, but we will wait to discuss it below. 
 
@@ -369,9 +369,9 @@ ages %>%
   
   - Finally, after the `case_when()` function has tested all conditions, the returned values are assigned to a new column that we named `age_3cat`.
   
-* Notice that we named the new variable `age_3cat`. We're  not sure where we picked up this naming convention, but we use it a lot when we collapse variables. The basic format is the name of variable we're collapsing, an underscore, and the number of categories in the collapsed variable. We like using this convention for two reasons. First, the resulting column names are meaningful and informative. Second, we don't have to spend any time trying to think of a different meaningful or informative name for my new variable. It's totally fine if you don't adopt this naming convention, but we would recommend that you try to use names that are more informative than `age2` or something like that.
+* Notice that we named the new variable `age_3cat`. We're  not sure where we picked up this naming convention, but we use it a lot when we collapse variables. The basic format is the name of variable we're collapsing, an underscore, and the number of categories in the collapsed variable. We like using this convention for two reasons. First, the resulting column names are meaningful and informative. Second, we don't have to spend any time trying to think of a different meaningful or informative name for our new variable. It's totally fine if you don't adopt this naming convention, but we would recommend that you try to use names that are more informative than `age2` or something like that.
 
-* Notice that we used a number (`1`) on the right-hand side of the two-sided formula above. We could have used a character value instead (i.e., `child`); however, for reasons we discussed in the section on factor variables, we prefer to recode my variables using numeric categories and then later creating a factor version of the variable using the `_f` naming convention.
+* Notice that we used a number (`1`) on the right-hand side of the two-sided formula above. We could have used a character value instead (i.e., `child`); however, for reasons we discussed in the section on factor variables, we prefer to recode our variables using numeric categories and then later creating a factor version of the variable using the `_f` naming convention.
 
 Now, let's add a second two-sided formula to our `case_when()` function.
 
@@ -484,7 +484,7 @@ ages %>%
 
 We've already talked about how R uses the special `NA` value to represent missing data. We've also learned how to convert other representations of missing data (e.g., ".") to `NA` when we are importing data. However, It is extremely common for data sets that we use in epidemiology to include "don't know" and "refused" answer options in addition to true "missing". By convention, those options are often coded as `7` and `9`. For questions that include 7 or more response options (e.g., month), then `77` and `99` are commonly used to represent "don't know" and "refused". For questions that include 77 or more response options (e.g., age), then `777` and `999` are commonly used to represent "don't know" and "refused". 
   
-Differentiating between true missing (i.e., the respondent was never asked the question or just left the response blank on a written questionnaire), don't know (i.e., the respondent doesn't know the answer), and refused (i.e., the respondent knows the answer, but doesn't want to reveille it -- possibly out of shame, fear, or embarrassment) can be of some interest for survey design purposes. However, all three of the values described above typically just amount to missing data by the time we get around to the substantive analyses. In other words, knowing that a person refused to give their age doesn't help me figure out how old they are any more than if they had never been asked at all. Therefore, we commonly use conditional operations in epidemiology to recode these kinds of values to explicitly missing values (`NA`). 
+Differentiating between true missing (i.e., the respondent was never asked the question or just left the response blank on a written questionnaire), don't know (i.e., the respondent doesn't know the answer), and refused (i.e., the respondent knows the answer, but doesn't want to reveille it -- possibly out of shame, fear, or embarrassment) can be of some interest for survey design purposes. However, all three of the values described above typically just amount to missing data by the time we get around to the substantive analyses. In other words, knowing that a person refused to give their age doesn't help us figure out how old they are any more than if they had never been asked at all. Therefore, we commonly use conditional operations in epidemiology to recode these kinds of values to explicitly missing values (`NA`). 
 
 We'll walk through an example below, but first we will simulate some additional data. Specifically, we'll add a `race` column and a `hispanic` column to our `ages` data frame, and name the new data frame `demographics`.
 
@@ -533,7 +533,7 @@ demographics %>%
   )
 ```
 
-We intentionally made this error because it's a really easy one to make, and you will probably make it too. If we look back to the [Let's get programming chapter](#missing-data), we will see that we briefly discussed the `NA` value being type logical by default. We also talked about "type coercion" and how most of the time we don’t have to worry about it. We said that R generally coerces `NA` to `NA_character`, `NA_double`, or whatever specific version of `NA` is most appropriate for the data type automatically. We also said that there are some exceptions. Notably, when using the `if_else()` and `case_when()` functions, R will throw an error instead of automatically type coercing. Finally, we said we would discuss it later. It's later now. Long story short, the developers of the `if_else()` function do this on purpose to make the function's returned result more predictable and slightly faster. 
+We intentionally made this error because it's a really easy one to make, and you will probably make it too. If we look back to the [Let's get programming chapter](../lets_get_programming/lets_get_programming.qmd#missing-data), we will see that we briefly discussed the `NA` value being type logical by default. We also talked about "type coercion" and how most of the time we don’t have to worry about it. We said that R generally coerces `NA` to `NA_character`, `NA_double`, or whatever specific version of `NA` is most appropriate for the data type automatically. We also said that there are some exceptions. Notably, when using the `if_else()` and `case_when()` functions, R will throw an error instead of automatically type coercing. Finally, we said we would discuss it later. It's later now. Long story short, the developers of the `if_else()` function do this on purpose to make the function's returned result more predictable and slightly faster. 
 
 For us, this just means that we have to remember to use `NA_character`, `NA_integer`, or `NA_real` as appropriate. For example, the error message above says, "`false` must be a logical vector, not a double vector." This means that the value we passed to the `false` argument was type double, but `if_else()` was expecting it to be type logical. Why? Well, `if_else()` was expecting it to be type logical because the value we passed to the `true` argument (`NA`) is type logical, and vectors can only ever have one type. To fix this error, we simply need to change the value we are passing to the `true` argument from logical (`NA`) to double (`NA_real`) so that it matches the values we are passing to the `false` argument.
 
