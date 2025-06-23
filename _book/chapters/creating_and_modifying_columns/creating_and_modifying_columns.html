@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
+<meta name="generator" content="quarto-1.5.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>26&nbsp; Creating and Modifying Columns – R 4 Epidemiology</title>
+<title>R 4 Epidemiology – 26&nbsp; Creating and Modifying Columns</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -74,10 +74,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -852,7 +852,7 @@ Note
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dplyr for the mutate function</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>we first discussed <code>mutate()</code> in the <a href="../../chapters/exporting_data_to_disk/exporting_data_to_disk.html">chapter on exporting data</a>, and again in the <a href="../intro_data_management/introduction.qmd">Introduction to data management chapter</a>. As we said there, the first two arguments to <code>mutate()</code> are <code>.data</code> and <code>...</code>.</p>
+<p>we first discussed <code>mutate()</code> in <a href="../exporting_data_to_disk/exporting_data_to_disk.html" class="quarto-xref"><span>Chapter 17</span></a>, and again in <a href="../intro_data_management/intro_data_management.html" class="quarto-xref"><span>Chapter 25</span></a>. As we said there, the first two arguments to <code>mutate()</code> are <code>.data</code> and <code>...</code>.</p>
 <p>The value passed to <code>.data</code> should always be a data frame. In this book, we will often pass data frames to the <code>.data</code> argument using the pipe operator (e.g., <code>df %&gt;% mutate()</code>).</p>
 <p>The value passed to the <code>...</code> argument should be a name-value pair or multiple name value pairs separated by commas. The <code>...</code> argument is where you will tell <code>mutate()</code> to create or modify columns in your data frame and how.</p>
 <ul>
@@ -1311,7 +1311,7 @@ object length</code></pre>
 <li><p>Notice that we created one variable per line. We suggest you do the same. It just makes your code much easier to read.</p></li>
 </ul>
 <p>So, adding or modifying multiple columns is really easy with <code>mutate()</code>. But, did any of you notice an error? Take a look at the structure of the data the line of code that creates <code>se_diarrhea_f</code>. Instead of writing the “No” label with an “N” and an “o”, we accidently wrote it with an “N” and a zero. We find that when we have to type something over and over like this, we are more likely to make a mistake. Further, if we ever need to change the levels or labels, we will have to change them in every <code>factor()</code> function in the code above.</p>
-<p>For these reasons (and others), programmers of many languages – including R – are taught <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">the DRY principle</a>. DRY is an acronym for don’t repeat yourself. We will discuss the DRY principle again in the chapter on <a href="#introduction-to-repeated-operations">repeated operations</a>, but for now, it just means that you typically don’t want to type code that is the same (or nearly the same) over and over in your programs. Here’s one way we could reduce the repetition in the code above:</p>
+<p>For these reasons (and others), programmers of many languages – including R – are taught <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">the DRY principle</a>. DRY is an acronym for don’t repeat yourself. We will discuss the DRY principle again in <a href="../intro_repeated_operations/intro_repeated_operations.html" class="quarto-xref"><span>Chapter 33</span></a>, but for now, it just means that you typically don’t want to type code that is the same (or nearly the same) over and over in your programs. Here’s one way we could reduce the repetition in the code above:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector of 0/1 levels that can be reused below.</span></span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>yn_levs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
@@ -1828,6 +1828,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1938,6 +1940,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
+      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
