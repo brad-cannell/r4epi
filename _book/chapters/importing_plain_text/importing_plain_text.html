@@ -648,21 +648,21 @@ bookdown::preview_chapter("chapters/03_part_data_transfer/03_importing_plain_tex
 Copy and paste:
 👆**Here's what we did above:**
 -->
-<p>We previously learned how to manually create a data frame in RStudio with the <code>data.frame()</code> function, the <code>tibble()</code> function, or the <code>tribble()</code> function. This will get the job done, but it’s not always very practical – particularly when you have larger data sets.</p>
-<p>Additionally, others will usually share data with you that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In my experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the <strong>.csv</strong> file extension and Excel files end with the <strong>.xls</strong> or <strong>.xlsx</strong> file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, you will learn how to take data stored in several different common types of files import them into R for use.</p>
-<p>There are many different file types that one can use to store data. In this book, we will divide those file types into two categories: <a href="../../chapters/appendices/glossary.html#plain-text-files">plain text files</a> and <a href="../../chapters/appendices/glossary.html#binary-files">binary files</a>. Plain text files are simple files that you (<i>a human</i>) can directly read using only your operating system’s plain text editor (i.e., Notepad on Windows or TextEdit on Mac). These files usually end with the <strong>.txt</strong> file extension – one exception being the <strong>.csv</strong> extension. Specifically, in this chapter we will learn to import the following variations of plain text files:</p>
+<p>We previously learned how to manually create a data frame in RStudio with the <code>data.frame()</code> function, the <code>tibble()</code> function, or the <code>tribble()</code> function. This will get the job done, but it’s not always very practical – particularly when we have larger data sets.</p>
+<p>Additionally, others will usually share data with us that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In our experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the <strong>.csv</strong> file extension and Excel files end with the <strong>.xls</strong> or <strong>.xlsx</strong> file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, we will learn how to take data stored in several different common types of files import them into R for use.</p>
+<p>There are many different file types that one can use to store data. In this book, we will divide those file types into two categories: <a href="../../chapters/appendices/glossary.html#plain-text-files">plain text files</a> and <a href="../../chapters/appendices/glossary.html#binary-files">binary files</a>. Plain text files are simple files that we (<i>a human</i>) can directly read using only our operating system’s plain text editor (i.e., Notepad on Windows or TextEdit on Mac). These files usually end with the <strong>.txt</strong> file extension – one exception being the <strong>.csv</strong> extension. Specifically, in this chapter we will learn to import the following variations of plain text files:</p>
 <ul>
 <li><p>Plain text files with data delimited by a single space.</p></li>
 <li><p>Plain text files with data delimited by tabs.</p></li>
 <li><p>Plain text files stored in a fixed width format.</p></li>
 <li><p>Plain text files with data delimited by commas - csv files.</p></li>
 </ul>
-<p>Later, we will discuss importing binary files. For now, you can think of binary files as more complex file types that can’t generally be read by humans without the use of special software. Some examples include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.</p>
+<p>Later, we will discuss importing binary files. For now, we can think of binary files as more complex file types that can’t generally be read by humans without the use of special software. Some examples include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="files.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="files.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -675,14 +675,14 @@ Copy and paste:
 <li><p>Doesn’t convert character variables to factors by default.</p></li>
 <li><p>Behaves more consistently across operating systems and geographic locations.</p></li>
 </ul>
-<p>If you would like to follow along, I suggest that you go ahead and install and load <code>readr</code> now.</p>
+<p>If you would like to follow along, we suggest that you go ahead and install and load the <code>readr</code> package now.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="importing-space-delimited-files" class="level2" data-number="14.2">
 <h2 data-number="14.2" class="anchored" data-anchor-id="importing-space-delimited-files"><span class="header-section-number">14.2</span> Importing space delimited files</h2>
-<p>We will start by importing data with values are separated by a single space. Not necessarily because this is the most common format you will encounter; in my experience it is not. But it’s about as simple as it gets, and other types of data are often considered special cases of files separated with a single space. So, it seems like a good place to start.</p>
+<p>We will start by importing data with values are separated by a single space. Not necessarily because this is the most common format we will encounter - in our experience it isn’t. We’ll start with space delimited files because they are about as simple as it gets, and other types of data are often considered special cases of files separated with a single space.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -693,20 +693,20 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In programming lingo, it is common to use the word <strong>delimited</strong> interchangeably with the word <strong>separated.</strong> For example, you might say “values separated by a single space” or you might say “a file with space delimited values.”</p>
+<p>In programming lingo, it is common to use the word <strong>delimited</strong> interchangeably with the word <strong>separated.</strong> For example, we might say “values separated by a single space” or we might say “a file with space delimited values.”</p>
 </div>
 </div>
 <div class="cell" data-lable="importing_plain_space">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="space.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="space.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>For our first example we will import a text file with values separated by a single space. The contents of the file are the now familiar height and weight data.</p>
-<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/single_delimited.txt">You may click here to download this file to your computer.</a></p>
+<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/single_delimited.txt">Click here to download this file.</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>single_space <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"single_delimited.txt"</span>,</span>
@@ -738,8 +738,8 @@ dbl (1): wgt_lbs
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>readr</code>’s <code>read_delim()</code> function to import a data set with values that are delimited by a single space. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>single_space</code>.</p></li>
-<li><p>You can type <code>?read_delim</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
-<li><p>The first argument to the <code>read_delim()</code> function is the <code>file</code> argument. The value passed to the file argument should be a file path that tells R where to find the data set on your computer.</p></li>
+<li><p>We can type <code>?read_delim</code> into our R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>read_delim()</code> function is the <code>file</code> argument. The value passed to the file argument should be a file path that tells R where to find the data set on our computer.</p></li>
 <li><p>The second argument to the <code>read_delim()</code> function is the <code>delim</code> argument. The value passed to the <code>delim</code> argument tells R what character separates each value in the data set. In this case, a single space separates the values. Note that we had to wrap the single space in quotation marks.</p></li>
 <li><p>The <code>readr</code> package imported the data and printed a message giving us some information about how it interpreted column names and column types. In programming lingo, deciding how to interpret the data that is being imported is called <strong>parsing</strong> the data.</p>
 <ul>
@@ -757,7 +757,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Make sure to always include the file extension in your file paths. For example, using “/single_delimited” instead of “/single_delimited.txt” above (i.e., no .txt) would have resulted in an error telling you that the filed does not exist.</p>
+<p>Make sure to always include the file extension in file paths. For example, using <code>/single_delimited</code> instead of <code>/single_delimited.txt</code> above (i.e., no <code>.txt</code>) would have resulted in an error telling us that the file does not exist.</p>
 </div>
 </div>
 <section id="specifying-missing-data-values" class="level3" data-number="14.2.1">
@@ -767,7 +767,7 @@ Warning
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="space.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="space.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -813,18 +813,18 @@ dbl (2): ht_in, wgt_lbs
 </section>
 <section id="importing-tab-delimited-files" class="level2" data-number="14.3">
 <h2 data-number="14.3" class="anchored" data-anchor-id="importing-tab-delimited-files"><span class="header-section-number">14.3</span> Importing tab delimited files</h2>
-<p>Sometimes you will encounter plain text files that contain values separated by tab characters instead of a single space. Files like these may be called <strong>tab separated value</strong> or <strong>tsv</strong> files, or they may be called <strong>tab-delimited</strong> files.</p>
+<p>Sometimes we will encounter plain text files that contain values separated by tab characters instead of a single space. Files like these may be called <strong>tab separated value</strong> or <strong>tsv</strong> files, or they may be called <strong>tab-delimited</strong> files.</p>
 <div class="cell" data-labele="importing_plain_tab">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tab.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="tab.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>To import tab separated value files in R, we use a variation of the same program we just saw. We just need to tell R that now the values in the data will be delimited by tabs instead of a single space.</p>
-<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/tab.txt">You may click here to download this file to your computer.</a></p>
+<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/tab.txt">Click here to download this file.</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"tab.txt"</span>,</span>
@@ -858,7 +858,7 @@ dbl (2): ht_in, wgt_lbs
 <li><p>We used <code>readr</code>’s <code>read_delim()</code> function to import a data set with values that are delimited by tabs. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>tab</code>.</p></li>
 <li><p>To tell R that the values are now separated by tabs, we changed the value we passed to the <code>delim</code> argument to <code>"\t"</code>. This is a special symbol that means “tab” to R.</p></li>
 </ul>
-<p>I don’t personally receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the <code>readr</code> package. That is, instead of using the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>"\t"</code>, we can simply pass our file path to the <code>read_tsv()</code> function. Under the hood, the <code>read_tsv()</code> function does exactly the same thing as the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>"\t"</code>.</p>
+<p>We don’t receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the <code>readr</code> package. That is, instead of using the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>"\t"</code>, we can simply pass our file path to the <code>read_tsv()</code> function. Under the hood, the <code>read_tsv()</code> function does exactly the same thing as the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>"\t"</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"tab.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -887,28 +887,28 @@ dbl (2): ht_in, wgt_lbs
 </section>
 <section id="importing-fixed-width-format-files" class="level2" data-number="14.4">
 <h2 data-number="14.4" class="anchored" data-anchor-id="importing-fixed-width-format-files"><span class="header-section-number">14.4</span> Importing fixed width format files</h2>
-<p>Yet another type of plain text file we will discuss is called a <strong>fixed width format</strong> or <strong>fwf</strong> file. Again, these files aren’t super common in my experience, but they can be sort of tricky when you do encounter them. Take a look at this example:</p>
+<p>Yet another type of plain text file we will discuss is called a <strong>fixed width format</strong> or <strong>fwf</strong> file. Again, we don’t encounter these files frequently, but they can be sort of tricky when we do encounter them. Take a look at this example:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="fixed_width.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="fixed_width.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>As you can see, a hallmark of fixed width format files is inconsistent spacing between values. For example, there is only one single space between the values <code>004</code> and <code>Female</code> in the fourth row. But, there are multiple spaces between the values <code>65</code> and <code>154</code>. Therefore, we can’t tell R to look for a single space or tab to separate values. So, how do we tell R which characters (including spaces) go with which variable? Well, if you look closely you will notice that all variable values start in the same column. If you are wondering what I mean, try to imagine a number line along the top of the data:</p>
+<p>As you can see, a hallmark of fixed width format files is inconsistent spacing between values. For example, there is only one single space between the values <code>004</code> and <code>Female</code> in the fourth row. But, there are multiple spaces between the values <code>65</code> and <code>154</code>. Therefore, we can’t tell R to look for a single space or tab to separate values. So, how do we tell R which characters (including spaces) go with which variable? Well, if we look closely we will notice that all variable values start in the same column. If you are wondering what we mean, try to imagine a number line along the top of the data:</p>
 <div class="cell" data-lable="number_line_spaces">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="number_line_spaces.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="number_line_spaces.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>This number line creates a sequence of columns across your data, with each column being 1 character wide. Notice that spaces are also considered a character with width just like any other. We can use these columns to tell R exactly which columns contain the values for each variable.</p>
-<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/fixed_width.txt">You may click here to download this file to your computer.</a></p>
+<p>This number line creates a sequence of columns across our data, with each column being 1 character wide. Notice that spaces are also considered a character with width just like any other. We can use these columns to tell R exactly which columns contain the values for each variable.</p>
+<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/fixed_width.txt">Click here to download this file.</a></p>
 <p>Now, in this case we can just use <code>readr</code>’s <code>read_table()</code> function to import this data:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fixed <span class="ot">&lt;-</span> <span class="fu">read_table</span>(<span class="st">"fixed_width.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -943,15 +943,15 @@ row col  expected    actual              file
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>readr</code>’s <code>read_table()</code> function to import data from a fixed width format file. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>fixed</code>.</p></li>
-<li><p>You can type <code>?read_table</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>We can type <code>?read_table</code> into our R console to view the help documentation for this function and follow along with the explanation below.</p></li>
 <li><p>By default, the <code>read_table()</code> function looks for values to be separated by one or more columns of space.</p></li>
 </ul>
-<p>However, how could you import this data if there weren’t always spaces in between data values. For example:</p>
+<p>However, how could we import this data if there weren’t always spaces in between data values? For example:</p>
 <div class="cell" data-lable="number_line">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="number_line.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="number_line.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -989,7 +989,7 @@ row col  expected    actual                       file
 </div>
 </div>
 <p>Instead, it parses the entire data set as a single character column. It does this because it can’t tell where the values for one variable stop and the values for the next variable start. However, because all the variables start in the same column, we can tell R how to parse the data correctly. We can actually do this in a couple different ways:</p>
-<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/fixed_width_no_space.txt">You may click here to download this file to your computer.</a></p>
+<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/fixed_width_no_space.txt">Click here to download this file.</a></p>
 <section id="vector-of-column-widths" class="level3" data-number="14.4.1">
 <h3 data-number="14.4.1" class="anchored" data-anchor-id="vector-of-column-widths"><span class="header-section-number">14.4.1</span> Vector of column widths</h3>
 <p>One way to import this data is to tell R how many columns wide each variable is in the raw data. We do that like so:</p>
@@ -1028,8 +1028,8 @@ dbl (2): ht_in, wgt_lbs
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>readr</code>’s <code>read_fwf()</code> function to import data from a fixed width format file. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>fixed</code>.</p></li>
-<li><p>You can type <code>?read_fwf</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
-<li><p>The first argument to the <code>read_fwf()</code> function is the <code>file</code> argument. The value passed to the file argument should be file path that tells R where to find the data set on your computer.</p></li>
+<li><p>We can type <code>?read_fwf</code> into our R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>The first argument to the <code>read_fwf()</code> function is the <code>file</code> argument. The value passed to the file argument should be file path that tells R where to find the data set on our computer.</p></li>
 <li><p>The second argument to the <code>read_fwf()</code> function is the the <code>col_positions</code> argument. The value passed to this argument tells R the width (i.e., number of columns) that belong to each variable in the raw data set. This information is actually passed to the <code>col_positions</code> argument directly from the <code>fwf_widths()</code> function. This is an example of nesting functions.</p>
 <ul>
 <li>The first argument to the <code>fwf_widths()</code> function is the <code>widths</code> argument. The value passed to the <code>widths</code> argument should be a numeric vector of column widths. The column width of each variable should be calculated as the number of columns that contain the values for that variable. For example, take another look at the data with the imaginary number line:</li>
@@ -1039,7 +1039,7 @@ dbl (2): ht_in, wgt_lbs
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="number_line.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="number_line.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1106,7 +1106,7 @@ dbl (2): ht_in, wgt_lbs
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="number_line.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="number_line.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1187,12 +1187,12 @@ dbl (2): ht_in, wgt_lbs
 </section>
 <section id="importing-comma-separated-values-files" class="level2" data-number="14.5">
 <h2 data-number="14.5" class="anchored" data-anchor-id="importing-comma-separated-values-files"><span class="header-section-number">14.5</span> Importing comma separated values files</h2>
-<p>The final type of plain text file that we will discuss is by far the most common type used in my experience. I’m talking about the <strong>comma separated values</strong> or <strong>csv</strong> file. Unlike space and tab separated values files, csv file names end with the <strong>.csv</strong> file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, or Google Sheets.</p>
+<p>The final type of plain text file that we will discuss is by far the most common type used in our experience. I’m talking about the <strong>comma separated values</strong> or <strong>csv</strong> file. Unlike space and tab separated values files, csv file names end with the <strong>.csv</strong> file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, or Google Sheets.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="csv_plain_text.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="csv_plain_text.png" class="img-fluid figure-img"></p>
 <figcaption>A csv file viewed in a plain text editor.</figcaption>
 </figure>
 </div>
@@ -1202,14 +1202,14 @@ dbl (2): ht_in, wgt_lbs
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="csv_excel.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="csv_excel.png" class="img-fluid figure-img"></p>
 <figcaption>A csv file viewed in Microsoft Excel.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Importing standard csv files into R with the <code>readr</code> package is easy and uses a syntax that is very similar to <code>read_delim()</code> and <code>read_tsv()</code>. In fact, in many cases we only have to pass the path to the csv file to the <code>read_csv()</code> function like so:</p>
-<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/comma.csv">You may click here to download this file to your computer.</a></p>
+<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/comma.csv">Click here to download this file.</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>csv <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"comma.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -1238,24 +1238,24 @@ dbl (3): id, ht_in, wt_lbs
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We used <code>readr</code>’s <code>read_csv()</code> function to import a data set with values that are delimited by commas. Those values were imported as a data frame, and we assigned that data frame to the R object called <code>csv</code>.</p></li>
-<li><p>You can type <code>?read_csv</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
-<li><p>Like <code>read_tsv()</code>, R is basically executing the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> under the hood. You could also use the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> if you wanted to.</p></li>
+<li><p>We can type <code>?read_csv</code> into our R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>Like <code>read_tsv()</code>, R is basically executing the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> under the hood. We could also use the <code>read_delim()</code> function with the value of the <code>delim</code> argument set to <code>","</code> if we wanted to.</p></li>
 </ul>
 </section>
 <section id="additional-arguments" class="level2" data-number="14.6">
 <h2 data-number="14.6" class="anchored" data-anchor-id="additional-arguments"><span class="header-section-number">14.6</span> Additional arguments</h2>
-<p>For the most part, the data we imported in all of the examples above was relatively well behaved. What I mean by that is that the data basically “looked” like each of the <code>read_</code> functions were expecting it to “look”. Therefore, we didn’t have to adjust many of the various <code>read_</code> functions’ default values. The exception was changing the default value of the <code>na</code> argument to the <code>read_delim()</code> function. However, all of the <code>read_</code> functions above have additional arguments that you may need to tweak on occasion. The two that I tend to adjust most often are the <code>col_names</code> and <code>col_types</code> arguments. It’s impossible for me to think of every scenario where you may need to do this, but I’ll walk through a basic example below, which should be sufficient for you to get the idea.</p>
-<p>Take a look at this csv file for a few seconds. It started as the same exact height and weight data we’ve been using, but I made a few changes. See if you can spot them all.</p>
+<p>For the most part, the data we imported in all of the examples above was relatively well behaved. What we mean by that is that the data basically “looked” like each of the <code>read_</code> functions were expecting it to “look”. Therefore, we didn’t have to adjust many of the various <code>read_</code> functions’ default values. The exception was changing the default value of the <code>na</code> argument to the <code>read_delim()</code> function. However, all of the <code>read_</code> functions above have additional arguments that we may need to tweak on occasion. The two that we tend to adjust most often are the <code>col_names</code> and <code>col_types</code> arguments. It’s impossible for us to think of every scenario where we may need to do this, but we’ll walk through a basic example below, which should be sufficient to get the idea.</p>
+<p>Take a look at this csv file for a few seconds. It started as the same exact height and weight data we’ve been using, but we made a few changes. See if you can spot them all.</p>
 <div class="cell" data-lable="csv_complex">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="csv_complex.png" class="img-fluid figure-img" width="900"></p>
+<p><img src="csv_complex.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>When people record data in Microsoft Excel, they do all kinds of crazy things. In the screenshot above, I’ve included just a few examples of things I see all the time. For example:</p>
+<p>When people record data in Microsoft Excel, they do all kinds of crazy things. In the screenshot above, I’ve included just a few examples of things we see all the time. For example:</p>
 <ul>
 <li><p>Row one contains generic variable names that don’t really serve much of a purpose.</p></li>
 <li><p>Row two is a blank line. I’m not sure why it’s there. Maybe the study staff finds it aesthetically pleasing?</p></li>
@@ -1275,15 +1275,15 @@ Warning
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>I suggest that you don’t <strong>EVER</strong> alter your raw data. All kinds of crazy things happen with data and data files. If you keep your raw data untouched and in a safe place, worst case scenario you can always come back to it and start over. If you start messing with the raw data, then you may lose the ability to recover what it looked like in its original form forever. If you import the data into R before altering it then your raw data stays preserved</p></li>
-<li><p>If you are going to make alterations in Excel prior to importing the data, I <strong>strongly</strong> suggest making a copy of the raw data first. Then, alter the copy before importing into R. But, even this can be a bad idea.</p></li>
-<li><p>If you make alterations to the data in Excel then there is generally no record of those alterations. For example, let’s say you click in a cell and delete a value (maybe even by accident), and then send me the csv file. I will have no way of knowing that a value was deleted. When you alter the data directly in Excel (or any program that doesn’t require writing code), it can be really difficult for others (including future you) to know what was done to the data. You may be able manually compare the altered data to the original data if you have access to both, but who wants to do that – especially if the file is large? However, if you import the data into R as-is and programmatically make alterations with R code, then your R code will, by definition, serve a record of all alterations that were made.</p></li>
-<li><p>Often data is updated. You could spend a significant amount of time altering your data in Excel only to be sent an updated file next week. Often, the manual alterations you made in one Excel file are not transferable to another. However, if all alterations are made in R, then you can often just run the exact same code again on the updated data.</p></li>
+<li><p>We suggest that you don’t <strong>EVER</strong> alter raw data. All kinds of crazy things happen with data and data files. If we keep our raw data untouched and in a safe place, in a worst case scenario we can always come back to it and start over. If we start messing with the raw data, then we may lose the ability to recover what it looked like in its original form forever. If we import the data into R before altering it then our raw data stays preserved</p></li>
+<li><p>If the data need to be altered in Excel prior to import, we <strong>strongly</strong> suggest making a copy of the raw data first. Then, alter the copy before importing into R. But, even this can be a bad idea.</p></li>
+<li><p>When making alterations to the data in Excel then there is generally no record of those alterations. For example, let’s say you click in a cell and delete a value (maybe even by accident), and then send someone the Excel file. They will have no way of knowing that a value was deleted. When we alter the data directly in Excel (or any program that doesn’t require writing code), it can be really difficult for others (including future us) to know what was done to the data. We may be able manually compare the altered data to the original data if we have access to both, but who wants to do that – especially if the file is large? However, if we import the data into R as-is and programmatically make alterations with R code, then our R code will, by definition, serve a record of all alterations that were made.</p></li>
+<li><p>Often data is updated. We could spend a significant amount of time altering our data in Excel only to be sent an updated file next week. Often, the manual alterations we made in one Excel file are not transferable to another. However, if all alterations are made in R, then we can often just run the exact same code again on the updated data.</p></li>
 </ul>
 </div>
 </div>
 <p>So, let’s walk through addressing these issues together. We’ll start by taking a look at our results with all of <code>read_csv</code>’s arguments left at their default values.</p>
-<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/comma_complex.csv">You may click here to download this file to your computer.</a></p>
+<p><a href="https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/comma_complex.csv">Click here to download this file.</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>csv <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"comma_complex.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -1384,10 +1384,10 @@ e.g.:
 <p>👆<strong>Here’s what we did above:</strong></p>
 <ul>
 <li><p>We told R explicitly what type of values we wanted each column to contain. We did so by nesting a <code>col_</code> function for each column type inside the <code>col()</code> function, which is passed directly to the <code>col-types</code> argument.</p></li>
-<li><p>You can type <code>?readr::cols</code> into your R console to view the help documentation for this function and follow along with the explanation below.</p></li>
-<li><p>Notice various column types (e.g., <code>col_character()</code>) <em>are functions</em>, and that they are nested inside of the <code>cols()</code> function. Because they are functions, you must include the parentheses. That’s just how the <code>readr</code> package is designed.</p></li>
+<li><p>We can type <code>?readr::cols</code> into our R console to view the help documentation for this function and follow along with the explanation below.</p></li>
+<li><p>Notice various column types (e.g., <code>col_character()</code>) <em>are functions</em>, and that they are nested inside of the <code>cols()</code> function. Because they are functions, we must include the parentheses. That’s just how the <code>readr</code> package is designed.</p></li>
 <li><p>Notice that the last column type we passed to the <code>col_types</code> argument was <code>col_skip()</code>. This tells R to ignore the 5th column in the raw data (5th because it’s the 5th column type we listed). Doing this will get rid of the warning we saw earlier.</p></li>
-<li><p>You can type <code>?readr::cols</code> into your R console to see all available column types.</p></li>
+<li><p>We can type <code>?readr::cols</code> into our R console to see all available column types.</p></li>
 <li><p>Because we told R explicitly what type of values we wanted each column to contain, R had to drop any values that couldn’t be coerced to the type we requested. More specifically, they were coerced to missing (<code>NA</code>). For example, the value <code>Var3</code> that was previously in the first row of the <code>ht_in</code> column. It was coerced to <code>NA</code> because R does not know (nor do I) how to turn the character string “Var3” into an integer. R gives us a warning message about this.</p></li>
 </ul>
 <p>Next, let’s go ahead and tell R to ignore the first three rows of the csv file. They don’t contain anything that is of use to us at this point.</p>
@@ -1455,7 +1455,7 @@ e.g.:
 4 4     Female    65      NA</code></pre>
 </div>
 </div>
-<p>Wow! This was kind of a long chapter! 🤯 But, you should now have the foundation you need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.</p>
+<p>Wow! This was kind of a long chapter! 🤯 But, we should now have the foundation we need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.</p>
 
 
 </section>

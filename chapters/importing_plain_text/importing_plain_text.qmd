@@ -17,11 +17,11 @@ Copy and paste:
 👆**Here's what we did above:**
 -->
 
-We previously learned how to manually create a data frame in RStudio with the `data.frame()` function, the `tibble()` function, or the `tribble()` function. This will get the job done, but it’s not always very practical -- particularly when you have larger data sets. 
+We previously learned how to manually create a data frame in RStudio with the `data.frame()` function, the `tibble()` function, or the `tribble()` function. This will get the job done, but it’s not always very practical -- particularly when we have larger data sets. 
 
-Additionally, others will usually share data with you that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In my experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the **.csv** file extension and Excel files end with the **.xls** or **.xlsx** file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, you will learn how to take data stored in several different common types of files import them into R for use.
+Additionally, others will usually share data with us that is already stored in a file of some sort. For our purposes, any file containing data that is not an R data frame is referred to as raw data. In our experience, raw data is most commonly shared as CSV (comma separated values) files or as Microsoft Excel files. CSV files will end with the **.csv** file extension and Excel files end with the **.xls** or **.xlsx** file extensions. But remember, generally speaking R can only manipulate and analyze data that has been imported into R’s global environment. In this lesson, we will learn how to take data stored in several different common types of files import them into R for use.
 
-There are many different file types that one can use to store data. In this book, we will divide those file types into two categories: [plain text files](../appendices/glossary.qmd#plain-text-files) and [binary files](../appendices/glossary.qmd#binary-files). Plain text files are simple files that you (<i>a human</i>) can directly read using only your operating system's plain text editor (i.e., Notepad on Windows or TextEdit on Mac). These files usually end with the **.txt** file extension -- one exception being the **.csv** extension. Specifically, in this chapter we will learn to import the following variations of plain text files:
+There are many different file types that one can use to store data. In this book, we will divide those file types into two categories: [plain text files](../appendices/glossary.qmd#plain-text-files) and [binary files](../appendices/glossary.qmd#binary-files). Plain text files are simple files that we (<i>a human</i>) can directly read using only our operating system's plain text editor (i.e., Notepad on Windows or TextEdit on Mac). These files usually end with the **.txt** file extension -- one exception being the **.csv** extension. Specifically, in this chapter we will learn to import the following variations of plain text files:
 
 * Plain text files with data delimited by a single space.
 
@@ -31,7 +31,7 @@ There are many different file types that one can use to store data. In this book
 
 * Plain text files with data delimited by commas - csv files.
 
-Later, we will discuss importing binary files. For now, you can think of binary files as more complex file types that can't generally be read by humans without the use of special software. Some examples include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.
+Later, we will discuss importing binary files. For now, we can think of binary files as more complex file types that can't generally be read by humans without the use of special software. Some examples include Microsoft Excel spreadsheets, SAS data sets, and Stata data sets.
 
 ```{r}
 #| label: importing_plain_files
@@ -51,7 +51,7 @@ Base R contains several functions that can be used to import plain text files; h
 
 * Behaves more consistently across operating systems and geographic locations.
 
-If you would like to follow along, I suggest that you go ahead and install and load `readr` now. 
+If you would like to follow along, we suggest that you go ahead and install and load the `readr` package now. 
 
 ```{r}
 library(readr)
@@ -59,10 +59,10 @@ library(readr)
 
 ## Importing space delimited files
 
-We will start by importing data with values are separated by a single space. Not necessarily because this is the most common format you will encounter; in my experience it is not. But it’s about as simple as it gets, and other types of data are often considered special cases of files separated with a single space. So, it seems like a good place to start.
+We will start by importing data with values are separated by a single space. Not necessarily because this is the most common format we will encounter - in our experience it isn't. We'll start with space delimited files because they are about as simple as it gets, and other types of data are often considered special cases of files separated with a single space.
 
 :::callout-note
-In programming lingo, it is common to use the word **delimited** interchangeably with the word **separated.** For example, you might say "values separated by a single space" or you might say "a file with space delimited values."
+In programming lingo, it is common to use the word **delimited** interchangeably with the word **separated.** For example, we might say "values separated by a single space" or we might say "a file with space delimited values."
 :::
 
 ```{r}
@@ -75,7 +75,7 @@ knitr::include_graphics("space.png")
 
 For our first example we will import a text file with values separated by a single space. The contents of the file are the now familiar height and weight data.
 
-[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/single_delimited.txt)
+[Click here to download this file.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/single_delimited.txt)
 
 ```{r}
 #| cache: TRUE
@@ -93,9 +93,9 @@ single_space
 
 * We used `readr`'s `read_delim()` function to import a data set with values that are delimited by a single space. Those values were imported as a data frame, and we assigned that data frame to the R object called `single_space`.
 
-* You can type `?read_delim` into your R console to view the help documentation for this function and follow along with the explanation below.
+* We can type `?read_delim` into our R console to view the help documentation for this function and follow along with the explanation below.
 
-* The first argument to the `read_delim()` function is the `file` argument. The value passed to the file argument should be a file path that tells R where to find the data set on your computer.
+* The first argument to the `read_delim()` function is the `file` argument. The value passed to the file argument should be a file path that tells R where to find the data set on our computer.
 
 * The second argument to the `read_delim()` function is the `delim` argument. The value passed to the `delim` argument tells R what character separates each value in the data set. In this case, a single space separates the values. Note that we had to wrap the single space in quotation marks.
 
@@ -106,7 +106,7 @@ single_space
   - By default, `readr` will try to guess what type of data (e.g., numbers, character strings, dates, etc.) each column contains. It will guess based on analyzing the contents of the first 1,000 rows of the data. In this case, `readr`'s guess was not entirely correct (or at least not what we wanted). `readr` correctly guessed that the variables `id` and `sex` should be character variables, but incorrectly guessed that `ht_in` should be a character variable as well. Below, we will learn how to fix this issue.
   
 ::: callout-warning
-Make sure to always include the file extension in your file paths. For example, using "/single_delimited" instead of "/single_delimited.txt" above (i.e., no .txt) would have resulted in an error telling you that the filed does not exist.
+Make sure to always include the file extension in file paths. For example, using `/single_delimited` instead of `/single_delimited.txt` above (i.e., no `.txt`) would have resulted in an error telling us that the file does not exist.
 :::
 
 ### Specifying missing data values
@@ -148,7 +148,7 @@ single_space
 
 ## Importing tab delimited files
 
-Sometimes you will encounter plain text files that contain values separated by tab characters instead of a single space. Files like these may be called **tab separated value** or **tsv** files, or they may be called **tab-delimited** files.
+Sometimes we will encounter plain text files that contain values separated by tab characters instead of a single space. Files like these may be called **tab separated value** or **tsv** files, or they may be called **tab-delimited** files.
 
 ```{r}
 #| labele: importing_plain_tab
@@ -160,7 +160,7 @@ knitr::include_graphics("tab.png")
 
 To import tab separated value files in R, we use a variation of the same program we just saw. We just need to tell R that now the values in the data will be delimited by tabs instead of a single space.
 
-[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/tab.txt)
+[Click here to download this file.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/tab.txt)
 
 ```{r}
 #| cache: TRUE
@@ -180,7 +180,7 @@ tab
 
 * To tell R that the values are now separated by tabs, we changed the value we passed to the `delim` argument to `"\t"`. This is a special symbol that means "tab" to R.
 
-I don't personally receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the `readr` package. That is, instead of using the `read_delim()` function with the value of the `delim` argument set to `"\t"`, we can simply pass our file path to the `read_tsv()` function. Under the hood, the `read_tsv()` function does exactly the same thing as the `read_delim()` function with the value of the `delim` argument set to `"\t"`.
+We don't receive tab separated values files very often. But, apparently, they are common enough to warrant a shortcut function in the `readr` package. That is, instead of using the `read_delim()` function with the value of the `delim` argument set to `"\t"`, we can simply pass our file path to the `read_tsv()` function. Under the hood, the `read_tsv()` function does exactly the same thing as the `read_delim()` function with the value of the `delim` argument set to `"\t"`.
 
 ```{r}
 #| cache: TRUE
@@ -193,7 +193,7 @@ tab
 
 ## Importing fixed width format files
 
-Yet another type of plain text file we will discuss is called a **fixed width format** or **fwf** file. Again, these files aren't super common in my experience, but they can be sort of tricky when you do encounter them. Take a look at this example:
+Yet another type of plain text file we will discuss is called a **fixed width format** or **fwf** file. Again, we don't encounter these files frequently, but they can be sort of tricky when we do encounter them. Take a look at this example:
 
 ```{r}
 #| label: fixed-width
@@ -203,7 +203,7 @@ Yet another type of plain text file we will discuss is called a **fixed width fo
 knitr::include_graphics("fixed_width.png")
 ```
 
-As you can see, a hallmark of fixed width format files is inconsistent spacing between values. For example, there is only one single space between the values `004` and `Female` in the fourth row. But, there are multiple spaces between the values `65` and `154`. Therefore, we can't tell R to look for a single space or tab to separate values. So, how do we tell R which characters (including spaces) go with which variable? Well, if you look closely you will notice that all variable values start in the same column. If you are wondering what I mean, try to imagine a number line along the top of the data:
+As you can see, a hallmark of fixed width format files is inconsistent spacing between values. For example, there is only one single space between the values `004` and `Female` in the fourth row. But, there are multiple spaces between the values `65` and `154`. Therefore, we can't tell R to look for a single space or tab to separate values. So, how do we tell R which characters (including spaces) go with which variable? Well, if we look closely we will notice that all variable values start in the same column. If you are wondering what we mean, try to imagine a number line along the top of the data:
 
 ```{r}
 #| lable: number_line_spaces
@@ -212,9 +212,9 @@ As you can see, a hallmark of fixed width format files is inconsistent spacing b
 knitr::include_graphics("number_line_spaces.png")
 ```
 
-This number line creates a sequence of columns across your data, with each column being 1 character wide. Notice that spaces are also considered a character with width just like any other. We can use these columns to tell R exactly which columns contain the values for each variable. 
+This number line creates a sequence of columns across our data, with each column being 1 character wide. Notice that spaces are also considered a character with width just like any other. We can use these columns to tell R exactly which columns contain the values for each variable. 
 
-[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/fixed_width.txt)
+[Click here to download this file.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/fixed_width.txt)
 
 Now, in this case we can just use `readr`'s `read_table()` function to import this data:
 
@@ -231,11 +231,11 @@ fixed
 
 * We used `readr`'s `read_table()` function to import data from a fixed width format file. Those values were imported as a data frame, and we assigned that data frame to the R object called `fixed`.
 
-* You can type `?read_table` into your R console to view the help documentation for this function and follow along with the explanation below.
+* We can type `?read_table` into our R console to view the help documentation for this function and follow along with the explanation below.
 
 * By default, the `read_table()` function looks for values to be separated by one or more columns of space.
 
-However, how could you import this data if there weren't always spaces in between data values. For example:
+However, how could we import this data if there weren't always spaces in between data values? For example:
 
 ```{r}
 #| lable: number_line
@@ -258,7 +258,7 @@ fixed
 
 Instead, it parses the entire data set as a single character column. It does this because it can't tell where the values for one variable stop and the values for the next variable start. However, because all the variables start in the same column, we can tell R how to parse the data correctly. We can actually do this in a couple different ways:
 
-[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/fixed_width_no_space.txt)
+[Click here to download this file.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/fixed_width_no_space.txt)
 
 ### Vector of column widths
 
@@ -284,9 +284,9 @@ fixed
 
 * We used `readr`'s `read_fwf()` function to import data from a fixed width format file. Those values were imported as a data frame, and we assigned that data frame to the R object called `fixed`.
 
-* You can type `?read_fwf` into your R console to view the help documentation for this function and follow along with the explanation below.
+* We can type `?read_fwf` into our R console to view the help documentation for this function and follow along with the explanation below.
 
-* The first argument to the `read_fwf()` function is the `file` argument. The value passed to the file argument should be file path that tells R where to find the data set on your computer.
+* The first argument to the `read_fwf()` function is the `file` argument. The value passed to the file argument should be file path that tells R where to find the data set on our computer.
 
 * The second argument to the `read_fwf()` function is the the `col_positions` argument. The value passed to this argument tells R the width (i.e., number of columns) that belong to each variable in the raw data set. This information is actually passed to the `col_positions` argument directly from the `fwf_widths()` function. This is an example of nesting functions.
 
@@ -395,7 +395,7 @@ read_fwf(
 
 ## Importing comma separated values files
 
-The final type of plain text file that we will discuss is by far the most common type used in my experience. I'm talking about the **comma separated values** or **csv** file. Unlike space and tab separated values files, csv file names end with the **.csv** file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, or Google Sheets. 
+The final type of plain text file that we will discuss is by far the most common type used in our experience. I'm talking about the **comma separated values** or **csv** file. Unlike space and tab separated values files, csv file names end with the **.csv** file extension. Although, csv files are plain text files that can be opened in plain text editors such as Notepad for Windows or TextEdit for Mac, many people view csv files in spreadsheet applications like Microsoft Excel, Numbers for Mac, or Google Sheets. 
 
 ```{r}
 #| label: csv_plain_text
@@ -417,7 +417,7 @@ knitr::include_graphics("csv_excel.png")
 
 Importing standard csv files into R with the `readr` package is easy and uses a syntax that is very similar to `read_delim()` and `read_tsv()`. In fact, in many cases we only have to pass the path to the csv file to the `read_csv()` function like so:
 
-[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/comma.csv)
+[Click here to download this file.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/comma.csv)
 
 ```{r}
 #| cache: TRUE
@@ -432,15 +432,15 @@ csv
 
 * We used `readr`'s `read_csv()` function to import a data set with values that are delimited by commas. Those values were imported as a data frame, and we assigned that data frame to the R object called `csv`.
 
-* You can type `?read_csv` into your R console to view the help documentation for this function and follow along with the explanation below.
+* We can type `?read_csv` into our R console to view the help documentation for this function and follow along with the explanation below.
 
-* Like `read_tsv()`, R is basically executing  the `read_delim()` function with the value of the `delim` argument set to `","` under the hood. You could also use the `read_delim()` function with the value of the `delim` argument set to `","` if you wanted to.
+* Like `read_tsv()`, R is basically executing  the `read_delim()` function with the value of the `delim` argument set to `","` under the hood. We could also use the `read_delim()` function with the value of the `delim` argument set to `","` if we wanted to.
 
 ## Additional arguments
 
-For the most part, the data we imported in all of the examples above was relatively well behaved. What I mean by that is that the data basically "looked" like each of the `read_` functions were expecting it to "look". Therefore, we didn't have to adjust many of the various `read_` functions' default values. The exception was changing the default value of the `na` argument to the `read_delim()` function. However, all of the `read_` functions above have additional arguments that you may need to tweak on occasion. The two that I tend to adjust most often are the `col_names` and `col_types` arguments. It's impossible for me to think of every scenario where you may need to do this, but I'll walk through a basic example below, which should be sufficient for you to get the idea.
+For the most part, the data we imported in all of the examples above was relatively well behaved. What we mean by that is that the data basically "looked" like each of the `read_` functions were expecting it to "look". Therefore, we didn't have to adjust many of the various `read_` functions' default values. The exception was changing the default value of the `na` argument to the `read_delim()` function. However, all of the `read_` functions above have additional arguments that we may need to tweak on occasion. The two that we tend to adjust most often are the `col_names` and `col_types` arguments. It's impossible for us to think of every scenario where we may need to do this, but we'll walk through a basic example below, which should be sufficient to get the idea.
 
-Take a look at this csv file for a few seconds. It started as the same exact height and weight data we've been using, but I made a few changes. See if you can spot them all.
+Take a look at this csv file for a few seconds. It started as the same exact height and weight data we've been using, but we made a few changes. See if you can spot them all.
 
 ```{r}
 #| lable: csv_complex
@@ -450,7 +450,7 @@ Take a look at this csv file for a few seconds. It started as the same exact hei
 knitr::include_graphics("csv_complex.png")
 ```
 
-When people record data in Microsoft Excel, they do all kinds of crazy things. In the screenshot above, I've included just a few examples of things I see all the time. For example:
+When people record data in Microsoft Excel, they do all kinds of crazy things. In the screenshot above, I've included just a few examples of things we see all the time. For example:
 
 * Row one contains generic variable names that don't really serve much of a purpose. 
 
@@ -465,18 +465,18 @@ When people record data in Microsoft Excel, they do all kinds of crazy things. I
 All of the issues listed above are things we will have to deal with before we can analyze our data. Now, in this small data set we could just fix these issues directly in Microsoft Excel and then import the altered data into R with a simple call to `read_csv()` without adjusting any options. However, that this is generally a really bad idea. 
 
 ::: callout-warning
-* I suggest that you don't **EVER** alter your raw data. All kinds of crazy things happen with data and data files. If you keep your raw data untouched and in a safe place, worst case scenario you can always come back to it and start over. If you start messing with the raw data, then you may lose the ability to recover what it looked like in its original form forever. If you import the data into R before altering it then your raw data stays preserved
+* We suggest that you don't **EVER** alter raw data. All kinds of crazy things happen with data and data files. If we keep our raw data untouched and in a safe place, in a worst case scenario we can always come back to it and start over. If we start messing with the raw data, then we may lose the ability to recover what it looked like in its original form forever. If we import the data into R before altering it then our raw data stays preserved
 
-* If you are going to make alterations in Excel prior to importing the data, I **strongly** suggest making a copy of the raw data first. Then, alter the copy before importing into R. But, even this can be a bad idea.
+* If the data need to be altered in Excel prior to import, we **strongly** suggest making a copy of the raw data first. Then, alter the copy before importing into R. But, even this can be a bad idea.
 
-* If you make alterations to the data in Excel then there is generally no record of those alterations. For example, let's say you click in a cell and delete a value (maybe even by accident), and then send me the csv file. I will have no way of knowing that a value was deleted. When you alter the data directly in Excel (or any program that doesn't require writing code), it can be really difficult for others (including future you) to know what was done to the data. You may be able manually compare the altered data to the original data if you have access to both, but who wants to do that -- especially if the file is large? However, if you import the data into R as-is and programmatically make alterations with R code, then your R code will, by definition, serve a record of all alterations that were made.
+* When making alterations to the data in Excel then there is generally no record of those alterations. For example, let's say you click in a cell and delete a value (maybe even by accident), and then send someone the Excel file. They will have no way of knowing that a value was deleted. When we alter the data directly in Excel (or any program that doesn't require writing code), it can be really difficult for others (including future us) to know what was done to the data. We may be able manually compare the altered data to the original data if we have access to both, but who wants to do that -- especially if the file is large? However, if we import the data into R as-is and programmatically make alterations with R code, then our R code will, by definition, serve a record of all alterations that were made.
 
-* Often data is updated. You could spend a significant amount of time altering your data in Excel only to be sent an updated file next week. Often, the manual alterations you made in one Excel file are not transferable to another. However, if all alterations are made in R, then you can often just run the exact same code again on the updated data.
+* Often data is updated. We could spend a significant amount of time altering our data in Excel only to be sent an updated file next week. Often, the manual alterations we made in one Excel file are not transferable to another. However, if all alterations are made in R, then we can often just run the exact same code again on the updated data.
 :::
 
 So, let's walk through addressing these issues together. We'll start by taking a look at our results with all of `read_csv`'s arguments left at their default values.
 
-[You may click here to download this file to your computer.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/comma_complex.csv)
+[Click here to download this file.](https://github.com/brad-cannell/r4epi/blob/master/chapters/importing_plain_text/comma_complex.csv)
 
 ```{r}
 #| cache: TRUE
@@ -531,13 +531,13 @@ csv
 
 * We told R explicitly what type of values we wanted each column to contain. We did so by nesting a `col_` function for each column type inside the `col()` function, which is passed directly to the `col-types` argument.
 
-* You can type `?readr::cols` into your R console to view the help documentation for this function and follow along with the explanation below.
+* We can type `?readr::cols` into our R console to view the help documentation for this function and follow along with the explanation below.
 
-* Notice various column types (e.g., `col_character()`) _are functions_, and that they are nested inside of the `cols()` function. Because they are functions, you must include the parentheses. That's just how the `readr` package is designed.
+* Notice various column types (e.g., `col_character()`) _are functions_, and that they are nested inside of the `cols()` function. Because they are functions, we must include the parentheses. That's just how the `readr` package is designed.
 
 * Notice that the last column type we passed to the `col_types` argument was `col_skip()`. This tells R to ignore the 5th column in the raw data (5th because it's the 5th column type we listed). Doing this will get rid of the warning we saw earlier.
 
-* You can type `?readr::cols` into your R console to see all available column types.
+* We can type `?readr::cols` into our R console to see all available column types.
 
 * Because we told R explicitly what type of values we wanted each column to contain, R had to drop any values that couldn't be coerced to the type we requested. More specifically, they were coerced to missing (`NA`). For example, the value `Var3` that was previously in the first row of the `ht_in` column. It was coerced to `NA` because R does not know (nor do I) how to turn the character string "Var3" into an integer. R gives us a warning message about this. 
 
@@ -590,4 +590,4 @@ csv <- read_csv(
 csv
 ```
 
-Wow! This was kind of a long chapter! 🤯 But, you should now have the foundation you need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.
+Wow! This was kind of a long chapter! 🤯 But, we should now have the foundation we need to start importing data in R instead of creating data frames manually. At least as it pertains to data that is stored in plain text files. Next, we will learn how to import data that is stored in binary files. Most of the concepts we learned in this chapter will apply, but we will get to use a couple new packages 📦.
